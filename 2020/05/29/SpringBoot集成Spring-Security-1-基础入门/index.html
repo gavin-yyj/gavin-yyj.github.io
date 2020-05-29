@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>SpringBoot集成Spring Security(1)--基础入门 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-05-29 12:57">
+      May 29, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="一、导入依赖"><a href="#一、导入依赖" class="headerlink" title="一、导入依赖"></a>一、导入依赖</h1><p>导入 <code>spring-boot-starter-security</code> 依赖，在 SpringBoot 2.0 环境下默认使用的是 5.0 版本。</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>2.1.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+      <span class="hljs-comment">&lt;!--注意，这里必须要指定版本，MySQL5用的驱动url是com.mysql.jdbc.Driver，</span>
+<span class="hljs-comment">      MySQL6以后用的是com.mysql.cj.jdbc.Driver。版本不匹配便会报驱动类已过时的错误。--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>mysql<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>mysql-connector-java<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>8.0.15<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<h1 id="二、创建数据库"><a href="#二、创建数据库" class="headerlink" title="二、创建数据库"></a>二、创建数据库</h1><p>一般权限控制有三层，即：<code>用户</code>&lt;–&gt;<code>角色</code>&lt;–&gt;<code>权限</code>，用户与角色是多对多，角色和权限也是多对多。这里我们先暂时不考虑权限，只考虑<code>用户</code>&lt;–&gt;<code>角色</code>。</p>
+<div class="hljs"><pre><code class="hljs mysql">-- 创建用户表 sys_user： --
+DROP TABLE IF EXISTS &#96;sys_user&#96;;
+CREATE TABLE &#96;sys_user&#96;(
+	&#96;id&#96; int(11) NOT NULL AUTO_INCREMENT,
+	&#96;name&#96; varchar(255) NOT NULL,
+	&#96;password&#96; varchar(255) NOT NULL,
+    PRIMARY KEY (&#96;id&#96;)
+)ENGINE&#x3D;InnoDB DEFAULT CHARSET &#x3D; utf8;
+
+-- 创建权限表 sys_role： --
+DROP TABLE IF EXISTS &#96;sys_role&#96;;
+CREATE TABLE &#96;sys_role&#96;(
+	&#96;id&#96; int(11) NOT NULL AUTO_INCREMENT,
+    &#96;name&#96; varchar(255) NOT NULL,
+    PRIMARY KEY (&#96;id&#96;)
+)ENGINE&#x3D;InnoDB DEFAULT CHARSET &#x3D; utf8;
+
+-- 创建用户-角色表 sys_user_role：（外键这里有点困惑，先标记下） --
+DROP TABLE IF EXISTS &#96;sys_user_role&#96;;
+CREATE TABLE &#96;sys_user_role&#96;(
+	&#96;user_id&#96; int(11) NOT NULL ,
+    &#96;role_id&#96; int(11) NOT NULL,
+    PRIMARY KEY (&#96;user_id&#96;,&#96;role_id&#96;),
+    KEY &#96;fk_role_id&#96; (&#96;role_id&#96;),
+    CONSTRAINT &#96;fk_role_id&#96; FOREIGN KEY (&#96;role_id&#96;) REFERENCES &#96;sys_role&#96; (&#96;id&#96;) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT &#96;fk_user_id&#96; FOREIGN KEY (&#96;user_id&#96;) REFERENCES &#96;sys_user&#96; (&#96;id&#96;) ON DELETE CASCADE ON UPDATE CASCADE
+)ENGINE&#x3D;InnoDB DEFAULT CHARSET &#x3D; utf8;
+
+-- 添加数据：（注意：传值的时候里面是单引号，如：&#39;1&#39;） --
+INSERT INTO &#96;sys_role&#96; VALUES (&#39;1&#39;, &#39;ROLE_ADMIN&#39;);
+INSERT INTO &#96;sys_role&#96; VALUES (&#39;2&#39;, &#39;ROLE_USER&#39;);
+
+INSERT INTO &#96;sys_user&#96; VALUES (&#39;1&#39;, &#39;admin&#39;, &#39;123&#39;);
+INSERT INTO &#96;sys_user&#96; VALUES (&#39;2&#39;, &#39;jitwxs&#39;, &#39;123&#39;);
+
+INSERT INTO &#96;sys_user_role&#96; VALUES (&#39;1&#39;, &#39;1&#39;);
+INSERT INTO &#96;sys_user_role&#96; VALUES (&#39;2&#39;, &#39;2&#39;);</code></pre></div>
+
+<p>注意：权限格式为 <code>ROLE_XXX</code>，是 Spring Security 的规定。</p>
+<h1 id="三、准备页面"><a href="#三、准备页面" class="headerlink" title="三、准备页面"></a>三、准备页面</h1><p>因为是示例程序，页面越简单越好，只用于登录的 <code>login.html</code> 以及用于登录成功后的 <code>home.html</code>，将其放置在 <code>resources/static</code> 目录下：</p>
+<p>(1)login.html</p>
+<div class="hljs"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>欢迎来到登录页面<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"/login"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>立即登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+
+<p>注意：用户的登录认证是由 Spring Security 进行处理的，请求路径默认为 <code>/login</code>，用户名字段默认为 <code>username</code>，密码字段默认为 <code>password</code> 。</p>
+<p>(2)home.html</p>
+<div class="hljs"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>欢迎回家<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>登录成功<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/admin"</span>&gt;</span>检测是否具有ROLE_ADMIN角色<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/user"</span>&gt;</span>检测是否具有ROLE_USER角色<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"window.location.href='/logout'"</span>&gt;</span>退出登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+
+<h1 id="四、配置-application-properties"><a href="#四、配置-application-properties" class="headerlink" title="四、配置 application.properties"></a>四、配置 application.properties</h1><p>在配置文件中配置下数据库连接：</p>
+<div class="hljs"><pre><code class="hljs properties"><span class="hljs-meta">spring.datasource.username</span>=<span class="hljs-string">root</span>
+<span class="hljs-meta">spring.datasource.password</span>=<span class="hljs-string">root</span>
+<span class="hljs-comment">#JDBC连接MySQL6 （com.mysql.cj.jdbc.Driver）， 需要指定时区serverTimezone，否则会报错</span>
+<span class="hljs-meta">spring.datasource.url</span>=<span class="hljs-string">jdbc:mysql://localhost:3306/spring_security?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai</span>
+<span class="hljs-meta">spring.datasource.driver-class-name</span>=<span class="hljs-string">com.mysql.cj.jdbc.Driver</span>
+
+<span class="hljs-comment">#开启下划线转驼峰命令法</span>
+<span class="hljs-meta">mybatis.configuration.map-underscore-to-camel-case</span>=<span class="hljs-string">true</span></code></pre></div>
+
+<h1 id="五、创建Model实体、Mapper、Service-和-Controller"><a href="#五、创建Model实体、Mapper、Service-和-Controller" class="headerlink" title="五、创建Model实体、Mapper、Service 和 Controller"></a>五、创建Model实体、Mapper、Service 和 Controller</h1><h2 id="5-1-Model"><a href="#5-1-Model" class="headerlink" title="5.1 Model"></a>5.1 Model</h2><p>(1)SysUser</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//com.gavin.springsecuriity01.Model.SysUser</span>
+    
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysUser</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span></span>&#123;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+
+    <span class="hljs-keyword">private</span> Integer id;
+	
+    <span class="hljs-comment">//这里必须是name，与数据库对应，否则运行会报错</span>
+    <span class="hljs-keyword">private</span> String name;
+
+    <span class="hljs-keyword">private</span> String password;
+
+    <span class="hljs-comment">// 省略getter/setter</span>
+&#125;</code></pre></div>
+
+<p>(2)SysRole</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysRole</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+
+    <span class="hljs-keyword">private</span> Integer id;
+
+    <span class="hljs-keyword">private</span> String name;
+
+    <span class="hljs-comment">// 省略getter/setter</span>
+&#125;</code></pre></div>
+
+<p>(3)SysUserRole</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysUserRole</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;
+    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+
+    <span class="hljs-keyword">private</span> Integer userId;
+
+    <span class="hljs-keyword">private</span> Integer roleId;
+    
+    <span class="hljs-comment">// 省略getter/setter</span>
+&#125;</code></pre></div>
+
+<h2 id="5-2-Mapper"><a href="#5-2-Mapper" class="headerlink" title="5.2 Mapper"></a>5.2 Mapper</h2><p>(1)SysUserMapper</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//com.gavin.springsecuriity01.Mapper.SysUserMapper</span>
+
+<span class="hljs-meta">@Mapper</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">SysUserMapper</span> </span>&#123;
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"SELECT * FROM sys_user WHERE id = #&#123;id&#125;"</span>)
+    <span class="hljs-function">SysUser <span class="hljs-title">selectById</span><span class="hljs-params">(Integer id)</span></span>;
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"SELECT * FROM sys_user WHERE name = #&#123;name&#125;"</span>)
+    <span class="hljs-function">SysUser <span class="hljs-title">selectByName</span><span class="hljs-params">(String name)</span></span>;
+&#125;</code></pre></div>
+
+<p>(2)SysRoleMapper</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Mapper</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">SysRoleMapper</span> </span>&#123;
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"SELECT * FROM sys_role WHERE id = #&#123;id&#125;"</span>)
+    <span class="hljs-function">SysRole <span class="hljs-title">selectById</span><span class="hljs-params">(Integer id)</span></span>;
+&#125;</code></pre></div>
+
+<p>(3)SysUserRoleMapper</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Mapper</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">SysUserRoleMapper</span> </span>&#123;
+    <span class="hljs-meta">@Select</span>(<span class="hljs-string">"SELECT * FROM sys_user_role WHERE user_id = #&#123;id&#125;"</span>)
+    <span class="hljs-function">List&lt;SysUserRole&gt; <span class="hljs-title">listByUserId</span><span class="hljs-params">(Integer userId)</span></span>; 
+&#125;</code></pre></div>
+
+<h2 id="5-3-Service"><a href="#5-3-Service" class="headerlink" title="5.3 Service"></a>5.3 Service</h2><p>(1)SysUserService</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysUserService</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    SysUserMapper sysUserMapper;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> SysUser <span class="hljs-title">selectById</span><span class="hljs-params">(Integer id)</span></span>&#123;
+        <span class="hljs-keyword">return</span> sysUserMapper.selectById(id);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> SysUser <span class="hljs-title">selectByName</span><span class="hljs-params">(String name)</span></span>&#123;
+        <span class="hljs-keyword">return</span> sysUserMapper.selectByName(name);
+    &#125;
+&#125;</code></pre></div>
+
+<p>(2)SysRoleService</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysRoleService</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    SysRoleMapper sysRoleMapper;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> SysRole <span class="hljs-title">selectById</span><span class="hljs-params">(Integer id)</span></span>&#123;
+        <span class="hljs-keyword">return</span> sysRoleMapper.selectById(id);
+    &#125;
+&#125;</code></pre></div>
+
+<p>(3)SysUserRoleService</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SysUserRoleService</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    SysUserRoleMapper sysUserRoleMapper;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;SysUserRole&gt; <span class="hljs-title">listByUserId</span><span class="hljs-params">(Integer userId)</span></span>&#123;
+        <span class="hljs-keyword">return</span> sysUserRoleMapper.listByUserId(userId);
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="5-4-Controller"><a href="#5-4-Controller" class="headerlink" title="5.4 Controller"></a>5.4 Controller</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LoginController</span> </span>&#123;
+    <span class="hljs-keyword">private</span> Logger logger = LoggerFactory.getLogger(LoginController<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+    
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">showHome</span><span class="hljs-params">()</span></span>&#123;
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info(<span class="hljs-string">"当前登录用户："</span>+name);
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"home.html"</span>;
+    &#125;
+    
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/login"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">showLogin</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"login.html"</span>;
+    &#125;
+    
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/admin"</span>)
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@PreAuthorize</span>(<span class="hljs-string">"hasRole('ROLE_ADMIN')"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">printAdmin</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"如果你看见这句话，说明你有ROLE_ADMIN角色"</span>;
+    &#125;
+    
+    <span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/user"</span>)
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@PreAuthorize</span>(<span class="hljs-string">"hasRole('ROLE_USER')"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">printUser</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"如果你看见这句话，说明你有ROLE_USER角色"</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<ul>
+<li>如代码所示，获取当前登录用户：<code>SecurityContextHolder.getContext().getAuthentication()</code></li>
+<li><code>@PreAuthorize</code> 用于判断用户是否有指定权限，没有就不能访问</li>
+</ul>
+<h1 id="六、配置-SpringSecurity"><a href="#六、配置-SpringSecurity" class="headerlink" title="六、配置 SpringSecurity"></a>六、配置 SpringSecurity</h1><h2 id="6-1-UserDetailsService"><a href="#6-1-UserDetailsService" class="headerlink" title="6.1 UserDetailsService"></a>6.1 UserDetailsService</h2><p>首先我们需要自定义 <code>UserDetailsService</code> ，将用户信息和权限注入进来。</p>
+<p>我们需要重写 <code>loadUserByUsername</code> 方法，参数是用户输入的用户名。返回值是<code>UserDetails</code>，这是一个接口，一般使用它的子类<code>org.springframework.security.core.userdetails.User</code>，它有三个参数，分别是用户名、密码和权限集。</p>
+<blockquote>
+<p>实际情况下，大多将 DAO 中的 User 类继承 <code>org.springframework.security.core.userdetails.User</code> 返回。</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>(<span class="hljs-string">"userDetailsService"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomUserDetailsService</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">UserDetailsService</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    SysUserService sysUserService;
+    
+    <span class="hljs-meta">@Autowired</span>
+    SysRoleService sysRoleService;
+    
+    <span class="hljs-meta">@Autowired</span>
+    SysUserRoleService sysUserRoleService;
+    
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> UserDetails <span class="hljs-title">loadUserByUsername</span><span class="hljs-params">(String username)</span> <span class="hljs-keyword">throws</span> UsernameNotFoundException </span>&#123;
+        Collection&lt;GrantedAuthority&gt; authorities = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();
+        
+        <span class="hljs-comment">//从数据库中取出用户信息</span>
+        SysUser user = sysUserService.selectByName(username);
+        
+        <span class="hljs-comment">//判断用户是否存在</span>
+        <span class="hljs-keyword">if</span>(user == <span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UsernameNotFoundException(<span class="hljs-string">"用户名不存在！！"</span>);
+        &#125;
+        
+        <span class="hljs-comment">//如果用户存在，就添加权限给他</span>
+        List&lt;SysUserRole&gt; userRoles = sysUserRoleService.listByUserId(user.getId());
+        <span class="hljs-keyword">for</span>(SysUserRole userRole:userRoles)&#123;
+            SysRole role = sysRoleService.selectById(userRole.getRoleId());
+            authorities.add(<span class="hljs-keyword">new</span> SimpleGrantedAuthority(role.getName()));
+        &#125;
+        <span class="hljs-comment">//返回UserDetails的实现类</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> User(user.getName(),user.getPassword(),authorities);
+    &#125;
+&#125;</code></pre></div>
+
+<h1 id="6-2-WebSecurityConfig"><a href="#6-2-WebSecurityConfig" class="headerlink" title="6.2 WebSecurityConfig"></a>6.2 WebSecurityConfig</h1><p>该类是 Spring Security 的配置类，该类的三个注解分别是标识该类是配置类、开启 Security 服务、开启全局 Securtiy 注解。</p>
+<p>首先将我们自定义的 <code>userDetailsService</code> 注入进来，在 <code>configure()</code> 方法中使用 <code>auth.userDetailsService()</code> 方法替换掉默认的 userDetailsService。</p>
+<p>这里我们还指定了密码的加密方式（5.0 版本强制要求设置），因为我们数据库是明文存储的，所以明文返回即可，如下所示：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-meta">@EnableWebSecurity</span>
+<span class="hljs-meta">@EnableGlobalMethodSecurity</span>(prePostEnabled = <span class="hljs-keyword">true</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSecurityConfig</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebSecurityConfigurerAdapter</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    CustomUserDetailsService userDetailsService;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(AuthenticationManagerBuilder auth)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        auth.userDetailsService(userDetailsService).passwordEncoder(<span class="hljs-keyword">new</span> PasswordEncoder() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">encode</span><span class="hljs-params">(CharSequence rawPassword)</span> </span>&#123;
+                <span class="hljs-keyword">return</span> rawPassword.toString();
+            &#125;
+
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">matches</span><span class="hljs-params">(CharSequence rawPassword, String encodedPassword)</span> </span>&#123;
+                <span class="hljs-keyword">return</span> encodedPassword.equals(rawPassword.toString());
+            &#125;
+        &#125;);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(WebSecurity web)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">//设置拦截忽略文件夹，可以对静态资源访问</span>
+        web.ignoring().antMatchers(<span class="hljs-string">"/css/**"</span>,<span class="hljs-string">"/js/**"</span>,<span class="hljs-string">"/css/**"</span>);
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        http.authorizeRequests()
+                <span class="hljs-comment">// 如果有允许匿名的url，填在下面</span>
+<span class="hljs-comment">//                .antMatchers().permitAll()</span>
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage(<span class="hljs-string">"/login"</span>)
+                .defaultSuccessUrl(<span class="hljs-string">"/"</span>).permitAll()
+                <span class="hljs-comment">// 自定义登录用户名和密码参数，默认为username和password</span>
+<span class="hljs-comment">//                .usernameParameter("username")</span>
+<span class="hljs-comment">//                .passwordParameter("password")</span>
+                .and()
+                .logout().permitAll();
+        <span class="hljs-comment">//关闭CRSF跨域</span>
+        http.csrf().disable();
+    &#125;
+&#125;</code></pre></div>
+
+<h1 id="七、运行程序"><a href="#七、运行程序" class="headerlink" title="七、运行程序"></a>七、运行程序</h1><blockquote>
+<p>ROLE_ADMIN 账户：用户名 <strong>admin</strong>，密码 <strong>123</strong><br>ROLE_USER 账户：用户名 <strong>jitwxs</strong>，密码 <strong>123</strong></p>
+</blockquote>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/29/hello-world/">
+                        <span class="hidden-mobile">Hello World</span>
+                        <span class="visible-mobile">次の記事</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "SpringBoot集成Spring Security(1)--基础入门&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
