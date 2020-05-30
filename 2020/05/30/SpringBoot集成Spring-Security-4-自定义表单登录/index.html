@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>SpringBoot集成Spring Security(4)--自定义表单登录 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-05-30 10:57">
+      May 30, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h3 id="一、添加验证码"><a href="#一、添加验证码" class="headerlink" title="一、添加验证码"></a>一、添加验证码</h3><h4 id="1-1-验证码-Servlet"><a href="#1-1-验证码-Servlet" class="headerlink" title="1.1 验证码 Servlet"></a>1.1 验证码 Servlet</h4><p>验证码的 Servlet 代码，大家无需关心其内部实现，我也是百度直接捞了一个，直接复制即可。</p>
+<div class="hljs"><pre><code class="hljs java">com.gavin.springsecurity04.common.VerifyServlet
+    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VerifyServlet</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">HttpServlet</span> </span>&#123;
+		 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = -<span class="hljs-number">5051097528828603895L</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 验证码图片的宽度。</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> width = <span class="hljs-number">100</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     *  验证码图片的高度。</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> height = <span class="hljs-number">30</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 验证码字符个数</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> codeCount = <span class="hljs-number">4</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 字体高度</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> fontHeight;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 干扰线数量</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> interLine = <span class="hljs-number">16</span>;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 第一个字符的x轴值，因为后面的字符坐标依次递增，所以它们的x轴值是codeX的倍数</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> codeX;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * codeY ,验证字符的y轴值，因为并行所以值一样</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> codeY;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * codeSequence 表示字符允许出现的序列值</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-keyword">char</span>[] codeSequence = &#123; <span class="hljs-string">'A'</span>, <span class="hljs-string">'B'</span>, <span class="hljs-string">'C'</span>, <span class="hljs-string">'D'</span>, <span class="hljs-string">'E'</span>, <span class="hljs-string">'F'</span>, <span class="hljs-string">'G'</span>, <span class="hljs-string">'H'</span>, <span class="hljs-string">'I'</span>, <span class="hljs-string">'J'</span>,
+            <span class="hljs-string">'K'</span>, <span class="hljs-string">'L'</span>, <span class="hljs-string">'M'</span>, <span class="hljs-string">'N'</span>, <span class="hljs-string">'O'</span>, <span class="hljs-string">'P'</span>, <span class="hljs-string">'Q'</span>, <span class="hljs-string">'R'</span>, <span class="hljs-string">'S'</span>, <span class="hljs-string">'T'</span>, <span class="hljs-string">'U'</span>, <span class="hljs-string">'V'</span>, <span class="hljs-string">'W'</span>,
+            <span class="hljs-string">'X'</span>, <span class="hljs-string">'Y'</span>, <span class="hljs-string">'Z'</span>, <span class="hljs-string">'0'</span>, <span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>, <span class="hljs-string">'4'</span>, <span class="hljs-string">'5'</span>, <span class="hljs-string">'6'</span>, <span class="hljs-string">'7'</span>, <span class="hljs-string">'8'</span>, <span class="hljs-string">'9'</span> &#125;;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 初始化验证图片属性</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+        <span class="hljs-comment">// 从web.xml中获取初始信息</span>
+        <span class="hljs-comment">// 宽度</span>
+        String strWidth = <span class="hljs-keyword">this</span>.getInitParameter(<span class="hljs-string">"width"</span>);
+        <span class="hljs-comment">// 高度</span>
+        String strHeight = <span class="hljs-keyword">this</span>.getInitParameter(<span class="hljs-string">"height"</span>);
+        <span class="hljs-comment">// 字符个数</span>
+        String strCodeCount = <span class="hljs-keyword">this</span>.getInitParameter(<span class="hljs-string">"codeCount"</span>);
+        <span class="hljs-comment">// 将配置的信息转换成数值</span>
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-keyword">if</span> (strWidth != <span class="hljs-keyword">null</span> &amp;&amp; strWidth.length() != <span class="hljs-number">0</span>) &#123;
+                width = Integer.parseInt(strWidth);
+            &#125;
+            <span class="hljs-keyword">if</span> (strHeight != <span class="hljs-keyword">null</span> &amp;&amp; strHeight.length() != <span class="hljs-number">0</span>) &#123;
+                height = Integer.parseInt(strHeight);
+            &#125;
+            <span class="hljs-keyword">if</span> (strCodeCount != <span class="hljs-keyword">null</span> &amp;&amp; strCodeCount.length() != <span class="hljs-number">0</span>) &#123;
+                codeCount = Integer.parseInt(strCodeCount);
+            &#125;
+        &#125; <span class="hljs-keyword">catch</span> (NumberFormatException e) &#123;
+            e.printStackTrace();
+        &#125;
+        <span class="hljs-comment">//width-4 除去左右多余的位置，使验证码更加集中显示，减得越多越集中。</span>
+        <span class="hljs-comment">//codeCount+1     //等比分配显示的宽度，包括左右两边的空格</span>
+        codeX = (width-<span class="hljs-number">4</span>) / (codeCount+<span class="hljs-number">1</span>);
+        <span class="hljs-comment">//height - 10 集中显示验证码</span>
+        fontHeight = height - <span class="hljs-number">10</span>;
+        codeY = height - <span class="hljs-number">7</span>;
+    &#125;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> response</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> ServletException</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@throws</span> java.io.IOException</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">service</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> ServletException, java.io.IOException </span>&#123;
+        <span class="hljs-comment">// 定义图像buffer</span>
+        BufferedImage buffImg = <span class="hljs-keyword">new</span> BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D gd = buffImg.createGraphics();
+        <span class="hljs-comment">// 创建一个随机数生成器类</span>
+        Random random = <span class="hljs-keyword">new</span> Random();
+        <span class="hljs-comment">// 将图像填充为白色</span>
+        gd.setColor(Color.LIGHT_GRAY);
+        gd.fillRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width, height);
+        <span class="hljs-comment">// 创建字体，字体的大小应该根据图片的高度来定。</span>
+        Font font = <span class="hljs-keyword">new</span> Font(<span class="hljs-string">"Times New Roman"</span>, Font.PLAIN, fontHeight);
+        <span class="hljs-comment">// 设置字体。</span>
+        gd.setFont(font);
+        <span class="hljs-comment">// 画边框。</span>
+        gd.setColor(Color.BLACK);
+        gd.drawRect(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, width - <span class="hljs-number">1</span>, height - <span class="hljs-number">1</span>);
+        <span class="hljs-comment">// 随机产生16条干扰线，使图象中的认证码不易被其它程序探测到。</span>
+        gd.setColor(Color.gray);
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; interLine; i++) &#123;
+            <span class="hljs-keyword">int</span> x = random.nextInt(width);
+            <span class="hljs-keyword">int</span> y = random.nextInt(height);
+            <span class="hljs-keyword">int</span> xl = random.nextInt(<span class="hljs-number">12</span>);
+            <span class="hljs-keyword">int</span> yl = random.nextInt(<span class="hljs-number">12</span>);
+            gd.drawLine(x, y, x + xl, y + yl);
+        &#125;
+        <span class="hljs-comment">// randomCode用于保存随机产生的验证码，以便用户登录后进行验证。</span>
+        StringBuffer randomCode = <span class="hljs-keyword">new</span> StringBuffer();
+        <span class="hljs-keyword">int</span> red = <span class="hljs-number">0</span>, green = <span class="hljs-number">0</span>, blue = <span class="hljs-number">0</span>;
+        <span class="hljs-comment">// 随机产生codeCount数字的验证码。</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; codeCount; i++) &#123;
+            <span class="hljs-comment">// 得到随机产生的验证码数字。</span>
+            String strRand = String.valueOf(codeSequence[random.nextInt(<span class="hljs-number">36</span>)]);
+            <span class="hljs-comment">// 产生随机的颜色分量来构造颜色值，这样输出的每位数字的颜色值都将不同。</span>
+            red = random.nextInt(<span class="hljs-number">255</span>);
+            green = random.nextInt(<span class="hljs-number">255</span>);
+            blue = random.nextInt(<span class="hljs-number">255</span>);
+            <span class="hljs-comment">// 用随机产生的颜色将验证码绘制到图像中。</span>
+            gd.setColor(<span class="hljs-keyword">new</span> Color(red,green,blue));
+            gd.drawString(strRand, (i + <span class="hljs-number">1</span>) * codeX, codeY);
+            <span class="hljs-comment">// 将产生的四个随机数组合在一起。</span>
+            randomCode.append(strRand);
+        &#125;
+        <span class="hljs-comment">// 将四位数字的验证码保存到Session中。</span>
+        HttpSession session = request.getSession();
+        session.setAttribute(<span class="hljs-string">"validateCode"</span>, randomCode.toString());
+        <span class="hljs-comment">// 禁止图像缓存。</span>
+        response.setHeader(<span class="hljs-string">"Pragma"</span>, <span class="hljs-string">"no-cache"</span>);
+        response.setHeader(<span class="hljs-string">"Cache-Control"</span>, <span class="hljs-string">"no-cache"</span>);
+        response.setDateHeader(<span class="hljs-string">"Expires"</span>, <span class="hljs-number">0</span>);
+
+        response.setContentType(<span class="hljs-string">"image/jpeg"</span>);
+        <span class="hljs-comment">// 将图像输出到Servlet输出流中。</span>
+        ServletOutputStream sos = response.getOutputStream();
+        ImageIO.write(buffImg, <span class="hljs-string">"jpeg"</span>, sos);
+        sos.close();
+    &#125;
+  &#125;</code></pre></div>
+
+<p>然后在 Application 中注入该 Servlet：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootApplication</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SpringSecurity04Application</span> </span>&#123;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        SpringApplication.run(SpringSecurity04Application<span class="hljs-class">.<span class="hljs-keyword">class</span>, <span class="hljs-title">args</span>)</span>;
+    &#125;
+
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ServletRegistrationBean <span class="hljs-title">indexServletRegistration</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-comment">//利用ServletRegistrationBean接口来使用servlet功能</span>
+        ServletRegistrationBean registration = <span class="hljs-keyword">new</span> ServletRegistrationBean(<span class="hljs-keyword">new</span> VerifyServlet());
+        registration.addUrlMappings(<span class="hljs-string">"/getVerifyCode"</span>);
+        <span class="hljs-keyword">return</span> registration;
+    &#125;
+&#125;</code></pre></div>
+
+<h4 id="1-2-修改-login-html"><a href="#1-2-修改-login-html" class="headerlink" title="1.2 修改 login.html"></a>1.2 修改 login.html</h4><p>在原本的 login 页面基础上加上验证码字段：</p>
+<div class="hljs"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>登陆<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>登陆<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"/login"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"form-control"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"verifyCode"</span> <span class="hljs-attr">required</span>=<span class="hljs-string">"required"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"验证码"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"getVerifyCode"</span> <span class="hljs-attr">title</span>=<span class="hljs-string">"看不清，请点我"</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"refresh(this)"</span> <span class="hljs-attr">onmouseover</span>=<span class="hljs-string">"mouseover(this)"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"remember-me"</span>/&gt;</span>自动登录<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>立即登陆<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span>
+<span class="javascript">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">refresh</span>(<span class="hljs-params">obj</span>) </span>&#123; obj.src = <span class="hljs-string">"getVerifyCode?"</span> + <span class="hljs-built_in">Math</span>.random(); &#125;</span>
+
+<span class="actionscript">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mouseover</span><span class="hljs-params">(obj)</span> </span>&#123; obj.style.cursor = <span class="hljs-string">"pointer"</span>; &#125;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+
+<h4 id="1-3-添加匿名访问-Url"><a href="#1-3-添加匿名访问-Url" class="headerlink" title="1.3 添加匿名访问 Url"></a>1.3 添加匿名访问 Url</h4><p>不要忘记在 WebSecurityConfig 中允许该 Url 的匿名访问，不然没有登录是没有办法访问该 Url 的：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(WebSecurity web)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    <span class="hljs-comment">//设置拦截忽略文件夹，可以对静态资源访问</span>
+    web.ignoring().antMatchers(<span class="hljs-string">"/css/**"</span>,<span class="hljs-string">"/js/**"</span>,<span class="hljs-string">"/css/**"</span>,<span class="hljs-string">"/getVerifyCode"</span>);
+&#125;</code></pre></div>
+
+<p>效果如下：</p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200523174552543.png" srcset="/img/loading.gif" alt="效果"></p>
+<p>下面才算是这篇文章真正的部分。我们如何才能实现验证码验证呢，思考一下，应该有以下几种实现方式：</p>
+<ol>
+<li>登录表单提交前发送 AJAX 验证验证码</li>
+<li>使用自定义过滤器(Filter)，在 Spring security 校验前验证验证码合法性</li>
+<li>和用户名、密码一起发送到后台，在 Spring security 中进行验证</li>
+</ol>
+<h3 id="二、AJAX-验证"><a href="#二、AJAX-验证" class="headerlink" title="二、AJAX 验证"></a>二、AJAX 验证</h3><p>使用 AJAX 方式验证和我们 Spring Security 框架就没有任何关系了，其实就是表单提交前先发个 HTTP 请求验证验证码，本篇不再赘述。</p>
+<h3 id="三、过滤器验证"><a href="#三、过滤器验证" class="headerlink" title="三、过滤器验证"></a>三、过滤器验证</h3><p>使用过滤器的思路是：<strong>在Spring Security 处理登录验证请求前，验证验证码，如果正确，放行；如果不正确，跳到异常</strong>。</p>
+<h4 id="3-1-编写验证码过滤器"><a href="#3-1-编写验证码过滤器" class="headerlink" title="3.1 编写验证码过滤器"></a>3.1 编写验证码过滤器</h4><p>自定义一个过滤器，实现 <code>OncePerRequestFilter</code> （该 Filter 保证每次请求一定会过滤），在 <code>isProtectedUrl()</code> 方法中拦截了 POST 方式的 /login 请求。</p>
+<p>在逻辑处理中从 request 中取出验证码，并进行验证，如果验证成功，放行；验证失败，手动生成异常。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VerifyFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">OncePerRequestFilter</span> </span>&#123;
+    <span class="hljs-comment">/**获取路径信息**/</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> PathMatcher PATH_MATCHER = <span class="hljs-keyword">new</span> AntPathMatcher();
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilterInternal</span><span class="hljs-params">(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)</span> <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+        <span class="hljs-comment">//如果是POST请求，并且请求路径是/login，就去进行验证码校验</span>
+        <span class="hljs-keyword">if</span>(isProtectedUrl(httpServletRequest))&#123;
+            String verifyCode = httpServletRequest.getParameter(<span class="hljs-string">"verifyCode"</span>);
+            <span class="hljs-comment">//如果验证码错误，就抛出异常，否则正常执行</span>
+            <span class="hljs-keyword">if</span>(!validateVerify(verifyCode))&#123;
+                <span class="hljs-comment">//手动设置异常</span>
+                httpServletRequest.setAttribute(<span class="hljs-string">"SPRING_SECURITY_LAST_EXCEPTION"</span>,<span class="hljs-keyword">new</span> DisabledException(<span class="hljs-string">"验证码输入错误"</span>));
+                <span class="hljs-comment">//转发到错误url</span>
+       httpServletRequest.getRequestDispatcher(<span class="hljs-string">"/login/error"</span>).forward(httpServletRequest,httpServletResponse);
+            &#125;<span class="hljs-keyword">else</span> &#123;
+                filterChain.doFilter(httpServletRequest,httpServletResponse);
+            &#125;
+        &#125;<span class="hljs-keyword">else</span> &#123;
+            filterChain.doFilter(httpServletRequest,httpServletResponse);
+        &#125;
+    &#125;
+    <span class="hljs-comment">/**校验验证码**/</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">validateVerify</span><span class="hljs-params">(String verifyCode)</span> </span>&#123;
+        <span class="hljs-comment">//获取当前线程绑定的request对象</span>
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        <span class="hljs-comment">//下面这个validateCode是在servlet中存入session的名字</span>
+        String validateCode = ((String) request.getSession().getAttribute(<span class="hljs-string">"validateCode"</span>)).toLowerCase();
+        verifyCode = verifyCode.toLowerCase();
+        System.out.println(<span class="hljs-string">"验证码："</span>+validateCode+<span class="hljs-string">"用户输入："</span>+verifyCode);
+        <span class="hljs-keyword">return</span> validateCode.equals(verifyCode);
+    &#125;
+
+    <span class="hljs-comment">/**拦截/login的POST请求**/</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isProtectedUrl</span><span class="hljs-params">(HttpServletRequest request)</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"POST"</span>.equals(request.getMethod()) &amp;&amp; PATH_MATCHER.match(<span class="hljs-string">"/login"</span>,request.getServletPath());
+    &#125;
+&#125;</code></pre></div>
+
+<h4 id="3-2-注入过滤器"><a href="#3-2-注入过滤器" class="headerlink" title="3.2 注入过滤器"></a>3.2 注入过滤器</h4><p>修改 WebSecurityConfig 的 configure 方法，添加一个 <code>addFilterBefore()</code> ，具有两个参数，作用是在参数二之前执行参数一设置的过滤器。</p>
+<p>Spring Security 对于用户名/密码登录方式是通过 <code>UsernamePasswordAuthenticationFilter</code> 处理的，我们在它之前执行验证码过滤器即可。</p>
+<div class="hljs"><pre><code class="hljs java">.addFilterBefore(<span class="hljs-keyword">new</span> VerifyFilter(), UsernamePasswordAuthenticationFilter<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span></code></pre></div>
+
+<p>测试效果不理想，不推荐这种方式。</p>
+<h3 id="四、Spring-Security-验证"><a href="#四、Spring-Security-验证" class="headerlink" title="四、Spring Security 验证"></a>四、Spring Security 验证</h3><p>使用过滤器就已经实现了验证码功能，但其实它和 AJAX 验证差别不大。</p>
+<ul>
+<li>AJAX 是在提交前发一个请求，请求返回成功就提交，否则不提交；</li>
+<li>过滤器是先验证验证码，验证成功就让 Spring Security 验证用户名和密码；验证失败，则产生异常·。</li>
+</ul>
+<p>如果我们要做的需求是用户登录是需要多个验证字段，不单单是用户名和密码，那么使用过滤器会让逻辑变得复杂，这时候可以考虑自定义 Spring Security 的验证逻辑了…</p>
+<h4 id="4-1-WebAuthenticationDetails"><a href="#4-1-WebAuthenticationDetails" class="headerlink" title="4.1 WebAuthenticationDetails"></a>4.1 WebAuthenticationDetails</h4><p>我们知道 Spring security 默认只会处理用户名和密码信息。这时候就要请出我们的主角——<code>WebAuthenticationDetails</code>。</p>
+<blockquote>
+<p><code>WebAuthenticationDetails</code>: 该类提供了获取用户登录时携带的额外信息的功能，默认提供了 remoteAddress 与 sessionId 信息。</p>
+</blockquote>
+<p>我们需要实现自定义的 <code>WebAuthenticationDetails</code>，并在其中加入我们的验证码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomWebAuthenticationDetails</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebAuthenticationDetails</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">6975601077710753878L</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String verifyCode;
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * Records the remote address and will also set the session Id if a session already</span>
+<span class="hljs-comment">     * exists (it won't create one).</span>
+<span class="hljs-comment">     *</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@param</span> request that the authentication request was received from</span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CustomWebAuthenticationDetails</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+        <span class="hljs-keyword">super</span>(request);
+        verifyCode = request.getParameter(<span class="hljs-string">"verifyCode"</span>);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getVerifyCode</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.verifyCode;
+    &#125;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span></span>&#123;
+        StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder();
+        sb.append(<span class="hljs-keyword">super</span>.toString()).append(<span class="hljs-string">";VerifiCode:"</span>).append(<span class="hljs-keyword">this</span>.verifyCode);
+        <span class="hljs-keyword">return</span> sb.toString();
+    &#125;
+&#125;</code></pre></div>
+
+<p>在这个方法中，我们将前台form表单中的verifyCode获取到，并通过get方法方便调用。</p>
+<h4 id="4-2-AuthenticationDetailsSource"><a href="#4-2-AuthenticationDetailsSource" class="headerlink" title="4.2 AuthenticationDetailsSource"></a>4.2 AuthenticationDetailsSource</h4><p>自定义了<code>WebAuthenticationDetails</code>，我i们还需要将其放入 <code>AuthenticationDetailsSource</code> 中来替换原本的 <code>WebAuthenticationDetails</code> ，因此还得实现自定义 <code>AuthenticationDetailsSource</code> ：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>(<span class="hljs-string">"authenticationDetailsSource"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomAuthenticationDetailsSource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">AuthenticationDetailsSource</span>&lt;<span class="hljs-title">HttpServletRequest</span>, <span class="hljs-title">WebAuthenticationDetails</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> WebAuthenticationDetails <span class="hljs-title">buildDetails</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> CustomWebAuthenticationDetails(request);
+    &#125;
+&#125;</code></pre></div>
+
+<p>该类是将原本的 <code>WebAuthenticationDetails</code> 替换为了我们的 <code>CustomWebAuthenticationDetails</code>。</p>
+<p>接下来我们只需将 <code>CustomAuthenticationDetailsSource</code> 注入Spring Security中，替换掉默认的 <code>AuthenticationDetailsSource</code>。</p>
+<p>通过修改 <code>WebSecurityConfig</code>将其注入，然后在config()中使用 <code>authenticationDetailsSource(authenticationDetailsSource)</code>方法来指定它。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Autowired</span>
+  AuthenticationDetailsSource&lt;HttpServletRequest, WebAuthenticationDetails&gt; authenticationDetailsSource;
+
+  <span class="hljs-meta">@Override</span>
+  <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+      http.authorizeRequests()
+      	....省略
+   		.authenticationDetailsSource(authenticationDetailsSource)</code></pre></div>
+
+<h4 id="4-3-AuthenticationProvider"><a href="#4-3-AuthenticationProvider" class="headerlink" title="4.3 AuthenticationProvider"></a>4.3 AuthenticationProvider</h4><p>至此我们通过自定义 <code>WebAuthenticationDetails</code> 和 <code>AuthenticationDetailsSource</code> 将验证码和用户名、密码一起带入了 Spring Security 中，下面我们需要将它取出来。</p>
+<p>这里需要我们自定义 <code>AuthenticationProvider</code>，需要注意的是，<strong>如果是我们自己实现 <code>AuthenticationProvider</code>，那么我们就需要自己做密码校验了。</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CustomAuthenticationProvider</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">AuthenticationProvider</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> CustomUserDetailsService customUserDetailsService;
+
+    <span class="hljs-comment">/**用来验证用户身份**/</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Authentication <span class="hljs-title">authenticate</span><span class="hljs-params">(Authentication authentication)</span> <span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+        <span class="hljs-comment">//1.获取用户的用户名和密码</span>
+        String inputName = authentication.getName();
+        String inputPassword = authentication.getCredentials().toString();
+
+        CustomWebAuthenticationDetails details = (CustomWebAuthenticationDetails) authentication.getDetails();
+        String verifyCode = details.getVerifyCode();
+        <span class="hljs-keyword">if</span>(!validateVerify(verifyCode))&#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> DisabledException(<span class="hljs-string">"验证码输入错误"</span>);
+        &#125;
+
+        <span class="hljs-comment">// userDetails为数据库中查询到的用户信息</span>
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(inputName);
+
+        <span class="hljs-comment">// 如果是自定义AuthenticationProvider，需要手动密码校验</span>
+        <span class="hljs-keyword">if</span>(!userDetails.getPassword().equals(inputPassword) || !userDetails.getUsername().equals(inputName))&#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadCredentialsException(<span class="hljs-string">"用户名或密码错误"</span>);
+        &#125;
+
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> UsernamePasswordAuthenticationToken(inputName,inputPassword,userDetails.getAuthorities());
+
+    &#125;
+
+    <span class="hljs-comment">/**验证码核对**/</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">validateVerify</span><span class="hljs-params">(String verifiCode)</span> </span>&#123;
+        <span class="hljs-comment">//获取当前线程绑定的request对象</span>
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        String validateCode = ((String) request.getSession().getAttribute(<span class="hljs-string">"validateCode"</span>)).toLowerCase();
+        verifiCode = verifiCode.toLowerCase();
+        System.out.println(<span class="hljs-string">"验证码："</span>+validateCode+<span class="hljs-string">";用户输入："</span>+verifiCode);
+        <span class="hljs-keyword">return</span> validateCode.equals(verifiCode);
+
+    &#125;
+
+    <span class="hljs-comment">/**判断当前的AuthenticationProvider是否支持对应的Authentication**/</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">supports</span><span class="hljs-params">(Class&lt;?&gt; authentication)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> (UsernamePasswordAuthenticationToken<span class="hljs-class">.<span class="hljs-keyword">class</span></span>
+<span class="hljs-class">                .<span class="hljs-title">isAssignableFrom</span>(<span class="hljs-title">authentication</span>))</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>最后在 <code>WebSecurityConfig</code> 中将其注入，并在 config 方法中通过 <code>auth.authenticationProvider()</code> 指定使用。</p>
+<div class="hljs"><pre><code class="hljs java"> <span class="hljs-meta">@Autowired</span>
+ CustomAuthenticationProvider customAuthenticationProvider;
+ 
+<span class="hljs-meta">@Override</span>
+ <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(AuthenticationManagerBuilder auth)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+     auth.authenticationProvider(customAuthenticationProvider);
+ &#125;</code></pre></div>
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-5-%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">SpringBoot集成Spring Security(5)--权限控制</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">
+                        <span class="hidden-mobile">SpringBoot集成Spring Security(3)--异常处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "SpringBoot集成Spring Security(4)--自定义表单登录&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
