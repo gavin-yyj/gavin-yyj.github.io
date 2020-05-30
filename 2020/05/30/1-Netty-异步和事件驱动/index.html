@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>SpringBoot集成Spring Security(9)--角色继承 - 杨玉杰|个人博客</title>
+  <title>1.Netty--异步和事件驱动 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-05-30 16:02">
+    <time datetime="2020-05-30 21:57">
       May 30, 2020 pm
     </time>
   </div>
@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      536 字
+      1.1k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      6
+      12
        分钟
     </span>
   
@@ -215,36 +215,119 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <p>在本节中，补充下<strong>角色继承</strong>的知识点。角色继承其实是一个十分常见的需求，因为一般系统中角色权限呈金字塔型，高层用户拥有底层用户的权限。</p>
-<p>例如存在以下角色：普通用户、VIP 用户、SVIP 用户、星悦会员，那么对应的权限可以是“星悦会员 &gt; SVIP 用户 &gt; VIP 用户 &gt; 普通用户”。那么如何在 Spring Security 中实现这样的功能呢？</p>
-<h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>为了简便起见，我直接使用<a href="https://www.jitwxs.cn/5f5715e6.html" target="_blank" rel="noopener">《SpringBoot 集成 Spring Security（1）——入门程序》</a> 的代码。</p>
-<p>在该章中，我们存在两个角色，<code>ROLE_ADMIN</code> 和 <code>ROLE_USER</code>，并且经过我们的实验，<code>/admin</code> 接口只有 ROLE_ADMIN 有权限，<code>/user</code> 接口只有 ROLE_USER 有权限。</p>
-<p>但是如果我想让 ROLE_ADMIN 用户继承 ROLE_USER 用户的所有权限，该如何做呢？</p>
-<h3 id="RoleHierarchy"><a href="#RoleHierarchy" class="headerlink" title="RoleHierarchy"></a>RoleHierarchy</h3><p>这里就需要引入 <code>RoleHierarch</code>了，我们只需要自定义一个 RoleHierarchy，并将其注入容器即可。修改 <code>WebSecurityConfig</code>，在其中注入 RoleHierarchy：</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> RoleHierarchy <span class="hljs-title">roleHierarchy</span><span class="hljs-params">()</span></span>&#123;
-    RoleHierarchyImpl roleHierarchy = <span class="hljs-keyword">new</span> RoleHierarchyImpl();
-    String hierarchy = <span class="hljs-string">"ROLE_ADMIN &gt; ROLE_USER"</span>;
-    roleHierarchy.setHierarchy(hierarchy);
-    <span class="hljs-keyword">return</span> roleHierarchy;
+              <blockquote>
+<p>本系列文章主要来自《Netty IN ACTION》</p>
+<p>本章主要内容：</p>
+<ul>
+<li><p>Java网络编程</p>
+</li>
+<li><p>Netty简介</p>
+</li>
+<li><p>Netty核心组件</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="Java网络编程"><a href="#Java网络编程" class="headerlink" title="Java网络编程"></a>Java网络编程</h2><p>首先来看一个典型的阻塞I/O示例：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//创建一个新的ServerSocket，用于监听指定端口上的连接请求</span>
+ServerSocket serverSocket = <span class="hljs-keyword">new</span> ServerSocket(portNumber);<span class="hljs-comment">//1</span>
+<span class="hljs-comment">//以阻塞的方式来调用accept()方法，直到一个连接建立</span>
+Socket clientSocket = serverSocket.accept();<span class="hljs-comment">//2</span>
+<span class="hljs-comment">//BufferedReader和PrintWriter分别用于从字符输入流中读取文本和将对象格式化到文本输出流</span>
+BufferedReader in = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(clientSocket.getInputStream()));
+PrintWriter out = <span class="hljs-keyword">new</span> PrintWriter(clientSocket.getOutputStream(),<span class="hljs-keyword">true</span>);
+String request,response;
+<span class="hljs-comment">//循环对输入流进行判断处理</span>
+<span class="hljs-keyword">while</span>((request = in.readLine()) != <span class="hljs-keyword">null</span>)&#123;
+    <span class="hljs-keyword">if</span>(<span class="hljs-string">"Done"</span>.equals(request))&#123;
+        <span class="hljs-keyword">break</span>;
+    &#125;
+    <span class="hljs-comment">//服务器处理客户端的请求，并作出响应</span>
+    response = processRequest(request);
+    <span class="hljs-comment">//输出响应</span>
+    out.println(response);</code></pre></div>
+
+<p>这里<code>ServerSocket</code>的作用是监听某一路端口是否有连接，如果有连接就会创建一个新的<code>Socket</code>用于客户端和服务器进行通信，而此时<code>ServerSocket</code>并不会断开连接，而是会继续监听传入的连接。</p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211626179.png" srcset="/img/loading.gif" alt="传统阻塞I/O"></p>
+<p>这里就体现出弊端了，如果有多个并发客户端，那就需要为每个客户端Socket创建一个Thread，弊端有三：</p>
+<ul>
+<li>资源浪费，并不是每时每刻都有数据在传输，大部分情况下线程都处在休眠状态；</li>
+<li>内存消耗，需要为每个线程的调度栈分配内存；</li>
+<li>上下文切换带来的开销大；</li>
+</ul>
+<h3 id="Java-NIO"><a href="#Java-NIO" class="headerlink" title="Java NIO"></a>Java NIO</h3><p>使用setSockopt()方法配置套接字，以便读/写调用在没有数据的时候立即返回</p>
+<h3 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a>选择器</h3><p>使用<code>java.nio.channels.Selector</code>这个类，利用事件通知API来确定在一组非阻塞套接字中有哪些已经就绪能够进行I/O相关的操作。</p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211701935.png" srcset="/img/loading.gif" alt="使用Selector的非阻塞I/O"></p>
+<h2 id="Netty简介"><a href="#Netty简介" class="headerlink" title="Netty简介"></a>Netty简介</h2><p>Netty是一个<strong>NIO</strong>客户端/服务器<strong>框架</strong>，支持快速、简单地开发网络应用，如协议服务器和客户端。</p>
+<h2 id="Netty核心组件"><a href="#Netty核心组件" class="headerlink" title="Netty核心组件"></a>Netty核心组件</h2><p>Netty的主要构建块：</p>
+<ul>
+<li>Channel</li>
+<li>回调</li>
+<li>Future</li>
+<li>事件和Channelhandler</li>
+</ul>
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p>简单理解就是传入或者传出数据的载体，可以被打开或者被关闭，连接或者断开连接。</p>
+<h3 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h3><p>回调其实就是一个方法，回调函数不是由该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或条件进行响应。Netty内部使用了回调来处理事件，当一个回调被触发时，相关的事件被一个ChannelHandler的实现来处理，</p>
+<p>看下面一段代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelActive</span><span class="hljs-params">(channelHandlerContect ctx)</span> <span class="hljs-keyword">throws</span> Exception</span>&#123;
+        System.out.println(<span class="hljs-string">"Client "</span> + ctx.channel().remoteAddress() + <span class="hljs-string">" connected"</span>);
+    &#125;
 &#125;</code></pre></div>
 
-<p><code>roleHierarchy.setHierarchy()</code> 指定了角色的继承关系，参数就是一个字符串，比大小即可，是不是非常简单？</p>
-<p>让我们使用 ROLE_ADMIN 账号登陆，发现原本无法访问的 <code>/user</code> 接口也可以访问了：</p>
-<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p>角色关系的实现也比较简单，本质就是将字符串使用正则切分，并将角色关系存放进一个 Map 中，map 的 key 是大的角色，value 是一个 Set，存放所有比它小的角色。然后交由后续处理，有兴趣的可以继续阅读源码。</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20190902233900717.png" srcset="/img/loading.gif" alt="buildRolesReachableInOneStepMap()"></p>
-<p>如果有多个继承关系，在 SpringBoot 2.1 中，就应该改写为：</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> RoleHierarchy <span class="hljs-title">roleHierarchy</span><span class="hljs-params">()</span> </span>&#123;
-    String separator = System.lineSeparator();
-    
-    RoleHierarchyImpl roleHierarchy = <span class="hljs-keyword">new</span> RoleHierarchyImpl();
-    String hierarchy = <span class="hljs-string">"ROLE_ADMIN &gt; ROLE_USER "</span> + separator + <span class="hljs-string">" ROLE_USER &gt; ROLE_TOURISTS"</span>;
-    roleHierarchy.setHierarchy(hierarchy);
-    <span class="hljs-keyword">return</span> roleHierarchy;
+<p>当一个新的连接已经被建立时，ChannelHandler的channelActive()回调方法将会被调用，并将打印一条信息。</p>
+<h3 id="Future"><a href="#Future" class="headerlink" title="Future"></a>Future</h3><p>可以看作是一个异步操作的结果的占位符，可以在未来提供对其结果的访问；</p>
+<p>Netty提供了自己的ChannelFuture，用于在执行异步操作的时候使用。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectExample</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Channel CHANNEL_FROM_SOMEWHERE = <span class="hljs-keyword">new</span> NioSocketChannel();
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">connect</span><span class="hljs-params">()</span> </span>&#123;
+        Channel channel = CHANNEL_FROM_SOMEWHERE; 
+        <span class="hljs-comment">//异步地连接到远程节点</span>
+        ChannelFuture future = channel.connect(
+                <span class="hljs-keyword">new</span> InetSocketAddress(<span class="hljs-string">"192.168.0.1"</span>, <span class="hljs-number">25</span>));
+        <span class="hljs-comment">//注册一个 ChannelFutureListener，以便在操作完成时获得通知</span>
+        future.addListener(<span class="hljs-keyword">new</span> ChannelFutureListener() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">operationComplete</span><span class="hljs-params">(ChannelFuture future)</span> </span>&#123;
+                <span class="hljs-comment">//检查操作的状态</span>
+                <span class="hljs-keyword">if</span> (future.isSuccess()) &#123;
+                    <span class="hljs-comment">//如果操作是成功的，则创建一个 ByteBuf 以持有数据</span>
+                    ByteBuf buffer = Unpooled.copiedBuffer(
+                            <span class="hljs-string">"Hello"</span>, Charset.defaultCharset());
+                    <span class="hljs-comment">//将数据异步地发送到远程节点。返回一个 ChannelFuture</span>
+                    ChannelFuture wf = future.channel()
+                            .writeAndFlush(buffer);
+                    <span class="hljs-comment">// ...</span>
+                &#125; <span class="hljs-keyword">else</span> &#123;
+                    <span class="hljs-comment">//如果发生错误，则访问描述原因的 Throwable</span>
+                    Throwable cause = future.cause();
+                    cause.printStackTrace();
+                &#125;
+            &#125;
+        &#125;);
+    &#125;
 &#125;</code></pre></div>
 
-<p>另外换行符大家都知道在不同系统中表示不一样，例如 Windows 中为 <code>\r\n</code>，Mac 为 <code>\r</code>，Linux 为 <code>\n</code>，因此以上代码我是用的 <code>java.lang</code> 包的 System 类中封装的方法，不用判断当前操作系统。</p>
+<p>可以看到，回调和Future是相互补充的机制，而ChannelFutureListener可以看作是回调的一个更加精细的版本。</p>
+<h3 id="事件和Channelhandler"><a href="#事件和Channelhandler" class="headerlink" title="事件和Channelhandler"></a>事件和Channelhandler</h3><p>Netty使用不同的事件来通知我们状态的改变或者是操作的状态，因此我们可以利用事件来进行相应的处理，比如：</p>
+<ul>
+<li>记录日志</li>
+<li>数据转换</li>
+<li>流控制</li>
+<li>应用程序逻辑</li>
+</ul>
+<p>Netty作为一个网络编程框架，主要事件分为入站事件和出站事件，入站事件包括：</p>
+<ul>
+<li>连接已被激活或者连接失活</li>
+<li>数据读取</li>
+<li>用户事件</li>
+<li>错误事件</li>
+</ul>
+<p>出站事件包括：</p>
+<ul>
+<li>打开或者关闭远程节点的连接</li>
+<li>将数据写到或者冲刷到套接字</li>
+</ul>
 
             </article>
             <hr>
@@ -256,7 +339,7 @@
                     
                       <a class="hover-with-bg" href="/categories/java/">java</a>
                     
-                      <a class="hover-with-bg" href="/categories/java/Spring-Security/">Spring Security</a>
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
                     
                   </div>
                 
@@ -264,7 +347,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
                     
                   </div>
                 
@@ -277,18 +360,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">1.Netty--异步和事件驱动</span>
-                        <span class="visible-mobile">前の記事</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-8-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95/">
-                        <span class="hidden-mobile">SpringBoot集成Spring Security(8)--短信验证码登录</span>
+                      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-9-%E8%A7%92%E8%89%B2%E7%BB%A7%E6%89%BF/">
+                        <span class="hidden-mobile">SpringBoot集成Spring Security(9)--角色继承</span>
                         <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -443,7 +520,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "SpringBoot集成Spring Security(9)--角色继承&nbsp;",
+        "1.Netty--异步和事件驱动&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
