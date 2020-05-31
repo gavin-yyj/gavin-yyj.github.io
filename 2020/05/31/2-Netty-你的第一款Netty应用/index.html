@@ -227,7 +227,7 @@
 </ul>
 </blockquote>
 <h3 id="1-设置开发环境"><a href="#1-设置开发环境" class="headerlink" title="1.设置开发环境"></a>1.设置开发环境</h3><p>准备好JDK和Maven</p>
-<h3 id="2-Netty客户端-服务器概览"><a href="#2-Netty客户端-服务器概览" class="headerlink" title="2.Netty客户端/服务器概览"></a>2.Netty客户端/服务器概览</h3><p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530220611801.png" srcset="/img/loading.gif" alt="Echo客户端和服务器"></p>
+<h3 id="2-Netty客户端-服务器概览"><a href="#2-Netty客户端-服务器概览" class="headerlink" title="2.Netty客户端/服务器概览"></a>2.Netty客户端/服务器概览</h3><p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530220611801.png" srcset="/img/loading.gif" alt="Echo客户端和服务器"></p>
 <p>在客户端建立一个连接之后，它会向服务器发送一个或多个消息，反过来，服务器又会将每个消息回送给客户端。</p>
 <h3 id="3-编写Echo服务器"><a href="#3-编写Echo服务器" class="headerlink" title="3.编写Echo服务器"></a>3.编写Echo服务器</h3><p>首先明确的一点是，所有的Netty服务器都需要以下两部分：</p>
 <ul>
@@ -386,7 +386,7 @@
 
 <p>注意： 从服务器发送的消息可能会被分块接收，channelRead0()方法因此有可能被调用多次。</p>
 <p>还有一点值得注意的是Echo 服务端使用的ChannelHandler是 ChannelInboundHandlerAdapter，而 Echo 客户端使用的却是 SimpleChannelInboundHandler，其实它们是继承关系。</p>
-<p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531000101367.png" srcset="/img/loading.gif" alt="关系图"></p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531000101367.png" srcset="/img/loading.gif" alt="关系图"></p>
 <p>既然是继承关系，也就是说，”你有的我也有，你没有的我还有。” 那么 SimpleChannelInboundHandler 里面肯定重写或者新增了 ChannelInboundHandlerAdapter 里面的方法功能 - channelRead0 和 channelRead()。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx, I msg)</span> <span class="hljs-keyword">throws</span> Exception</span>;</code></pre></div>
 
@@ -435,7 +435,7 @@
 &#125;</code></pre></div>
 
 <h3 id="5-构建和运行Echo服务器和客户端"><a href="#5-构建和运行Echo服务器和客户端" class="headerlink" title="5. 构建和运行Echo服务器和客户端"></a>5. 构建和运行Echo服务器和客户端</h3><p>目录如下：</p>
-<p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005801752.png" srcset="/img/loading.gif" alt="image-20200531005801752"></p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005801752.png" srcset="/img/loading.gif" alt="image-20200531005801752"></p>
 <p>注意要在pom.xml文件中引入netty依赖以及编译maven模板需要的插件。</p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -469,14 +469,14 @@
 
 <p>先执行<code>mvn clean package</code>来清除指定的包，然后<code>cd server</code>，执行<code>exec:java -Dexec.args=&quot;1&quot;</code>,接下来点击右下角的加号新建一个终端，然后<code>cd client</code>，执行<code>exec:java -Dexec.args=&quot;0 1&quot;</code>，即可看到效果。一定一定要先开启服务器然后再开客户端，否则会报错。</p>
 <p>效果：</p>
-<p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531013137631.png" srcset="/img/loading.gif" alt="image-20200531013137631"></p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531013137631.png" srcset="/img/loading.gif" alt="image-20200531013137631"></p>
 <p>补充一个遇到的坑：</p>
-<p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005234930.png" srcset="/img/loading.gif" alt="image-20200531005234930"></p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005234930.png" srcset="/img/loading.gif" alt="image-20200531005234930"></p>
 <p>如果在执行<code>mvn exec:java -Dexec.args=&quot;0 1&quot;</code>的时候出现上面错误，首先去自己的maven的目录下查看配置文件setting.xml</p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">localRepository</span>&gt;</span>D:\Software\apache-maven-3.6.1\repository<span class="hljs-tag">&lt;/<span class="hljs-name">localRepository</span>&gt;</span></code></pre></div>
 
 <p>看路径是否正确，其次检查IDEA中的MAVEN配置。</p>
-<p><img src="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005642681.png" srcset="/img/loading.gif" alt="image-20200531005642681"></p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531005642681.png" srcset="/img/loading.gif" alt="image-20200531005642681"></p>
 
             </article>
             <hr>
