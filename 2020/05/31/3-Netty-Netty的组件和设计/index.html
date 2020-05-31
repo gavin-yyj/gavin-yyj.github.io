@@ -235,7 +235,7 @@
 </ul>
 <h3 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h3><p>基本的I/O操作（bind、connect、read、write）都依赖于底层网络传送所提供的原语，也就是Socket，而Netty中的Channel就是简化Socket编程的复杂性。</p>
 <h3 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h3><p>用于处理连接的生命周期中所发生的事件。</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531101754279.png" srcset="/img/loading.gif" alt="image-20200531101754279"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200531232619159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>其关系是：</p>
 <ul>
 <li>一个EventLoopGroup包含一个或多个EventLoop；</li>
@@ -256,7 +256,7 @@
     &#125;
 &#125;);</code></pre></div>
 
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531105603364.png" srcset="/img/loading.gif" alt="image-20200531105603364"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020053123263110.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>执行顺序由添加顺序所决定，ChannelHandler处理完后将数据传递给链中的下一个ChannelHandler，该ChanelHandler不一定会去修改数据，如果数据到达ChannelPipeline一端，也就说明处理结束。</p>
 <p>当ChannelHandler被添加到ChannelPipeline时，它将会被分配一个ChannelHandlerContext，其代表了ChannelHandler和ChannelPipeline之间的绑定，主要用于写出站数据。</p>
 <p>在Netty中有两种发送消息的方式，直接写到Channel中，也可以写到ChannelHandlerContext对象中，前一种方式将会导致消息从ChannelPipeline的尾端开始流动，后者将导致消息从ChannelPipeline中的下一个ChannelHandler开始流动。</p>
@@ -293,7 +293,7 @@
 </tbody></table>
 <p>为什么ServerBootStrap需要两个EventLoopGroup呢？</p>
 <p>因为服务器需要两组不同的Channel，第一组将只包含一个ServerChannel，代表服务器自身的已绑定到某个本地端口的正在监听的套接字，而第二组将包含所有已创建的用来处理传入客户端连接的Channel。</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531115618470.png" srcset="/img/loading.gif" alt="image-20200531115618470"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200531232645361.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 
             </article>
             <hr>
