@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>SpringBoot集成Spring Security(2)--自动登录 - 杨玉杰|个人博客</title>
+  <title>3.Netty--Netty的组件和设计 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,8 +163,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-05-30 09:43">
-      May 30, 2020 am
+    <time datetime="2020-05-31 09:58">
+      May 31, 2020 am
     </time>
   </div>
 
@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      935 字
+      1k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      11
        分钟
     </span>
   
@@ -215,110 +215,85 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="一、修改-login-html"><a href="#一、修改-login-html" class="headerlink" title="一、修改 login.html"></a>一、修改 login.html</h2><p>在登录页添加自动登录的选项，注意自动登录字段的 name 属性必须是 <code>remember-me</code> ：</p>
-<div class="hljs"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>登录<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>欢迎来到登录页面<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"/login"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"checkbox"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"remember-me"</span>&gt;</span>记住我<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span>
-        <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>立即登录<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+              <blockquote>
+<p>本文主要内容：</p>
+<ul>
+<li>Netty的技术和体系结构方面的内容</li>
+<li>Channel、EventLoop和ChannelFuture</li>
+<li>ChannelHandler和ChannelPipeline</li>
+<li>引导</li>
+</ul>
+</blockquote>
+<p>学习Netty是因为它是基于Java NIO 的异步和事件驱动的实现，保证了高负载下应用程序性能的最大化和可伸缩性；同时它包含了一组设计模式，实现了应用程序逻辑从网络层解耦，简化了开发过程，最大限度地提高了可测试性、模块化以及代码的可重用性。</p>
+<h2 id="1-Channel、EventLoop和ChannelFuture"><a href="#1-Channel、EventLoop和ChannelFuture" class="headerlink" title="1. Channel、EventLoop和ChannelFuture"></a>1. Channel、EventLoop和ChannelFuture</h2><ul>
+<li><p>Channel：Socket；</p>
+</li>
+<li><p>EventLoop：控制流、多线程处理、并发；</p>
+</li>
+<li><p>ChannelFuture：异步通知</p>
+</li>
+</ul>
+<h3 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h3><p>基本的I/O操作（bind、connect、read、write）都依赖于底层网络传送所提供的原语，也就是Socket，而Netty中的Channel就是简化Socket编程的复杂性。</p>
+<h3 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h3><p>用于处理连接的生命周期中所发生的事件。</p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531101754279.png" srcset="/img/loading.gif" alt="image-20200531101754279"></p>
+<p>其关系是：</p>
+<ul>
+<li>一个EventLoopGroup包含一个或多个EventLoop；</li>
+<li>一个EventLoop在它的生命周期内只和一个Thread绑定；</li>
+<li>所有由EventLoop处理的I/O事件都将在它专有的Thread上被处理（<strong>消除了对同步的需求</strong>）</li>
+<li>一个Channel在它的生命周期内只注册于一个EventLoop；</li>
+<li>一个EventLoop可能会被分配给一个或多个Channel。</li>
+</ul>
+<h3 id="ChannelFuture"><a href="#ChannelFuture" class="headerlink" title="ChannelFuture"></a>ChannelFuture</h3><p>正因为Netty中所有的I/O操作都是异步的，其执行结果不会立即返回，所以Netty提供了ChannelFuture接口，其addListener()方法注册了一个ChannelFutureListener，以便在某个操作完成时(无论是否成功)都能得到通知。</p>
+<h2 id="2-ChannelHandler和ChannelPipeline"><a href="#2-ChannelHandler和ChannelPipeline" class="headerlink" title="2. ChannelHandler和ChannelPipeline"></a>2. ChannelHandler和ChannelPipeline</h2><p>管理数据流以及执行应用程序处理逻辑的组件</p>
+<h3 id="ChannelHandler接口"><a href="#ChannelHandler接口" class="headerlink" title="ChannelHandler接口"></a>ChannelHandler接口</h3><p>充当了所有处理入站和出站数据的应用程序逻辑的容器，因为<code>ChannelHandler</code>的方法是由<strong>网络事件触发</strong>的。</p>
+<h3 id="ChannelPipeline接口"><a href="#ChannelPipeline接口" class="headerlink" title="ChannelPipeline接口"></a>ChannelPipeline接口</h3><p>提供了ChannelHandler链的容器，并定义了用于在该链上传播入站和出站事件流的API，当Channel被创建时，他会被自动的分配到它专属的ChannelPipeline。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//在创建Channel时向ChannelPipeline中添加一个EchoClientHandler实例</span>
+.handler(<span class="hljs-keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(SocketChannel socketChannel)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        socketChannel.pipeline().addLast(<span class="hljs-keyword">new</span> EchoClientHandler());
+    &#125;
+&#125;);</code></pre></div>
 
-<h2 id="二、两种实现方式"><a href="#二、两种实现方式" class="headerlink" title="二、两种实现方式"></a>二、两种实现方式</h2><h3 id="2-1-Cookie-存储"><a href="#2-1-Cookie-存储" class="headerlink" title="2.1 Cookie 存储"></a>2.1 Cookie 存储</h3><p>这种方式十分简单，只要在 WebSecurityConfig 中的 configure() 方法添加一个 <code>rememberMe()</code> 即可,如下所示：</p>
-<div class="hljs"><pre><code class="hljs java"> http.authorizeRequests()
-                <span class="hljs-comment">// 如果有允许匿名的url，填在下面</span>
-<span class="hljs-comment">//                .antMatchers().permitAll()</span>
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(<span class="hljs-string">"/login"</span>)
-                .defaultSuccessUrl(<span class="hljs-string">"/"</span>).permitAll()
-                <span class="hljs-comment">// 自定义登录用户名和密码参数，默认为username和password</span>
-<span class="hljs-comment">//                .usernameParameter("username")</span>
-<span class="hljs-comment">//                .passwordParameter("password")</span>
-                .and()
-                <span class="hljs-comment">// 开启自动登录</span>
-                .rememberMe()
-                .and()
-                .logout()
-                .permitAll();
-        <span class="hljs-comment">//关闭CRSF跨域</span>
-        http.csrf().disable();
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531105603364.png" srcset="/img/loading.gif" alt="image-20200531105603364"></p>
+<p>执行顺序由添加顺序所决定，ChannelHandler处理完后将数据传递给链中的下一个ChannelHandler，该ChanelHandler不一定会去修改数据，如果数据到达ChannelPipeline一端，也就说明处理结束。</p>
+<p>当ChannelHandler被添加到ChannelPipeline时，它将会被分配一个ChannelHandlerContext，其代表了ChannelHandler和ChannelPipeline之间的绑定，主要用于写出站数据。</p>
+<p>在Netty中有两种发送消息的方式，直接写到Channel中，也可以写到ChannelHandlerContext对象中，前一种方式将会导致消息从ChannelPipeline的尾端开始流动，后者将导致消息从ChannelPipeline中的下一个ChannelHandler开始流动。</p>
+<h3 id="编码器和解码器"><a href="#编码器和解码器" class="headerlink" title="编码器和解码器"></a>编码器和解码器</h3><p>因为网络数据总是一系列的字节，而我们写的代码是一些对象</p>
+<p>所有由Netty提供的编码器/解码器适配器类都实现了ChannelInboundHandler接口或者ChannelOutboundHandler接口。</p>
+<h3 id="抽象类SimpleChannelInboundHandler"><a href="#抽象类SimpleChannelInboundHandler" class="headerlink" title="抽象类SimpleChannelInboundHandler"></a>抽象类SimpleChannelInboundHandler</h3><p>当我们利用一个ChannelHandler来接收解码消息，并对该数据应用业务逻辑，基本上只需要扩展基类SimpleChannelInboundHandler<T>，其中T就是我们要处理的Java类型。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@ChannelHandler</span>.Sharable
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoClientHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">ByteBuf</span>&gt; </span>&#123;
+<span class="hljs-comment">//这里的ByteBuf应该是跟服务端代码没有关系的，根据我们自身的业务需求来定的</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        System.out.println(<span class="hljs-string">"Client received: "</span>+ byteBuf.toString(CharsetUtil.UTF_8));
     &#125;</code></pre></div>
 
-<p>当我们登录时勾选自动登录时，会自动在 Cookie 中保存一个名为 <code>remember-me</code> 的cookie，默认有效期为2周，其值是一个加密字符串：</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20180509100451811.png" srcset="/img/loading.gif" alt="基于缓存的自动登录"></p>
-<h3 id="2-2-数据库存储"><a href="#2-2-数据库存储" class="headerlink" title="2.2 数据库存储"></a>2.2 数据库存储</h3><p>使用 Cookie 存储虽然很方便，但是大家都知道 Cookie 毕竟是保存在客户端的，而且 Cookie 的值还与用户名、密码这些敏感数据相关，虽然加密了，但是将敏感信息存在客户端，毕竟不太安全。</p>
-<p>Spring security 还提供了另一种相对更安全的实现机制：<strong>在客户端的 Cookie 中，仅保存一个无意义的加密串（与用户名、密码等敏感数据无关），然后在数据库中保存该加密串-用户信息的对应关系，自动登录时，用 Cookie 中的加密串，到数据库中验证，如果通过，自动登录才算通过。</strong></p>
-<h4 id="2-2-1-基本原理"><a href="#2-2-1-基本原理" class="headerlink" title="2.2.1 基本原理"></a>2.2.1 基本原理</h4><p>当浏览器发起表单登录请求时，当通过 <code>UsernamePasswordAuthenticationFilter</code> 认证成功后，会经过 <code>RememberMeService</code>，在其中有个 <code>TokenRepository</code>，它会生成一个 token，首先将 token 写入到浏览器的 Cookie 中，然后将 token、认证成功的用户名写入到数据库中。</p>
-<p>当浏览器下次请求时，会经过 <code>RememberMeAuthenticationFilter</code>，它会读取 Cookie 中的 token，交给 RememberMeService 从数据库中查询记录。如果存在记录，会读取用户名并去调用 <code>UserDetailsService</code>，获取用户信息，并将用户信息放入Spring Security 中，实现自动登录。</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20181202143630639.png" srcset="/img/loading.gif" alt="实现原理"></p>
-<p>RememberMeAuthenticationFilter 在整个过滤器链中是比较靠后的位置，也就是说在传统登录方式都无法登录的情况下才会使用自动登录。</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20181202144420871.png" srcset="/img/loading.gif" alt="spring security过滤器链"></p>
-<h4 id="2-2-2-代码实现"><a href="#2-2-2-代码实现" class="headerlink" title="2.2.2 代码实现"></a>2.2.2 代码实现</h4><p>首先需要创建一张表来存储 token 信息：</p>
-<div class="hljs"><pre><code class="hljs SQL"><span class="hljs-keyword">DROP</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-keyword">IF</span> <span class="hljs-keyword">EXISTS</span> <span class="hljs-string">`persistent_logins`</span>;
-<span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> <span class="hljs-string">`persistent_logins`</span>(
-	<span class="hljs-string">`username`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
-	<span class="hljs-string">`series`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
-    <span class="hljs-string">`token`</span> <span class="hljs-built_in">varchar</span>(<span class="hljs-number">64</span>) <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span>,
-    <span class="hljs-string">`last_used`</span> <span class="hljs-built_in">timestamp</span> <span class="hljs-keyword">NOT</span> <span class="hljs-literal">NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span> <span class="hljs-keyword">ON</span> <span class="hljs-keyword">UPDATE</span> <span class="hljs-keyword">CURRENT_TIMESTAMP</span>,
-    PRIMARY <span class="hljs-keyword">KEY</span> (<span class="hljs-string">`series`</span>)
-)<span class="hljs-keyword">ENGINE</span>=<span class="hljs-keyword">InnoDB</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">CHARSET</span>=utf8mb4;</code></pre></div>
-
-<p>在 WebSecurityConfig 中注入 <code>dataSource</code> ，创建一个 <code>PersistentTokenRepository</code> 的Bean：</p>
-<div class="hljs"><pre><code class="hljs java">    <span class="hljs-meta">@Autowired</span>
-    DataSource dataSource;
-
-    <span class="hljs-meta">@Bean</span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> PersistentTokenRepository <span class="hljs-title">persistentTokenRepository</span><span class="hljs-params">()</span></span>&#123;
-        JdbcTokenRepositoryImpl tokenRepository = <span class="hljs-keyword">new</span> JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        
-        <span class="hljs-comment">//如果token表不存在，使用下面语句可以初始化该表，若存在，则需要注释掉这条语句，否则会报错</span>
-<span class="hljs-comment">//        tokenRepository.setCreateTableOnStartup(true);</span>
-        <span class="hljs-keyword">return</span> tokenRepository;
-    &#125;</code></pre></div>
-
-<p>在 <code>configure()</code> 中按如下所示配置自动登录：</p>
-<div class="hljs"><pre><code class="hljs java"> <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
-        http.authorizeRequests()
-                <span class="hljs-comment">// 如果有允许匿名的url，填在下面</span>
-<span class="hljs-comment">//                .antMatchers().permitAll()</span>
-                .anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage(<span class="hljs-string">"/login"</span>)
-                .defaultSuccessUrl(<span class="hljs-string">"/"</span>).permitAll()
-                .and()
-                <span class="hljs-comment">// 开启自动登录</span>
-                .rememberMe()
-                .tokenRepository(persistentTokenRepository())
-                <span class="hljs-comment">//有效时间(单位；s)</span>
-                .tokenValiditySeconds(<span class="hljs-number">60</span>)
-                .userDetailsService(userDetailsService)
-                .and()
-                .logout()
-                .permitAll();
-        <span class="hljs-comment">//关闭CRSF跨域</span>
-        http.csrf().disable();
-    &#125;</code></pre></div>
-
-<h2 id="三、运行程序"><a href="#三、运行程序" class="headerlink" title="三、运行程序"></a>三、运行程序</h2><p>勾选自动登录后，Cookie 和数据库中均存储了 token 信息：</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20180509102031410.png" srcset="/img/loading.gif" alt="效果"></p>
+<h3 id="引导"><a href="#引导" class="headerlink" title="引导"></a>引导</h3><p>Netty的引导类为应用程序的<strong>网络层</strong>配置提供了容器，有两种类型的引导：一种用于客户端，另一种用于服务器，区别如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">区别</th>
+<th align="center">BootStrap</th>
+<th align="center">ServerBootStrap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">网络编程中的作用</td>
+<td align="center">连接到远程主机和端口</td>
+<td align="center">绑定到一个本地端口</td>
+</tr>
+<tr>
+<td align="center">EventLoopGroup的数目</td>
+<td align="center">1</td>
+<td align="center">2</td>
+</tr>
+</tbody></table>
+<p>为什么ServerBootStrap需要两个EventLoopGroup呢？</p>
+<p>因为服务器需要两组不同的Channel，第一组将只包含一个ServerChannel，代表服务器自身的已绑定到某个本地端口的正在监听的套接字，而第二组将包含所有已创建的用来处理传入客户端连接的Channel。</p>
+<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531115618470.png" srcset="/img/loading.gif" alt="image-20200531115618470"></p>
 
             </article>
             <hr>
@@ -330,7 +305,7 @@
                     
                       <a class="hover-with-bg" href="/categories/java/">java</a>
                     
-                      <a class="hover-with-bg" href="/categories/java/Spring-Security/">Spring Security</a>
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
                     
                   </div>
                 
@@ -338,7 +313,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
                     
                   </div>
                 
@@ -351,18 +326,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SpringBoot集成Spring Security(3)--异常处理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/05/29/SpringBoot%E9%9B%86%E6%88%90Spring-Security-1-%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">
-                        <span class="hidden-mobile">SpringBoot集成Spring Security(1)--基础入门</span>
+                      <a href="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/">
+                        <span class="hidden-mobile">2.Netty--你的第一款Netty应用</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -517,7 +486,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "SpringBoot集成Spring Security(2)--自动登录&nbsp;",
+        "3.Netty--Netty的组件和设计&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
