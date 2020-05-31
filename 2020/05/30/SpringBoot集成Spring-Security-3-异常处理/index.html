@@ -216,7 +216,7 @@
             
             <article class="markdown-body">
               <p>思考：为何登录失败自动跳转到/login?error，而且没有异常提示？</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200523125639595.png" srcset="/img/loading.gif" alt="登录错误自动来到login?error"></p>
+<p><img src="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200523125639595.png" srcset="/img/loading.gif" alt="登录错误自动来到login?error"></p>
 <p>因为首先 <code>/login?error</code> 是 Spring security 默认的失败 Url，其次<strong>如果你不手动处理这个异常，这个异常是不会被处理的</strong>。</p>
 <h2 id="一、常见异常"><a href="#一、常见异常" class="headerlink" title="一、常见异常"></a>一、常见异常</h2><p>我们先来列举下一些 Spring Security 中常见的异常：</p>
 <ul>
@@ -485,7 +485,7 @@
 &#125;</code></pre></div>
 
 <p>我们首先获取了 session 中的 <code>SPRING_SECURITY_LAST_EXCEPTION</code> 。为了演示，我只是简单的将错误信息返回给了页面。运行程序，当我们输入错误密码时：</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200523162917851.png" srcset="/img/loading.gif" alt="错误页面"></p>
+<p><img src="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200523162917851.png" srcset="/img/loading.gif" alt="错误页面"></p>
 <p>来到我们自己设置的错误页面，显示我们设置的错误信息。</p>
 
             </article>

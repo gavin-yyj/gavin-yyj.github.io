@@ -402,7 +402,7 @@
 
 <p>我们发现使用Netty框架，从阻塞传输切换到非阻塞传输代码要做的更改非常小。</p>
 <h2 id="传输API"><a href="#传输API" class="headerlink" title="传输API"></a>传输API</h2><p>传输API 的核心就是Channel接口，它被用于所有的I/O操作，其层次结构如下图所示：</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531151609709.png" srcset="/img/loading.gif" alt="image-20200531151609709"></p>
+<p><img src="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531151609709.png" srcset="/img/loading.gif" alt="image-20200531151609709"></p>
 <p>如图所示，每个Channel都将会被分配一个ChannelPipeline和ChannelConfig，ChannelConfig包含了该Channel的所有配置设置，并且支持热更新。</p>
 <p>ChannelPipeline持有所有将应用于入站和出站数据以及事件的ChannelHandler实例，这些ChannelHandler实现了应用程序用于处理状态变化以及数据处理的逻辑。</p>
 <p>ChannelHandler的典型用途包括：</p>
@@ -545,7 +545,7 @@
 </tr>
 </tbody></table>
 <p>处理流程如下：</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531162714677.png" srcset="/img/loading.gif" alt="image-20200531162714677">    </p>
+<p><img src="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200531162714677.png" srcset="/img/loading.gif" alt="image-20200531162714677">    </p>
 <p>知识点扩展：</p>
 <p>零拷贝：零拷贝时一种目前只有在使用NIO和Epoll传输时才可使用的特性，可以快速高效地将数据从文件系统移动到网络接口，而不需要将其从内核空间复制到用户空间。但是它对于实现了数据加密或者压缩的文件系统是不可用的，只能传输文件的原始内容。</p>
 

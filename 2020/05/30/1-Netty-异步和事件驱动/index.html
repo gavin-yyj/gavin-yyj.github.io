@@ -247,7 +247,7 @@ String request,response;
     out.println(response);</code></pre></div>
 
 <p>这里<code>ServerSocket</code>的作用是监听某一路端口是否有连接，如果有连接就会创建一个新的<code>Socket</code>用于客户端和服务器进行通信，而此时<code>ServerSocket</code>并不会断开连接，而是会继续监听传入的连接。</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211626179.png" srcset="/img/loading.gif" alt="传统阻塞I/O"></p>
+<p><img src="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211626179.png" srcset="/img/loading.gif" alt="传统阻塞I/O"></p>
 <p>这里就体现出弊端了，如果有多个并发客户端，那就需要为每个客户端Socket创建一个Thread，弊端有三：</p>
 <ul>
 <li>资源浪费，并不是每时每刻都有数据在传输，大部分情况下线程都处在休眠状态；</li>
@@ -256,7 +256,7 @@ String request,response;
 </ul>
 <h3 id="Java-NIO"><a href="#Java-NIO" class="headerlink" title="Java NIO"></a>Java NIO</h3><p>使用setSockopt()方法配置套接字，以便读/写调用在没有数据的时候立即返回</p>
 <h3 id="选择器"><a href="#选择器" class="headerlink" title="选择器"></a>选择器</h3><p>使用<code>java.nio.channels.Selector</code>这个类，利用事件通知API来确定在一组非阻塞套接字中有哪些已经就绪能够进行I/O相关的操作。</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211701935.png" srcset="/img/loading.gif" alt="使用Selector的非阻塞I/O"></p>
+<p><img src="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200530211701935.png" srcset="/img/loading.gif" alt="使用Selector的非阻塞I/O"></p>
 <h2 id="Netty简介"><a href="#Netty简介" class="headerlink" title="Netty简介"></a>Netty简介</h2><p>Netty是一个<strong>NIO</strong>客户端/服务器<strong>框架</strong>，支持快速、简单地开发网络应用，如协议服务器和客户端。</p>
 <h2 id="Netty核心组件"><a href="#Netty核心组件" class="headerlink" title="Netty核心组件"></a>Netty核心组件</h2><p>Netty的主要构建块：</p>
 <ul>
