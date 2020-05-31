@@ -237,7 +237,7 @@
 <li>支持<a href="https://blog.csdn.net/syviah/article/details/46550161" target="_blank" rel="noopener">池化</a></li>
 </ul>
 <h2 id="ByteBuf类"><a href="#ByteBuf类" class="headerlink" title="ByteBuf类"></a>ByteBuf类</h2><h3 id="如何工作"><a href="#如何工作" class="headerlink" title="如何工作"></a>如何工作</h3><p>ByteBuf维护了两个不同的索引：一个用于读取，一个用于写入。当你从ByteBuf读取时，它的readIndex将会被递增已经被读取的字节数，同样，当你写入ByteBuf时，它的writerIndex也会被递增。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/8196941-22b8639d0f468400.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/633/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTIyYjg2MzlkMGY0Njg0MDAucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="ByteBuf的使用模式"><a href="#ByteBuf的使用模式" class="headerlink" title="ByteBuf的使用模式"></a>ByteBuf的使用模式</h3><h4 id="堆缓冲区"><a href="#堆缓冲区" class="headerlink" title="堆缓冲区"></a>堆缓冲区</h4><p>将数据存储在JVM的堆空间中，这种模式被称为支撑数组，它能在没有使用<a href="https://blog.csdn.net/syviah/article/details/46550161" target="_blank" rel="noopener">池化</a>的情况下提供快速的分配和释放。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">heapBuffer</span><span class="hljs-params">()</span> </span>&#123;
         ByteBuf heapBuf = BYTE_BUF_FROM_SOMEWHERE; <span class="hljs-comment">//get reference form somewhere</span>
@@ -309,17 +309,17 @@
     &#125;</code></pre></div>
 
 <h3 id="顺序访问索引"><a href="#顺序访问索引" class="headerlink" title="顺序访问索引"></a>顺序访问索引</h3><p>ByteBuf被读索引和写索引划分为了三个区域：</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2644021208,3730924698&fm=15&gp=0.jpg" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9zczAuYmRzdGF0aWMuY29tLzcwY0Z1SFNoX1ExWW54R2twb1dLMUhGNmhoeS9pdC91PTI2NDQwMjEyMDgsMzczMDkyNDY5OCZmbT0xNSZncD0wLmpwZw?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="可丢弃字节"><a href="#可丢弃字节" class="headerlink" title="可丢弃字节"></a>可丢弃字节</h3><p>可丢弃字节的分段包含了已经被读过的字节。通过调用discardReadBytes()方法，可以丢弃它们并回收空间，变成可写字节，但是不建议频繁调用discardReadBytes()方法，因为可读字节必须被移动到缓冲区的开始位置。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/8196941-6621cdd624077d87.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTY2MjFjZGQ2MjQwNzdkODcucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="可读字节"><a href="#可读字节" class="headerlink" title="可读字节"></a>可读字节</h3><p>存储了实际数据，任何名称以read 或者skip 开头的操作都将检索或者跳过位于当前readerIndex 的数据，并且将它增加已读字节数。</p>
 <h3 id="可写字节"><a href="#可写字节" class="headerlink" title="可写字节"></a>可写字节</h3><p>拥未定义内容的、写入就绪的内存区域，任何名称以write开头的操作都将从当前的writerIndex处开始写数据，并将它增加已经写入的字节数。</p>
 <h3 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h3><p>通过调用markReaderIndex()、markWriterIndex()、resetWriterIndex()和resetReaderIndex()来标记和重置ByteBuf 的readerIndex 和</p>
 <p>writerIndex。可以通过调用clear()方法来将readerIndex 和writerIndex 都设置为0，但是这并不会清除内存中的内容。</p>
 <p>clear（）方法调用前：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/8196941-6e3313a95086dd08.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTZlMzMxM2E5NTA4NmRkMDgucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <p>clear（）方法调用后：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/8196941-6147abc43c0560e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTYxNDdhYmM0M2MwNTYwZTYucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="查找操作"><a href="#查找操作" class="headerlink" title="查找操作"></a>查找操作</h3><ul>
 <li><p>boolean process(byte value) 检查输入值是否是正在查找的值</p>
 </li>
