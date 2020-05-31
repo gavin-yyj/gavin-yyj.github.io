@@ -455,7 +455,7 @@
 <li>通过 <code>sessionInformation.expireNow()</code> 使得 session 过期</li>
 </ol>
 <p>运行程序，分别使用 admin 和 jitwxs 账户登录，admin 访问 <code>/kick?username=jitwxs</code> 来踢出用户 jitwxs，jitwxs 刷新页面，发现被踢出。</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200524210531605.png" srcset="/img/loading.gif" alt="image-20200524210531605"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200531234209914.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h2 id="五、退出登录"><a href="#五、退出登录" class="headerlink" title="五、退出登录"></a>五、退出登录</h2><p>补充一下退出登录的内容，在之前，我们直接在 WebSecurityConfig 的 configure() 方法中，配置了：</p>
 <div class="hljs"><pre><code class="hljs java">http.logout();</code></pre></div>
 
@@ -499,7 +499,7 @@
 <span class="hljs-keyword">private</span> CustomLogoutSuccessHandler logoutSuccessHandler;</code></pre></div>
 
 <p>效果：</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200524214054848.png" srcset="/img/loading.gif" alt="image-20200524214054848"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020053123365730.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h2 id="六、Session-共享"><a href="#六、Session-共享" class="headerlink" title="六、Session 共享"></a>六、Session 共享</h2><p>在最后补充下关于 Session 共享的知识点，一般情况下，一个程序为了保证稳定至少要部署两个，构成集群。那么就牵扯到了 Session 共享的问题，不然用户在 8080 登录成功后，后续访问了 8060 服务器，结果又提示没有登录。</p>
 <p>这里就简单实现下 Session 共享，采用 Redis 来存储。</p>
 <h3 id="6-1-配置-Redis"><a href="#6-1-配置-Redis" class="headerlink" title="6.1 配置 Redis"></a>6.1 配置 Redis</h3><p>为了方便起见，我直接使用 Docker 快速部署，如果你需要传统方式安装，可以参考文章<a href="https://www.jitwxs.cn/e331e26a.html" target="_blank" rel="noopener">《Redis 初探（1）——Redis 的安装》</a>。</p>
@@ -537,9 +537,9 @@ docker exec -<span class="hljs-keyword">it</span> myredis redis-cli</code></pre>
 &#125;</code></pre></div>
 
 <h3 id="6-3-运行程序"><a href="#6-3-运行程序" class="headerlink" title="6.3 运行程序"></a>6.3 运行程序</h3><p>这样就完成了基于 Redis 的 Session 共享，下面来测试下。首先修改 IDEA 配置来允许项目在多端口运行，勾选 <code>Allow running in parallel</code>(2018.2版本好像没有该选项，应该是取消勾选<code>Single instance only</code>)：</p>
-<p><img src="D:%5C%E4%B8%AA%E4%BA%BA%E8%B5%84%E6%96%99%5CBlog%5CMyBlog%5Csource_posts%5Cimage-20200524220218834.png" srcset="/img/loading.gif" alt="image-20200524220218834"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200531233713573.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>运行程序，然后修改配置文件，将 <code>server.port</code> 更改为 8060，再次运行。这样项目就会分别在默认的 8080 端口和 8060 端口运行。</p>
-<p><img src="https://www.jitwxs.cn/images/posts/20190118113440171.png" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200531233941130.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>先访问 <code>localhost:8080</code>，登录成功后，再访问 <code>localhost:8060</code>，发现无需登录。</p>
 
             </article>
