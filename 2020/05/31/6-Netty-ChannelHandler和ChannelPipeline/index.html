@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      0 字
+      2.8k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      33
        分钟
     </span>
   
@@ -215,12 +215,332 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              
+              <blockquote>
+<p>本文主要内容：</p>
+<ul>
+<li>ChannelHandler和ChannelPipeline</li>
+<li>检测资源泄漏</li>
+<li>异常处理</li>
+</ul>
+</blockquote>
+<h2 id="ChannelHandler家族"><a href="#ChannelHandler家族" class="headerlink" title="ChannelHandler家族"></a>ChannelHandler家族</h2><h3 id="Channel的生命周期"><a href="#Channel的生命周期" class="headerlink" title="Channel的生命周期"></a>Channel的生命周期</h3><table>
+<thead>
+<tr>
+<th>状态</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChannelUnregistered</td>
+<td>Channel已经被创建，但还未注册到EventLoop</td>
+</tr>
+<tr>
+<td>ChannelRegistered</td>
+<td>Channel已经被注册到了EventLoop</td>
+</tr>
+<tr>
+<td>ChannelActive</td>
+<td>Channel处于活动状态（已连接到远程节点），可以接收和发送数据了</td>
+</tr>
+<tr>
+<td>ChannelInactive</td>
+<td>Channel没有连接到远程节点</td>
+</tr>
+</tbody></table>
+<p>Channel的正常生命周期如下图所示，当这些状态发生改变时，将会生成对应的事件，这些事件将会被转发给ChannelPipeline中的ChannelHandler，其可以随后对它们做出响应。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200601160759198.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="ChannelHandler的生命周期"><a href="#ChannelHandler的生命周期" class="headerlink" title="ChannelHandler的生命周期"></a>ChannelHandler的生命周期</h3><p>ChannelHandler的生命周期方法主要有下面几种，这些方法都有一个ChannelHandlerContext参数，在ChannelHandler被添加到ChannelPipeline中或者从ChannelPipeline中移除时都会调用这些操作。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>handlerAdded</td>
+<td>当把ChannelHandler添加到ChannelPipeline中时被调用</td>
+</tr>
+<tr>
+<td>handlerRemoved</td>
+<td>当从ChannelPineline中移除ChannelHandler时被调用</td>
+</tr>
+<tr>
+<td>exceptionCaught</td>
+<td>当处理过程中在ChannelPipeline中有错误产生时被调用</td>
+</tr>
+</tbody></table>
+<p>Netty定义了两个重要的ChannelHandler子接口：</p>
+<ul>
+<li>ChannelInboundHandler：处理入站数据以及各种状态变化；</li>
+<li>ChannelOutboundHandler：处理出站数据并且允许拦截所有的操作；</li>
+</ul>
+<h3 id="ChannelInboundHandler接口"><a href="#ChannelInboundHandler接口" class="headerlink" title="ChannelInboundHandler接口"></a>ChannelInboundHandler接口</h3><p>下面这些是ChannelInboundHandler的生命周期方法，将会在数据被接收时或者与其对应的Channel状态发生改变时被调用。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ChannelUnregistered</td>
+<td>当Channel从它的EventLoop注销并且无法处理任何I/O时被调用</td>
+</tr>
+<tr>
+<td>ChannelRegistered</td>
+<td>当Channel已经注册到它的EventLoop，并且能够处理I/O时被调用</td>
+</tr>
+<tr>
+<td>ChannelActive</td>
+<td>当Channel处于活动状态（已连接到远程节点）时被调用</td>
+</tr>
+<tr>
+<td>ChannelInactive</td>
+<td>当Channel离开活动状态并且不再连接它的远程节点时被调用</td>
+</tr>
+<tr>
+<td>ChannelReadComplete</td>
+<td>当Channel上的一个读操作完成时被调用</td>
+</tr>
+<tr>
+<td>ChannelRead</td>
+<td>当从Channel读取数据时被调用</td>
+</tr>
+<tr>
+<td>ChannelWritabilityChanged</td>
+<td>当Channel的可写状态发生改变时被调用</td>
+</tr>
+<tr>
+<td>userEventTriggered</td>
+<td>当调用ChannelInboundHandler.fireUserEventTriggered()方法时被调用</td>
+</tr>
+</tbody></table>
+<p>当某个ChannelInboundHandler的实现重写了channelRead（）方法时，它将负责显示地释放与池化的ByteBuf实例相关的内存。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DiscardHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead</span><span class="hljs-params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;
+        <span class="hljs-comment">//丢弃已接收的消息</span>
+        ReferenceCountUtil.release(msg);
+    &#125;
+&#125;</code></pre></div>
+
+<p>不过我们一般使用SimpleChannelInboundHandler来自动释放资源。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleDiscardHandler</span></span>
+<span class="hljs-class">    <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">Object</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,</span></span>
+<span class="hljs-function"><span class="hljs-params">        Object msg)</span> </span>&#123;
+        <span class="hljs-comment">//不需要任何显式的资源释放</span>
+        <span class="hljs-comment">// No need to do anything special</span>
+    &#125;
+&#125;</code></pre></div>
+
+<p>由于使用SimpleChannelInboundHandler会自动释放资源，所以不能存储指向任何消息的引用供将来使用。</p>
+<h3 id="ChannelOutboundHandler接口"><a href="#ChannelOutboundHandler接口" class="headerlink" title="ChannelOutboundHandler接口"></a>ChannelOutboundHandler接口</h3><p>用来处理出站操作，它的方法将被Channel、ChannelPipeline以及ChannelHandlerContext调用。</p>
+<p>ChannelOutboundHandler的一个强大的功能就是可以按需推迟操作或者事件，比如到远程节点的写入被暂停了，你可以推迟冲刷操作并在稍后继续。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ChannelOutboundHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelHandler</span> </span>&#123;
+	<span class="hljs-comment">//当请求将Channel绑定到本地地址时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">bind</span><span class="hljs-params">(ChannelHandlerContext ctx, SocketAddress localAddress, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求将Channel连接到远程节点时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">connect</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            ChannelHandlerContext ctx, SocketAddress remoteAddress,</span></span>
+<span class="hljs-function"><span class="hljs-params">            SocketAddress localAddress, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求将Channel从远程节点断开时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">disconnect</span><span class="hljs-params">(ChannelHandlerContext ctx, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求关闭Channel时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">close</span><span class="hljs-params">(ChannelHandlerContext ctx, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求将Channel从它的EventLoop注销时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">deregister</span><span class="hljs-params">(ChannelHandlerContext ctx, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求从Channel读取更多的数据时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">read</span><span class="hljs-params">(ChannelHandlerContext ctx)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求通过Channel将数据写到远程节点时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">write</span><span class="hljs-params">(ChannelHandlerContext ctx, Object msg, ChannelPromise promise)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+	<span class="hljs-comment">//当请求通过Channel将入队数据冲刷到远程节点时被调用</span>
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">flush</span><span class="hljs-params">(ChannelHandlerContext ctx)</span> <span class="hljs-keyword">throws</span> Exception</span>;
+&#125;</code></pre></div>
+
+<p>ChannelOutboundHandler中的大部分方法都需要一个ChannelPromise参数，以便在操作完成时得到通知。ChannelPromise是ChannelFuture的一个子类，其定义了一些可写的方法，如setSuccess（）和setFailure（），从而使ChannelFuture不可变。</p>
+<h3 id="ChannelHandler适配器"><a href="#ChannelHandler适配器" class="headerlink" title="ChannelHandler适配器"></a>ChannelHandler适配器</h3><p>我们可以使用ChannelInboundHandlerAdapter和ChannelOutboundHandlerAdapter类作为自己的ChannelHandler的起始点。这两个适配器分别提供了ChannelInboundHandler和ChannelOutboundHandler的基本实现，通过扩展抽象类ChannelHandlerAdapter，他们获得了ChannelHandler的方法。生成的类的层次结构如下图</p>
+<p><img src="https://img-blog.csdnimg.cn/20200601160813550.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200601160827702.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>在ChannelInboundHandlerAdapter和ChannelOutboundHandlerAdapter中所提供的方法体调用了其相关联的ChannelHandlerContext上的等效方法，从而将事件转发到了ChannelPipeline中的下一个ChannelHandler中。</p>
+<h3 id="资源管理"><a href="#资源管理" class="headerlink" title="资源管理"></a>资源管理</h3><p>每当通过调用ChannelInboundHandler.channelRead()或者ChannelOutboundHandler.write()方法来处理数据时，你都需要确保没有任何的资源泄露。</p>
+<p>Netty提供了4种泄漏检测级别，分别如下：</p>
+<ul>
+<li><p>DISABLED——禁用泄露检测</p>
+</li>
+<li><p>SIMPLE——使用1%的默认采样率检测并报告任何发现的泄露</p>
+</li>
+<li><p>ADVANCED——使用默认的采样率，报告所发现的任何的泄露以及对应的消息被访问的位置</p>
+</li>
+<li><p>PARANOID——类似于ADVANCED，但是其将会对每次访问都进行采样，这对性能将会有很大的影响，应该只在调试阶段使用</p>
+</li>
+</ul>
+<p>泄露检测级别可以通过将下面的Java系统属性设置为表中的一个值来定义：</p>
+<div class="hljs"><pre><code class="hljs java">java -Dio.netty.leakDetectionLevel = ADVANCED</code></pre></div>
+
+<p>消费入站可以通过SimpleChannelInboundHandler类来实现，在消息被channelRead0()方法消费之后自动释放消息。</p>
+<p>如果是出站消息，丢弃并释放资源的代码参考如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DiscardOutboundHandler</span></span>
+<span class="hljs-class">    <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelOutboundHandlerAdapter</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">write</span><span class="hljs-params">(ChannelHandlerContext ctx,</span></span>
+<span class="hljs-function"><span class="hljs-params">        Object msg, ChannelPromise promise)</span> </span>&#123;
+        <span class="hljs-comment">//通过使用 ReferenceCountUtil.realse(...)方法释放资源</span>
+        ReferenceCountUtil.release(msg);
+        <span class="hljs-comment">//通知 ChannelPromise数据已经被处理了</span>
+        promise.setSuccess();
+    &#125;
+&#125;</code></pre></div>
+
+<p>这里要注意的是，我们不仅要释放资源，同时也要通知ChannelPromise，否则可能会出现ChannelFutureListener收不到某个消息已经被处理的通知。</p>
+<h2 id="ChannelPipeline接口"><a href="#ChannelPipeline接口" class="headerlink" title="ChannelPipeline接口"></a>ChannelPipeline接口</h2><p>每个新建的Channel都会被分配一个新的ChannelPipeline，Channel既不能附加另一个ChannelPipeline，也不能分离当前的。</p>
+<p>根据事件的起源，事件将会被ChannelInboundHandler或者ChannelOutboundHandler处理，随后通过调用ChannelHandlerContext的实现，它将被转发给同一超类型的下一个ChannelHandler。</p>
+<p>ChannelHandlerContext的作用就是使得ChannelHandler能够和它的ChannelPipeline以及其他的ChannelHandler交互。</p>
+<p>下图是一个典型的同时具有入站和出站ChannelHandler的ChannelPipeline的布局：</p>
+<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590999092320&di=27fc68aadc3a9af02ab63d0231dcb6d5&imgtype=0&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1589654393%2C4151543914%26fm%3D214%26gp%3D0.jpg" srcset="/img/loading.gif" alt="img"></p>
+<p>Netty总是将ChannelPipeline的入站口作为头部，而将出站口作为尾部，在ChannelPipeline传播事件时，它会测试ChannelPipeline中下一个ChannelHandler的类型是否和事件的运动方向相匹配，如果不匹配就跳过，直到找到和该事件所期望的方向相匹配的为止。</p>
+<h3 id="修改ChannelPipeline"><a href="#修改ChannelPipeline" class="headerlink" title="修改ChannelPipeline"></a>修改ChannelPipeline</h3><p>通过调用ChannelPipeline上的相关方法，ChannelHandler可以添加、删除或者替换其他的ChannelHandler，从而实时地修改ChannelPipeline的布局。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">modifyPipeline</span><span class="hljs-params">()</span> </span>&#123;
+        ChannelPipeline pipeline = CHANNEL_PIPELINE_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
+        <span class="hljs-comment">//创建一个 FirstHandler 的实例</span>
+        FirstHandler firstHandler = <span class="hljs-keyword">new</span> FirstHandler();
+        <span class="hljs-comment">//将该实例作为"handler1"添加到ChannelPipeline 中</span>
+        pipeline.addLast(<span class="hljs-string">"handler1"</span>, firstHandler);
+        <span class="hljs-comment">//将一个 SecondHandler的实例作为"handler2"添加到 ChannelPipeline的第一个槽中。这意味着它将被放置在已有的"handler1"之前</span>
+        pipeline.addFirst(<span class="hljs-string">"handler2"</span>, <span class="hljs-keyword">new</span> SecondHandler());
+        <span class="hljs-comment">//将一个 ThirdHandler 的实例作为"handler3"添加到 ChannelPipeline 的最后一个槽中</span>
+        pipeline.addLast(<span class="hljs-string">"handler3"</span>, <span class="hljs-keyword">new</span> ThirdHandler());
+        <span class="hljs-comment">//...</span>
+        <span class="hljs-comment">//通过名称移除"handler3"</span>
+        pipeline.remove(<span class="hljs-string">"handler3"</span>);
+        <span class="hljs-comment">//通过引用移除FirstHandler（它是唯一的，所以不需要它的名称）</span>
+        pipeline.remove(firstHandler);
+        <span class="hljs-comment">//将 SecondHandler("handler2")替换为 FourthHandler:"handler4"</span>
+        pipeline.replace(<span class="hljs-string">"handler2"</span>, <span class="hljs-string">"handler4"</span>, <span class="hljs-keyword">new</span> FourthHandler());
+    &#125;</code></pre></div>
+
+<p>通常ChannelPipeline中的每个ChannelHandler都是通过它的EventLoop（I/O线程）来处理传递给它的事件的。</p>
+<h3 id="触发事件"><a href="#触发事件" class="headerlink" title="触发事件"></a>触发事件</h3><ul>
+<li>ChannelPipeline保存了与Channel相关联的ChannelHandler；</li>
+</ul>
+<ul>
+<li>ChannelPipeline可以根据需要、通过添加或者删除ChannelHandler来动态修改；</li>
+</ul>
+<ul>
+<li>ChannelPipeline有着丰富的API用以被调用、以响应入站和出站事件。</li>
+</ul>
+<h2 id="ChannelHandlerContext接口"><a href="#ChannelHandlerContext接口" class="headerlink" title="ChannelHandlerContext接口"></a>ChannelHandlerContext接口</h2><p>前面也提到了，ChannelHandlerContext代表了ChannelHandler和ChannelPipeline之间的关联，ChannelHandlerContext的主要功能就是管理它所关联的ChannelHandler和在同一个ChannelPipeline中的其他ChannelHandler之间的交互。</p>
+<p>ChannelHandlerContext本身很多方法在Channel和ChannelPipeline中也存在，但是如果调用Channel或者ChannelPipeline上的这些方法，它们将沿着整个ChannelPipeline进行传播，而调用位于ChannelHandlerContext上的这些方法，则将从当前所关联的ChannelHandler开始，并且只会传播给位于该ChannelPipeline中的下一个能够处理该事件的ChannelHandler因此它会产生更短的事件流，性能会得到提高。</p>
+<p>另外，ChannelHandlerContext和ChannelHandler之间的关联（绑定）是永远不会改变的，所以缓存对它的引用是安全的。</p>
+<h3 id="使用ChannelHandlerContext"><a href="#使用ChannelHandlerContext" class="headerlink" title="使用ChannelHandlerContext"></a>使用ChannelHandlerContext</h3><p>Channel、ChannelPipeline、ChannelHandler以及ChannelHandlerContext之间的关系如下图：</p>
+<p><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=777592249,3155125613&fm=15&gp=0.jpg" srcset="/img/loading.gif" alt="img"></p>
+<p>为什么想要从channelPipeline中的某个特定点开始传播事件呢？</p>
+<ul>
+<li><p>为了减少将事件经传对它不感兴趣的ChannelHandler所带来的开销；</p>
+</li>
+<li><p>为了避免将事件传经那些可能会对它感兴趣的ChannelHandler。</p>
+</li>
+</ul>
+<p>如果想调用从某个特定的ChannelHandler开始的处理过程，必须获取到在（ChannelPipeline）该ChannelHandler之前的ChannelHandler所关联的ChannelHandlerContext，这个ChannelHandlerContext将调用和它所关联的ChannelHandler之后的ChannelHandler。</p>
+<p>通过ChannelHandlerContext触发的操作的事件流如下图所示：</p>
+<p><img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=770095752,3504408543&fm=15&gp=0.jpg" srcset="/img/loading.gif" alt="img"></p>
+<h3 id="ChannelHandler和ChannelHandlerContext的高级用法"><a href="#ChannelHandler和ChannelHandlerContext的高级用法" class="headerlink" title="ChannelHandler和ChannelHandlerContext的高级用法"></a>ChannelHandler和ChannelHandlerContext的高级用法</h3><p>通过调用ChannelHandlerContext上的pipeline()方法来获得被封闭的ChannelPipeline的引用，这使得运行时得以操作ChannelPipeline的ChannelHandler。如可以通过将ChannelHandler添加到ChannelPipeline中来实现动态的协议切换；还可以缓存ChannelHandlerContext的引用以供后面使用。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WriteHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelHandlerAdapter</span> </span>&#123;
+    <span class="hljs-keyword">private</span> ChannelHandlerContext ctx;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handlerAdded</span><span class="hljs-params">(ChannelHandlerContext ctx)</span> </span>&#123;
+        <span class="hljs-comment">//存储到 ChannelHandlerContext的引用以供稍后使用</span>
+        <span class="hljs-keyword">this</span>.ctx = ctx;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">send</span><span class="hljs-params">(String msg)</span> </span>&#123;
+        <span class="hljs-comment">//使用之前存储的到 ChannelHandlerContext的引用来发送消息</span>
+        ctx.writeAndFlush(msg);
+    &#125;
+&#125;</code></pre></div>
+
+<p>因为一个ChannelHandler可以从属于多个ChannelPipeline，所以也可以绑定多个ChannelHandlerContext实例，但是ChannelHandler必须使用@Sharable注解，并且ChannelHandler必须是线程安全的。</p>
+<p>看个错误示例：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Sharable</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UnsharableHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead</span><span class="hljs-params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;
+        <span class="hljs-comment">//将 count 字段的值加 1</span>
+        count++;
+        <span class="hljs-comment">//记录方法调用，并转发给下一个ChannelHandler</span>
+        System.out.println(<span class="hljs-string">"inboundBufferUpdated(...) called the "</span>
+                + count + <span class="hljs-string">" time"</span>);
+        ctx.fireChannelRead(msg);
+    &#125;
+&#125;</code></pre></div>
+
+<p>为什么要共享一个ChannelHandler？</p>
+<p>主要是用于收集跨域多个Channel的统计信息。</p>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="处理入站异常"><a href="#处理入站异常" class="headerlink" title="处理入站异常"></a>处理入站异常</h3><p>要想处理入站异常，需要在自己的ChannelInboundHandler实现中重写exceptionCaught（）方法。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InboundExceptionHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">exceptionCaught</span><span class="hljs-params">(ChannelHandlerContext ctx,</span></span>
+<span class="hljs-function"><span class="hljs-params">        Throwable cause)</span> </span>&#123;
+        cause.printStackTrace();
+        ctx.close();
+    &#125;
+&#125;</code></pre></div>
+
+<ul>
+<li>ChannelHandler.exceptionCaught()的默认实现是简单地将当前异常转发给ChannelPipeline中的下一个ChannelHandler；</li>
+<li>如果异常到达了ChannelPipeline的尾端，它将会被记录为未被处理；</li>
+<li>要想自定义处理逻辑，需要重写exceptionCaught（）方法，然后决定是否需要将异常传播出去。</li>
+</ul>
+<h3 id="处理出站异常"><a href="#处理出站异常" class="headerlink" title="处理出站异常"></a>处理出站异常</h3><p>用于处理出站操作中的正常完成以及异常完成的选项，都基于以下的通知机制：</p>
+<ul>
+<li>每个出站操作都将返回一个ChannelFuture。注册到ChannelFuture的ChannelFutureListener将在操作完成时被通知该操作是成功了还是失败了；</li>
+<li>几乎所有的ChannelOutboundHandler上的方法都会传入一个ChannelPromise的实例，作为ChannelFuture的子类，ChannelPromise也可以被分配用于异步通知的监听器。</li>
+</ul>
+<p>添加ChannelFutureListener到ChannelFuture的代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addingChannelFutureListener</span><span class="hljs-params">()</span></span>&#123;
+        Channel channel = CHANNEL_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
+        ByteBuf someMessage = SOME_MSG_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
+        <span class="hljs-comment">//...</span>
+        io.netty.channel.ChannelFuture future = channel.write(someMessage);
+        future.addListener(<span class="hljs-keyword">new</span> ChannelFutureListener() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">operationComplete</span><span class="hljs-params">(io.netty.channel.ChannelFuture f)</span> </span>&#123;
+                <span class="hljs-keyword">if</span> (!f.isSuccess()) &#123;
+                    f.cause().printStackTrace();
+                    f.channel().close();
+                &#125;
+            &#125;
+        &#125;);
+    &#125;</code></pre></div>
+
+
+
+
+
+
             </article>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
                 
               </div>
               
@@ -237,7 +557,7 @@
                     
                       <a href="/2020/05/31/5-Netty-ByteBuf/">
                         <span class="hidden-mobile">5.Netty--ByteBuf</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -270,7 +590,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -297,7 +617,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -306,7 +626,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

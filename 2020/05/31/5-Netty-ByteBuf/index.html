@@ -314,8 +314,7 @@
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTY2MjFjZGQ2MjQwNzdkODcucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="可读字节"><a href="#可读字节" class="headerlink" title="可读字节"></a>可读字节</h3><p>存储了实际数据，任何名称以read 或者skip 开头的操作都将检索或者跳过位于当前readerIndex 的数据，并且将它增加已读字节数。</p>
 <h3 id="可写字节"><a href="#可写字节" class="headerlink" title="可写字节"></a>可写字节</h3><p>拥未定义内容的、写入就绪的内存区域，任何名称以write开头的操作都将从当前的writerIndex处开始写数据，并将它增加已经写入的字节数。</p>
-<h3 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h3><p>通过调用markReaderIndex()、markWriterIndex()、resetWriterIndex()和resetReaderIndex()来标记和重置ByteBuf 的readerIndex 和</p>
-<p>writerIndex。可以通过调用clear()方法来将readerIndex 和writerIndex 都设置为0，但是这并不会清除内存中的内容。</p>
+<h3 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h3><p>通过调用markReaderIndex()、markWriterIndex()、resetWriterIndex()和resetReaderIndex()来标记和重置ByteBuf 的readerIndex 和writerIndex。可以通过调用clear()方法来将readerIndex 和writerIndex 都设置为0，但是这并不会清除内存中的内容。</p>
 <p>clear（）方法调用前：</p>
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTZlMzMxM2E5NTA4NmRkMDgucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <p>clear（）方法调用后：</p>
@@ -327,8 +326,7 @@
 </li>
 </ul>
 <h3 id="派生缓冲区"><a href="#派生缓冲区" class="headerlink" title="派生缓冲区"></a>派生缓冲区</h3><p>1.duplicate()；<br> 2.slice()；<br> 3.slice(int, int)；<br> 4.Unpooled.unmodifiableBuffer(…)；<br> 5.order(ByteOrder)；<br> 6.readSlice(int)。</p>
-<p>以上这些方法都将返回一个新的ByteBuf实例，它具有自己的读索引、写索引和标记索引，其内部存储和JDK的ByteBuffer一样也是共享</p>
-<p>的，因此如果修改了它的内容，那么同时也就修改了其对应的源实例。</p>
+<p>以上这些方法都将返回一个新的ByteBuf实例，它具有自己的读索引、写索引和标记索引，其内部存储和JDK的ByteBuffer一样也是共享的，因此如果修改了它的内容，那么同时也就修改了其对应的源实例。</p>
 <p>如果需要一个现有缓冲区的真实副本，使用copy()或者copy(int,int)方法。</p>
 <p>下面代码展示了如何使用slice(int,int)方法来操作ByteBuf的一个分段：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">byteBufSlice</span><span class="hljs-params">()</span> </span>&#123;
@@ -347,7 +345,12 @@
 
 <p>如果有可能，建议使用slice()方法来避免复制内存的开销。</p>
 <h3 id="读-写操作"><a href="#读-写操作" class="headerlink" title="读/写操作"></a>读/写操作</h3><p>有两种类别的读/写操作：</p>
-<p>get()和set()操作，从给定的索引开始，并且保持索引不变；<br>read()和write()操作，从给定的索引开始，并且会根据已经访问过的字节数对索引进行调整。</p>
+<ul>
+<li><p>get()和set()操作，从给定的索引开始，并且保持索引不变；</p>
+</li>
+<li><p>read()和write()操作，从给定的索引开始，并且会根据已经访问过的字节数对索引进行调整。</p>
+</li>
+</ul>
 <p>测试代码：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">byteBufSetGet</span><span class="hljs-params">()</span> </span>&#123;
         Charset utf8 = Charset.forName(<span class="hljs-string">"UTF-8"</span>);
@@ -390,9 +393,7 @@
 </tr>
 </tbody></table>
 <h2 id="ByteBuf-分配"><a href="#ByteBuf-分配" class="headerlink" title="ByteBuf 分配"></a>ByteBuf 分配</h2><h3 id="按需分配：ByteBufAllocator-接口"><a href="#按需分配：ByteBufAllocator-接口" class="headerlink" title="按需分配：ByteBufAllocator 接口"></a>按需分配：ByteBufAllocator 接口</h3><p>Netty 通过<code>ByteBufAllocator</code>接口 实现了（ByteBuf 的）<a href="https://blog.csdn.net/syviah/article/details/46550161" target="_blank" rel="noopener">池化</a> ，它可以用来分配我们所描述过的任意类型的ByteBuf实例。</p>
-<p>Netty提供了两种ByteBufAllocator 的实现： <code>PooledByteBufAllocator</code>和<code>Unpooled-ByteBufAllocator</code>。前者池化了ByteBuf的实例</p>
-<p>以提高性能并最大限度地减少内存碎片(一种称为jemalloc的已被大量现代操作系统所采用的高效方法来分配内存).后者的实现不池化</p>
-<p>ByteBuf实例，并且在每次它被调用时都会返回一个新的实例。</p>
+<p>Netty提供了两种ByteBufAllocator 的实现： <code>PooledByteBufAllocator</code>和<code>UnpooledByteBufAllocator</code>。前者池化了ByteBuf的实例以提高性能并最大限度地减少内存碎片(一种称为jemalloc的已被大量现代操作系统所采用的高效方法来分配内存).后者的实现不池化ByteBuf实例，并且在每次它被调用时都会返回一个新的实例。</p>
 <h3 id="Unpooled缓冲区"><a href="#Unpooled缓冲区" class="headerlink" title="Unpooled缓冲区"></a>Unpooled缓冲区</h3><p>提供静态的辅助方法来创建未池化的ByteBuf实例：</p>
 <table>
 <thead>
@@ -480,7 +481,7 @@
                       <a href="/2020/05/31/6-Netty-ChannelHandler%E5%92%8CChannelPipeline/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">6.Netty--ChannelHandler和ChannelPipeline</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -489,7 +490,7 @@
                     
                       <a href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/">
                         <span class="hidden-mobile">4.Netty--传输</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -522,7 +523,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -549,7 +550,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -558,7 +559,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
