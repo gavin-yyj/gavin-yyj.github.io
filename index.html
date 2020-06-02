@@ -179,6 +179,60 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/">8.Netty--引导</a>
+
+      <a href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+引导客户端和服务器
+从Channel内引导客户端
+添加ChannelHandler
+使用ChannelOption和属性
+
+
+Bootstrap类引导类的层次结构：
+
+服务器致力于使用一个父Channel来接收来自客户端的连接，并创建子Channel以用于它们之间的通信；而客户端一般只需要一个单独的、没有父Channel的Channel来用于所有的网络交互。
+首先聊聊为什么引导</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">7.Netty--EventLoop和线程模型</a>
 
       <a href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="index-excerpt">
@@ -637,53 +691,6 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
 1.1 用户名密码登录逻辑废话不多说，在上一篇文章中，以标准的用户名密码登录为例，讲解了整个认证流程。大致流程如下：
 
 先进入 UsernamePasswordAuthenticationFilte</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-7-%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B/">SpringBoot集成Spring Security(7)--认证流程</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-7-%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B/" class="index-excerpt">
-        
-        
-          
-        
-        <div>在前面的六章中，介绍了 Spring Security 的基础使用，在继续深入向下的学习前，有必要理解清楚 Spring Security 的认证流程，这样才能理解为什么要这样写代码，也方便后续的扩展。
-一、认证流程
-
-上图是 Spring Security 认证流程的一部分，下面的讲解以上图为依据。
-
-（1） 用户发起表单登录请求后，首先进入 UsernamePasswordAuthentica</div>
       </a>
 
       <div class="index-btm post-metas">
