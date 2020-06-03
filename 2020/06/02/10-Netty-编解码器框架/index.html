@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>10.Netty--编解码器框架 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-02 21:08">
+      June 2, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <blockquote>
+<p>本文主要内容：</p>
+<ul>
+<li>解码器、编码器以及编解码器的概述</li>
+<li>Netty的编解码器类</li>
+</ul>
+</blockquote>
+<h2 id="什么是编解码器"><a href="#什么是编解码器" class="headerlink" title="什么是编解码器"></a>什么是编解码器</h2><ul>
+<li><p>编码器是将消息转换为适合于传输的格式（最有可能的就是字节流）；</p>
+</li>
+<li><p>解码器则是将网络字节流换回应用程序的消息格式；</p>
+</li>
+<li><p>编码器操作出站数据，解码器处理入站数据；</p>
+</li>
+</ul>
+<h2 id="解码器"><a href="#解码器" class="headerlink" title="解码器"></a>解码器</h2><ul>
+<li><p>将字节码解码为消息———ByteToMessageDecoder和ReplayingDecoder；</p>
+</li>
+<li><p>将一种消息类型解码为另一种———MessageToMessagedecoder</p>
+</li>
+</ul>
+<p>因为解码器是负责将入站数据从一种格式转换到另一种格式，所以Netty的解码器实现了ChannelInboundHandler。</p>
+<p>每当需要为ChannelPipeline中的下一个ChannelInboundHanler转换入站数据时会用到解码器，可以将多个解码器链接在一起，以实现任意复杂的转换逻辑。</p>
+<h3 id="抽象类ByteToMessageDecoder"><a href="#抽象类ByteToMessageDecoder" class="headerlink" title="抽象类ByteToMessageDecoder"></a>抽象类ByteToMessageDecoder</h3><p>由于你不可能知道远程节点是否会一次性地发送一个完整的消息，所以这个类会对入站数据进行缓冲，直到它准备好处理。</p>
+<p>ByteToMessageDecoder方法：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>decode(ChannelHandlerContext ctx,ByteBuf in,List<Objext> out)</td>
+<td>decode()方法被调用时将会传入一个包含了传入数据的ByteBuf，以及一个用来添加解码消息的List，对这个方法的调用将会重复进行，直到确定没有新的元素被添加到该List，或者该ByteBuf中没有更多可读取的字节时为止。然后，如果该List不为空，那么它的内容将会被传递给ChannelPipeline中的下一个ChannelInboundHandler。</td>
+</tr>
+<tr>
+<td>decodeLast(ChannelHandlerContext ctx,ByteBuf in,Lists<Object>out)</td>
+<td>默认实现只是简单地调用了decode()方法，当Channel的状态变为非活动时，这个方法将会被调用一次，可以重写该方法来提供特殊的处理，比如用来产生一个LastHttpContent消息</td>
+</tr>
+</tbody></table>
+<p>示例：假设你接收了一个包含简单int的字节流，每个int都需要被单独处理，在这种情况下，你需要从入站ByteBuf中读取每个int，并将它传递给ChannelPipeline中的下一个ChannelInboundHandler。为了解码这个字节流，你要扩展ByteToMessageDecoder类。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200603100430311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ToIntegerDecoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ByteToMessageDecoder</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, ByteBuf in,</span></span>
+<span class="hljs-function"><span class="hljs-params">        List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">//检查是否至少有 4 字节可读（一个 int 的字节长度）</span>
+        <span class="hljs-keyword">if</span> (in.readableBytes() &gt;= <span class="hljs-number">4</span>) &#123;
+            <span class="hljs-comment">//从入站 ByteBuf 中读取一个 int，并将其添加到解码消息的 List 中</span>
+            out.add(in.readInt());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="抽象类ReplayingDecoder"><a href="#抽象类ReplayingDecoder" class="headerlink" title="抽象类ReplayingDecoder"></a>抽象类ReplayingDecoder</h3><p>ReplayingDecoder扩展了ByteToMessageDecoder类，不必调用readableBytes()方法。它通过使用一个自定义的ByteBuf也就是ReplayingDecoderByteBuf来实现，包装传入的ByteBuf实现了这一点，readableBytes()方法将在内部执行。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ToIntegerDecoder2</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ReplayingDecoder</span>&lt;<span class="hljs-title">Void</span>&gt; </span>&#123; <span class="hljs-comment">// 扩展ReplayingDecoder&lt;Void&gt;以将字节解码为消息</span>
+    <span class="hljs-meta">@Override</span> <span class="hljs-comment">// 传入的ByteBuf 是ReplayingDecoderByteBuf</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, ByteBuf in,List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123; 
+    	<span class="hljs-comment">//从入站ByteBuf中读取一个int，并将其添加</span>
+        out.add(in.readInt());
+    &#125;
+&#125;</code></pre></div>
+<p>如果没有足够的字节可用，这个readInt()方法的实现将会抛出一个Error（实际上是Signal），其将在基类中被捕获并处理，当有更多的数据可供读取时，该decode()方法将会被再次调用。<br>这里有一个简单的准则：如果使用ByteToMessageDecoder 不会引入太多的复杂性，那么请使用它；否则，请使用ReplayingDecoder。</p>
+<h2 id="抽象类MessageToMessageDecoder"><a href="#抽象类MessageToMessageDecoder" class="headerlink" title="抽象类MessageToMessageDecoder"></a>抽象类MessageToMessageDecoder</h2><p>这里我们将编写一个IntegerToStringDecoder解码器来扩展MessageToMessageDecoder<Integer>,尖括号里面的参数代表了输入参数的类型。<br><img src="https://img-blog.csdnimg.cn/20200603102908817.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntegerToStringDecoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">MessageToMessageDecoder</span>&lt;<span class="hljs-title">Integer</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, Integer msg, List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        out.add(String.valueOf(msg));
+    &#125;
+&#125;</code></pre></div>
+<h2 id="TooLongFrameException类"><a href="#TooLongFrameException类" class="headerlink" title="TooLongFrameException类"></a>TooLongFrameException类</h2><p>Netty提供了TooLongFrameException类，其将由解码器在帧超出指定的大小限制时抛出。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SafeByteToMessageDecoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ByteToMessageDecoder</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAX_FRAME_SIZE = <span class="hljs-number">1024</span>;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, ByteBuf in,</span></span>
+<span class="hljs-function"><span class="hljs-params">        List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">int</span> readable = in.readableBytes();
+        <span class="hljs-keyword">if</span> (readable &gt; MAX_FRAME_SIZE) &#123; <span class="hljs-comment">// 检查缓冲区中是否有超过MAX_FRAME_SIZE个字节</span>
+            in.skipBytes(readable); <span class="hljs-comment">// 跳过所有的可读字节，抛出TooLongFrameException 并通知ChannelHandler</span>
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> TooLongFrameException(<span class="hljs-string">"Frame too big!"</span>);
+        &#125;
+        <span class="hljs-comment">// do something</span>
+        ...
+    &#125;
+&#125;</code></pre></div>
+<h1 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h1><p>编码器实现了ChannelOutBoundHandler，并将出站数据从一种格式转换为另一种格式。Netty提供了一组类，用于帮助你编写具有以下功能的编码器：<br>将消息编码为字节；<br>将消息编码为另一种格式的消息；</p>
+<h2 id="抽象类MessageToByteEncoder"><a href="#抽象类MessageToByteEncoder" class="headerlink" title="抽象类MessageToByteEncoder"></a>抽象类MessageToByteEncoder</h2><p><img src="https://img-blog.csdnimg.cn/20200603103905581.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>这个类只有一个方法，而解码器有两个，这是因为解码器通常需要在Channel关闭之后产生最后一个消息，因此也就有了decodeLast()方法，但是编码器就没必要在连接被关闭后仍产生消息了。<br>示例：接收一个Short类型的实例作为消息，将它编码为Short的原子类型，并将它写入ByteBuf中，其将随后被转发给ChannelPipeline中的下一个ChannelOutboundHandler，每个传出的Short值都将会被占用ByteBuf中的2字节。<br><img src="https://img-blog.csdnimg.cn/20200603104641304.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShortToByteEncoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">MessageToByteEncoder</span>&lt;<span class="hljs-title">Short</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">encode</span><span class="hljs-params">(ChannelHandlerContext ctx, Short msg, ByteBuf out)</span><span class="hljs-keyword">throws</span> Exception </span>&#123;
+        out.writeShort(msg);
+    &#125;
+&#125;</code></pre></div>
+<h2 id="抽象类MessageToMessageEncoder"><a href="#抽象类MessageToMessageEncoder" class="headerlink" title="抽象类MessageToMessageEncoder"></a>抽象类MessageToMessageEncoder</h2><p>示例：使用IntegerToStringEncoder扩展了MessageToMessageEncoder，设计如图所示：<br><img src="https://img-blog.csdnimg.cn/20200603105140614.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IntegerToStringEncoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">MessageToMessageEncoder</span>&lt;<span class="hljs-title">Integer</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">encode</span><span class="hljs-params">(ChannelHandlerContext ctx, Integer msg, List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        out.add(String.valueOf(msg));
+    &#125;
+&#125;</code></pre></div>
+<h1 id="抽象的编解码器类"><a href="#抽象的编解码器类" class="headerlink" title="抽象的编解码器类"></a>抽象的编解码器类</h1><h2 id="抽象类ByteToMessageCodec"><a href="#抽象类ByteToMessageCodec" class="headerlink" title="抽象类ByteToMessageCodec"></a>抽象类ByteToMessageCodec</h2><p>应用场景：我们需要将字节解码为某种形式的消息，随后再次对它进行编码。<br><img src="https://img-blog.csdnimg.cn/20200603110056715.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="抽象类MessageToMessageCodec"><a href="#抽象类MessageToMessageCodec" class="headerlink" title="抽象类MessageToMessageCodec"></a>抽象类MessageToMessageCodec</h2><p><img src="https://img-blog.csdnimg.cn/20200603111222346.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下面代码展示了Web浏览器与服务器之间的双向通信可能的实现方式：我们的WebSocketConvertHandler在参数化MessageToMessageCodec时将使用INBOUN_IN类型的WebSocketFrame，以及OUTBOUND_IN类型的MyWebSocketFrame，后者是WebSocketConvertHandler本身的一个静态嵌套类。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSocketConvertHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">MessageToMessageCodec</span>&lt;<span class="hljs-title">WebSocketFrame</span>, <span class="hljs-title">WebSocketConvertHandler</span>.<span class="hljs-title">MyWebSocketFrame</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span> <span class="hljs-comment">// 将MyWebSocketFrame 编码为指定的WebSocketFrame 子类型</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">encode</span><span class="hljs-params">(ChannelHandlerContext ctx, WebSocketConvertHandler.MyWebSocketFrame msg, List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ByteBuf payload = msg.getData().duplicate().retain();
+        <span class="hljs-keyword">switch</span> (msg.getType()) &#123; <span class="hljs-comment">// 实例化一个指定子类型的WebSocketFrame</span>
+            <span class="hljs-keyword">case</span> BINARY:
+                out.add(<span class="hljs-keyword">new</span> BinaryWebSocketFrame(payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> TEXT:
+                out.add(<span class="hljs-keyword">new</span> TextWebSocketFrame(payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> CLOSE:
+                out.add(<span class="hljs-keyword">new</span> CloseWebSocketFrame(<span class="hljs-keyword">true</span>, <span class="hljs-number">0</span>, payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> CONTINUATION:
+                out.add(<span class="hljs-keyword">new</span> ContinuationWebSocketFrame(payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> PONG:
+                out.add(<span class="hljs-keyword">new</span> PongWebSocketFrame(payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> PING:
+                out.add(<span class="hljs-keyword">new</span> PingWebSocketFrame(payload));
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">default</span>:
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(
+                        <span class="hljs-string">"Unsupported websocket msg "</span> + msg);
+        &#125;
+    &#125;
+    <span class="hljs-meta">@Override</span> <span class="hljs-comment">// 将WebSocketFrame 解码为MyWebSocketFrame，并设置FrameType</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, WebSocketFrame msg, List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ByteBuf payload = msg.content().duplicate().retain();
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> BinaryWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame(
+                    MyWebSocketFrame.FrameType.BINARY, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> CloseWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame (
+                    MyWebSocketFrame.FrameType.CLOSE, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> PingWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame (
+                    MyWebSocketFrame.FrameType.PING, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> PongWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame (
+                    MyWebSocketFrame.FrameType.PONG, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> TextWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame (
+                    MyWebSocketFrame.FrameType.TEXT, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        <span class="hljs-keyword">if</span> (msg <span class="hljs-keyword">instanceof</span> ContinuationWebSocketFrame) &#123;
+            out.add(<span class="hljs-keyword">new</span> MyWebSocketFrame (
+                    MyWebSocketFrame.FrameType.CONTINUATION, payload));
+        &#125; <span class="hljs-keyword">else</span>
+        &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(
+                    <span class="hljs-string">"Unsupported websocket msg "</span> + msg);
+        &#125;
+    &#125;
+    <span class="hljs-comment">//声明WebSocketConvertHandler所使用的OUTBOUND_IN类型</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyWebSocketFrame</span> </span>&#123;
+    	<span class="hljs-comment">//定义拥有被包装的有效负载的WebSocketFrame的类型</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> FrameType &#123;
+            BINARY,
+            CLOSE,
+            PING,
+            PONG,
+            TEXT,
+            CONTINUATION
+        &#125;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> FrameType type;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ByteBuf data;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MyWebSocketFrame</span><span class="hljs-params">(FrameType type, ByteBuf data)</span> </span>&#123;
+            <span class="hljs-keyword">this</span>.type = type;
+            <span class="hljs-keyword">this</span>.data = data;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> FrameType <span class="hljs-title">getType</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">return</span> type;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> ByteBuf <span class="hljs-title">getData</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">return</span> data;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="CombinedChannelDuplexHandler类"><a href="#CombinedChannelDuplexHandler类" class="headerlink" title="CombinedChannelDuplexHandler类"></a>CombinedChannelDuplexHandler类</h2><p>结合一个解码器和编码器可能会对可重用性造成影响。但是，有一种方法既能够避免这种惩罚，又不会牺牲将一个解码器和一个编码器作为一个单独的单元部署所带来的便利性。CombinedChannelDuplexHandler 提供了这个解决方案，其声明为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CombinedChannelDuplexHandler</span> &lt;<span class="hljs-title">I</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandler</span>,<span class="hljs-title">O</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelOutboundHandler</span>&gt;</span></code></pre></div>
+<p>首先看看ByteToCharDecoder类：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ByteToCharDecoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ByteToMessageDecoder</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, ByteBuf in,</span></span>
+<span class="hljs-function"><span class="hljs-params">        List&lt;Object&gt; out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">while</span> (in.readableBytes() &gt;= <span class="hljs-number">2</span>) &#123;
+            out.add(in.readChar());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<p>这里的decode()方法一次将从ByteBuf中提取2字节，并将它们作为char写入到List中，其将会被自动装箱为Character对象。<br>再来看看CharToByteEncoder类：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CharToByteEncoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">MessageToByteEncoder</span>&lt;<span class="hljs-title">Character</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">encode</span><span class="hljs-params">(ChannelHandlerContext ctx, Character msg, ByteBuf out)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        out.writeChar(msg);
+    &#125;
+&#125;</code></pre></div>
+<p>既然我们有了编码器和解码器，我们可以将它们结合起来构建一个编解码器：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//通过该编码器和解码器实现参数化CombinnedByteCharCodec</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CombinedByteCharCodec</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">CombinedChannelDuplexHandler</span>&lt;<span class="hljs-title">ByteToCharDecoder</span>, <span class="hljs-title">CharToByteEncoder</span>&gt; </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CombinedByteCharCodec</span><span class="hljs-params">()</span> </span>&#123;
+    	<span class="hljs-comment">//将委托实例传递给父类</span>
+        <span class="hljs-keyword">super</span>(<span class="hljs-keyword">new</span> ByteToCharDecoder(), <span class="hljs-keyword">new</span> CharToByteEncoder());
+    &#125;
+&#125;</code></pre></div>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">11.Netty--预置的ChannelHandler和编解码器</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">
+                        <span class="hidden-mobile">9.Netty--单元测试</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "10.Netty--编解码器框架&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

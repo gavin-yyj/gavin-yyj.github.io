@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>11.Netty--预置的ChannelHandler和编解码器 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-03 20:07">
+      June 3, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      48
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <blockquote>
+<p>本文主要内容：</p>
+<ul>
+<li>通过SSL/TLS保护Netty应用程序；</li>
+<li>构建基于Netty的HTTP/HTTPS应用程序</li>
+<li>处理空闲的连接和超时</li>
+<li>解码基于分隔符的协议和基于长度的协议</li>
+<li>写大型数据</li>
+<li>Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。</li>
+</ul>
+</blockquote>
+<h1 id="通过SSL-TLS保护Netty应用程序"><a href="#通过SSL-TLS保护Netty应用程序" class="headerlink" title="通过SSL/TLS保护Netty应用程序"></a>通过SSL/TLS保护Netty应用程序</h1><p>为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLEngine类使得实现解密和加密相当简单直接。Netty通过一个名为SslHandler的ChannelHandler实现利用了这个API，其中SslHandler在内部使用了SSLEngine来完成实际的工作。<br>下图是通过SslHandler进行解密和加密的数据流。<br><img src="https://img-blog.csdnimg.cn/20200603120939780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>Netty还提供了使用OpenSSL工具包的SSLEngine实现，该类提供了比JDK提供的SSLEngine具有更好的性能。<br>下面的代码展示了如何使用ChannelInitializer来将SslHandler添加到ChannelPipeline中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SslChannelInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt;</span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SslContext context; <span class="hljs-comment">// 传入要使用的SslContext</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> startTls; <span class="hljs-comment">// 如果设置为true，第一个写入的消息将不会被加密（客户端应该设置为true）</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SslChannelInitializer</span><span class="hljs-params">(SslContext context,<span class="hljs-keyword">boolean</span> startTls)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.context = context;
+        <span class="hljs-keyword">this</span>.startTls = startTls;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">// 对于每个SslHandler实例，都使用Channel的ByteBufAllocator从SslContext获取一个新的SSLEngine</span>
+        SSLEngine engine = context.newEngine(ch.alloc());
+        <span class="hljs-comment">// 将SslHandler 作为第一个ChannelHandler 添加到ChannelPipeline 中</span>
+        ch.pipeline().addFirst(<span class="hljs-string">"ssl"</span>,<span class="hljs-keyword">new</span> SslHandler(engine, startTls));
+    &#125;
+&#125;</code></pre></div>
+<p>在大多数情况下，SslHandler将是ChannelPipeline中的第一个ChannelHandler，这确保了只有在所有其他的ChannelHandler将他们的逻辑应用到数据之后，才会进行加密。<br>SslHandler提供的一些方法：<br><img src="https://img-blog.csdnimg.cn/20200603121820849.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h1 id="构建基于Netty的HTTP-HTTPS应用程序"><a href="#构建基于Netty的HTTP-HTTPS应用程序" class="headerlink" title="构建基于Netty的HTTP/HTTPS应用程序"></a>构建基于Netty的HTTP/HTTPS应用程序</h1><h2 id="HTTP解码器、编码器和编解码器"><a href="#HTTP解码器、编码器和编解码器" class="headerlink" title="HTTP解码器、编码器和编解码器"></a>HTTP解码器、编码器和编解码器</h2><p>HTTP是基于请求/响应模式的：客户端向服务器发送一个HTTP请求，然后服务器将会返回一个HTTP响应。<br>下图分别展示了生产和消费HTTP请求和HTTP响应的方法：<br>HTTP 请求的组成部分：<br><img src="https://img-blog.csdnimg.cn/20200603122819791.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="HTTP 请求的组成部分"><br>HTTP 响应的组成部分：<br><img src="https://img-blog.csdnimg.cn/20200603122907848.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下面的代码展示了将HTTP支持添加到你的应用程序，几乎只需要将正确的ChannelHandler添加到ChannelPipeline中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpPipelineInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> client;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpPipelineInitializer</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> client)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.client = client;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-keyword">if</span> (client) &#123; 
+        	<span class="hljs-comment">// 如果是客户端，则添加HttpResponseDecoder来处理来自服务器的响应</span>
+            pipeline.addLast(<span class="hljs-string">"decoder"</span>, <span class="hljs-keyword">new</span> HttpResponseDecoder());
+            <span class="hljs-comment">//如果是客户端，则添加HttpRequestEncoder来向服务器发送请求</span>
+            pipeline.addLast(<span class="hljs-string">"encoder"</span>, <span class="hljs-keyword">new</span> HttpRequestEncoder());
+        &#125; <span class="hljs-keyword">else</span> &#123;
+        	<span class="hljs-comment">//如果是服务器，则添加HttpRequestDecoder来接收来自客户端的请求</span>
+            pipeline.addLast(<span class="hljs-string">"decoder"</span>, <span class="hljs-keyword">new</span> HttpRequestDecoder());
+            <span class="hljs-comment">//如果是服务器，则添加HttpResponseEncoder以向客户端发送响应</span>
+            pipeline.addLast(<span class="hljs-string">"encoder"</span>, <span class="hljs-keyword">new</span> HttpResponseEncoder());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="聚合HTTP消息"><a href="#聚合HTTP消息" class="headerlink" title="聚合HTTP消息"></a>聚合HTTP消息</h2><p>由于HTTP 的请求和响应可能由许多部分组成，因此你需要聚合它们以形成完整的消息。为了消除这项繁琐的任务，Netty 提供了一个聚合器，它可以将多个消息部分合并为FullHttpRequest 或者FullHttpResponse 消息。<br>引入这种自动聚合机制只不过是向ChannelPipeline中添加另外一个ChannelHandler罢了。<br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment">* 自动聚合HTTP 的消息片段</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpAggregatorInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> isClient;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpAggregatorInitializer</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> isClient)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.isClient = isClient;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-keyword">if</span> (isClient) &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpClientCodec());
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpServerCodec());
+        &#125;
+        <span class="hljs-comment">//将最大的消息大小为512KB的HttpObjectAggregator添加到ChannelPipeline</span>
+        pipeline.addLast(<span class="hljs-string">"aggregator"</span>,<span class="hljs-keyword">new</span> HttpObjectAggregator(<span class="hljs-number">512</span> * <span class="hljs-number">1024</span>));
+    &#125;
+&#125;</code></pre></div>
+<h2 id="HTTP压缩"><a href="#HTTP压缩" class="headerlink" title="HTTP压缩"></a>HTTP压缩</h2><p>Netty 为压缩和解压缩提供了ChannelHandler 实现，它们同时支持gzip 和deflate 编码。<br>客户端可以通过提供以下头部信息来指示服务器它所支持的压缩格式：</p>
+<div class="hljs"><pre><code class="hljs markup">GET &#x2F;encrypted-area HTTP&#x2F;1.1
+Host: www.example.com
+Accept-Encoding: gzip, deflate</code></pre></div>
+<p>注意：服务器不需要压缩它所发送的数据<br>下面代码展示了自动压缩HTTP消息</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/**</span>
+<span class="hljs-comment">* 自动压缩HTTP 消息</span>
+<span class="hljs-comment">*/</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpCompressionInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> isClient;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpCompressionInitializer</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> isClient)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.isClient = isClient;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-keyword">if</span> (isClient) &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpClientCodec());
+            <span class="hljs-comment">// 如果是客户端，则添加HttpContentDecompressor 以处理来自服务器的压缩内容.</span>
+            pipeline.addLast(<span class="hljs-string">"decompressor"</span>,<span class="hljs-keyword">new</span> HttpContentDecompressor());
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpServerCodec());
+            <span class="hljs-comment">// 如果是服务器，则添加HttpContentCompressor来压缩数据（如果客户端支持它）</span>
+            pipeline.addLast(<span class="hljs-string">"compressor"</span>,<span class="hljs-keyword">new</span> HttpContentCompressor());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="使用HTTPS"><a href="#使用HTTPS" class="headerlink" title="使用HTTPS"></a>使用HTTPS</h2><p>启用HTTPS只需要将SslHandler添加到ChannelPipeline的ChannelHandler组合中。<br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpsCodecInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SslContext context;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> isClient;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpsCodecInitializer</span><span class="hljs-params">(SslContext context, <span class="hljs-keyword">boolean</span> isClient)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.context = context;
+        <span class="hljs-keyword">this</span>.isClient = isClient;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        SSLEngine engine = context.newEngine(ch.alloc());
+        <span class="hljs-comment">//将SslHandler添加到ChannelPipeline中以使用HTTPS</span>
+        pipeline.addFirst(<span class="hljs-string">"ssl"</span>, <span class="hljs-keyword">new</span> SslHandler(engine));
+        <span class="hljs-comment">//如果是客户端，则添加HttpClientCodec</span>
+        <span class="hljs-keyword">if</span> (isClient) &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpClientCodec());
+        <span class="hljs-comment">//如果是服务器，则添加HttpServerCodec</span>
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            pipeline.addLast(<span class="hljs-string">"codec"</span>, <span class="hljs-keyword">new</span> HttpServerCodec());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h2><p>WebSocket为网页和远程服务器之间的双向通信提供了一种替代HTTP轮询的方案。<br>如果想要在应用程序中添加对于WebSocket的支持，只需要将适当的客户端或者服务器WebSocketChannelHandler添加到ChannelPipeline中，这个类将处理由WebSocket定义的称为帧的特殊消息类型。<br>WebSocket协议如下：<br><img src="https://img-blog.csdnimg.cn/2020060313363214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>WebSocketFrame可以被归类于数据帧或者控制帧，主要类型如下：<br><img src="https://img-blog.csdnimg.cn/20200603133805130.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>在服务器端支持WebSocket的代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSocketServerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt;</span>&#123;
+    <span class="hljs-meta">@Override</span>
+        ch.pipeline().addLast(
+        <span class="hljs-keyword">new</span> HttpServerCodec(),
+        <span class="hljs-keyword">new</span> HttpObjectAggregator(<span class="hljs-number">65536</span>), <span class="hljs-comment">// 为握手提供聚合的HttpRequest</span>
+        <span class="hljs-keyword">new</span> WebSocketServerProtocolHandler(<span class="hljs-string">"/websocket"</span>), <span class="hljs-comment">// 如果被请求的端点是"/websocket"，则处理该升级握手</span>
+        <span class="hljs-keyword">new</span> TextFrameHandler(), <span class="hljs-comment">// TextFrameHandler 处理TextWebSocketFrame</span>
+        <span class="hljs-keyword">new</span> BinaryFrameHandler(),
+        <span class="hljs-keyword">new</span> ContinuationFrameHandler());
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TextFrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">TextWebSocketFrame</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,TextWebSocketFrame msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Handle text frame</span>
+        &#125;
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BinaryFrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">BinaryWebSocketFrame</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,BinaryWebSocketFrame msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Handle binary frame</span>
+        &#125;
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ContinuationFrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">ContinuationWebSocketFrame</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,ContinuationWebSocketFrame msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Handle continuation frame</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<p>想要为WebSocket添加安全性，只需要将SslHandler作为第一个ChannelHandler添加到ChannelPipeline中。</p>
+<h1 id="空闲的连接和超时"><a href="#空闲的连接和超时" class="headerlink" title="空闲的连接和超时"></a>空闲的连接和超时</h1><p>检测空闲连接以及超时连接对于及时释放资源来说是至关重要的，Netty特地为它提供了几个ChannelHandler实现。<br><img src="https://img-blog.csdnimg.cn/20200603142124762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下列代码展示了当我们通常的发送心跳消息到远程节点的方法时，如果在60s内没有接收或者发送任何的数据，我们将如何得到通知；如果没有响应，则连接会被关闭。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">IdleStateHandlerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-comment">// IdleStateHandler 将在被触发时发送一个IdleStateEvent 事件</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> IdleStateHandler(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">60</span>, TimeUnit.SECONDS));
+        <span class="hljs-comment">//将一个HeartbeatHandler添加到ChannelPipeline中</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> HeartbeatHandler());
+    &#125;
+    <span class="hljs-comment">//实现userEventTriggered()方法以发送心跳消息</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HeartbeatHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    	<span class="hljs-comment">//发送到远程节点的心跳消息</span>
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> ByteBuf HEARTBEAT_SEQUENCE =Unpooled.unreleasableBuffer(Unpooled.copiedBuffer(<span class="hljs-string">"HEARTBEAT"</span>, CharsetUtil.ISO_8859_1));
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">userEventTriggered</span><span class="hljs-params">(ChannelHandlerContext ctx,Object evt)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-keyword">if</span> (evt <span class="hljs-keyword">instanceof</span> IdleStateEvent) &#123; 
+            	<span class="hljs-comment">// 发送心跳消息，并在发送失败时关闭该连接</span>
+                ctx.writeAndFlush(HEARTBEAT_SEQUENCE.duplicate())
+                    .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+            &#125; <span class="hljs-keyword">else</span> &#123; 
+            	<span class="hljs-comment">// 不是IdleStateEvent事件，所以将它传递给下一个ChannelInboundHandler</span>
+                <span class="hljs-keyword">super</span>.userEventTriggered(ctx, evt);
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<p>上面这个示例演示了如何使用IdleStateHandler来测试远程节点是否仍然还活着，并且在它失活时通过关闭连接来释放资源。<br>如果连接超过60s没有接收或者发送任何的数据，那么IdleStateHandler将会使用一个IdleStateEvent事件来调用fireUserEventTriggered()方法。HeartbeatHandler实现了userEventTriggered()方法，如果这个方法检测到IdleSstateEvent事件，它将会发送心跳消息，并且添加一个将在发送操作失败时关闭该连接的ChannelFutureListener。</p>
+<h1 id="解码基于分隔符的协议和基于长度的协议"><a href="#解码基于分隔符的协议和基于长度的协议" class="headerlink" title="解码基于分隔符的协议和基于长度的协议"></a>解码基于分隔符的协议和基于长度的协议</h1><h2 id="基于分隔符的协议"><a href="#基于分隔符的协议" class="headerlink" title="基于分隔符的协议"></a>基于分隔符的协议</h2><p>基于分隔符的（delimited）消息协议使用定义的字符来标记的消息或者消息段（通常被称为帧）的开头或者结尾。由RFC文档正式定义的许多协议（如SMTP、POP3、IMAP以及Telnet）都是这样的。<br><img src="https://img-blog.csdnimg.cn/20200603143648459.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下图展示了当帧由行尾序列\r\n分割时是如何被处理的：<br><img src="https://img-blog.csdnimg.cn/20200603143900748.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LineBasedHandlerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-comment">//该LineBasedFrameDecoder将提取的帧转发给下一个ChannelInboundHandler</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> LineBasedFrameDecoder(<span class="hljs-number">64</span> * <span class="hljs-number">1024</span>));
+        <span class="hljs-comment">//添加FrameHandler来接收帧</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> FrameHandler());
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">ByteBuf</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-comment">//传入了单个帧的内容</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,ByteBuf msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Do something with the data extracted from the frame</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<p>作为示例，我们将使用下面的协议规范：<br>1.传入数据流是一系列的帧，每个帧都由换行符（\n）分隔；<br>2.每个帧都由一系列的元素组成，每个元素都由单个空格字符分隔；<br>3.一个帧的内容代表一个命令，定义为一个命令名称后跟着数目可变的参数。<br>我们用于这个协议的自定义解码器将定义以下类：<br>1.Cmd—将帧（命令）的内容存储在ByteBuf 中，一个ByteBuf 用于名称，另一个用于参数；<br>2.CmdDecoder—从被重写了的decode()方法中获取一行字符串，并从它的内容构建一个Cmd 的实例；<br>3.CmdHandler —从CmdDecoder 获取解码的Cmd 对象，并对它进行一些处理；<br>4.CmdHandlerInitializer —为了简便起见，我们将会把前面的这些类定义为专门的ChannelInitializer 的嵌套类，其将会把这些ChannelInboundHandler 安装到ChannelPipeline 中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CmdHandlerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">byte</span> SPACE = (<span class="hljs-keyword">byte</span>)<span class="hljs-string">' '</span>;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(<span class="hljs-keyword">new</span> CmdDecoder(<span class="hljs-number">64</span> * <span class="hljs-number">1024</span>)); <span class="hljs-comment">// 添加CmdDecoder 以提取Cmd 对象，并将它转发给下一个ChannelInboundHandler</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> CmdHandler()); <span class="hljs-comment">// 添加CmdHandler 以接收和处理Cmd 对象</span>
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Cmd</span> </span>&#123;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ByteBuf name;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ByteBuf args;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Cmd</span><span class="hljs-params">(ByteBuf name, ByteBuf args)</span> </span>&#123;
+            <span class="hljs-keyword">this</span>.name = name;
+            <span class="hljs-keyword">this</span>.args = args;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> ByteBuf <span class="hljs-title">name</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">return</span> name;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> ByteBuf <span class="hljs-title">args</span><span class="hljs-params">()</span> </span>&#123;
+            <span class="hljs-keyword">return</span> args;
+        &#125;
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CmdDecoder</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">LineBasedFrameDecoder</span> </span>&#123;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CmdDecoder</span><span class="hljs-params">(<span class="hljs-keyword">int</span> maxLength)</span> </span>&#123;
+            <span class="hljs-keyword">super</span>(maxLength);
+        &#125;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">protected</span> Object <span class="hljs-title">decode</span><span class="hljs-params">(ChannelHandlerContext ctx, ByteBuf buffer)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        	<span class="hljs-comment">//从ByteBuf中提取由行尾符序列分割的帧</span>
+            ByteBuf frame = (ByteBuf) <span class="hljs-keyword">super</span>.decode(ctx, buffer);
+            <span class="hljs-keyword">if</span> (frame == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+            &#125;
+            <span class="hljs-comment">// 查找第一个空格字符的索引。前面是命令名称，接着是参数</span>
+            <span class="hljs-keyword">int</span> index = frame.indexOf(frame.readerIndex(),frame.writerIndex(), SPACE);
+            <span class="hljs-comment">// 使用包含有命令名称和参数的切片创建新的Cmd 对象</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Cmd(frame.slice(frame.readerIndex(), index),frame.slice(index + <span class="hljs-number">1</span>, frame.writerIndex()));
+        &#125;
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CmdHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">Cmd</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx, Cmd msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Do something with the command(获取Cmd对象进一步操作)</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="基于长度的协议"><a href="#基于长度的协议" class="headerlink" title="基于长度的协议"></a>基于长度的协议</h2><p><img src="https://img-blog.csdnimg.cn/20200603144720346.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200603144751918.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果遇到被编码到消息头部的帧大小不是固定值的协议，为了处理这种变长帧，可以使用LengthFieldBasedFrameDecoder，它将从头部字段确定帧长，然后从数据流中提取指定的字节数。<br><img src="https://img-blog.csdnimg.cn/20200603145131132.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LengthBasedInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(<span class="hljs-keyword">new</span> LengthFieldBasedFrameDecoder(<span class="hljs-number">64</span> * <span class="hljs-number">1024</span>, <span class="hljs-number">0</span>, <span class="hljs-number">8</span>));
+        pipeline.addLast(<span class="hljs-keyword">new</span> FrameHandler());
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">ByteBuf</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,ByteBuf msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Do something with the frame</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h1 id="写大型数据"><a href="#写大型数据" class="headerlink" title="写大型数据"></a>写大型数据</h1><p>由于写操作是非阻塞的，所在存在内存耗尽的风险，因此在写大型数据时，需要准备好处理到远程节点的连接是慢速连接的情况，这种情况会导致内存释放的延迟。<br>下面代码展示了如何通过从FileInputStream创建一个DefaultRegion，并将其写入Channel，从而利用零拷贝特性来传输一个文件的内容。</p>
+<div class="hljs"><pre><code class="hljs java">FileInputStream in = <span class="hljs-keyword">new</span> FileInputStream(file);
+<span class="hljs-comment">// 以该文件的完整长度创建一个新的DefaultFileRegion</span>
+FileRegion region = <span class="hljs-keyword">new</span> DefaultFileRegion(in.getChannel(), <span class="hljs-number">0</span>, file.length());
+<span class="hljs-comment">// 发送该DefaultFileRegion，并注册一个ChannelFutureListener</span>
+channel.writeAndFlush(region).addListener(<span class="hljs-keyword">new</span> ChannelFutureListener() &#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">operationComplete</span><span class="hljs-params">(ChannelFuture future)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">if</span> (!future.isSuccess()) &#123;
+            Throwable cause = future.cause(); <span class="hljs-comment">// 处理失败</span>
+            <span class="hljs-comment">// Do something</span>
+        &#125;
+    &#125;
+&#125;);</code></pre></div>
+<p>这个示例只适用于文件内容的直接传输，不包括应用程序对数据的任何处理。在需要将数据从文件系统复制到用户内存中时，可以使用ChunkedWriteHandler，它支持异步写大型数据流，而又不会导致大量的内存消耗。<br><img src="https://img-blog.csdnimg.cn/20200603150611949.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下面代码展示了ChunkedStream的用法：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChunkedWriteHandlerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> File file;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SslContext sslCtx;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ChunkedWriteHandlerInitializer</span><span class="hljs-params">(File file, SslContext sslCtx)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.file = file;
+        <span class="hljs-keyword">this</span>.sslCtx = sslCtx;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        <span class="hljs-comment">//将SslHandler添加到ChannelPipeline中</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> SslHandler(sslCtx.newEngine(ch.alloc());
+        <span class="hljs-comment">//添加ChunkedWritHandler以处理作为ChunkedInput传入的数据</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> ChunkedWriteHandler());
+        <span class="hljs-comment">// 一旦连接建立，WriteStreamHandler就开始写文件数据</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> WriteStreamHandler()); 
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WriteStreamHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
+    	<span class="hljs-comment">//当连接建立时，channelActive()方法将使用ChunkedInput写文件数据</span>
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelActive</span><span class="hljs-params">(ChannelHandlerContext ctx)</span><span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-keyword">super</span>.channelActive(ctx);
+            ctx.writeAndFlush(<span class="hljs-keyword">new</span> ChunkedStream(<span class="hljs-keyword">new</span> FileInputStream(file)));
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h1 id="序列化数据"><a href="#序列化数据" class="headerlink" title="序列化数据"></a>序列化数据</h1><h2 id="JDK序列化"><a href="#JDK序列化" class="headerlink" title="JDK序列化"></a>JDK序列化</h2><p><img src="https://img-blog.csdnimg.cn/20200603151321484.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="JBoss-Marshalling序列化"><a href="#JBoss-Marshalling序列化" class="headerlink" title="JBoss Marshalling序列化"></a>JBoss Marshalling序列化</h2><p><img src="https://img-blog.csdnimg.cn/20200603151359976.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>下面代码展示了如何使用MarshallingDecoder和MarshallingEncoder：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MarshallingInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> MarshallerProvider marshallerProvider;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> UnmarshallerProvider unmarshallerProvider;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MarshallingInitializer</span><span class="hljs-params">(UnmarshallerProvider unmarshallerProvider,MarshallerProvider marshallerProvider)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.marshallerProvider = marshallerProvider;
+        <span class="hljs-keyword">this</span>.unmarshallerProvider = unmarshallerProvider;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel channel)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = channel.pipeline();
+        <span class="hljs-comment">//添加MarshallingDecoder以将ByteBuf转换为POJO</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> MarshallingDecoder(unmarshallerProvider));
+        <span class="hljs-comment">//添加MarshallingEncoder以将POJO转换为ByteBuf</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> MarshallingEncoder(marshallerProvider));
+        <span class="hljs-comment">// 添加ObjectHandler，以处理普通的实现了Serializable 接口的POJO</span>
+        pipeline.addLast(<span class="hljs-keyword">new</span> ObjectHandler()); 
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ObjectHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">Serializable</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext channelHandlerContext,Serializable serializable)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Do something</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+<h2 id="Protocol-Buffers序列化"><a href="#Protocol-Buffers序列化" class="headerlink" title="Protocol Buffers序列化"></a>Protocol Buffers序列化</h2><p>Protocol Buffers 以一种紧凑而高效的方式对结构化的数据进行编码以及解码。它具有许多的编程语言绑定，使得它很适合跨语言的项目。(由Google公司开发的、现在已经开源的数据交换格式。)<br><img src="https://img-blog.csdnimg.cn/20200603151801160.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProtoBufInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> MessageLite lite;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ProtoBufInitializer</span><span class="hljs-params">(MessageLite lite)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.lite = lite;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(<span class="hljs-keyword">new</span> ProtobufVarint32FrameDecoder());
+        pipeline.addLast(<span class="hljs-keyword">new</span> ProtobufEncoder()); ①
+        pipeline.addLast(<span class="hljs-keyword">new</span> ProtobufDecoder(lite));
+        pipeline.addLast(<span class="hljs-keyword">new</span> ObjectHandler());
+    &#125;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ObjectHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">Object</span>&gt; </span>&#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx, Object msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+            <span class="hljs-comment">// Do something with the object</span>
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">
+                        <span class="hidden-mobile">10.Netty--编解码器框架</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "11.Netty--预置的ChannelHandler和编解码器&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
