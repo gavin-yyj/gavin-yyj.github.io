@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>12.Netty--WebSocket - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-03 21:15">
+      June 3, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <blockquote>
+<p>本文主要内容：</p>
+<ul>
+<li>实时Web的概念</li>
+<li>WebSocket协议</li>
+<li>使用Netty构建一个基于WebSocket的聊天室服务器</li>
+</ul>
+</blockquote>
+<h1 id="WebSocket简介"><a href="#WebSocket简介" class="headerlink" title="WebSocket简介"></a>WebSocket简介</h1><p>WebSocket协议是完全重新设计的协议，旨在为Web上的双向数据传输问题提供一个切实可行的解决方案，使得客户端与服务器之间可以在任意时刻传输消息。</p>
+<h1 id="我们的WebSocket示例应用程序"><a href="#我们的WebSocket示例应用程序" class="headerlink" title="我们的WebSocket示例应用程序"></a>我们的WebSocket示例应用程序</h1><p><img src="https://img-blog.csdnimg.cn/20200603155650935.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h1 id="添加WebSocket支持"><a href="#添加WebSocket支持" class="headerlink" title="添加WebSocket支持"></a>添加WebSocket支持</h1><p><img src="https://img-blog.csdnimg.cn/20200603155948230.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="处理HTTP请求"><a href="#处理HTTP请求" class="headerlink" title="处理HTTP请求"></a>处理HTTP请求</h2><p>首先我们需要实现处理HTTP请求的组件，这个组件将提供用于访问聊天室并显示由连接的客户端发送的消息的网页。channelRead0()方法的实现是如何转发任何目标URI为/ws的请求的。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpRequestHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">FullHttpRequest</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String wsUri;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> File INDEX;
+    <span class="hljs-keyword">static</span> &#123;
+        URL location = HttpRequestHandler<span class="hljs-class">.<span class="hljs-keyword">class</span></span>
+<span class="hljs-class">            .<span class="hljs-title">getProtectionDomain</span>()</span>
+<span class="hljs-class">            .<span class="hljs-title">getCodeSource</span>().<span class="hljs-title">getLocation</span>()</span>;
+        <span class="hljs-keyword">try</span> &#123;
+            String path = location.toURI() + <span class="hljs-string">"index.html"</span>;
+            path = !path.contains(<span class="hljs-string">"file:"</span>) ? path : path.substring(<span class="hljs-number">5</span>);
+            INDEX = <span class="hljs-keyword">new</span> File(path);
+        &#125; <span class="hljs-keyword">catch</span> (URISyntaxException e) &#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">"Unable to locate index.html"</span>, e);
+        &#125;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpRequestHandler</span><span class="hljs-params">(String wsUri)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.wsUri = wsUri;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,FullHttpRequest request)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">// 如果请求了WebSocket协议升级，则增加引用计数（调用retain()方法），并将它传递给下一个 ChannelInboundHandler</span>
+        <span class="hljs-keyword">if</span> (wsUri.equalsIgnoreCase(request.getUri())) &#123;
+            ctx.fireChannelRead(request.retain()); 
+        &#125; <span class="hljs-keyword">else</span> &#123;
+        	<span class="hljs-comment">// 处理100 Continue请求以符合HTTP1.1 规范</span>
+            <span class="hljs-keyword">if</span> (HttpHeaders.is100ContinueExpected(request)) &#123; 
+                send100Continue(ctx);
+            &#125;
+            <span class="hljs-comment">// 读取index.html</span>
+            RandomAccessFile file = <span class="hljs-keyword">new</span> RandomAccessFile(INDEX, <span class="hljs-string">"r"</span>); 
+            HttpResponse response = <span class="hljs-keyword">new</span> DefaultHttpResponse(
+            request.getProtocolVersion(), HttpResponseStatus.OK);
+            response.headers().set(HttpHeaders.Names.CONTENT_TYPE,<span class="hljs-string">"text/plain; charset=UTF-8"</span>);
+            <span class="hljs-keyword">boolean</span> keepAlive = HttpHeaders.isKeepAlive(request);
+            <span class="hljs-keyword">if</span> (keepAlive) &#123;
+                response.headers().set(HttpHeaders.Names.CONTENT_LENGTH, file.length());
+                response.headers().set( HttpHeaders.Names.CONNECTION,HttpHeaders.Values.KEEP_ALIVE);
+            &#125;
+            <span class="hljs-comment">// 将HttpResponse写到客户端</span>
+            ctx.write(response); 
+            <span class="hljs-keyword">if</span> (ctx.pipeline().get(SslHandler<span class="hljs-class">.<span class="hljs-keyword">class</span>) </span>== <span class="hljs-keyword">null</span>) &#123;
+            	<span class="hljs-comment">// 将index.html写到客户端</span>
+                ctx.write(<span class="hljs-keyword">new</span> DefaultFileRegion(file.getChannel(), <span class="hljs-number">0</span>, file.length())); 
+            &#125; <span class="hljs-keyword">else</span> &#123;
+                ctx.write(<span class="hljs-keyword">new</span> ChunkedNioFile(file.getChannel()));
+            &#125;
+            <span class="hljs-comment">// 写LastHttpContent并冲刷至客户端</span>
+            ChannelFuture future = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT); 
+            <span class="hljs-comment">// 如果没有请求keep-alive，则在写操作完成后关闭Channel</span>
+            <span class="hljs-keyword">if</span> (!keepAlive) &#123; 
+                future.addListener(ChannelFutureListener.CLOSE);
+            &#125;
+        &#125;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">send100Continue</span><span class="hljs-params">(ChannelHandlerContext ctx)</span> </span>&#123;
+        FullHttpResponse response = <span class="hljs-keyword">new</span> DefaultFullHttpResponse(
+        HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE);
+        ctx.writeAndFlush(response);
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">exceptionCaught</span><span class="hljs-params">(ChannelHandlerContext ctx, Throwable cause)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        cause.printStackTrace();
+        ctx.close();
+    &#125;
+&#125;</code></pre></div>
+<p>如果该HTTP请求指向了地址为/ws的URI，那么HttpRequestHandler将调用FullHttpRequest对象上的retain()方法，并通过调用fireChannelRead(msg)方法将它转发给下一个ChannelInboundHandler。之所以需要调用retain()方法，是因为调用channelRead()方法完成之后，它将调用FullHttpRequest对象上的release()方法来释放它的资源。</p>
+<h2 id="处理WebSocket帧"><a href="#处理WebSocket帧" class="headerlink" title="处理WebSocket帧"></a>处理WebSocket帧</h2><p><img src="https://img-blog.csdnimg.cn/20200603203324279.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>TextWebSocketFrame是我们唯一真正需要处理的帧类型。Netty提供了WebSocketServerProtocolHandler来处理其他类型的帧。<br>下面代码展示了我们用于处理TextWebSocketFrame的ChannelInboundHandler，其还将在它的ChannelGroup中跟踪所有活动的WebSocket连接。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TextWebSocketFrameHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SimpleChannelInboundHandler</span>&lt;<span class="hljs-title">TextWebSocketFrame</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ChannelGroup group;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">TextWebSocketFrameHandler</span><span class="hljs-params">(ChannelGroup group)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.group = group;
+    &#125;
+    <span class="hljs-meta">@Override</span> <span class="hljs-comment">// 重写userEventTriggered()方法以处理自定义事件</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">userEventTriggered</span><span class="hljs-params">(ChannelHandlerContext ctx, Object evt)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">// 如果该事件表示握手成功，则从该Channelipeline中移除HttpRequestHandler，因为将不会接收到任何HTTP 消息了</span>
+        <span class="hljs-keyword">if</span> (evt == WebSocketServerProtocolHandler.ServerHandshakeStateEvent.HANDSHAKE_COMPLETE) &#123;
+            ctx.pipeline().remove(HttpRequestHandler<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+            <span class="hljs-comment">// 通知所有已经连接的WebSocket 客户端新的客户端已经连接上了</span>
+            group.writeAndFlush(<span class="hljs-keyword">new</span> TextWebSocketFrame(<span class="hljs-string">"Client "</span> + ctx.channel() + <span class="hljs-string">" joined"</span>));
+            <span class="hljs-comment">// 将新的WebSocket Channel添加到ChannelGroup 中，以便它可以接收到所有的消息</span>
+            group.add(ctx.channel());
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">super</span>.userEventTriggered(ctx, evt);
+        &#125;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead0</span><span class="hljs-params">(ChannelHandlerContext ctx,TextWebSocketFrame msg)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+	    <span class="hljs-comment">// 增加消息的引用计数，并将它写到ChannelGroup 中所有已经连接的客户端</span>
+        group.writeAndFlush(msg.retain()); 
+    &#125;
+&#125;</code></pre></div>
+<p>和之前一样，对于retain()方法的调用是必需的，因为当channelRead0()方法返回时，TextWebSocketFrame 的引用计数将会被减少。由于所有的操作都是异步的，因此，writeAndFlush()方法可能会在channelRead0()方法返回之后完成，而且它绝对不能访问一个已经失效的引用。</p>
+<h2 id="初始化ChannelPipeline"><a href="#初始化ChannelPipeline" class="headerlink" title="初始化ChannelPipeline"></a>初始化ChannelPipeline</h2><p>为了将ChannelHandler安装到ChannelPipeline中，需要扩展ChannelInitializer，并实现initChannel()方法。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChatServerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">Channel</span>&gt; </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ChannelGroup group;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ChatServerInitializer</span><span class="hljs-params">(ChannelGroup group)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.group = group;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-comment">//将所有有需要的ChannelHandler添加到ChannelPipeline中</span>
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(<span class="hljs-keyword">new</span> HttpServerCodec());
+        pipeline.addLast(<span class="hljs-keyword">new</span> ChunkedWriteHandler());
+        pipeline.addLast(<span class="hljs-keyword">new</span> HttpObjectAggregator(<span class="hljs-number">64</span> * <span class="hljs-number">1024</span>));
+        pipeline.addLast(<span class="hljs-keyword">new</span> HttpRequestHandler(<span class="hljs-string">"/ws"</span>));
+        pipeline.addLast(<span class="hljs-keyword">new</span> WebSocketServerProtocolHandler(<span class="hljs-string">"/ws"</span>));
+        pipeline.addLast(<span class="hljs-keyword">new</span> TextWebSocketFrameHandler(group));
+    &#125;
+&#125;</code></pre></div>
+<p>下面是基于WebSocket聊天服务器的ChannelHandler及各自的职责：<br><img src="https://img-blog.csdnimg.cn/20200603204803165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>Netty的WebSocketServerProtocolHandler处理了所有委托管理的WebSocket帧类型以及升级握手本身，如果握手成功，那么所需的ChannelHandler将会被添加到ChannelPipeline中，而那些不再需要的ChannelHandler则将会被移除。<br>WebSocket 协议升级之前的ChannelPipeline：<br><img src="https://img-blog.csdnimg.cn/20200603205148885.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>WebSocket 协议升级完成之后的ChannelPipeline：<br><img src="https://img-blog.csdnimg.cn/20200603205201947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="引导"><a href="#引导" class="headerlink" title="引导"></a>引导</h2><p>由ChatServer类来引导服务器，并安装ChatServerInitializer的代码。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChatServer</span> </span>&#123;
+	<span class="hljs-comment">//创建DefaultChannelGroup，其将保存所有已经连接的WebSocketChannel</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ChannelGroup channelGroup =
+            <span class="hljs-keyword">new</span> DefaultChannelGroup(ImmediateEventExecutor.INSTANCE);
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> EventLoopGroup group = <span class="hljs-keyword">new</span> NioEventLoopGroup();
+    <span class="hljs-keyword">private</span> Channel channel;
+    <span class="hljs-comment">//引导服务器</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ChannelFuture <span class="hljs-title">start</span><span class="hljs-params">(InetSocketAddress address)</span> </span>&#123;
+        ServerBootstrap bootstrap = <span class="hljs-keyword">new</span> ServerBootstrap();
+        bootstrap.group(group)
+                .channel(NioServerSocketChannel<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>
+<span class="hljs-class">                .<span class="hljs-title">childHandler</span>(<span class="hljs-title">createInitializer</span>(<span class="hljs-title">channelGroup</span>))</span>;
+        ChannelFuture future = bootstrap.bind(address);
+        future.syncUninterruptibly();
+        channel = future.channel();
+        <span class="hljs-keyword">return</span> future;
+    &#125;
+    <span class="hljs-comment">//创建ChatServerInitializer</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> ChannelInitializer&lt;Channel&gt; <span class="hljs-title">createInitializer</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">            ChannelGroup group)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ChatServerInitializer(group);
+    &#125;
+    <span class="hljs-comment">//处理服务器关闭，并释放所有的资源</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">destroy</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (channel != <span class="hljs-keyword">null</span>) &#123;
+            channel.close();
+        &#125;
+        channelGroup.close();
+        group.shutdownGracefully();
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">if</span> (args.length != <span class="hljs-number">1</span>) &#123;
+            System.err.println(<span class="hljs-string">"Please give port as argument"</span>);
+            System.exit(<span class="hljs-number">1</span>);
+        &#125;
+        <span class="hljs-keyword">int</span> port = Integer.parseInt(args[<span class="hljs-number">0</span>]);
+        <span class="hljs-keyword">final</span> ChatServer endpoint = <span class="hljs-keyword">new</span> ChatServer();
+        ChannelFuture future = endpoint.start(
+                <span class="hljs-keyword">new</span> InetSocketAddress(port));
+        Runtime.getRuntime().addShutdownHook(<span class="hljs-keyword">new</span> Thread() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                endpoint.destroy();
+            &#125;
+        &#125;);
+        future.channel().closeFuture().syncUninterruptibly();
+    &#125;
+&#125;</code></pre></div>
+<h1 id="测试该应用程序"><a href="#测试该应用程序" class="headerlink" title="测试该应用程序"></a>测试该应用程序</h1><p>略</p>
+<h2 id="如何进行加密"><a href="#如何进行加密" class="headerlink" title="如何进行加密"></a>如何进行加密</h2><p>为ChannelPipeline加密：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//扩展ChatServerInitializer来加密</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecureChatServerInitializer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChatServerInitializer</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SslContext context;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SecureChatServerInitializer</span><span class="hljs-params">(ChannelGroup group, SslContext context)</span> </span>&#123;
+        <span class="hljs-keyword">super</span>(group);
+        <span class="hljs-keyword">this</span>.context = context;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">super</span>.initChannel(ch);
+        <span class="hljs-comment">//调用父类的initChannel()方法</span>
+        SSLEng.ine engine = context.newEngine(ch.alloc());
+        engine.setUseClientMode(<span class="hljs-keyword">false</span>);
+        <span class="hljs-comment">//将SslHandler添加到ChannelPipeline中</span>
+        ch.pipeline().addFirst(<span class="hljs-keyword">new</span> SslHandler(engine));
+    &#125;
+&#125;</code></pre></div>
+<p>最后一步是调整ChatServer以使用SecureChatServerInitializer，以便在ChannelPipeline中安装SslHandler。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecureChatServer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChatServer</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> SslContext context;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SecureChatServer</span><span class="hljs-params">(SslContext context)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.context = context;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> ChannelInitializer&lt;Channel&gt; <span class="hljs-title">createInitializer</span><span class="hljs-params">(ChannelGroup group)</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SecureChatServerInitializer(group, context); <span class="hljs-comment">// 返回之前创建的SecureChatServerInitializer 以启用加密</span>
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        <span class="hljs-keyword">if</span> (args.length != <span class="hljs-number">1</span>) &#123;
+            System.err.println(<span class="hljs-string">"Please give port as argument"</span>);
+            System.exit(<span class="hljs-number">1</span>);
+        &#125;
+        <span class="hljs-keyword">int</span> port = Integer.parseInt(args[<span class="hljs-number">0</span>]);
+        SelfSignedCertificate cert = <span class="hljs-keyword">new</span> SelfSignedCertificate();
+        SslContext context = SslContext.newServerContext(cert.certificate(), cert.privateKey());
+        <span class="hljs-keyword">final</span> SecureChatServer endpoint = <span class="hljs-keyword">new</span> SecureChatServer(context);
+        ChannelFuture future = endpoint.start(<span class="hljs-keyword">new</span> InetSocketAddress(port));
+        Runtime.getRuntime().addShutdownHook(<span class="hljs-keyword">new</span> Thread() &#123;
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                endpoint.destroy();
+            &#125;
+        &#125;);
+        future.channel().closeFuture().syncUninterruptibly();
+    &#125;</code></pre></div>
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/java/">java</a>
+                    
+                      <a class="hover-with-bg" href="/categories/java/Netty/">Netty</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">
+                        <span class="hidden-mobile">11.Netty--预置的ChannelHandler和编解码器</span>
+                        <span class="visible-mobile">次の記事</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "12.Netty--WebSocket&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
