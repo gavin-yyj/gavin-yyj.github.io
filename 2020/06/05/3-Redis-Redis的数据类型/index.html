@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>3. Redis--Redis的数据类型 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-05 22:13">
+      June 5, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      46
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>Redis支持以下五种数据结构：</p>
+<ul>
+<li>String类型</li>
+<li>List类型</li>
+<li>Set类型</li>
+<li>SortedSet类型</li>
+<li>Hash类型</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>存储极限</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String类型的value大小</td>
+<td>512M</td>
+</tr>
+<tr>
+<td>Hash类型key的键值对大小</td>
+<td>4294967295</td>
+</tr>
+<tr>
+<td>List类型的key个数</td>
+<td>4294967295</td>
+</tr>
+<tr>
+<td>Set/SortedSet类型的key个数</td>
+<td>4294967295</td>
+</tr>
+</tbody></table>
+<h2 id="一、String（字符串）类型"><a href="#一、String（字符串）类型" class="headerlink" title="一、String（字符串）类型"></a>一、String（字符串）类型</h2><p>在前面两章中，我们存储的都是 String 类型。该类型增加和删除一个键值对十分简单，如下：</p>
+<table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>获取值</td>
+<td>get key</td>
+</tr>
+<tr>
+<td>添加一个键值对</td>
+<td>set key value</td>
+</tr>
+<tr>
+<td>获取并重置一个键值对</td>
+<td>getset key value</td>
+</tr>
+<tr>
+<td>删除一个键值对</td>
+<td>del key</td>
+</tr>
+</tbody></table>
+<p>字符串也可以进行数值操作（Redis内部自动将value转换为数值型），方法如下：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>incr key</td>
+<td>值加1</td>
+</tr>
+<tr>
+<td>decr key</td>
+<td>值减1</td>
+</tr>
+<tr>
+<td>incrby key n</td>
+<td>值加n</td>
+</tr>
+<tr>
+<td>decrby key n</td>
+<td>值减n</td>
+</tr>
+</tbody></table>
+<p>如果key值不存在，当做0处理，如果value值无法转换为整型时，会返回错误信息：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200605223023304.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>介绍一下字符串拼接方法，如下：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>append key</td>
+<td>拼接字符串</td>
+</tr>
+</tbody></table>
+<p><img src="https://img-blog.csdnimg.cn/2020060522335293.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="二、Hash（散列）类型"><a href="#二、Hash（散列）类型" class="headerlink" title="二、Hash（散列）类型"></a>二、Hash（散列）类型</h2><p>散列，即 Hash，Redis 中的 Hash 类型可以看成<strong>Map集合</strong>。Hash 类型的<strong>每一个 key 的 value 对应于一个 Map，该Map包含多个键值对的数据</strong>，如下图所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200605231035860.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="2-1-赋值"><a href="#2-1-赋值" class="headerlink" title="2.1 赋值"></a>2.1 赋值</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hset key field value</td>
+<td>为指定key设置一个键值对</td>
+</tr>
+<tr>
+<td>hmset key field value[field2 value2…]</td>
+<td>为指定key设置多个键值对</td>
+</tr>
+</tbody></table>
+<p><img src="https://img-blog.csdnimg.cn/2020060523171942.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="2-2-取值"><a href="#2-2-取值" class="headerlink" title="2.2 取值"></a>2.2 取值</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hget key field</td>
+<td>返回指定 key 中 field 的值</td>
+</tr>
+<tr>
+<td>hmget key filed[field2…]</td>
+<td>返回指定 key 中多个 field 的值</td>
+</tr>
+<tr>
+<td>hgetall key</td>
+<td>返回指定 key 中所有 field-value</td>
+</tr>
+</tbody></table>
+<p><img src="https://img-blog.csdnimg.cn/2020060523191135.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="2-3-删除"><a href="#2-3-删除" class="headerlink" title="2.3 删除"></a>2.3 删除</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hdel key field[field2…]</td>
+<td>删除指定 key 一个或多个 field</td>
+</tr>
+<tr>
+<td>del key</td>
+<td>清空 Hash</td>
+</tr>
+</tbody></table>
+<p><img src="https://img-blog.csdnimg.cn/20200605232227429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="2-4-扩展命令"><a href="#2-4-扩展命令" class="headerlink" title="2.4 扩展命令"></a>2.4 扩展命令</h3><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hexists key field</td>
+<td>判断指定 key 中 field 是否存在</td>
+</tr>
+<tr>
+<td>hlen key</td>
+<td>返回指定 key 中 field 的数量</td>
+</tr>
+<tr>
+<td>hkeys key</td>
+<td>获取指定 key 中所有的 field</td>
+</tr>
+<tr>
+<td>hvals key</td>
+<td>获取指定 key 中所有的 value</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hmset myHash name yyj age <span class="hljs-number">20</span> sex male
+OK
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hexists myHash name
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hexists myHash unknown
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">0</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hlen myHash
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hkeys myHash
+<span class="hljs-number">1</span>) <span class="hljs-string">"name"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"age"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"sex"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; hvals myHash
+<span class="hljs-number">1</span>) <span class="hljs-string">"yyj"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"20"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"male"</span></code></pre></div>
+
+<h2 id="三、List-类型"><a href="#三、List-类型" class="headerlink" title="三、List 类型"></a>三、List 类型</h2><p>Redis 的 List 类型有点像 Java 中的 LinkList，内部实现是一个<code>双向链表</code>，双向链表的知识点参考文章：<a href="https://www.jitwxs.cn/abd3f641.html" target="_blank" rel="noopener">《数据结构 第二章 线性表》</a>。</p>
+<h3 id="3-1-添加"><a href="#3-1-添加" class="headerlink" title="3.1 添加"></a>3.1 添加</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>从左端添加多个value</td>
+<td>lpush key value[value2…]</td>
+</tr>
+<tr>
+<td>从右端添加多个value</td>
+<td>rpush key value[value2…]</td>
+</tr>
+</tbody></table>
+<p><strong>注：</strong> 如果 key 不存在会先创建 key，然后添加。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200605233016372.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="3-2-查看"><a href="#3-2-查看" class="headerlink" title="3.2 查看"></a>3.2 查看</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>获取 list 从 start 到 end 的值</td>
+<td>lrange key start end</td>
+</tr>
+<tr>
+<td>获取 list 中元素数量</td>
+<td>llen key</td>
+</tr>
+</tbody></table>
+<p>因为 List 内部是一个双向链表，因此链表<strong>首元素下标为0，尾元素下标为-1</strong>，因此查看所有元素即：<code>lrange key 0 -1</code>。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200605233241255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="3-3-删除"><a href="#3-3-删除" class="headerlink" title="3.3 删除"></a>3.3 删除</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>返回并弹出左端元素</td>
+<td>lpop key</td>
+</tr>
+<tr>
+<td>返回并弹出右端元素</td>
+<td>rpop key</td>
+</tr>
+</tbody></table>
+<p><strong>注：</strong> 如果 key 不存在，返回nil。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200605233444391.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="3-4-扩展命令"><a href="#3-4-扩展命令" class="headerlink" title="3.4 扩展命令"></a>3.4 扩展命令</h3><h4 id="3-4-1-添加前检查-key-的存在性"><a href="#3-4-1-添加前检查-key-的存在性" class="headerlink" title="3.4.1 添加前检查 key 的存在性"></a>3.4.1 添加前检查 key 的存在性</h4><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>从左端添加多个 value</td>
+<td>lpushx key value[value2…]</td>
+</tr>
+<tr>
+<td>从右端添加多个 value</td>
+<td>rpushx key value[value2…]</td>
+</tr>
+</tbody></table>
+<p>这两个方法加了 <code>x</code> 的和之前不加 <code>x</code> 的不同之处是：如果 key 不存在，将<strong>不进行插入</strong>。</p>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; del myList
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lpushx myList a b c
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">0</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+(empty list <span class="hljs-keyword">or</span> <span class="hljs-keyword">set</span>)</code></pre></div>
+
+<h4 id="3-4-2-根据-value-删除"><a href="#3-4-2-根据-value-删除" class="headerlink" title="3.4.2 根据 value 删除"></a>3.4.2 根据 value 删除</h4><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>删除 count 个值为 value 的元素</td>
+<td>lrem key count value</td>
+</tr>
+</tbody></table>
+<p>若 count &gt; 0，则从左到右删除：</p>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myList <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">6</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"5"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrem myList <span class="hljs-number">2</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">2</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"5"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"1"</span></code></pre></div>
+
+<p>若 count &lt; 0，则从右向左删除：</p>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myList <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">6</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"5"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrem myList <span class="hljs-number">-2</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">2</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"5"</span></code></pre></div>
+
+<p>若 count = 0，删除所有：</p>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myList <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">6</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"5"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrem myList <span class="hljs-number">0</span> <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"5"</span></code></pre></div>
+
+<h4 id="3-4-3-根据下标设置-value"><a href="#3-4-3-根据下标设置-value" class="headerlink" title="3.4.3 根据下标设置 value"></a>3.4.3 根据下标设置 value</h4><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>设置下标为 index 的元素值。0代表最左边元素，-1代表最右边元素，下标不存在时抛出异常。</td>
+<td>lset key index value</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs tcl"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myList <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+(integer) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">lset</span> myList <span class="hljs-number">1</span> <span class="hljs-number">5</span>
+OK
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">lrange</span> myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"5"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">lset</span> myList <span class="hljs-number">3</span> <span class="hljs-number">5</span>
+(<span class="hljs-keyword">error</span>) ERR index out of range</code></pre></div>
+
+<h4 id="3-4-4-相对于某元素插入-value"><a href="#3-4-4-相对于某元素插入-value" class="headerlink" title="3.4.4 相对于某元素插入 value"></a>3.4.4 相对于某元素插入 value</h4><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>在 pivot 元素前插入value</td>
+<td>linsert key before pivot value</td>
+</tr>
+<tr>
+<td>在 pivot 元素后插入value</td>
+<td>linsert key after pivot value</td>
+</tr>
+</tbody></table>
+<p>注：如果 pivot 不存在，不插入。</p>
+<div class="hljs"><pre><code class="hljs tcl"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myList <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+(integer) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">linsert</span> myList before <span class="hljs-number">2</span> a
+(integer) <span class="hljs-number">4</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">linsert</span> myList <span class="hljs-keyword">after</span> <span class="hljs-number">2</span> b
+(integer) <span class="hljs-number">5</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; <span class="hljs-keyword">lrange</span> myList <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"3"</span></code></pre></div>
+
+<h4 id="3-4-5-将链表-A-右边元素移出并添加到链表B-左边"><a href="#3-4-5-将链表-A-右边元素移出并添加到链表B-左边" class="headerlink" title="3.4.5 将链表 A 右边元素移出并添加到链表B 左边"></a>3.4.5 将链表 A 右边元素移出并添加到链表B 左边</h4><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>将链表 A 右边元素移出并添加到链表 B 左边</td>
+<td>rpoplpush listA listB</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myListA <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpush myListB a b c
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpoplpush myListA myListB
+<span class="hljs-string">"3"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myListA <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myListB <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"c"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rpoplpush myListA myListA
+<span class="hljs-string">"2"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; lrange myListA <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"1"</span></code></pre></div>
+
+<h2 id="四、Set-类型"><a href="#四、Set-类型" class="headerlink" title="四、Set 类型"></a>四、Set 类型</h2><p>Redis 的 Set 类型和 Java 中的 Set 类型一样，它具有两个重要的特点：<code>无序性</code>和<code>唯一性</code>，具体不再赘述。</p>
+<h3 id="4-1-基本操作"><a href="#4-1-基本操作" class="headerlink" title="4.1 基本操作"></a>4.1 基本操作</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>向 set 中添加成员，如果成员已存在，不再添加</td>
+<td>sadd key member[member2…]</td>
+</tr>
+<tr>
+<td>向 set 中删除成员，如果不存在，也不会报错</td>
+<td>srem key member[member2…]</td>
+</tr>
+<tr>
+<td>获取 set 中所有成员</td>
+<td>smembers key</td>
+</tr>
+<tr>
+<td>判断指定成员是否存在于 set 中</td>
+<td>sismember key member</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sadd mySet <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; smembers mySet
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; srem mySet <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">5</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">2</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; smembers mySet
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sismember mySet <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sismember mySet <span class="hljs-number">2</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">0</span></code></pre></div>
+
+<h3 id="4-2-集合操作"><a href="#4-2-集合操作" class="headerlink" title="4.2 集合操作"></a>4.2 集合操作</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>集合的差集</td>
+<td>sdiff key1 key2[key3…]</td>
+</tr>
+<tr>
+<td>集合的交集</td>
+<td>sinter key1 key2[key3…]</td>
+</tr>
+<tr>
+<td>集合的并集</td>
+<td>sunion key1 key2[key3…]</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sadd mySet1 a b c <span class="hljs-number">1</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">4</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sadd mySet2 <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> b
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">4</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sdiff mySet1 mySet2
+<span class="hljs-number">1</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"c"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sdiff mySet2 mySet1
+<span class="hljs-number">1</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sinter mySet1 mySet2
+<span class="hljs-number">1</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sunion mySet1 mySet2
+<span class="hljs-number">1</span>) <span class="hljs-string">"c"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"3"</span></code></pre></div>
+
+<h3 id="4-3-扩展命令"><a href="#4-3-扩展命令" class="headerlink" title="4.3 扩展命令"></a>4.3 扩展命令</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>求 set 中成员数量</td>
+<td>scard key</td>
+</tr>
+<tr>
+<td>随机返回一个成员</td>
+<td>srandmember key</td>
+</tr>
+<tr>
+<td>将多个集合的差集存储在 desc 中</td>
+<td>sdiffstore desc key1 key2[key3…]</td>
+</tr>
+<tr>
+<td>将多个集合的交集存储在 desc 中</td>
+<td>sinterstore desc key1 key2[key3…]</td>
+</tr>
+<tr>
+<td>将多个集合的并集存储在 desc 中</td>
+<td>sunionstore desc key1 key2[key3…]</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; smembers mySet1
+<span class="hljs-number">1</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"c"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; smembers mySet2
+<span class="hljs-number">1</span>) <span class="hljs-string">"3"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"b"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"2"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; scard mySet1
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">4</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; srandmember mySet1
+<span class="hljs-string">"c"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; sdiffstore mySet3 mySet1 mySet2
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">2</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; smembers mySet3
+<span class="hljs-number">1</span>) <span class="hljs-string">"a"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"c"</span></code></pre></div>
+
+<h2 id="五、SortedSet-类型"><a href="#五、SortedSet-类型" class="headerlink" title="五、SortedSet 类型"></a>五、SortedSet 类型</h2><p>SortedSet 和 Set 的区别是，SortedSet 中每一个成员都有一个 <code>score（分数）</code>与之关联，Redis 通过 score 来为集合中的元素进行排序（默认为升序）。</p>
+<h3 id="5-1-添加-获取元素"><a href="#5-1-添加-获取元素" class="headerlink" title="5.1 添加/获取元素"></a>5.1 添加/获取元素</h3><table>
+<thead>
+<tr>
+<th align="left">含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">添加成员。如果成员存在，会用新的 score 替代原有的 score，返回值是新加入到集合中的成员个数</td>
+<td>zadd key score member[score2 member2… ]</td>
+</tr>
+<tr>
+<td align="left">获取指定成员的 score</td>
+<td>zscore key member</td>
+</tr>
+<tr>
+<td align="left">获取 key 中成员个数</td>
+<td>scard key</td>
+</tr>
+<tr>
+<td align="left">获取集合中下标从 start 到 end 的成员，[withscores]表明返回的成员包含其 score</td>
+<td>zrange key start end[withscores]</td>
+</tr>
+<tr>
+<td align="left">上面方法的反转</td>
+<td>zrevrange key start end[withscores]</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zadd mySort <span class="hljs-number">82</span> wangnima <span class="hljs-number">100</span> cat <span class="hljs-number">33</span> dog <span class="hljs-number">43</span> jitwxs <span class="hljs-number">80</span> zhouyang <span class="hljs-number">60</span> liuchang
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">6</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zscore mySort jitwxs
+<span class="hljs-string">"100"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zcard mySort
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">6</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"liuchang"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"zhouyang"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"wangnima"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"jitwxs"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span> withscores
+ <span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+ <span class="hljs-number">2</span>) <span class="hljs-string">"33"</span>
+ <span class="hljs-number">3</span>) <span class="hljs-string">"liuchang"</span>
+ <span class="hljs-number">4</span>) <span class="hljs-string">"60"</span>
+ <span class="hljs-number">5</span>) <span class="hljs-string">"zhouyang"</span>
+ <span class="hljs-number">6</span>) <span class="hljs-string">"80"</span>
+ <span class="hljs-number">7</span>) <span class="hljs-string">"wangnima"</span>
+ <span class="hljs-number">8</span>) <span class="hljs-string">"82"</span>
+ <span class="hljs-number">9</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">10</span>) <span class="hljs-string">"100"</span>
+<span class="hljs-number">11</span>) <span class="hljs-string">"jitwxs"</span>
+<span class="hljs-number">12</span>) <span class="hljs-string">"100"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrevrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span> withscores
+ <span class="hljs-number">1</span>) <span class="hljs-string">"jitwxs"</span>
+ <span class="hljs-number">2</span>) <span class="hljs-string">"100"</span>
+ <span class="hljs-number">3</span>) <span class="hljs-string">"cat"</span>
+ <span class="hljs-number">4</span>) <span class="hljs-string">"100"</span>
+ <span class="hljs-number">5</span>) <span class="hljs-string">"wangnima"</span>
+ <span class="hljs-number">6</span>) <span class="hljs-string">"82"</span>
+ <span class="hljs-number">7</span>) <span class="hljs-string">"zhouyang"</span>
+ <span class="hljs-number">8</span>) <span class="hljs-string">"80"</span>
+ <span class="hljs-number">9</span>) <span class="hljs-string">"liuchang"</span>
+<span class="hljs-number">10</span>) <span class="hljs-string">"60"</span>
+<span class="hljs-number">11</span>) <span class="hljs-string">"dog"</span>
+<span class="hljs-number">12</span>) <span class="hljs-string">"33"</span></code></pre></div>
+
+<h3 id="5-2-删除元素"><a href="#5-2-删除元素" class="headerlink" title="5.2 删除元素"></a>5.2 删除元素</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>删除成员</td>
+<td>zrem key member[member2…]</td>
+</tr>
+<tr>
+<td>按照下标范围删除成员</td>
+<td>zremrangebyrank key start stop</td>
+</tr>
+<tr>
+<td>按照 score 范围删除成员</td>
+<td>zremrangebyscore key min max</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrem mySort wangnima
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zcard mySort
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">5</span>
+
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"liuchang"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"zhouyang"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"jitwxs"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zremrangebyrank mySort <span class="hljs-number">0</span> <span class="hljs-number">2</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"jitwxs"</span>
+
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span> withscores
+ <span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+ <span class="hljs-number">2</span>) <span class="hljs-string">"33"</span>
+ <span class="hljs-number">3</span>) <span class="hljs-string">"jitwxs"</span>
+ <span class="hljs-number">4</span>) <span class="hljs-string">"43"</span>
+ <span class="hljs-number">5</span>) <span class="hljs-string">"liuchang"</span>
+ <span class="hljs-number">6</span>) <span class="hljs-string">"60"</span>
+ <span class="hljs-number">7</span>) <span class="hljs-string">"zhouyang"</span>
+ <span class="hljs-number">8</span>) <span class="hljs-string">"80"</span>
+ <span class="hljs-number">9</span>) <span class="hljs-string">"wangnima"</span>
+<span class="hljs-number">10</span>) <span class="hljs-string">"82"</span>
+<span class="hljs-number">11</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">12</span>) <span class="hljs-string">"100"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zremrangebyscore mySort <span class="hljs-number">50</span> <span class="hljs-number">85</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span> withscores
+<span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"33"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"jitwxs"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"43"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"100"</span></code></pre></div>
+
+<h3 id="5-3-扩展方法"><a href="#5-3-扩展方法" class="headerlink" title="5.3 扩展方法"></a>5.3 扩展方法</h3><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>返回 score 在[min,max]的成员并按照 score 排序。[withscores]：显示 score；[limit offset count]：从 offst 开始返回 count 个成员</td>
+<td>zrangebyscore key min max[withscores] [limit offset count]</td>
+</tr>
+<tr>
+<td>设置指定成员增加的分数，返回值是修改后的分数</td>
+<td>zincrby key increment member</td>
+</tr>
+<tr>
+<td>获取分树在[min,max]的成员数量</td>
+<td>zcount key min max</td>
+</tr>
+<tr>
+<td>返回成员在集合中的排名（升序）</td>
+<td>zrank key member</td>
+</tr>
+<tr>
+<td>返回成员在集合中的排名（降序）</td>
+<td>zrevrank key member</td>
+</tr>
+</tbody></table>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrange mySort <span class="hljs-number">0</span> <span class="hljs-number">-1</span> withscores
+ <span class="hljs-number">1</span>) <span class="hljs-string">"dog"</span>
+ <span class="hljs-number">2</span>) <span class="hljs-string">"33"</span>
+ <span class="hljs-number">3</span>) <span class="hljs-string">"jitwxs"</span>
+ <span class="hljs-number">4</span>) <span class="hljs-string">"43"</span>
+ <span class="hljs-number">5</span>) <span class="hljs-string">"liuchang"</span>
+ <span class="hljs-number">6</span>) <span class="hljs-string">"60"</span>
+ <span class="hljs-number">7</span>) <span class="hljs-string">"zhouyang"</span>
+ <span class="hljs-number">8</span>) <span class="hljs-string">"80"</span>
+ <span class="hljs-number">9</span>) <span class="hljs-string">"wangnima"</span>
+<span class="hljs-number">10</span>) <span class="hljs-string">"82"</span>
+<span class="hljs-number">11</span>) <span class="hljs-string">"cat"</span>
+<span class="hljs-number">12</span>) <span class="hljs-string">"100"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrangebyscore mySort <span class="hljs-number">30</span> <span class="hljs-number">86</span> limit <span class="hljs-number">2</span> <span class="hljs-number">3</span>
+<span class="hljs-number">1</span>) <span class="hljs-string">"liuchang"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"zhouyang"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"wangnima"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zcount mySort <span class="hljs-number">0</span> <span class="hljs-number">60</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">3</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zincrby mySort <span class="hljs-number">17</span> jitwxs
+<span class="hljs-string">"60"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrank mySort jitwxs
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; zrevrank mySort jitwxs
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">4</span></code></pre></div>
+
+<h2 id="六、key-的通用命令"><a href="#六、key-的通用命令" class="headerlink" title="六、key 的通用命令"></a>六、key 的通用命令</h2><table>
+<thead>
+<tr>
+<th>含义</th>
+<th>方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>获取所有于 pattern 匹配的 key。*：任意一个或多个字符，？：任意一个字符</td>
+<td>keys pattern</td>
+</tr>
+<tr>
+<td>删除指定 key</td>
+<td>del key[key2…]</td>
+</tr>
+<tr>
+<td>判断 key 是否存在</td>
+<td>exists key</td>
+</tr>
+<tr>
+<td>为 key 重命名</td>
+<td>rename key newKey</td>
+</tr>
+<tr>
+<td>设置过期时间（单位s）</td>
+<td>expire key</td>
+</tr>
+<tr>
+<td>获取key 剩余的过期时间（单位s）。若没有设置过期时间，返回-1；超时不存在返回-2</td>
+<td>ttl key</td>
+</tr>
+<tr>
+<td>获取 key 类型，key 不存在返回none</td>
+<td>type key</td>
+</tr>
+</tbody></table>
+<p>注：如果你设置了一个 key 的过期时间，如果又不想让它过期，可以执行命令 <code>persist key</code>。</p>
+<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; keys *
+ <span class="hljs-number">1</span>) <span class="hljs-string">"unknown"</span>
+ <span class="hljs-number">2</span>) <span class="hljs-string">"mySet2"</span>
+ <span class="hljs-number">3</span>) <span class="hljs-string">"float_num"</span>
+ <span class="hljs-number">4</span>) <span class="hljs-string">"myListB"</span>
+ <span class="hljs-number">5</span>) <span class="hljs-string">"mySet3"</span>
+ <span class="hljs-number">6</span>) <span class="hljs-string">"userName"</span>
+ <span class="hljs-number">7</span>) <span class="hljs-string">"myListA"</span>
+ <span class="hljs-number">8</span>) <span class="hljs-string">"int_num"</span>
+ <span class="hljs-number">9</span>) <span class="hljs-string">"mySort"</span>
+<span class="hljs-number">10</span>) <span class="hljs-string">"mySet1"</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; del unknown
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; type myListA
+list
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; rename myListA myList
+OK
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; exists myListA
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">0</span>
+
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; ttl mySort
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">-1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; expire mySort <span class="hljs-number">30</span>
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; ttl mySort
+(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">-2</span>
+<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; keys *
+<span class="hljs-number">1</span>) <span class="hljs-string">"mySet2"</span>
+<span class="hljs-number">2</span>) <span class="hljs-string">"myList"</span>
+<span class="hljs-number">3</span>) <span class="hljs-string">"float_num"</span>
+<span class="hljs-number">4</span>) <span class="hljs-string">"myListB"</span>
+<span class="hljs-number">5</span>) <span class="hljs-string">"mySet3"</span>
+<span class="hljs-number">6</span>) <span class="hljs-string">"userName"</span>
+<span class="hljs-number">7</span>) <span class="hljs-string">"int_num"</span>
+<span class="hljs-number">8</span>) <span class="hljs-string">"mySet1"</span></code></pre></div>
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Redis/">Redis</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                        <span class="hidden-mobile">2. Redis--Jedis的使用</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "3. Redis--Redis的数据类型&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
