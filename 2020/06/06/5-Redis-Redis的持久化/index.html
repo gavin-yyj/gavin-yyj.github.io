@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>5. Redis--Redis的持久化 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-06 10:41">
+      June 6, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>Redis 的高性能是由其将所有数据都存储在了内存中，需要使用时直接从内存调用即可。为了使 Redis 在重启之后仍然能保证数据不丢失，需要将数据从内存同步到内存中，这一过程就是<code>持久化</code>。</p>
+<p>Redis 支持两种持久化方式，一种是 <code>RDB方式</code>，一种是 <code>AOF方式</code>。可以单独使用其中一种或将两种结合使用。</p>
+<ul>
+<li>RDB (默认) 在<strong>指定的时间间隔</strong>内将内存中的数据快照写入磁盘。</li>
+<li>AOF 以<strong>日志</strong>的形式记录服务器处理的<strong>每一个写操作</strong>，在Redis服务器启动之初会读取该文件来重新构建数据库，以保证启动后数据库中的数据是完整的。</li>
+</ul>
+<h2 id="一、RDB"><a href="#一、RDB" class="headerlink" title="一、RDB"></a>一、RDB</h2><h3 id="1-1-实现步骤"><a href="#1-1-实现步骤" class="headerlink" title="1.1 实现步骤"></a>1.1 实现步骤</h3><ol>
+<li>Redis 执行 <code>fork</code> 命令创建子进程。</li>
+<li>父进程继续处理 client 请求，子进程负责将内存内容写入到临时文件。由于 OS 的写时复制机制父子进程会共享相同的物理页面，当父进程处理写请求时OS会为父进程要修改的页面创建副本，而不是写共享的页面。所以子进程的地址空间内的数据是 fork 时刻整个数据库的一个<strong>快照</strong>。</li>
+<li>当子进程将快照写入临时文件完毕后，用临时文件替换原来的快照文件，然后子进程退出。</li>
+</ol>
+<p>需要注意的是，每次 RDB 都是将<strong>内存数据完整写入到磁盘一次</strong>，并<strong>不是增量的只同步脏数据</strong>。如果数据量大的话，而且写操作比较多，必然会引起大量的磁盘IO操作，可能会严重影响性能。</p>
+<h3 id="1-2-优势"><a href="#1-2-优势" class="headerlink" title="1.2 优势"></a>1.2 优势</h3><ol>
+<li>一旦采用该方式，那么你的整个 Redis 数据库将<strong>只包含一个文件</strong>，这样非常<strong>方便备份</strong>。</li>
+<li>方便备份，我们可以很容易的将一个一个 RDB 文件移动到其他的存储介质上。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的<strong>恢复速度要快</strong>。</li>
+<li>RDB 可以<strong>最大化 Redis 的性能</strong>（父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 IO 操作）。</li>
+</ol>
+<h3 id="1-3-劣势"><a href="#1-3-劣势" class="headerlink" title="1.3 劣势"></a>1.3 劣势</h3><ol>
+<li>如果你想保证数据的高可用性，即最大限度的避免数据丢失，那么 RDB 将不是一个很好的选择。 因为系统一旦在定时持久化之前发生宕机， 你就可能会<strong>丢失这之间的数据</strong>。</li>
+<li>因为 RDB 是通过 fork 子进程来协助完成持久化工作的，因此当数据集较大时，会<strong>影响服务器性能</strong>。</li>
+</ol>
+<h3 id="1-4-RDB-配置"><a href="#1-4-RDB-配置" class="headerlink" title="1.4 RDB 配置"></a>1.4 RDB 配置</h3><p>在 <code>redis.conf</code> 中可以配置和RDF相关的信息：</p>
+<p>(1) 配置 RDB 文件位置</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606122136837.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>(2) 配置 RDB 保存时机</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606122206950.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="二、AOF"><a href="#二、AOF" class="headerlink" title="二、AOF"></a>二、AOF</h2><p>采用 AOF 方式，Redis 会将每一个收到的写命令都通过 <code>write</code> 函数写入到 AOF 文件中。当 Redis 重启时会通过重新执行文件中保存的写命令来在内存中重建整个数据库的内容。</p>
+<p>AOF 的方式也同时带来了另一个问题：<strong>持久化文件会变的越来越大</strong>。例如我们调用 <code>incr num</code> 命令100次，文件中必须保存全部的100条命令，其实有99条都是多余的，因为要恢复数据库的状态其实文件中保存一条 <code>set num 100</code> 就够了。</p>
+<h3 id="2-1-实现步骤"><a href="#2-1-实现步骤" class="headerlink" title="2.1 实现步骤"></a>2.1 实现步骤</h3><ol>
+<li>Redis调用<code>fork</code>命令创建子进程。</li>
+<li>子进程根据内存中的数据库快照，往临时文件中写入重建数据库状态的命令。</li>
+<li>父进程继续处理client请求，除了把写命令写入到原来的AOF文件中，同时缓存新收到的写命令。</li>
+<li>子进程把快照内容写入到临时文件后，子进程发信号通知父进程，然后父进程把缓存的写命令也写入到临时文件。</li>
+<li>父进程使用临时文件替换老的AOF文件，并重命名，后面收到的写命令也开始往新的AOF文件中追加。</li>
+</ol>
+<p>需要注意的是，重写AOF文件的操作并没有读取旧的AOF文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的AOF文件，这点和快照有点类似。</p>
+<h3 id="2-2-优势"><a href="#2-2-优势" class="headerlink" title="2.2 优势"></a>2.2 优势</h3><ol>
+<li>AOF 提供的三种同步策略，使得数据安全性更高。</li>
+<li>因为 AOF 对日志文件的写入操作采用的是<code>append 模式</code>，因此在写入过程中即使出现宕机现象，也不会破坏日志文件已经存在的内容。</li>
+<li>如果 AOF 日志文件过大，Redis可以自动启用 <code>rewrite 机制</code>，使 Redis 以 append 模式不断的将修改数据写入到老的磁盘文件中，同时 Redis 还会创建一个新的文件用于记录此期间有哪些命令被执行。因此在进行 rewrite 切换时可以更好的保证数据安全性。</li>
+</ol>
+<h3 id="2-3-劣势"><a href="#2-3-劣势" class="headerlink" title="2.3 劣势"></a>2.3 劣势</h3><ol>
+<li>对于相同数量的数据集而言，AOF 文件通常要大于 RDB 文件。</li>
+<li>根据同步策略的不同，AOF 在运行效率上往往会慢于 RDB。</li>
+</ol>
+<h3 id="2-4-AOF-配置"><a href="#2-4-AOF-配置" class="headerlink" title="2.4 AOF 配置"></a>2.4 AOF 配置</h3><p>AOF 默认是关闭的，修改配置文件 <code>redis.conf</code> 来打开 AOF：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606122949195.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>AOF 具有三种同步策略，在配置文件 <code>redis.conf</code> 中进行配置：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606123020516.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>除了满足同步策略来自动同步外，可以手动同步，执行命令 <code>bgrewriteaof</code> 即可。</p>
+<p>下面演示下 AOF 恢复：</p>
+<div class="hljs"><pre><code class="hljs elixir">wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>./redis-cli 
+<span class="hljs-number">127.0</span>.0.<span class="hljs-number">1:6379</span>&gt; keys *
+(empty list <span class="hljs-keyword">or</span> set)
+<span class="hljs-number">127.0</span>.0.<span class="hljs-number">1:6379</span>&gt; set name jitwxs <span class="hljs-comment">#设置一个key</span>
+OK
+<span class="hljs-number">127.0</span>.0.<span class="hljs-number">1:6379</span>&gt; flushdb <span class="hljs-comment">#清空数据库</span>
+OK
+<span class="hljs-number">127.0</span>.0.<span class="hljs-number">1:6379</span>&gt; exit
+wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>ps auxc | grep redis
+wxs        <span class="hljs-number">5974</span>  0.<span class="hljs-number">1</span>  0.<span class="hljs-number">4</span>  <span class="hljs-number">51828</span>  <span class="hljs-number">8368</span> ?        Ssl  <span class="hljs-number">21:23</span>   0<span class="hljs-symbol">:</span>00 redis-server
+wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>kill <span class="hljs-number">5974</span> <span class="hljs-comment">#停止服务</span>
+wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>vim ../redis_dbfile/appendonly.aof <span class="hljs-comment">#修改AOF文件并删除掉最后一行的flushdb命令</span>
+wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>./redis-server ../redis.conf <span class="hljs-comment">#重新启动服务，数据被恢复</span>
+wxs<span class="hljs-variable">@ubuntu</span><span class="hljs-symbol">:/usr/local/redis/src</span><span class="hljs-variable">$ </span>./redis-cli 
+<span class="hljs-number">127.0</span>.0.<span class="hljs-number">1:6379</span>&gt; keys *
+<span class="hljs-number">1</span>) <span class="hljs-string">"name"</span></code></pre></div>
+
+<blockquote>
+<p>注：这里只是说明Redis持久化配置相关的内容，实际配置由于本人使用的是Docker容器生成的Redis，所以有些地方跟上述不一致，所以仅仅作为参考，后续会更新完善。</p>
+</blockquote>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Redis/">Redis</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">6. Redis--Redis集群</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/">
+                        <span class="hidden-mobile">4. Redis--Redis的特性</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "5. Redis--Redis的持久化&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

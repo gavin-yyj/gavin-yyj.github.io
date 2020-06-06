@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>6. Redis--Redis集群 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-06 12:47">
+      June 6, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      27
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>之前我们所学习的都是 Redis 的单机版，我们知道 Redis 之所以读取速度快是因为它是<strong>存储在内存</strong>中的。内存的容量是有限的，单台 Redis 会碰到性能瓶颈，这就需要使用 <code>Redis集群（Redis-cluster）</code>。</p>
+<h2 id="一、集群原理"><a href="#一、集群原理" class="headerlink" title="一、集群原理"></a>一、集群原理</h2><h3 id="1-1-集群架构"><a href="#1-1-集群架构" class="headerlink" title="1.1 集群架构"></a>1.1 集群架构</h3><p><img src="https://img-blog.csdnimg.cn/20200606125039833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 <code>Redis集群（Redis-cluster）</code>。节点之间使用 <code>Ping——Pong</code> 机制进行互联，其内部用二进制协议优化传输速度和带宽。</p>
+<p>Redis客户端和节点<strong>直接连接</strong>即可，无需中间件，一台客户端连接一个节点即可，Client 访问时直接访问任意一个Redis节点即可。</p>
+<h3 id="1-2-负载均衡"><a href="#1-2-负载均衡" class="headerlink" title="1.2 负载均衡"></a>1.2 负载均衡</h3><p>当我们搭建了集群后，其是如何实现负载均衡的呢？</p>
+<p>Redis 集群中内置了 <strong>16384</strong> 个<code>哈希槽（slot）</code>，它会把所有的物理节点都映射到<strong>[0,16383]</strong>的slot上。</p>
+<p>当我们需要在Redis集群中放置了个 key-value 时，Redis 先对 key 使用 <code>crc16</code> 算法得出一个结果，然后将结果<strong>对16384取余</strong>，这样<strong>每一个 key 都会对应一个编号在0 ~16383的 哈希槽</strong>。</p>
+<p>Redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。例如我们有三个节点，其每个节点哈希槽范围为：0 ~ 5000，5001 ~ 10000，10001~ 16383。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606130442462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>当我们存储一个名为 Hello1 的 key 时，其通过 <code>crc16</code> 算法计算出的结果为1500，Redis 集群就会将这个 key 放在对应1500的<code>哈希槽</code>中，又因为哈希槽0~ 5000被映射到了 Server1，则 Hello1 就被放置在了 Server1。</p>
+<p><img src="https://img-blog.csdnimg.cn/2020060613054833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="1-3-容错机制"><a href="#1-3-容错机制" class="headerlink" title="1.3 容错机制"></a>1.3 容错机制</h3><p>通过上面的负载均衡的原理，知道其实<strong>每一台</strong> Redis 客户端保存的<strong>内容都是不一样</strong>的，那么当Redis集群中<strong>任意一个节点挂掉</strong>（连接失败）时，<strong>整个集群就挂了</strong>。</p>
+<p>为了实现 Redis 的高可用，需要<strong>为每一个节点添加备用机</strong>，即<code>主备机制</code>。</p>
+<p>一般集群都有集群管理工具，但是 Redis 集群没有，它是通过<code>投票机制</code>来实现的。</p>
+<p>以下图为例简单说一下投票机制：</p>
+<ol>
+<li>当黄色节点发现无法 ping 通红色节点，它就觉得红色节点可能挂掉了，于是它会<strong>发起投票</strong>。</li>
+<li>其他节点会尝试去 ping 红色节点，只要有<strong>超过半数</strong>的节点无法 ping 通红色节点，就<strong>判定红色节点挂掉</strong>（即使它实际上可能并没有挂掉）。</li>
+<li>当红色节点被判定挂掉后，会<strong>启动该节点的备用机</strong>。如果该节点不存在备用机，或备用机也挂掉，那么<strong>整个Redis集群就挂掉了</strong>。</li>
+</ol>
+<p><img src="https://www.jitwxs.cn/images/posts/20180408222553762.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="二、搭建集群"><a href="#二、搭建集群" class="headerlink" title="二、搭建集群"></a>二、搭建集群</h2><blockquote>
+<p>说明：在实际项目中，搭建集群都是搞运维的负责的，如果是专门的研发人员，其实可以不用知道如何搭建集群。</p>
+</blockquote>
+<p>Redis 集群为了实现容错机制，<strong>最少需要三个节点</strong>（一个出错，另外两个投票），又因为<strong>每个节点至少要有一台备份机</strong>，因此一个<strong>最简单的 Redis 集群需要6个 Redis 客户端</strong>。</p>
+<p>这里只是演示一下，使用<code>伪集群</code>，即6台 Redis 搭建在一台 Linux 上，仅使用端口号进行区分，设端口号范围为7001 ~ 7006。</p>
+<h3 id="2-1-准备原始-Redis"><a href="#2-1-准备原始-Redis" class="headerlink" title="2.1 准备原始 Redis"></a>2.1 准备原始 Redis</h3><blockquote>
+<p>注：<a href="https://www.jitwxs.cn/e331e26a.html" target="_blank" rel="noopener">《Redis 初探（1）——Redis 的安装》</a>这篇文章中源码和安装后的文件是在同一文件夹下，本篇文章不使用这种方法。</p>
+</blockquote>
+<p>准备一个 Redis 安装包，将源码解压到当前文件夹：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~$ ls
+Desktop  redis-4.0.8.tar.gz
+wxs@ubuntu:~$ tar zxvf redis-4.0.8.tar.gz</code></pre></div>
+
+<p>进入解压后文件夹，执行 make 编译：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~$ cd redis-4.0.8/
+wxs@ubuntu:~/redis-4.0.8$ make</code></pre></div>
+
+<blockquote>
+<p>注：所有源码安装需要自行编译的都需要 gcc、g++ 等相关软件支持</p>
+</blockquote>
+<p>将其安装到<code>/usr/local/redis</code>目录下：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~/redis-4.0.8$ sudo make install PREFIX=/usr/local/redis</code></pre></div>
+
+<p>该目录下只有一个 bin 目录，存放 redis 的可执行文件，我们从源码包中拷贝一份 redis 配置文件过来：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis$ ls
+bin
+wxs@ubuntu:/usr/local/redis$ sudo cp ~/redis-4.0.8/redis.conf .
+wxs@ubuntu:/usr/local/redis$ ls
+bin  redis.conf</code></pre></div>
+
+<p>编辑该配置文件：</p>
+<p>（1）修改 bind 端口号为 <code>0.0.0.0</code>，使其支持远程访问。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135013850.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>（2）开启后端模式。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135225299.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>（3）设置日志文件位置</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135249116.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>（4）开启 AOF 持久化</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135308180.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="2-2-准备-Redis-集群客户端"><a href="#2-2-准备-Redis-集群客户端" class="headerlink" title="2.2 准备 Redis 集群客户端"></a>2.2 准备 Redis 集群客户端</h3><p><strong>注意：\</strong>用来做集群的客户端*<em>必须是干净的客户端*</em>，像备份文件 <code>dump.rdb</code>、<code>appendonly.aof</code> 等应当先删除掉，避免不必要的错误。</p>
+<p>在 <code>/usr/local</code> 中创建 <code>redis-cluster</code> 文件夹，拷贝六份原始 Redis：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis01
+wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis02
+wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis03
+wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis04
+wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis05
+wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis06
+wxs@ubuntu:/usr/local/redis-cluster$ ls
+redis01  redis02  redis03  redis04  redis05  redis06</code></pre></div>
+
+<p>以 redis01 为例，编辑其 <code>redis.conf</code> 文件：</p>
+<p>（1）修改端口号为 7001</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135324484.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>（2）修改 pidfile</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135353518.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>（3）开启集群开关</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135404621.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>依次修改其他客户端，端口号范围从7001 ~ 7006。</p>
+<p>编写一个启动这些客户端的批处理 <code>startup.sh</code>：</p>
+<div class="hljs"><pre><code class="hljs bash">COPYcd redis01/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis02/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis03/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis04/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis05/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis06/bin
+sudo ./redis-server ../redis.conf
+<span class="hljs-built_in">cd</span> ../../</code></pre></div>
+
+<p>执行脚本，启动成功：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135422369.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>编写一个关闭这些客户端的批处理 <code>shutdown.sh</code>：</p>
+<div class="hljs"><pre><code class="hljs bash">COPYcd redis01/bin
+sudo ./redis-cli -p 7001 shutdown
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis02/bin
+sudo ./redis-cli -p 7002 shutdown
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis03/bin
+sudo ./redis-cli -p 7003 shutdown
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis04/bin
+sudo ./redis-cli -p 7004 shutdown
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis05/bin
+sudo ./redis-cli -p 7005 shutdown
+<span class="hljs-built_in">cd</span> ../../
+<span class="hljs-built_in">cd</span> redis06/bin
+sudo ./redis-cli -p 7006 shutdown
+<span class="hljs-built_in">cd</span> ../../</code></pre></div>
+
+<p>执行脚本，关闭成功：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135446595.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>目录结构如下：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ls
+redis01  redis02  redis03  redis04  redis05  redis06  shutdown.sh  startup.sh</code></pre></div>
+
+<h3 id="2-3-搭建集群"><a href="#2-3-搭建集群" class="headerlink" title="2.3 搭建集群"></a>2.3 搭建集群</h3><p>从 redis 源码的 src 目录中拷贝 <code>redis-trib.rb</code> 过来：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo cp ~/redis-4.0.8/src/redis-trib.rb .
+wxs@ubuntu:/usr/local/redis-cluster$ ls
+redis01  redis03  redis05  redis-trib.rb  startup.sh
+redis02  redis04  redis06  shutdown.sh</code></pre></div>
+
+<p>因为这是一个 <code>shell</code> 文件，需要安装 shell 和 shell 包管理器：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo apt-get install shell shellgems</code></pre></div>
+
+<p>安装 shell 关于 Redis 的库,可以执行 <code>gem install redis</code> 或者<a href="https://shellgems.org/gems/redis/versions/" target="_blank" rel="noopener">前往官网</a>下载安装包后安装。</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo gem install redis
+Fetching: redis-4.0.1.gem (100%)
+Successfully installed redis-4.0.1
+Parsing documentation for redis-4.0.1
+Installing ri documentation for redis-4.0.1
+Done installing documentation for redis after 0 seconds
+1 gem installed</code></pre></div>
+
+<p>执行 <code>redis-trib.rb</code> 时需要附带参数，格式如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135501801.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>先启动所有客户端，然后执行脚本：</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ./startup.sh 
+wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168.30.155:7001 192.168.30.155:7002 192.168.30.155:7003 192.168.30.155:7004 192.168.30.155:7005  192.168.30.155:7006</code></pre></div>
+
+<p><img src="https://img-blog.csdnimg.cn/20200606135527930.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>创建成功：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135550905.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>最后说两句：</p>
+<ol>
+<li>如果你不是伪集群，真的在服务器上搭建了集群，即 <code>真集群</code>，那么只需要在任意一台上执行 <code>redis-trib.rb</code> 即可。</li>
+<li>在真集群的情况下，除了在配置文件中要 <code>bind 0.0.0.0</code> 以外，还要注意关闭防火墙，不然无法搭建。</li>
+<li>如果关闭所有 redis 客户端后，想要重新开启集群，在客户端都启动后，进入任意客户端执行<code>cluster nodes</code>即可。</li>
+<li>如果想要重新生成集群，需要删除每个 Redis 中生成的持久化文件。</li>
+</ol>
+<h2 id="三、使用-redis-cli-连接集群"><a href="#三、使用-redis-cli-连接集群" class="headerlink" title="三、使用 redis-cli 连接集群"></a>三、使用 redis-cli 连接集群</h2><p>使用任意一个 <code>redis-cli</code>（以redis01的为例），使用 <code>-h</code> 指定ip地址（默认连接127.0.0.1），使用 <code>-p</code> 参数指定端口号（默认连接原始的端口为6379的 redis），使用 <code>-c</code> 参数指定是集群（不加会导致无法将 key 放入对应的客户端中）。</p>
+<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ./redis01/bin/redis-cli -h 192.168.30.155 -p 7001 -c</code></pre></div>
+
+<p>当我在7001中添加了一个 <code>name jitwxs</code> 后，它计算出 key 的哈希槽为5798，这个范围在7002中，因此这个 key 被移动到了7002中，并且当前连接重定向到了7002。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606135606467.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<div class="hljs"><pre><code class="hljs shell">COPY192.168.30.155:7002&gt; keys *
+1) "name"
+192.168.30.155:7001&gt; keys *
+(empty list or set)</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Redis/">Redis</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">
+                        <span class="hidden-mobile">5. Redis--Redis的持久化</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "6. Redis--Redis集群&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
