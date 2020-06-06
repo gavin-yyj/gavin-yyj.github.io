@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>4. Redis--Redis的特性 - 杨玉杰|个人博客</title>
+  <title>9. Redis--Redis缓存问题 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,8 +163,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-06-06 09:28">
-      June 6, 2020 am
+    <time datetime="2020-06-06 16:05">
+      June 6, 2020 pm
     </time>
   </div>
 
@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      846 字
+      1.2k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      12
        分钟
     </span>
   
@@ -215,150 +215,34 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="一、多数据库"><a href="#一、多数据库" class="headerlink" title="一、多数据库"></a>一、多数据库</h2><p>每一个 Redis 实例可以包括多个数据库，客户端可以指定连接某个 Redis 实例的某个数据库。一个Redis实例最多可以提供 <strong>16</strong> 个数据库，下标从 0 到 15，客户端<strong>默认连接第 0 号数据库</strong>。</p>
-<table>
-<thead>
-<tr>
-<th>含义</th>
-<th>方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>选择第 n 号数据库</td>
-<td>select n</td>
-</tr>
-<tr>
-<td>将当前库的 key 转移到第 n 号数据库</td>
-<td>move key n</td>
-</tr>
-</tbody></table>
-<p><img src="https://img-blog.csdnimg.cn/20200606100035439.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>这里补充下之前没有提到的 Redis 服务器的一些命令：</p>
-<table>
-<thead>
-<tr>
-<th>含义</th>
-<th>方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>测试连接状态是否可用</td>
-<td>ping</td>
-</tr>
-<tr>
-<td>命令行中打印内容</td>
-<td>echo xxx</td>
-</tr>
-<tr>
-<td>返回当前数据库中 key 的数目</td>
-<td>dbsize</td>
-</tr>
-<tr>
-<td>获取服务器的信息和统计</td>
-<td>info</td>
-</tr>
-<tr>
-<td>删除当前选择数据库中所有key</td>
-<td>flushdb</td>
-</tr>
-<tr>
-<td>删除所有数据库中所有key</td>
-<td>flushall</td>
-</tr>
-</tbody></table>
-<div class="hljs"><pre><code class="hljs angelscript"><span class="hljs-symbol">wxs@</span>ubuntu:/usr/local/redis/src$ ./redis-cli
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; select <span class="hljs-number">1</span> #进入<span class="hljs-number">1</span>号数据库
-OK
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; ping #检查连接状态
-PONG
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; dbsize #获取当前数据库key数目
-(<span class="hljs-built_in">int</span>eger) <span class="hljs-number">1</span>
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; flushdb #清空当前数据库
-OK
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; keys *
-(empty list <span class="hljs-keyword">or</span> <span class="hljs-keyword">set</span>)
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; flushall #清空所有数据库
-OK
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>[<span class="hljs-number">1</span>]&gt; select <span class="hljs-number">0</span>
-OK
-<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span>:<span class="hljs-number">6379</span>&gt; keys *
-(empty list <span class="hljs-keyword">or</span> <span class="hljs-keyword">set</span>)</code></pre></div>
-
-<h2 id="二、消息订阅与发布"><a href="#二、消息订阅与发布" class="headerlink" title="二、消息订阅与发布"></a>二、消息订阅与发布</h2><p>Redis 发布订阅(pub/sub)是一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。Redis 客户端可以订阅<strong>任意数量</strong>的频道。</p>
-<table>
-<thead>
-<tr>
-<th>含义</th>
-<th>方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>订阅频道</td>
-<td>subscribe cctv</td>
-</tr>
-<tr>
-<td>批量订阅频道</td>
-<td>psubscribe cctv*</td>
-</tr>
-<tr>
-<td>在指定频道中发送消息publish cctv “hello”</td>
-<td></td>
-</tr>
-</tbody></table>
-<p>实现消息的订阅和发布至少需要两个终端，我们在终端1中订阅 cctv 这个频道的消息：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200606103425153.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>在终端2中向 cctv 这个频道发布消息：从上面的图可以看到，推送的消息已经被订阅者收到。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200606103500275.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>我们也可以以一种正则的形式订阅多个频道，比如 cctv 下面有多个频道，例如 cctv-1、cctv-2 等等，我们只需订阅这个即可：</p>
-<div class="hljs"><pre><code class="hljs nginx"><span class="hljs-attribute">psubscribe</span> cctv*</code></pre></div>
-
-<h2 id="三、事务"><a href="#三、事务" class="headerlink" title="三、事务"></a>三、事务</h2><p>Redis 和其他数据库一样，也支持事务功能，但是 Redis 的数据库<strong>并不是一种真正的事务</strong>，它其实<strong>更像是一种批处理</strong>。</p>
-<p>传统数据库意义上的事务，是将多条 SQL 语句作为一个整体，如果其中任何一条语句执行失败，那么这些语句都不会被执行。但是Redis的事务，<strong>如果有某一条命令执行失败，其后的命令仍然会执行</strong>。</p>
-<table>
-<thead>
-<tr>
-<th>含义</th>
-<th>方法</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>开启事务(类似：begin transaction)</td>
-<td>multi</td>
-</tr>
-<tr>
-<td>提交事务（类似：commit）</td>
-<td>exec</td>
-</tr>
-<tr>
-<td>事务回滚（类似：rollback）</td>
-<td>discard</td>
-</tr>
-</tbody></table>
-<div class="hljs"><pre><code class="hljs accesslog">wxs@ubuntu:/usr/local/redis/src$ ./redis-cli 
-<span class="hljs-number">127.0.0.1:6379</span>&gt; set num <span class="hljs-number">1</span>
-OK
-<span class="hljs-number">127.0.0.1:6379</span>&gt; set name jitwxs
-OK
-<span class="hljs-number">127.0.0.1:6379</span>&gt; multi #开启事务
-OK
-<span class="hljs-number">127.0.0.1:6379</span>&gt; incr num
-QUEUED
-<span class="hljs-number">127.0.0.1:6379</span>&gt; incr name
-QUEUED
-<span class="hljs-number">127.0.0.1:6379</span>&gt; set age <span class="hljs-number">20</span>
-QUEUED
-<span class="hljs-number">127.0.0.1:6379</span>&gt; exec #执行事务
-<span class="hljs-number">1</span>) (integer) <span class="hljs-number">2</span>
-<span class="hljs-number">2</span>) (error) ERR value is not an integer or out of range #命令报错
-<span class="hljs-number">3</span>) OK #前面命令出错后这条命令仍然执行了
-<span class="hljs-number">127.0.0.1:6379</span>&gt; get num
-<span class="hljs-string">"2"</span>
-<span class="hljs-number">127.0.0.1:6379</span>&gt; get name
-<span class="hljs-string">"jitwxs"</span>
-<span class="hljs-number">127.0.0.1:6379</span>&gt; get age #该命令的确执行了
-<span class="hljs-string">"20"</span>
-<span class="hljs-number">127.0.0.1:6379</span>&gt;</code></pre></div>
-
+              <h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><blockquote>
+<p>咳咳，这一节内容应该早就放上博客的，一直忘记了，在写上一篇<a href="https://www.jitwxs.cn/dc21b1d2.html" target="_blank" rel="noopener">《详解布隆过滤器》</a>时，谈到缓存问题，一看博客中竟然没有写过相关的，实在是不该，特此补上。</p>
+</blockquote>
+<p>Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括<strong>缓存穿透、缓存雪崩、缓存击穿、缓存预热</strong>等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基本就是废话了，谨慎阅读哦。</p>
+<h2 id="二、缓存穿透"><a href="#二、缓存穿透" class="headerlink" title="二、缓存穿透"></a>二、缓存穿透</h2><p><strong>问题描述：</strong></p>
+<p><code>缓存穿透</code>是指<strong>查询一个一定不存在的数据</strong>，由于缓存是不命中时被动写的，并且出于容错考虑，如果从存储层查不到数据则不写入缓存，这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义。在流量大时，可能DB就挂掉了，要是有人利用不存在的 key 频繁攻击我们的应用，这就是漏洞。</p>
+<p><strong>解决方案：</strong></p>
+<p>有很多种方法可以有效地解决缓存穿透问题，最常见的则是采用<code>布隆过滤器</code>，将所有可能存在的数据哈希到一个足够大的 bitmap 中，一个一定不存在的数据会被 这个 bitmap 拦截掉，从而避免了对底层存储系统的查询压力。</p>
+<p>另外也有一个更为简单粗暴的方法，如果一个查询返回的数据为空（不管是数据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。通过这个直接设置的默认值存放到缓存，这样第二次到缓冲中获取就有值了，而不会继续访问数据库。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200606160601704.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="三、缓存雪崩"><a href="#三、缓存雪崩" class="headerlink" title="三、缓存雪崩"></a>三、缓存雪崩</h2><p><strong>问题描述：</strong></p>
+<p><code>缓存雪崩</code>是指在我们<strong>设置缓存时采用了相同的过期时间，导致缓存在某一时刻同时失效</strong>，请求全部转发到DB，DB瞬时压力过重雪崩。</p>
+<p><strong>解决方案：</strong></p>
+<p>缓存失效时的雪崩效应对底层系统的冲击非常可怕。大多数系统设计者<strong>考虑用加锁或者队列的方式保证缓存的单线程（进程）写</strong>，从而避免失效时大量的并发请求落到底层存储系统上。</p>
+<p>还可以将缓存失效时间分散开，比如我们可以<strong>在原有的失效时间基础上增加一个随机值</strong>，比如1-5分钟随机，这样每一个缓存的过期时间的重复率就会降低，就很难引发集体失效的事件。</p>
+<h2 id="四、缓存击穿"><a href="#四、缓存击穿" class="headerlink" title="四、缓存击穿"></a>四、缓存击穿</h2><p><strong>问题描述：</strong></p>
+<p>对于一些设置了过期时间的 key，如果这些 key 可能会在某些时间点被超高并发地访问，是一种非常“热点”的数据。这个时候，需要考虑一个问题：缓存被“击穿”的问题，这个<strong>和缓存雪崩的区别在于这里针对某一 key 缓存，前者则是很多 key</strong>。</p>
+<p>缓存在某个时间点过期的时候，恰好在这个时间点对这个 key 有大量的并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端 DB 压垮。</p>
+<p><strong>解决方案：</strong></p>
+<p>业界比较常用的做法，是使用互斥锁(mutex)。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去 load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如 Redis 的 <code>SETNX</code> 或者 Memcache 的 ADD）去 set 一个 mutex key，当操作返回成功时，再进行 load db 的操作并回设缓存；否则，就重试整个 get 缓存的方法。</p>
+<h2 id="五、缓存预热"><a href="#五、缓存预热" class="headerlink" title="五、缓存预热"></a>五、缓存预热</h2><p><strong>问题描述：</strong></p>
+<p>缓存预热就是系统上线后，将相关的缓存数据直接加载到缓存系统。这样就可以避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题！用户直接查询事先被预热的缓存数据！</p>
+<p><strong>解决方案：</strong></p>
+<ol>
+<li>直接写个缓存刷新页面，上线时手工操作下；</li>
+<li>数据量不大，可以在项目启动的时候自动进行加载；</li>
+<li>定时刷新缓存；</li>
+</ol>
 
             </article>
             <hr>
@@ -391,18 +275,12 @@ QUEUED
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">5. Redis--Redis的持久化</span>
-                        <span class="visible-mobile">前の記事</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/06/05/3-Redis-Redis%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
-                        <span class="hidden-mobile">3. Redis--Redis的数据类型</span>
+                      <a href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/">
+                        <span class="hidden-mobile">8. Redis--Redis的实际应用</span>
                         <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -557,7 +435,7 @@ QUEUED
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "4. Redis--Redis的特性&nbsp;",
+        "9. Redis--Redis缓存问题&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
