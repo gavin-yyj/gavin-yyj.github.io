@@ -179,6 +179,167 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/31/5-Netty-ByteBuf/">5.Netty--ByteBuf</a>
+
+      <a href="/2020/05/31/5-Netty-ByteBuf/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+ByteBuf：Netty的数据容器
+API的详细信息
+用例
+内存分配
+
+
+ByteBuf的APIJava NIO虽然提供了ByteBuffer作为字节容器，但是其使用过于复杂和繁琐，因此用ByteBuf来代替ByteBuffer。
+优点：
+
+可以被用户自定义的缓冲区类型扩展
+通过内置的复合缓冲区类型实现了透明的零拷贝
+容量可以按需增长
+在读和写这两种模式之间切换不需要调用By</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/">4.Netty--传输</a>
+
+      <a href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+OIO：阻塞传输
+NIO：异步传输
+Local：JVM内部的异步通信
+Embedded：测试你的ChannelHandler
+
+
+案例研究：传输迁移不通过Netty使用OIO和NIO未使用Netty的阻塞网络编程代码如下：
+public class PlainOioServer &#123;
+    public void serve(int port) throws IOEx</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/">3.Netty--Netty的组件和设计</a>
+
+      <a href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+Netty的技术和体系结构方面的内容
+Channel、EventLoop和ChannelFuture
+ChannelHandler和ChannelPipeline
+引导
+
+
+学习Netty是因为它是基于Java NIO 的异步和事件驱动的实现，保证了高负载下应用程序性能的最大化和可伸缩性；同时它包含了一组设计模式，实现了应用程序逻辑从网络层解耦，简化了开发过程，最大限度地提高了</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/">2.Netty--你的第一款Netty应用</a>
 
       <a href="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/" class="index-excerpt">
@@ -517,147 +678,6 @@ http.authorizeRequests()
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-4-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(4)--自定义表单登录</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-4-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E7%99%BB%E5%BD%95/" class="index-excerpt">
-        
-        
-          
-        
-        <div>一、添加验证码1.1 验证码 Servlet验证码的 Servlet 代码，大家无需关心其内部实现，我也是百度直接捞了一个，直接复制即可。
-com.gavin.springsecurity04.common.VerifyServlet
-    public class VerifyServlet extends HttpServlet &#123;
-		 private static final </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">SpringBoot集成Spring Security(3)--异常处理</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="index-excerpt">
-        
-        
-          
-        
-        <div>思考：为何登录失败自动跳转到/login?error，而且没有异常提示？
-
-因为首先 /login?error 是 Spring security 默认的失败 Url，其次如果你不手动处理这个异常，这个异常是不会被处理的。
-一、常见异常我们先来列举下一些 Spring Security 中常见的异常：
-
-UsernameNotFoundException（用户不存在）
-DisabledExcept</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-2-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(2)--自动登录</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-2-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="index-excerpt">
-        
-        
-          
-        
-        <div>一、修改 login.html在登录页添加自动登录的选项，注意自动登录字段的 name 属性必须是 remember-me ：
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;登录&lt;/title&gt;
-&lt;/head&g</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -694,7 +714,7 @@ DisabledExcept</div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -703,7 +723,7 @@ DisabledExcept</div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

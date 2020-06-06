@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>カテゴリー - Redis - 杨玉杰|个人博客</title>
+  <title>Categories - Redis - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -171,12 +171,30 @@
                 
 
 <div class="list-group">
-<!--  <p class="h4">合計 8 件のポスト</p>-->
+<!--  <p class="h4">10 posts in total.</p>-->
   <hr>
   
     
       
       <p class="h5">2020</p>
+    
+    <a href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">11. Redis--一致性Hash算法</span>
+      <span style="float: right;">06-06</span>
+    </a>
+  
+    
+    <a href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">0. Redis--引导</span>
+      <span style="float: right;">06-06</span>
+    </a>
+  
+    
+    <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">10. Redis--如何优化缓存架构</span>
+      <span style="float: right;">06-06</span>
+    </a>
+  
     
     <a href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/" class="list-group-item list-group-item-action">
       <span class="archive-post-title">9. Redis--Redis缓存问题</span>
@@ -219,13 +237,19 @@
       <span style="float: right;">06-05</span>
     </a>
   
-    
-    <a href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">2. Redis--Jedis的使用</span>
-      <span style="float: right;">06-05</span>
-    </a>
-  
 </div>
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/page/2/">2</a><a class="extend next" rel="next" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -249,7 +273,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -258,7 +282,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -318,7 +342,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "カテゴリー - Redis&nbsp;",
+        "Category - Redis&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
