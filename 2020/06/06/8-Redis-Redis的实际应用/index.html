@@ -222,7 +222,7 @@
 <h2 id="二、功能实现"><a href="#二、功能实现" class="headerlink" title="二、功能实现"></a>二、功能实现</h2><p>实现之前首先思考 Redis 是要加在 Service 层还是 Web 层。理论上来说都可以，但是加在 Web 层的话，其他 Web 去调用 Service 还是得去查数据库，因此我们加在 Service 层。</p>
 <p>其次思考使用什么数据类型，我们使用<strong>哈希类型</strong>，field 为类别的 id，value 为对应查询的查询内容。</p>
 <h3 id="2-1-配置文件-cfg-properties"><a href="#2-1-配置文件-cfg-properties" class="headerlink" title="2.1 配置文件 cfg.properties"></a>2.1 配置文件 cfg.properties</h3><p>首先在配置文件中加入 Redis 相关的信息，最后一项 <code>redis.CONTENT_KEY</code> 为我们首页轮播图缓存的 key 值：</p>
-<div class="hljs"><pre><code class="hljs ini">COPY#Redis单机
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-comment">#Redis单机</span>
 <span class="hljs-attr">redis.standalone.host</span>=<span class="hljs-number">192.168</span>.<span class="hljs-number">30.155</span>
 <span class="hljs-attr">redis.standalone.port</span>=<span class="hljs-number">6379</span>
 
@@ -245,7 +245,7 @@
 <span class="hljs-attr">redis.CONTENT_KEY</span>=CONTENT_KEY</code></pre></div>
 
 <h3 id="2-2-Spring-中-Redis-配置"><a href="#2-2-Spring-中-Redis-配置" class="headerlink" title="2.2 Spring 中 Redis 配置"></a>2.2 Spring 中 Redis 配置</h3><p>这里的代码在上一节已经说过了，因为我们是开发环境，使用单机版即可。</p>
-<div class="hljs"><pre><code class="hljs xml">COPY<span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
 <span class="hljs-tag">       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
 <span class="hljs-tag">       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">"http://www.springframework.org/schema/context"</span></span>
@@ -311,7 +311,7 @@
 <blockquote>
 <p>注：JedisClient 接口和其单机/集群实现类代码省略，需要请看上一节。</p>
 </blockquote>
-<div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Service</span>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TbContentServiceImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ServiceImpl</span>&lt;<span class="hljs-title">TbContentMapper</span>, <span class="hljs-title">TbContent</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">TbContentService</span> </span>&#123;
     <span class="hljs-meta">@Autowired</span>
     <span class="hljs-keyword">private</span> TbContentMapper contentMapper;
@@ -382,7 +382,7 @@
 &#125;</code></pre></div>
 
 <h3 id="2-4-Web-层代码"><a href="#2-4-Web-层代码" class="headerlink" title="2.4 Web 层代码"></a>2.4 Web 层代码</h3><p>我们设首页轮播图的 id 为 <code>ad1Id</code>，直接调用 <code>tbContentService.listByCategoryId(ad1Id)</code> 即可。</p>
-<div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Controller</span>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PageController</span> </span>&#123;
     <span class="hljs-meta">@Value</span>(<span class="hljs-string">"$&#123;ad1.id&#125;"</span>)
     <span class="hljs-keyword">private</span> Long ad1Id;
@@ -404,7 +404,7 @@
 <p>Key 为 <code>CONTENT_KEY</code>，field 目前只有一个，即首页轮播图，其值为89，value 为转换为 json 的数据：</p>
 <p><img src="https://img-blog.csdnimg.cn/2020060616020848.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>当我在后台为首页添加一个轮播图后，该 Field 被删除掉了（这里之所以连 key 也被删掉了，是因为该 key 中只有一个field，因此唯一的 field 被删掉了，key 也就删掉了）：</p>
-<div class="hljs"><pre><code class="hljs shell">COPY127.0.0.1:6379&gt; keys *
+<div class="hljs"><pre><code class="hljs shell">127.0.0.1:6379&gt; keys *
 (empty list or set)</code></pre></div>
 
 <p><img src="https://img-blog.csdnimg.cn/20200606160231372.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>

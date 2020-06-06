@@ -221,7 +221,7 @@
 <p>Redis客户端和节点<strong>直接连接</strong>即可，无需中间件，一台客户端连接一个节点即可，Client 访问时直接访问任意一个Redis节点即可。</p>
 <h3 id="1-2-负载均衡"><a href="#1-2-负载均衡" class="headerlink" title="1.2 负载均衡"></a>1.2 负载均衡</h3><p>当我们搭建了集群后，其是如何实现负载均衡的呢？</p>
 <p>Redis 集群中内置了 <strong>16384</strong> 个<code>哈希槽（slot）</code>，它会把所有的物理节点都映射到<strong>[0,16383]</strong>的slot上。</p>
-<p>当我们需要在Redis集群中放置了个 key-value 时，Redis 先对 key 使用 <code>crc16</code> 算法得出一个结果，然后将结果<strong>对16384取余</strong>，这样<strong>每一个 key 都会对应一个编号在0 ~16383的 哈希槽</strong>。</p>
+<p>当我们需要在Redis集群中放置一个 key-value 时，Redis 先对 key 使用 <code>crc16</code> 算法得出一个结果，然后将结果<strong>对16384取余</strong>，这样<strong>每一个 key 都会对应一个编号在0 ~16383的 哈希槽</strong>。</p>
 <p>Redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。例如我们有三个节点，其每个节点哈希槽范围为：0 ~ 5000，5001 ~ 10000，10001~ 16383。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606130442462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>当我们存储一个名为 Hello1 的 key 时，其通过 <code>crc16</code> 算法计算出的结果为1500，Redis 集群就会将这个 key 放在对应1500的<code>哈希槽</code>中，又因为哈希槽0~ 5000被映射到了 Server1，则 Hello1 就被放置在了 Server1。</p>
@@ -245,22 +245,22 @@
 <p>注：<a href="https://www.jitwxs.cn/e331e26a.html" target="_blank" rel="noopener">《Redis 初探（1）——Redis 的安装》</a>这篇文章中源码和安装后的文件是在同一文件夹下，本篇文章不使用这种方法。</p>
 </blockquote>
 <p>准备一个 Redis 安装包，将源码解压到当前文件夹：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~$ ls
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:~$ ls
 Desktop  redis-4.0.8.tar.gz
 wxs@ubuntu:~$ tar zxvf redis-4.0.8.tar.gz</code></pre></div>
 
 <p>进入解压后文件夹，执行 make 编译：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~$ cd redis-4.0.8/
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:~$ cd redis-4.0.8/
 wxs@ubuntu:~/redis-4.0.8$ make</code></pre></div>
 
 <blockquote>
 <p>注：所有源码安装需要自行编译的都需要 gcc、g++ 等相关软件支持</p>
 </blockquote>
 <p>将其安装到<code>/usr/local/redis</code>目录下：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:~/redis-4.0.8$ sudo make install PREFIX=/usr/local/redis</code></pre></div>
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:~/redis-4.0.8$ sudo make install PREFIX=/usr/local/redis</code></pre></div>
 
 <p>该目录下只有一个 bin 目录，存放 redis 的可执行文件，我们从源码包中拷贝一份 redis 配置文件过来：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis$ ls
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis$ ls
 bin
 wxs@ubuntu:/usr/local/redis$ sudo cp ~/redis-4.0.8/redis.conf .
 wxs@ubuntu:/usr/local/redis$ ls
@@ -275,9 +275,9 @@ bin  redis.conf</code></pre></div>
 <p><img src="https://img-blog.csdnimg.cn/20200606135249116.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>（4）开启 AOF 持久化</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606135308180.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h3 id="2-2-准备-Redis-集群客户端"><a href="#2-2-准备-Redis-集群客户端" class="headerlink" title="2.2 准备 Redis 集群客户端"></a>2.2 准备 Redis 集群客户端</h3><p><strong>注意：\</strong>用来做集群的客户端*<em>必须是干净的客户端*</em>，像备份文件 <code>dump.rdb</code>、<code>appendonly.aof</code> 等应当先删除掉，避免不必要的错误。</p>
+<h3 id="2-2-准备-Redis-集群客户端"><a href="#2-2-准备-Redis-集群客户端" class="headerlink" title="2.2 准备 Redis 集群客户端"></a>2.2 准备 Redis 集群客户端</h3><p><strong>注意：</strong>用来做集群的客户端<strong>必须是干净的客户端</strong>，像备份文件 <code>dump.rdb</code>、<code>appendonly.aof</code> 等应当先删除掉，避免不必要的错误。</p>
 <p>在 <code>/usr/local</code> 中创建 <code>redis-cluster</code> 文件夹，拷贝六份原始 Redis：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis01
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis01
 wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis02
 wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis03
 wxs@ubuntu:/usr/local/redis-cluster$ sudo cp -r ../redis redis04
@@ -295,7 +295,7 @@ redis01  redis02  redis03  redis04  redis05  redis06</code></pre></div>
 <p><img src="https://img-blog.csdnimg.cn/20200606135404621.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>依次修改其他客户端，端口号范围从7001 ~ 7006。</p>
 <p>编写一个启动这些客户端的批处理 <code>startup.sh</code>：</p>
-<div class="hljs"><pre><code class="hljs bash">COPYcd redis01/bin
+<div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> redis01/bin
 sudo ./redis-server ../redis.conf
 <span class="hljs-built_in">cd</span> ../../
 <span class="hljs-built_in">cd</span> redis02/bin
@@ -317,7 +317,7 @@ sudo ./redis-server ../redis.conf
 <p>执行脚本，启动成功：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606135422369.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>编写一个关闭这些客户端的批处理 <code>shutdown.sh</code>：</p>
-<div class="hljs"><pre><code class="hljs bash">COPYcd redis01/bin
+<div class="hljs"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> redis01/bin
 sudo ./redis-cli -p 7001 shutdown
 <span class="hljs-built_in">cd</span> ../../
 <span class="hljs-built_in">cd</span> redis02/bin
@@ -339,20 +339,20 @@ sudo ./redis-cli -p 7006 shutdown
 <p>执行脚本，关闭成功：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606135446595.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>目录结构如下：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ls
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ ls
 redis01  redis02  redis03  redis04  redis05  redis06  shutdown.sh  startup.sh</code></pre></div>
 
 <h3 id="2-3-搭建集群"><a href="#2-3-搭建集群" class="headerlink" title="2.3 搭建集群"></a>2.3 搭建集群</h3><p>从 redis 源码的 src 目录中拷贝 <code>redis-trib.rb</code> 过来：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo cp ~/redis-4.0.8/src/redis-trib.rb .
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ sudo cp ~/redis-4.0.8/src/redis-trib.rb .
 wxs@ubuntu:/usr/local/redis-cluster$ ls
 redis01  redis03  redis05  redis-trib.rb  startup.sh
 redis02  redis04  redis06  shutdown.sh</code></pre></div>
 
 <p>因为这是一个 <code>shell</code> 文件，需要安装 shell 和 shell 包管理器：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo apt-get install shell shellgems</code></pre></div>
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ sudo apt-get install shell shellgems</code></pre></div>
 
 <p>安装 shell 关于 Redis 的库,可以执行 <code>gem install redis</code> 或者<a href="https://shellgems.org/gems/redis/versions/" target="_blank" rel="noopener">前往官网</a>下载安装包后安装。</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ sudo gem install redis
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ sudo gem install redis
 Fetching: redis-4.0.1.gem (100%)
 Successfully installed redis-4.0.1
 Parsing documentation for redis-4.0.1
@@ -363,7 +363,7 @@ Done installing documentation for redis after 0 seconds
 <p>执行 <code>redis-trib.rb</code> 时需要附带参数，格式如下：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606135501801.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>先启动所有客户端，然后执行脚本：</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ./startup.sh 
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ ./startup.sh 
 wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168.30.155:7001 192.168.30.155:7002 192.168.30.155:7003 192.168.30.155:7004 192.168.30.155:7005  192.168.30.155:7006</code></pre></div>
 
 <p><img src="https://img-blog.csdnimg.cn/20200606135527930.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
@@ -377,11 +377,11 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
 <li>如果想要重新生成集群，需要删除每个 Redis 中生成的持久化文件。</li>
 </ol>
 <h2 id="三、使用-redis-cli-连接集群"><a href="#三、使用-redis-cli-连接集群" class="headerlink" title="三、使用 redis-cli 连接集群"></a>三、使用 redis-cli 连接集群</h2><p>使用任意一个 <code>redis-cli</code>（以redis01的为例），使用 <code>-h</code> 指定ip地址（默认连接127.0.0.1），使用 <code>-p</code> 参数指定端口号（默认连接原始的端口为6379的 redis），使用 <code>-c</code> 参数指定是集群（不加会导致无法将 key 放入对应的客户端中）。</p>
-<div class="hljs"><pre><code class="hljs shell">COPYwxs@ubuntu:/usr/local/redis-cluster$ ./redis01/bin/redis-cli -h 192.168.30.155 -p 7001 -c</code></pre></div>
+<div class="hljs"><pre><code class="hljs shell">wxs@ubuntu:/usr/local/redis-cluster$ ./redis01/bin/redis-cli -h 192.168.30.155 -p 7001 -c</code></pre></div>
 
 <p>当我在7001中添加了一个 <code>name jitwxs</code> 后，它计算出 key 的哈希槽为5798，这个范围在7002中，因此这个 key 被移动到了7002中，并且当前连接重定向到了7002。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606135606467.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<div class="hljs"><pre><code class="hljs shell">COPY192.168.30.155:7002&gt; keys *
+<div class="hljs"><pre><code class="hljs shell">192.168.30.155:7002&gt; keys *
 1) "name"
 192.168.30.155:7001&gt; keys *
 (empty list or set)</code></pre></div>

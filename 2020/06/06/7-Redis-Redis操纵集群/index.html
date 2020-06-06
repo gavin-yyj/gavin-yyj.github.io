@@ -217,7 +217,7 @@
             <article class="markdown-body">
               <p>在<a href="https://www.jitwxs.cn/baef2507.html" target="_blank" rel="noopener">《Redis 初探（2）——Jedis 的使用》</a>中，我们已经学会了Jedis操纵单机Redis的简单使用，本章将继续深入，介绍Jedis对集群的操纵。</p>
 <h2 id="一、Jedis-连接单机"><a href="#一、Jedis-连接单机" class="headerlink" title="一、Jedis 连接单机"></a>一、Jedis 连接单机</h2><p>在开始介绍 Jedis 连接集群之前，先简单回顾下连接单机的使用。</p>
-<h3 id="1-1-简单使用"><a href="#1-1-简单使用" class="headerlink" title="1.1 简单使用"></a>1.1 简单使用</h3><div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Test</span>
+<h3 id="1-1-简单使用"><a href="#1-1-简单使用" class="headerlink" title="1.1 简单使用"></a>1.1 简单使用</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Test</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testJedis</span><span class="hljs-params">()</span> </span>&#123;
     <span class="hljs-comment">// 1.获得连接对象。参数为redis所在的服务器地址及端口号</span>
     Jedis jedis = <span class="hljs-keyword">new</span> Jedis(<span class="hljs-string">"192.168.30.155"</span>, <span class="hljs-number">6379</span>);
@@ -230,7 +230,7 @@
 
 &#125;</code></pre></div>
 
-<h3 id="1-2-使用连接池"><a href="#1-2-使用连接池" class="headerlink" title="1.2 使用连接池"></a>1.2 使用连接池</h3><div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Test</span>
+<h3 id="1-2-使用连接池"><a href="#1-2-使用连接池" class="headerlink" title="1.2 使用连接池"></a>1.2 使用连接池</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Test</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testJedisPool</span><span class="hljs-params">()</span> </span>&#123;
     <span class="hljs-comment">//1. 创建Jedis连接池配置（包含许多配置，这里只配置了3个）</span>
     JedisPoolConfig poolConfig = <span class="hljs-keyword">new</span> JedisPoolConfig();
@@ -257,7 +257,7 @@
 
 <h2 id="二、Jedis-连接集群"><a href="#二、Jedis-连接集群" class="headerlink" title="二、Jedis 连接集群"></a>二、Jedis 连接集群</h2><p>Jedis 连接集群也是十分简单，首先创建一个 <code>HostAndPort</code> 的集合，里面存放着集群中的每一个节点，然后创建 <code>JedisCluster</code> 对象，直接操纵该对象即可。</p>
 <p><code>JedisCluster</code> 在项目中<strong>单例存在</strong>即可。第三步的关闭可省略（因为单例存在，如果关掉了，即整个项目要结束了）。</p>
-<div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Test</span>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Test</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testJedisCluster</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException </span>&#123;
     <span class="hljs-comment">// 1.创建一个JedisCluster对象。第一个参数nodes是一个set类型，set中包含若干个HostAndPort对象</span>
     Set&lt;HostAndPort&gt; nodes = <span class="hljs-keyword">new</span> HashSet&lt;&gt;();
@@ -277,7 +277,7 @@
 
 <h2 id="三、Jedis-的实际应用"><a href="#三、Jedis-的实际应用" class="headerlink" title="三、Jedis 的实际应用"></a>三、Jedis 的实际应用</h2><p>在实际项目中，测试环境一般使用单机版，生产环境使用集群版。为了避免代码的不必要改动，我们使用<code>策略模式</code>，<code>面向接口开发</code>。</p>
 <h3 id="3-1-JedisClient-接口"><a href="#3-1-JedisClient-接口" class="headerlink" title="3.1 JedisClient 接口"></a>3.1 JedisClient 接口</h3><p>定义一个 <code>JedisClient</code> 的接口，里面封装了常用的一些方法，主要是对 <code>String</code> 类型和 <code>Hash</code> 类型的操作，可以根据实际情况进行修改。</p>
-<div class="hljs"><pre><code class="hljs java">COPYimport java.util.List;
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.List;
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">JedisClient</span> </span>&#123;
     <span class="hljs-function">String <span class="hljs-title">set</span><span class="hljs-params">(String key, String value)</span></span>;
@@ -294,7 +294,7 @@
     <span class="hljs-function">Long <span class="hljs-title">del</span><span class="hljs-params">(String key)</span></span>;
 &#125;</code></pre></div>
 
-<h3 id="3-2-单机实现类"><a href="#3-2-单机实现类" class="headerlink" title="3.2 单机实现类"></a>3.2 单机实现类</h3><div class="hljs"><pre><code class="hljs java">COPYimport java.util.List;
+<h3 id="3-2-单机实现类"><a href="#3-2-单机实现类" class="headerlink" title="3.2 单机实现类"></a>3.2 单机实现类</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.List;
 
 <span class="hljs-keyword">import</span> redis.clients.jedis.Jedis;
 <span class="hljs-keyword">import</span> redis.clients.jedis.JedisPool;
@@ -409,7 +409,7 @@
 
 &#125;</code></pre></div>
 
-<h3 id="3-3-集群实现类"><a href="#3-3-集群实现类" class="headerlink" title="3.3 集群实现类"></a>3.3 集群实现类</h3><div class="hljs"><pre><code class="hljs java">COPYimport java.util.List;
+<h3 id="3-3-集群实现类"><a href="#3-3-集群实现类" class="headerlink" title="3.3 集群实现类"></a>3.3 集群实现类</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.List;
 
 <span class="hljs-keyword">import</span> redis.clients.jedis.JedisCluster;
 
@@ -488,7 +488,7 @@
 &#125;</code></pre></div>
 
 <h3 id="3-4-实战演示"><a href="#3-4-实战演示" class="headerlink" title="3.4 实战演示"></a>3.4 实战演示</h3><p>（1）首先准备一个配置文件 <code>cfg.properties</code>，在配置文件中加入关于 redis 的信息：</p>
-<div class="hljs"><pre><code class="hljs ini">COPY# redis单机
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-comment"># redis单机</span>
 <span class="hljs-attr">redis.standalone.host</span>=<span class="hljs-number">192.168</span>.<span class="hljs-number">30.155</span>
 <span class="hljs-attr">redis.standalone.port</span>=<span class="hljs-number">6379</span>
 <span class="hljs-comment">#redis集群</span>
@@ -507,7 +507,7 @@
 
 <p>（2）准备 Spring 关于 redis 的配置文件 <code>applicationContext-redis.xml</code>：</p>
 <p>需要注意的是，单机和集群同时<strong>只能放开一个，另一个必须注释掉</strong>。因为我们取Bean是取接口，即 <code>JedisClient</code>，这两个都是 <code>JedisClient</code> 的实现类。</p>
-<div class="hljs"><pre><code class="hljs xml">COPY<span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
 <span class="hljs-tag">       <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
 <span class="hljs-tag">       <span class="hljs-attr">xmlns:context</span>=<span class="hljs-string">"http://www.springframework.org/schema/context"</span></span>
@@ -567,7 +567,7 @@
 <span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
 
 <p>（3）编写测试方法</p>
-<div class="hljs"><pre><code class="hljs java">COPY<span class="hljs-meta">@Test</span>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Test</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span> </span>&#123;
     ApplicationContext ac = <span class="hljs-keyword">new</span> ClassPathXmlApplicationContext(<span class="hljs-string">"classpath:applicationContext-redis.xml"</span>);
     JedisClient jedisClient = ac.getBean(JedisClient<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
