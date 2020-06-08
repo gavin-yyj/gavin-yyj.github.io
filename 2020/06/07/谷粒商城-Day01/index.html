@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      408 字
+      438 字
     </span>
   
 
@@ -219,6 +219,8 @@
 <h2 id="用到的框架技术"><a href="#用到的框架技术" class="headerlink" title="用到的框架技术"></a>用到的框架技术</h2><p><img src="https://img-blog.csdnimg.cn/20200607211031340.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h1><h2 id="1-1-准备git"><a href="#1-1-准备git" class="headerlink" title="1.1 准备git"></a>1.1 准备git</h2><p>在GitHub上新建一个仓库：<br><img src="https://img-blog.csdnimg.cn/20200607132311474.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="项目地址"><br>复制仓库地址后来到IDEA页面；<br><img src="https://img-blog.csdnimg.cn/20200607132504185.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200607132636145.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>记得检查JDK、MAVEN的配置是否正确：<br><img src="https://img-blog.csdnimg.cn/20200607133051908.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200607133123825.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果弹出提示框如下，问你是否要自动提交某些文件，请一律选NO,且不再提醒。否则系统会自动提交一些不必要的文件，平时养成好的习惯，否则步入社会会被人骂的。<br><img src="https://img-blog.csdnimg.cn/20200607132955394.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200607143024363.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="3-数据结构的概述"><a href="#3-数据结构的概述" class="headerlink" title="3.数据结构的概述"></a>3.数据结构的概述</h1><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><img src="https://img-blog.csdnimg.cn/20200607211213891.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>cms：内容管理        pms：商品管理        oms：订单管理</p>
+<p>sms：优惠管理        ums：用户管理        wms：库存管理</p>
 <h2 id="数据库建模工具"><a href="#数据库建模工具" class="headerlink" title="数据库建模工具"></a>数据库建模工具</h2><p>这里我使用的是<strong>PowerDesigner16.5</strong>，安装破解参考<a href="https://www.fujieace.com/software/powerdesigner.html" target="_blank" rel="noopener">这里</a>，简单学习可以参考<a href="https://www.cnblogs.com/lxbmaomao/p/9826790.html" target="_blank" rel="noopener">这篇文章</a></p>
 <h1 id="4-通用Mapper"><a href="#4-通用Mapper" class="headerlink" title="4. 通用Mapper"></a>4. 通用Mapper</h1><h2 id="导入通用Mapper依赖"><a href="#导入通用Mapper依赖" class="headerlink" title="导入通用Mapper依赖"></a>导入通用Mapper依赖</h2><div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- 通用mapper --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
@@ -270,13 +272,19 @@
                   <div class="post-prev col-6">
                     
                     
+                      <a href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2.SpringSecurity整合OAuth2.0-Day01</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </div>
                   <div class="post-next col-6">
                     
                     
                       <a href="/2020/06/06/1-%E7%90%86%E8%A7%A3-OAuth-2-0/">
                         <span class="hidden-mobile">1. 理解 OAuth 2.0</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -309,7 +317,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -336,7 +344,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -345,7 +353,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
