@@ -179,6 +179,59 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">11.Netty--预置的ChannelHandler和编解码器</a>
+
+      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+通过SSL/TLS保护Netty应用程序；
+构建基于Netty的HTTP/HTTPS应用程序
+处理空闲的连接和超时
+解码基于分隔符的协议和基于长度的协议
+写大型数据
+Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。
+
+
+通过SSL/TLS保护Netty应用程序为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLE</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">10.Netty--编解码器框架</a>
 
       <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/" class="index-excerpt">
@@ -687,63 +740,6 @@ ChannelHandler和ChannelPipeline
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">1.Netty--异步和事件驱动</a>
-
-      <a href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本系列文章主要来自《Netty IN ACTION》
-本章主要内容：
-
-Java网络编程
-
-Netty简介
-
-Netty核心组件
-
-
-
-Java网络编程首先来看一个典型的阻塞I/O示例：
-//创建一个新的ServerSocket，用于监听指定端口上的连接请求
-ServerSocket serverSocket = new ServerSocket(portNumber);//1
-//以阻塞的方式</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -780,7 +776,7 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -789,7 +785,7 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

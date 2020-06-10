@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>1. Redis--安装Redis - 杨玉杰|个人博客</title>
+  <title>深入分析Java Web技术内幕-1.深入Web请求过程 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,8 +163,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-06-05 20:39">
-      June 5, 2020 pm
+    <time datetime="2020-06-10 17:12">
+      June 10, 2020 pm
     </time>
   </div>
 
@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      308 字
+      1.7k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      18
        分钟
     </span>
   
@@ -215,37 +215,24 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="1-1-什么是-Redis"><a href="#1-1-什么是-Redis" class="headerlink" title="1.1 什么是 Redis"></a>1.1 什么是 Redis</h2><p>Redis 是使用 C 语言开发的一个开源的高性能键值对（key-value）数据库。它通过提供多种键值数据类型来适应不同场景下的存储需求，Redis 支持以下五种数据类型：</p>
+              <h1 id="1-B-S网络架构概述"><a href="#1-B-S网络架构概述" class="headerlink" title="1 B/S网络架构概述"></a>1 B/S网络架构概述</h1><p>B/S架构优势：</p>
 <ul>
-<li>String 类型</li>
-<li>List 类型</li>
-<li>Set 类型</li>
-<li>SortedSet 类型</li>
-<li>Hash类型</li>
+<li>客户端使用统一的浏览器（Browser），不需要特殊的配置和网络连接，有效地屏蔽了不同服务提供商提供给用户使用服务的差异性；</li>
+<li>服务器（Server）基于统一的HTTP，HTTP采用<strong>无状态的短连接</strong>的通信方式，服务开发者只需要关注提供服务的应用逻辑。</li>
 </ul>
-<h2 id="1-2-Redis-应用场景"><a href="#1-2-Redis-应用场景" class="headerlink" title="1.2 Redis 应用场景"></a>1.2 Redis 应用场景</h2><ul>
-<li>缓存</li>
-<li>分布式集群架构中session分离</li>
-<li>任务队列</li>
-<li>…</li>
+<p>B/S网络架构如下图所示：<br><img src="https://img-blog.csdnimg.cn/20200610152139776.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>主要步骤有：<br>1、用户在浏览器中输入URL；<br>2、DNS将URL解析成对应的IP地址；<br>3、根据IP地址在互联网上找到对应的服务器，服务器返回给用户需要的资源<br>在这里其中还有一些复杂的业务逻辑：<br>1、有时要通过负载均衡设备来平均分配所有用户的请求；<br>2、以及请求的数据是存储在分布式缓存里还是一个静态文件中，或是在数据库中；<br>3、当数据返回浏览器时，浏览器解析数据发现还有一些静态资源（如CSS，JS或是图片等）时又会发起另外的HTTP请求，CDN服务器来处理该请求。<br>…<br>这里有几个约定俗成的原则需要遵守：</p>
+<ul>
+<li>互联网上所有资源都要用一个URL来表示；</li>
+<li>必须基于HTTP与服务器交互；</li>
+<li>数据展示必须在浏览器中进行<h1 id="2-如何发起一个请求"><a href="#2-如何发起一个请求" class="headerlink" title="2 如何发起一个请求"></a>2 如何发起一个请求</h1>发起一个HTTP请求的过程就是建立一个Socket通信的过程。<br>接下来模拟浏览器来发送HTTP请求：<br>在Linux中可以通过<code>curl + URL</code>来简单地发起一个HTTP请求：<br><img src="https://img-blog.csdnimg.cn/20200610154208598.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果想要查看这次访问的HTTP头的信息，加上<code>-I</code>选项<br><img src="https://img-blog.csdnimg.cn/20200610154416519.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><h1 id="3-HTTP解析"><a href="#3-HTTP解析" class="headerlink" title="3 HTTP解析"></a>3 HTTP解析</h1>B/S网络架构的核心是HTTP，而HTTP中最重要的是HTTP Header，HTTP Header控制着互联网上成千上万的用户的数据传输，而且还控制着用户浏览器的渲染行为和服务器的执行逻辑。<br><img src="https://img-blog.csdnimg.cn/20200610155057712.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/2020061015512396.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20200610155138371.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>在浏览器上查看HTTP信息：通过<code>F12</code>键打开,然后选择<code>Network</code><h2 id="浏览器缓存机制"><a href="#浏览器缓存机制" class="headerlink" title="浏览器缓存机制"></a>浏览器缓存机制</h2><code>Ctrl+F5</code>刷新页面，此时在HTTP请求头中会增加两个请求项<code>Pragma:no-cache</code>和<code>Cache-Control:no-cache</code>，其作用是用于指定所有缓存机制在整个请求/响应链中必须服从的指令，告诉服务器我们要获取最新的数据而不是缓存的数据。<br><code>Expires</code>后面跟一个日期和时间，表示超过或者时间值后，缓存的内容将失效；<br><code>Last-Modified/Etag</code>:表示一个服务器上的资源的最后修改时间，后面那个Etag代表版本的意思；<h1 id="4-DNS域名解析"><a href="#4-DNS域名解析" class="headerlink" title="4 DNS域名解析"></a>4 DNS域名解析</h1><img src="https://img-blog.csdnimg.cn/20200610161609454.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>1、浏览器检查缓存中有没有这个域名对应的解析过的IP地址，如果没有，执行下一步，有，则结束解析过程；<br>2、浏览器查找操作系统缓存中（<code>C:\Windows\System32\drivers\etc\hosts</code>）是否有换个域名对应的DNS解析结果，如果没有，执行下一步，有，则结束解析过程；<br>3、操作系统将这个域名发送给LDNS，也就是本地区的域名服务器（完成80%的域名解析工作）；<br>4、如果LDNS没有，则直接到Root Server域名服务器请求解析；<br>5、根域名服务器返回给本地域名服务器一个所查询域的主域名服务器（gTLD Server）地址；6、本地域名服务器（Local DNS Server）再向上一步返回的gTLD服务器发送请求；<br>7、接受请求的gTLD服务器查找并返回此域名对应的Name Server域名服务器（当时注册的域名服务器）的地址；<br>8、Name Server域名服务器会查询存储的域名和IP的映射关系表；<br>9、返回该域名对应的IP和TTL值；<br>10、把解析的结果返回给用户，用户根据TTL值存储在本地系统缓存中，域名解析过程结束。<h2 id="清除缓存的域名"><a href="#清除缓存的域名" class="headerlink" title="清除缓存的域名"></a>清除缓存的域名</h2>Windows：ipconfig /flushdns<br>Linux：sudo /etc/init.d/nscd restart</li>
 </ul>
-<h2 id="1-3-安装-Redis"><a href="#1-3-安装-Redis" class="headerlink" title="1.3 安装 Redis"></a>1.3 安装 Redis</h2><p>这里我是基于Docker安装Redis</p>
-<ol>
-<li><p>先搜索Redis镜像</p>
-<div class="hljs"><pre><code><div class="hljs"><pre><code class="hljs linux">yyj@yyj-virtual-machine:~$ docker search redis</code></pre></div></div></code></pre><p><img src="https://img-blog.csdnimg.cn/20200605201628811.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-</li>
-<li><p>拉取镜像</p>
- <div class="hljs"><pre><code class="hljs java">sudo docker pull redis:tag</code></pre></div>
-
-<p><code>:tag</code>是可选的，tag表示软件的版本，默认是latest。</p>
-<h2 id="1-4-根据镜像启动redis"><a href="#1-4-根据镜像启动redis" class="headerlink" title="1.4 根据镜像启动redis"></a>1.4 根据镜像启动redis</h2></li>
-</ol>
-<p><img src="https://img-blog.csdnimg.cn/20200605202515325.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="!\[在这里插入图片描述\](https://img-blog.csdnimg.cn/20200605202139539.png?x-oss-process=image/watermark,type_ZmFuZ3"><br>其中 Port 表示redis的端口号，PID 表示改进程的 pid 号，下方光标不停的闪动，此时 redis 就已经启动了。<br>新开一个窗口，运行redis-cli<br><img src="https://img-blog.csdnimg.cn/20200605202656380.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>测试效果：<br><img src="https://img-blog.csdnimg.cn/20200605202757404.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<blockquote>
-<p>Tips:如果我们要连接远程Redis，可以加参数： <code>-h IP地址</code><br>如果要指定端口，可以加参数：<code>-p 端口号</code></p>
-</blockquote>
-<h2 id="1-5-后端模式"><a href="#1-5-后端模式" class="headerlink" title="1.5 后端模式"></a>1.5 后端模式</h2><p>如果觉得开多个窗口麻烦，可以设置Redis启动模式为后端启动即可，仅仅只需要在运行redis的时候加上<code>-d</code>。<br><img src="https://img-blog.csdnimg.cn/20200605203644657.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="1-6-退出Redis"><a href="#1-6-退出Redis" class="headerlink" title="1.6 退出Redis"></a>1.6 退出Redis</h2><p><img src="https://img-blog.csdnimg.cn/20200605203404108.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="几种域名解析方式"><a href="#几种域名解析方式" class="headerlink" title="几种域名解析方式"></a>几种域名解析方式</h2><p>A记录：Address，指定域名对应的IP地址<br>MX记录：Mail Exchange，可以将某个域名下的邮件服务指向到自己的Mail Server<br>CNAME记录：Canonical Name，别名解析，为一个域名设置一个或多个别名<br>NS记录：为某个域名指定DNS解析服务器<br>TXT记录：为主机或域名设置说明</p>
+<h1 id="5-CDN工作机制"><a href="#5-CDN工作机制" class="headerlink" title="5 CDN工作机制"></a>5 CDN工作机制</h1><p>CDN：内容分布网络（Content Delivery Network），构筑在现有Internet上的一种先进的流量分配网络。其目的就是将网站的内容发布到最接近用户的网络“边缘”，使用户可以就近取得所需的内容，提高用户访问网站的响应速度。<br>架构图：<br><img src="https://img-blog.csdnimg.cn/20200610164758810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果用户要访问某个静态文件，假如这个静态文件的域名是cdn.taobao.com，那么首先也会向Local DNS服务器发起请求，然后经过迭代解析后回到这个域名的注册服务器去解析，然后通过CDN域名解析器将它重新CNAME解析到另外一个域名，被指向到CDN全局中的DNS负载均衡服务器，再由这个GTM来最终分配是哪个地方的访问用户，返回给离这个访问用户最近的CDN节点。<br>拿到DNS解析结果后，用户就直接去这个ＣDN节点访问这个静态文件了，乳沟这个节点中所情趣的文件不存在，就会再回到源站去获取这个文件，然后再返回给用户。</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>Load Balance就是对工作任务进行平衡、分摊到多个操作单元上执行，共同完成工作任务。通常有三种负载均衡架构：链路负载均衡、集群负载均衡、操作系统负载均衡。</p>
+<h3 id="链路负载均衡"><a href="#链路负载均衡" class="headerlink" title="链路负载均衡"></a>链路负载均衡</h3><p><img src="https://img-blog.csdnimg.cn/20200610170349466.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如前面提到的通过DNS解析成不同的IP，然后用户根据这个IP来访问不同的目标服务器。</p>
+<h3 id="集群负载均衡"><a href="#集群负载均衡" class="headerlink" title="集群负载均衡"></a>集群负载均衡</h3><p>又分为硬件负责均衡和软件负载均衡，硬件负载均衡一般使用一台专门的硬件设备来转发请求，性能好，但是价格昂贵，而且不能动态扩容；<br>软件负载均衡成本非常低，缺点是一般一次访问请求要经过多次代理服务器，会增加网络延时。</p>
+<h3 id="操作系统负载均衡"><a href="#操作系统负载均衡" class="headerlink" title="操作系统负载均衡"></a>操作系统负载均衡</h3><p>利用操作系统级别的软中断或者硬件中断来达到负载均衡。</p>
+<h2 id="CDN动态加速"><a href="#CDN动态加速" class="headerlink" title="CDN动态加速"></a>CDN动态加速</h2><p>原理：在CDN的DNS解析中通过动态的链路探测来寻找回源最好的一条路径，然后通过DNS的调度将所有请求调度到选定的这条路径上回源，从而加速用户访问的效率。</p>
 
             </article>
             <hr>
@@ -255,7 +242,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%8CRedis/">数据库，Redis</a>
+                      <a class="hover-with-bg" href="/categories/Web%E6%8A%80%E6%9C%AF/">Web技术</a>
                     
                   </div>
                 
@@ -263,7 +250,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Redis/">Redis</a>
+                      <a class="hover-with-bg" href="/tags/Web%E6%8A%80%E6%9C%AF/">Web技术</a>
                     
                   </div>
                 
@@ -276,18 +263,12 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">2. Redis--Jedis的使用</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/06/03/13-Netty-%E4%BD%BF%E7%94%A8UDP%E5%B9%BF%E6%92%AD%E4%BA%8B%E4%BB%B6/">
-                        <span class="hidden-mobile">13.Netty--使用UDP广播事件</span>
+                      <a href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/">
+                        <span class="hidden-mobile">4.SpringSecurity整合OAuth2.0-Day03</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -442,7 +423,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "1. Redis--安装Redis&nbsp;",
+        "深入分析Java Web技术内幕-1.深入Web请求过程&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
