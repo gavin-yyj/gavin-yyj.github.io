@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      29
+      28
        分钟
     </span>
   
@@ -276,8 +276,7 @@ TokenGranter</code></pre></div>
 
 <h2 id="顶级身份管理者-AuthenticationManager（掌握）"><a href="#顶级身份管理者-AuthenticationManager（掌握）" class="headerlink" title="顶级身份管理者 AuthenticationManager（掌握）"></a>顶级身份管理者 AuthenticationManager（掌握）</h2><p>用来从请求中获取 client_id,client_secret，组装成一个 UsernamePasswordAuthenticationToken 作为身份标识，使用容器中的顶级身份管理器 AuthenticationManager 去进行身份认证（AuthenticationManager 的实现类一般是 ProviderManager。而 ProviderManager 内部维护了一个 List, 真正的身份认证是由一系列 AuthenticationProvider 去完成。而 AuthenticationProvider 的常用实现类则是 DaoAuthenticationProvider，DaoAuthenticationProvider 内部又聚合了一个 UserDetailsService 接口，</p>
 <p><img src="https://img-blog.csdnimg.cn/20200610091710428.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>所以说UserDetailsService 才是获取用户详细信息的最终接口，而我们上一篇文章中在内存中配置用户，就是使用了 UserDetailsService 的一个实现类 InMemoryUserDetailsManager）。UML 类图可以大概理解下这些类的关系，省略了授权部分。<br><img src="http://img.blog.csdn.net/20170809145344042?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzgxNTU0Ng==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" srcset="/img/loading.gif" alt="认证相关"></p>
-<p>​                                                        图 1 认证相关 UML 类图</p>
+<p>所以说UserDetailsService 才是获取用户详细信息的最终接口，而我们上一篇文章中在内存中配置用户，就是使用了 UserDetailsService 的一个实现类 InMemoryUserDetailsManager）。UML 类图可以大概理解下这些类的关系，省略了授权部分。<br><img src="https://img-blog.csdnimg.cn/20200610104349713.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>可能机智的读者会发现一个问题，我前面一篇文章已经提到了 client 模式是不存在“用户”的概念的，那么这里的身份认证是在认证什么呢？debug 可以发现 UserDetailsService 的实现被适配成了 ClientDetailsUserDetailsService，这个设计是将 client 客户端的信息（client_id,client_secret）适配成用户的信息 (username,password)，这样我们的认证流程就不需要修改了。</p>
 <p>经过 ClientCredentialsTokenEndpointFilter 之后，身份信息已经得到了 AuthenticationManager 的验证。接着便到达了TokenEndpoint。</p>
 <h2 id="Token-处理端点-TokenEndpoint（掌握）"><a href="#Token-处理端点-TokenEndpoint（掌握）" class="headerlink" title="Token 处理端点 TokenEndpoint（掌握）"></a>Token 处理端点 TokenEndpoint（掌握）</h2><p>前面的两个 ClientCredentialsTokenEndpointFilter 和 AuthenticationManager 可以理解为一些前置校验和身份封装，而这个类一看名字就知道和我们的 token 是密切相关的。</p>
@@ -342,8 +341,7 @@ TokenGranter</code></pre></div>
 &#125;</code></pre></div>
 
 <h2 id="TokenGranter（掌握）"><a href="#TokenGranter（掌握）" class="headerlink" title="TokenGranter（掌握）"></a>TokenGranter（掌握）</h2><p>先从 UML 类图对 TokenGranter 接口的设计有一个宏观的认识：</p>
-<p><a href="http://img.blog.csdn.net/20170809134129753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzgxNTU0Ng==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="noopener"><img src="http://img.blog.csdn.net/20170809134129753?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzgxNTU0Ng==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" srcset="/img/loading.gif" alt="这里写图片描述"></a></p>
-<p>​                                                                                                图 2 TokenGranter 相关 UML 类图</p>
+<p><img src="https://img-blog.csdnimg.cn/20200610104442401.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>TokenGranter 的设计思路是使用 CompositeTokenGranter 管理一个 List 列表，每一种 grantType 对应一个具体的真正授权者，在 debug 过程中可以发现 CompositeTokenGranter 内部就是在循环调用五种 TokenGranter 实现类的 grant 方法，而 granter 内部则是通过 grantType 来区分是否是各自的授权类型。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CompositeTokenGranter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">TokenGranter</span> </span>&#123;	
    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;TokenGranter&gt; tokenGranters;	
@@ -494,7 +492,7 @@ TokenGranter</code></pre></div>
                       <a href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">4.SpringSecurity整合OAuth2.0-Day03</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -503,7 +501,7 @@ TokenGranter</code></pre></div>
                     
                       <a href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/">
                         <span class="hidden-mobile">2.SpringSecurity整合OAuth2.0-Day01</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -536,7 +534,7 @@ TokenGranter</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -563,7 +561,7 @@ TokenGranter</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -572,7 +570,7 @@ TokenGranter</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

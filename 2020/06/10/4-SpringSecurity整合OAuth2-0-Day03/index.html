@@ -311,7 +311,7 @@
 </blockquote>
 <p>其中涉及到了两个关键的类 TokenExtractor，AuthenticationManager。相信后者这个接口大家已经不陌生，但前面这个类之前还未出现在我们的视野中。</p>
 <h2 id="OAuth2-的身份管理器-–OAuth2AuthenticationManager（掌握）"><a href="#OAuth2-的身份管理器-–OAuth2AuthenticationManager（掌握）" class="headerlink" title="OAuth2 的身份管理器 –OAuth2AuthenticationManager（掌握）"></a>OAuth2 的身份管理器 –OAuth2AuthenticationManager（掌握）</h2><p>在之前的 OAuth2 核心过滤器中出现的 AuthenticationManager 其实在我们意料之中，携带 access_token 必定得经过身份认证，但是在我们 debug 进入其中后，发现了一个出乎意料的事，AuthenticationManager 的实现类并不是我们在前面文章中聊到的常用实现类 ProviderManager，而是 OAuth2AuthenticationManager。</p>
-<p>[<img src="http://img.blog.csdn.net/20170810122532720?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMzgxNTU0Ng==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" srcset="/img/loading.gif" alt="OAuth2AuthenticationManager">                    图 1 新的 AuthenticationManager 实现类 OAuth2AuthenticationManager</p>
+<p><img src="https://img-blog.csdnimg.cn/20200610104133512.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>回顾之前文章的配置，压根没有出现过这个 OAuth2AuthenticationManager，并且它脱离了我们熟悉的认证流程（之前提到的认证管理器 UML 图是一张经典的 spring security 结构类图），它直接重写了容器的顶级身份认证接口，内部维护了一个 ClientDetailService 和 ResourceServerTokenServices，这两个核心类在前一篇文章中有分析过。在 ResourceServerSecurityConfigurer 的小节中我们已经知晓了它是如何被框架自动配置的，这里要强调的是 OAuth2AuthenticationManager 是密切与 token 认证相关的，而不是与获取 token 密切相关的。</p>
 <p>其判别身份的关键代码如下：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> Authentication <span class="hljs-title">authenticate</span><span class="hljs-params">(Authentication authentication)</span> <span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
@@ -452,7 +452,7 @@ access_token=f732723d-af7f-41bb-bd06-2636ab2be135</code></pre></div>
                     
                       <a href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/">
                         <span class="hidden-mobile">3.SpringSecurity整合OAuth2.0-Day02</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -485,7 +485,7 @@ access_token=f732723d-af7f-41bb-bd06-2636ab2be135</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -512,7 +512,7 @@ access_token=f732723d-af7f-41bb-bd06-2636ab2be135</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -521,7 +521,7 @@ access_token=f732723d-af7f-41bb-bd06-2636ab2be135</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
