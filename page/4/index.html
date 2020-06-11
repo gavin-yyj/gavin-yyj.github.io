@@ -179,6 +179,59 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/">4.Netty--传输</a>
+
+      <a href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+OIO：阻塞传输
+NIO：异步传输
+Local：JVM内部的异步通信
+Embedded：测试你的ChannelHandler
+
+
+案例研究：传输迁移不通过Netty使用OIO和NIO未使用Netty的阻塞网络编程代码如下：
+public class PlainOioServer &#123;
+    public void serve(int port) throws IOEx</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/">3.Netty--Netty的组件和设计</a>
 
       <a href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/" class="index-excerpt">
@@ -583,54 +636,6 @@ http.authorizeRequests()
 com.gavin.springsecurity04.common.VerifyServlet
     public class VerifyServlet extends HttpServlet &#123;
 		 private static final </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">SpringBoot集成Spring Security(3)--异常处理</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="index-excerpt">
-        
-        
-          
-        
-        <div>思考：为何登录失败自动跳转到/login?error，而且没有异常提示？
-
-因为首先 /login?error 是 Spring security 默认的失败 Url，其次如果你不手动处理这个异常，这个异常是不会被处理的。
-一、常见异常我们先来列举下一些 Spring Security 中常见的异常：
-
-UsernameNotFoundException（用户不存在）
-DisabledExcept</div>
       </a>
 
       <div class="index-btm post-metas">
