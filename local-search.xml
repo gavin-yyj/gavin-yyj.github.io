@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>谷粒商城-Day03</title>
+    <link href="/2020/06/14/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day03/"/>
+    <url>/2020/06/14/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day03/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-pms商品管理系统的介绍"><a href="#1-pms商品管理系统的介绍" class="headerlink" title="1.pms商品管理系统的介绍"></a>1.pms商品管理系统的介绍</h1><p>首先明确两个概念：SKU和SPU</p><ul><li>SKU：Stock Keeping Unit(库存量单元),即库存进出计量的单位， 可以是以件、盒、托盘等为单位。</li><li>SPU(Standard Product Unit)：标准化产品单元。是商品信息聚合的最小单位，是一组可复用、易检索的标准化信息的集合，该集合描述了一个产品的特性。</li></ul><h1 id="2-pms商品的数据结构的划分"><a href="#2-pms商品的数据结构的划分" class="headerlink" title="2. pms商品的数据结构的划分"></a>2. pms商品的数据结构的划分</h1><p>1 sku的结构  pms_sku_<br>2 spu的结构  pms_spu_<br>3类目的结构 pms_catalog_<br>4属性的结构 pms_attr_</p><h1 id="3-manage系统前后端分离"><a href="#3-manage系统前后端分离" class="headerlink" title="3. manage系统前后端分离"></a>3. manage系统前后端分离</h1><p>前后端分离<br>JVM  Spring Maven IDEA<br>Nodejs  vue  npm  vscode<br>安装nodejs，npm<br>这里我用的是postman进行演示操作，所以没用到前端框架；</p><h1 id="4-商城的商品录入功能（manage）"><a href="#4-商城的商品录入功能（manage）" class="headerlink" title="4. 商城的商品录入功能（manage）"></a>4. 商城的商品录入功能（manage）</h1><p>1 三级分类的查询<br>2 商品的平台属性列表的增删改查<br>3 商品spu的添加<br>    spu列表查询<br>    spu的销售属性、属性值、Fastdfs图片上传<br>4 商品sku的添加<br>    sku信息、sku关联的销售属性、sku关联的平台属性、sku图片</p><p>1 sku的结构  pms_sku_<br>2 spu的结构  pms_spu_</p><p>3类目的结构 pms_catalog_<br>三级分类，一级二级三级</p><p>4属性的结构 pms_attr_<br>平台属性的外键是三级分类id，在使用平台属性功能之前必须选择三级分类</p><h1 id="5-商品分类的查询"><a href="#5-商品分类的查询" class="headerlink" title="5 商品分类的查询"></a>5 商品分类的查询</h1><ol><li>新建两个模块：gmall-manage-web和gmall-manage-service</li><li>配置gmall-manage-web</li><li>根据前端提供的接口写一个getCatalog1()方法来返回前端想要的数据</li><li>数据通过gmall-manage-service来提供，利用通用mapper来返回数据。</li></ol><h1 id="6-前后端的跨域问题"><a href="#6-前后端的跨域问题" class="headerlink" title="6. 前后端的跨域问题"></a>6. 前后端的跨域问题</h1><p>因为前后端端口号不一样，所以会导致跨域 问题，因此在springMvc控制层下加入@CrossOrigini注解。<br><img src="https://img-blog.csdnimg.cn/20200614161851706.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p><h1 id="7-商品平台属性的管理功能-增删改查"><a href="#7-商品平台属性的管理功能-增删改查" class="headerlink" title="7. 商品平台属性的管理功能(增删改查)"></a>7. 商品平台属性的管理功能(增删改查)</h1><p>1 根据三级分类id，catalog3Id查询平台属性列表<br>A新建一个AttrController，方法attrInfoList<br>B新建PmsBaseAttrInfo和PmsBaseAttrValue的映射类<br>C新建service、mapper</p><p>代码：<a href="https://github.com/gavin-yyj/gmall" target="_blank" rel="noopener">https://github.com/gavin-yyj/gmall</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>项目</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>谷粒商城-Day02</title>
     <link href="/2020/06/14/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day02/"/>
     <url>/2020/06/14/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day02/</url>

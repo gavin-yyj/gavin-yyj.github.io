@@ -179,6 +179,56 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/">2.SpringSecurity整合OAuth2.0-Day01</a>
+
+      <a href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/" class="index-excerpt">
+        
+        
+          
+        
+        <div>概述使用 oauth2 保护你的应用，可以分为简易的分为三个步骤：
+
+配置资源服务器
+
+配置认证服务器
+
+配置 spring security
+本文重点讲解接口对接中常使用的密码模式（以下简称 password 模式）和客户端模式（以下简称 client 模式）。授权码模式使用到了回调地址，是最为复杂的方式，通常网站中经常出现的微博，qq 第三方登录，都会采用这个形式。简化模式不常用。
+项目准备首</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-08
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/OAuth2/">OAuth2</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/OAuth2/">OAuth2</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/07/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day01/">谷粒商城-Day01</a>
 
       <a href="/2020/06/07/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day01/" class="index-excerpt">
@@ -541,52 +591,6 @@ public void testJedis() &#123;
         <div>之前我们所学习的都是 Redis 的单机版，我们知道 Redis 之所以读取速度快是因为它是存储在内存中的。内存的容量是有限的，单台 Redis 会碰到性能瓶颈，这就需要使用 Redis集群（Redis-cluster）。
 一、集群原理1.1 集群架构
 如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 Redis集群（Redis-cluster）。节点之间使用 Ping——</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">5. Redis--Redis的持久化</a>
-
-      <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Redis 的高性能是由其将所有数据都存储在了内存中，需要使用时直接从内存调用即可。为了使 Redis 在重启之后仍然能保证数据不丢失，需要将数据从内存同步到数据库中，这一过程就是持久化。
-Redis 支持两种持久化方式，一种是 RDB方式，一种是 AOF方式。可以单独使用其中一种或将两种结合使用。
-
-RDB (默认) 在指定的时间间隔内将内存中的数据快照写入磁盘。
-AOF 以日志的形式记录服务器</div>
       </a>
 
       <div class="index-btm post-metas">
