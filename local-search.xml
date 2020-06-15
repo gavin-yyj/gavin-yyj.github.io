@@ -625,7 +625,9 @@
     
     <categories>
       
-      <category>数据库，Redis</category>
+      <category>数据库</category>
+      
+      <category>Redis</category>
       
     </categories>
     
