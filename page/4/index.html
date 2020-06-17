@@ -179,6 +179,58 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">9.Netty--单元测试</a>
+
+      <a href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+单元测试
+EmbeddedChannel概述
+使用EmbeddedChannel测试ChannelHandler
+
+
+单元测试的标准：不仅能够证明你的实现是正确的，而且还要能够很容易地隔离那些因修改代码而突然出现的问题。
+因为正在被测试的代码模块或者单元将在它正常的运行环境之外被执行，所以还需要一个框架或者脚手架以便在其中运行它（这里我们选择的是JUnit4）。
+Embedde</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/java/">java</a>
+            
+              <a href="/categories/java/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/">8.Netty--引导</a>
 
       <a href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
@@ -676,51 +728,6 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-8-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(8)--短信验证码登录</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-8-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95/" class="index-excerpt">
-        
-        
-          
-        
-        <div>一、理论说明在开始编码前，先理解下短信验证码的实现流程。如果你能对《SpringBoot集成Spring Security（7）——认证流程》这篇文章有一定的了解的话，那么这篇文章的学习你会轻松许多。
-1.1 用户名密码登录逻辑废话不多说，在上一篇文章中，以标准的用户名密码登录为例，讲解了整个认证流程。大致流程如下：
-
-先进入 UsernamePasswordAuthenticationFilte</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -757,7 +764,7 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -766,7 +773,7 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
