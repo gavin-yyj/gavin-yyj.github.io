@@ -179,6 +179,143 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/">9. Redis--Redis缓存问题</a>
+
+      <a href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、引言
+咳咳，这一节内容应该早就放上博客的，一直忘记了，在写上一篇《详解布隆过滤器》时，谈到缓存问题，一看博客中竟然没有写过相关的，实在是不该，特此补上。
+
+Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括缓存穿透、缓存雪崩、缓存击穿、缓存预热等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/">8. Redis--Redis的实际应用</a>
+
+      <a href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/" class="index-excerpt">
+        
+        
+          
+        
+        <div>在《Redis初探（7）——Jedis操纵集群》中，我们已经学会了搭建 Redis 集群，以及使用策略模式，在xml文件中灵活切换单机版和集群版。
+本章将演示在宜立方商城项目中使用 Redis，项目地址：e3mall。
+一、功能需求商城首页访问量巨大，因为首页的大轮播图是从数据库查询获取的，每次访问都要查询一次数据库，数据库压力巨大，亟需缓存。
+
+二、功能实现实现之前首先思考 Redis 是要加在</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/7-Redis-Redis%E6%93%8D%E7%BA%B5%E9%9B%86%E7%BE%A4/">7. Redis--Redis操纵集群</a>
+
+      <a href="/2020/06/06/7-Redis-Redis%E6%93%8D%E7%BA%B5%E9%9B%86%E7%BE%A4/" class="index-excerpt">
+        
+        
+          
+        
+        <div>在《Redis 初探（2）——Jedis 的使用》中，我们已经学会了Jedis操纵单机Redis的简单使用，本章将继续深入，介绍Jedis对集群的操纵。
+一、Jedis 连接单机在开始介绍 Jedis 连接集群之前，先简单回顾下连接单机的使用。
+1.1 简单使用@Test
+public void testJedis() &#123;
+    // 1.获得连接对象。参数为redis所在的服务器地址</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/">6. Redis--Redis集群</a>
 
       <a href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/" class="index-excerpt">
@@ -551,177 +688,11 @@ UDP广播UDP提供了向多个接收者发送消息的额外传输模式：多�
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/12-Netty-WebSocket/">12.Netty--WebSocket</a>
-
-      <a href="/2020/06/03/12-Netty-WebSocket/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-实时Web的概念
-WebSocket协议
-使用Netty构建一个基于WebSocket的聊天室服务器
-
-
-WebSocket简介WebSocket协议是完全重新设计的协议，旨在为Web上的双向数据传输问题提供一个切实可行的解决方案，使得客户端与服务器之间可以在任意时刻传输消息。
-我们的WebSocket示例应用程序
-添加WebSocket支持
-处理HTTP请求首先我们需要实现处</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">11.Netty--预置的ChannelHandler和编解码器</a>
-
-      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-通过SSL/TLS保护Netty应用程序；
-构建基于Netty的HTTP/HTTPS应用程序
-处理空闲的连接和超时
-解码基于分隔符的协议和基于长度的协议
-写大型数据
-Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。
-
-
-通过SSL/TLS保护Netty应用程序为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLE</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">10.Netty--编解码器框架</a>
-
-      <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-解码器、编码器以及编解码器的概述
-Netty的编解码器类
-
-
-什么是编解码器
-编码器是将消息转换为适合于传输的格式（最有可能的就是字节流）；
-
-解码器则是将网络字节流换回应用程序的消息格式；
-
-编码器操作出站数据，解码器处理入站数据；
-
-
-解码器
-将字节码解码为消息———ByteToMessageDecoder和ReplayingDecoder；
-
-将一种消息类型解码为另一种—</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/2/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/2/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
   
@@ -753,7 +724,7 @@ Netty的编解码器类
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -762,7 +733,7 @@ Netty的编解码器类
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

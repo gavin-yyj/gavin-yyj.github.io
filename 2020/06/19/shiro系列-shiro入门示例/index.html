@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>shiro系列-shiro入门示例 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-19 15:44">
+      June 19, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h1><p>基本上，在所有的开发的系统中，都必须做认证(authentication)和授权(authorization)，以保证系统的安全性。<br>简单来说：认证解决“你是谁”的问题，授权解决“你能做什么”的问题。<br>在Java生态中，目前两大安全框架是Spring Security和Apache Shiro，可以用来完成认证和授权的功能。</p>
+<blockquote>
+<p>关于Shiro：<br>Apache Shiro 是一个功能强大且易于使用的 Java 安全框架，它可以提供身份验证、授权、加密和会话管理的功能。<br>通过 Shiro 易于理解的 API ，你可以快速、轻松地保护任何应用程序 —— 从最小的移动端应用程序到大型的的 Web 和企业级应用程序。</p>
+</blockquote>
+<h1 id="2-快速入门"><a href="#2-快速入门" class="headerlink" title="2.快速入门"></a>2.快速入门</h1><h2 id="2-1-引入依赖"><a href="#2-1-引入依赖" class="headerlink" title="2.1 引入依赖"></a>2.1 引入依赖</h2><div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!--实现对Spring MVC的自动化配置--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+
+      <span class="hljs-comment">&lt;!--实现对shiro的自动化配置--&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.shiro<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>shiro-spring-boot-starter<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.4.2<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+<h2 id="2-2-ShiroConfig"><a href="#2-2-ShiroConfig" class="headerlink" title="2.2 ShiroConfig"></a>2.2 ShiroConfig</h2><p>创建com.gavin.shiro.config.ShiroConfig配置类，用来实现Shiro的自定义配置，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ShiroConfig</span> </span>&#123;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Realm <span class="hljs-title">realm</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> DefaultWebSecurityManager <span class="hljs-title">securityManager</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> ShiroFilterFactoryBean <span class="hljs-title">shiroFilterFactoryBean</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+&#125;</code></pre></div>
+<p>下面重点分析三个Bean的配置。</p>
+<h3 id="2-2-1-Realm"><a href="#2-2-1-Realm" class="headerlink" title="2.2.1 Realm"></a>2.2.1 Realm</h3><p>Realm是可以访问程序特定的安全数据如用户、角色、权限等的一个组件，Realm可以将这些程序特定的安全数据转换成一种Shiro可以理解的形式。简单说：Realm的职责就是进行<strong>身份认证</strong>和<strong>授权</strong>。</p>
+<p>Realm整体的类图如下：<br><img src="https://img-blog.csdnimg.cn/20200618154954140.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>Realm接口，主要定义了认证的方法，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Realm</span> </span>&#123;
+    <span class="hljs-function">String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">supports</span><span class="hljs-params">(AuthenticationToken var1)</span></span>;
+
+    <span class="hljs-function">AuthenticationInfo <span class="hljs-title">getAuthenticationInfo</span><span class="hljs-params">(AuthenticationToken var1)</span> <span class="hljs-keyword">throws</span> AuthenticationException</span>;
+&#125;</code></pre></div>
+<p>AuthorizingRealm抽象类，额外定义了授权方法，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> AuthorizationInfo <span class="hljs-title">doGetAuthorizationInfo</span><span class="hljs-params">(PrincipalCollection var1)</span></span>;</code></pre></div>
+<p>同时它又实现了Authorizer接口，提供判断经过认证过的Subject是否具有指定的角色、权限方法。</p>
+<p>从Realm类图结构可以看出，Shiro提供了多种AuthorizingRealm的实现类，提供从不同的数据源获取数据，不过在一般的项目中，我们会自定义实现Authorizing Realm来从自己定义的表结构中读取用户、角色、权限等数据。虽然Shiro提供了JdbcRealm可以访问数据库，但是它的表结构是固定的，所以我们才选择自定义实现AuthorizingRealm。</p>
+<p>在本示例中，在<code>com.gavin.shiro.config.ShiroConfig#realm</code>方法中，我们创建了SimpleAccountRealm对象，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> Realm <span class="hljs-title">realm</span><span class="hljs-params">()</span></span>&#123;
+    <span class="hljs-comment">//创建SimpleAccountRealm对象</span>
+    SimpleAccountRealm realm = <span class="hljs-keyword">new</span> SimpleAccountRealm();
+    <span class="hljs-comment">//添加两个用户，参数分别是username、password、roles</span>
+    realm.addAccount(<span class="hljs-string">"admin"</span>,<span class="hljs-string">"admin"</span>,<span class="hljs-string">"ADMIN"</span>);
+    realm.addAccount(<span class="hljs-string">"normal"</span>,<span class="hljs-string">"normal"</span>,<span class="hljs-string">"NORMAL"</span>);
+    <span class="hljs-keyword">return</span> realm;
+&#125;</code></pre></div>
+<p>在该方法中，我们添加了两个用户，分别对应ADMIN和NORMAL角色。</p>
+<h3 id="2-2-2-SecurityManager"><a href="#2-2-2-SecurityManager" class="headerlink" title="2.2.2 SecurityManager"></a>2.2.2 SecurityManager</h3><p>SecurityManager是Shiro架构的核心，配合内部安全组件共同组成安全伞。<br>在本示例中，在<code>com.gavin.shiro.config.ShiroConfig#securityManager</code>方法中，我们创建了DefaultWebSecurityManager对象，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+ <span class="hljs-function"><span class="hljs-keyword">public</span> DefaultWebSecurityManager <span class="hljs-title">securityManager</span><span class="hljs-params">()</span></span>&#123;
+     <span class="hljs-comment">//创建DefaultWebSecurityManager对象</span>
+     DefaultWebSecurityManager securityManager = <span class="hljs-keyword">new</span> DefaultWebSecurityManager();
+     <span class="hljs-comment">//设置其使用的Realm</span>
+     securityManager.setRealm(<span class="hljs-keyword">this</span>.realm());
+     <span class="hljs-keyword">return</span> securityManager;
+ &#125;</code></pre></div>
+<h3 id="2-2-3-ShiroFilter"><a href="#2-2-3-ShiroFilter" class="headerlink" title="2.2.3 ShiroFilter"></a>2.2.3 ShiroFilter</h3><p>通过AbstractShiroFilter过滤器，实现对请求的拦截，从而实现Shiro的功能，AbstractShiroFilter整体的类图如下：<br><img src="https://img-blog.csdnimg.cn/20200618164026190.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>在本示例中，在<code>com.gavin.shiro.config.ShiroConfig#shiroFilterFactoryBean</code>方法中，我们创建了ShiroFilterFactoryBean对象，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+  <span class="hljs-function"><span class="hljs-keyword">public</span> ShiroFilterFactoryBean <span class="hljs-title">shiroFilterFactoryBean</span><span class="hljs-params">()</span></span>&#123;
+      <span class="hljs-comment">//&lt;1&gt;创建ShiroFilterFactoryBean对象，用于创建ShiroFilter过滤器</span>
+      ShiroFilterFactoryBean filterFactoryBean = <span class="hljs-keyword">new</span> ShiroFilterFactoryBean();
+
+      <span class="hljs-comment">//&lt;2&gt;设置其SecurityManager属性</span>
+      filterFactoryBean.setSecurityManager(<span class="hljs-keyword">this</span>.securityManager());
+
+      <span class="hljs-comment">//&lt;3&gt;设置URL</span>
+      <span class="hljs-comment">//登录URL</span>
+      filterFactoryBean.setLoginUrl(<span class="hljs-string">"/login"</span>);
+      <span class="hljs-comment">//登录成功URL</span>
+      filterFactoryBean.setSuccessUrl(<span class="hljs-string">"/login_success"</span>);
+      <span class="hljs-comment">//无权限URL，在请求校验权限不通过时，会重定向到该URL上</span>
+      filterFactoryBean.setUnauthorizedUrl(<span class="hljs-string">"/unauthorized"</span>);
+
+      <span class="hljs-comment">//&lt;4&gt;设置URL的权限配置</span>
+      filterFactoryBean.setFilterChainDefinitionMap(<span class="hljs-keyword">this</span>.filterChainDefinitionMap());
+
+      <span class="hljs-keyword">return</span> filterFactoryBean;
+  &#125;</code></pre></div>
+
+<p>在介绍<code>filterChainDefinitionMap</code>方法的具体URL的权限配置之前，我们先来了解一下Shiro内置的过滤器，在<code>DefaultFilter</code>枚举类中，枚举了这些过滤器，以及其配置名：<br><img src="https://img-blog.csdnimg.cn/20200618175353156.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>比较常用的过滤器有：</p>
+<ul>
+<li><p>anon：AnonymousFilter，允许匿名访问，无需登录；</p>
+</li>
+<li><p>authc：FormAuthenticationFilter，需要经过认证的用户才可以访问，如果是匿名用户，则根据URL不同，会有不同的处理：<br> 1、如果拦截的URL是GET loginUrl登录页面，则进行该请求，跳转到登录页面；<br> 2、如果拦截的URL是POST loginUrl登录请求，则基于请求表单的username、password进行认证，认证通过后，默认重定向到GET loginSuccessUrl地址；<br> 3、如果拦截的URL是其他URL时，则记录该URL到Session中，在用户登录成功后，重定向到该URL上。</p>
+</li>
+<li><p>logout：LogoutFilter，拦截的URL，执行退出登录，退出完成后，重定向到GET loginUrl登录页面。</p>
+</li>
+<li><p>roles：RolesAuthorizationFilter，拥有指定角色的用户可访问；</p>
+</li>
+<li><p>perms：PermissionsAuthorizationFilter，拥有指定权限的用户可以访问。</p>
+<p>下面，让我们回过头来看看<code>#filterChainDefinitionMap()</code>方法的具体URL的权限配置，代码如下：</p>
+</li>
+</ul>
+<div class="hljs"><pre><code class="hljs java">  <span class="hljs-comment">/** URL的权限配置*/</span>
+	<span class="hljs-function"><span class="hljs-keyword">private</span> Map&lt;String, String&gt; <span class="hljs-title">filterChainDefinitionMap</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">//使用有序的LinkedHashMap，用来实现顺序匹配</span>
+    LinkedHashMap&lt;String,String&gt; filterMap = <span class="hljs-keyword">new</span> LinkedHashMap&lt;&gt;();
+    <span class="hljs-comment">//允许匿名访问</span>
+    filterMap.put(<span class="hljs-string">"/test/echo"</span>,<span class="hljs-string">"anon"</span>);
+    <span class="hljs-comment">//需要ADMIN角色才能访问</span>
+    filterMap.put(<span class="hljs-string">"/test/admin"</span>,<span class="hljs-string">"roles[ADMIN]"</span>);
+    <span class="hljs-comment">//需要NORMAL角色才能访问</span>
+    filterMap.put(<span class="hljs-string">"/test/normal"</span>,<span class="hljs-string">"roles[NORMAL]"</span>);
+    <span class="hljs-comment">//注销登录</span>
+    filterMap.put(<span class="hljs-string">"/logout"</span>,<span class="hljs-string">"logout"</span>);
+    <span class="hljs-comment">//默认剩余的URL，都要经过认证后才能访问</span>
+    filterMap.put(<span class="hljs-string">"/**"</span>,<span class="hljs-string">"authc"</span>);
+    <span class="hljs-keyword">return</span> filterMap;
+&#125;</code></pre></div>
+<p>这里补充一点，请求在ShiroFilter拦截之后，会根据该请求的情况，匹配到配置中内置的所有Shio Filter，逐个进行处理，也就是说Shiro Filter内部有一个由内置的Shiro Filter组成的过滤器链。</p>
+<h2 id="2-3-SecurityController"><a href="#2-3-SecurityController" class="headerlink" title="2.3 SecurityController"></a>2.3 SecurityController</h2><p> 创建一个SecurityController类，用来提供登录，登录成功等接口，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java">com.gavin.shiro.controller.SecurityController
+
+<span class="hljs-meta">@Controller</span>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecurityController</span> </span>&#123;
+    <span class="hljs-keyword">private</span> Logger logger = LoggerFactory.getLogger(getClass());
+
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/login"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">loginPage</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@PostMapping</span>(<span class="hljs-string">"/login"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">login</span><span class="hljs-params">(HttpServletRequest request)</span></span>&#123;
+
+    &#125;
+
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/login_success"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">loginSuccess</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+
+    <span class="hljs-meta">@ResponseBody</span>
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/unauthorized"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">unauthorized</span><span class="hljs-params">()</span></span>&#123;
+
+    &#125;
+&#125;</code></pre></div>
+<h3 id="2-3-1-登录页面"><a href="#2-3-1-登录页面" class="headerlink" title="2.3.1 登录页面"></a>2.3.1 登录页面</h3><p>GET /login地址，来到登录页面，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/login"</span>)
+  <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">loginPage</span><span class="hljs-params">()</span></span>&#123;
+      <span class="hljs-keyword">return</span> <span class="hljs-string">"login.html"</span>;
+  &#125;</code></pre></div>
+<p>login.html静态页面代码如下：</p>
+<div class="hljs"><pre><code class="hljs html"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>登录页面<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">action</span>=<span class="hljs-string">"/login"</span> <span class="hljs-attr">method</span>=<span class="hljs-string">"post"</span>&gt;</span>
+        用户名：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span>
+        密码：<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span>/&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">br</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"登录"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></code></pre></div>
+<p>POST提交登录请求到/login地址。</p>
+<h3 id="2-3-2-登录请求"><a href="#2-3-2-登录请求" class="headerlink" title="2.3.2 登录请求"></a>2.3.2 登录请求</h3><p>对于登录请求，会被我们配置的<code>FormAuthenticationFilter</code>过滤器进行拦截，进行用户的身份认证，过程如下：</p>
+<ul>
+<li><p>FormAuthenticationFilter解析请求的<code>username</code>、<code>password</code>参数，创建UsernamePasswordToken对象；</p>
+</li>
+<li><p>然后，调用SecurityManager的<code>login(Subject subject, AuthenticationToken authenticationToken)</code>方法，执行登录操作，进行“身份验证”（认证）；</p>
+</li>
+<li><p>在这内部其实是调用Realm的<code>个体Authentication Info（AuthenticationToken token）</code>方法进行认证，此时根据认证是否成功，会有不同的处理方式：<br>1、如果认证通过，则FormAuthenticationFilter会将请求重定向到Get loginSuccess地址上；<br>2、如果认证失败，则会将认证失败的原因设置到请求的attributes中，后续该请求会继续请求到POST login地址上，这样，在POST loginUrl地址上，我们可以从attributes中获取到失败的原因提示给用户。</p>
+<p>所以，POST loginUrl的目的实际上是为了处理认证失败的情况，其实现的代码如下：</p>
+</li>
+</ul>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@ResponseBody</span>
+   <span class="hljs-meta">@PostMapping</span>(<span class="hljs-string">"/login"</span>)
+   <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">login</span><span class="hljs-params">(HttpServletRequest request)</span></span>&#123;
+
+       <span class="hljs-comment">// &lt;1&gt; 判断是否已经登录</span>
+       Subject subject = SecurityUtils.getSubject();
+       <span class="hljs-keyword">if</span>(subject.getPrincipal() != <span class="hljs-keyword">null</span>)&#123;
+           <span class="hljs-keyword">return</span> <span class="hljs-string">"你已经登录，无需重复登录"</span>+subject.getPrincipal();
+       &#125;
+
+       <span class="hljs-comment">// &lt;2&gt; 获得登录失败的原因</span>
+       String shiroLoginFailure = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
+
+       <span class="hljs-comment">// 翻译成人类看得懂的提示</span>
+       String msg = <span class="hljs-string">""</span>;
+       <span class="hljs-keyword">if</span>(UnknownAccountException<span class="hljs-class">.<span class="hljs-keyword">class</span>.<span class="hljs-title">getName</span>().<span class="hljs-title">equals</span>(<span class="hljs-title">shiroLoginFailure</span>))</span>&#123;
+           msg = <span class="hljs-string">"账号不存在"</span>;
+       &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(IncorrectCredentialsException<span class="hljs-class">.<span class="hljs-keyword">class</span>.<span class="hljs-title">getName</span>().<span class="hljs-title">equals</span>(<span class="hljs-title">shiroLoginFailure</span>))</span>&#123;
+           msg = <span class="hljs-string">"密码不正确"</span>;
+       &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(LockedAccountException<span class="hljs-class">.<span class="hljs-keyword">class</span>.<span class="hljs-title">getName</span>().<span class="hljs-title">equals</span>(<span class="hljs-title">shiroLoginFailure</span>))</span>&#123;
+           msg = <span class="hljs-string">"账号被锁定"</span>;
+       &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(ExpiredCredentialsException<span class="hljs-class">.<span class="hljs-keyword">class</span>.<span class="hljs-title">getName</span>().<span class="hljs-title">equals</span>(<span class="hljs-title">shiroLoginFailure</span>))</span>&#123;
+           msg = <span class="hljs-string">"账号已过期"</span>;
+       &#125;<span class="hljs-keyword">else</span>&#123;
+           msg = <span class="hljs-string">"未知错误，请联系管理员"</span>;
+           logger.error(<span class="hljs-string">"[login][未知错误：&#123;&#125;]"</span>,shiroLoginFailure);
+       &#125;
+       <span class="hljs-keyword">return</span> <span class="hljs-string">"登录失败，原因："</span> + msg;
+   &#125;</code></pre></div>
+<h3 id="2-3-3-登录成功"><a href="#2-3-3-登录成功" class="headerlink" title="2.3.3 登录成功"></a>2.3.3 登录成功</h3><p>GET login_success地址，登录成功后响应，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@ResponseBody</span>
+   <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/login_success"</span>)
+   <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">loginSuccess</span><span class="hljs-params">()</span></span>&#123;
+       <span class="hljs-keyword">return</span> <span class="hljs-string">"恭喜你，登录成功！！"</span>;
+   &#125;</code></pre></div>
+<p>如果是AJAX请求，我们可以返回json数据；<br>如果是非AJAX请求，我们可以重定向到登录成功的页面，比如管理后台的home页面。</p>
+<h3 id="2-3-4-未授权"><a href="#2-3-4-未授权" class="headerlink" title="2.3.4 未授权"></a>2.3.4 未授权</h3><p>GET unauthorized地址，未授权响应，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@ResponseBody</span>
+   <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/unauthorized"</span>)
+   <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">unauthorized</span><span class="hljs-params">()</span></span>&#123;
+       <span class="hljs-keyword">return</span> <span class="hljs-string">"对不起，您没有权限进行操作"</span>;
+   &#125;</code></pre></div>
+<p>如果是AJAX请求，我们可以返回json数据；<br>如果是非AJAX请求，我们可以重定向到登录页面。</p>
+<h2 id="2-4-TestController"><a href="#2-4-TestController" class="headerlink" title="2.4 TestController"></a>2.4 TestController</h2><p>测试API接口：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/test"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestController</span> </span>&#123;
+
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/demo"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">demo</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"示例返回"</span>;
+    &#125;
+
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/home"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">home</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"首页"</span>;
+    &#125;
+    
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/admin"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">admin</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"我是管理员"</span>;
+    &#125;
+
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/normal"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">normal</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"我是普通用户"</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<ul>
+<li>对于 /test/demo 接口，直接访问，无需登陆。</li>
+<li>对于 /test/home 接口，无法直接访问，需要进行登陆。</li>
+<li>对于 /test/admin 接口，需要登陆「admin/admin」用户，因为需要 ADMIN 角色。</li>
+<li>对于 /test/normal 接口，需要登陆「user/user」用户，因为需要 USER 角色。</li>
+</ul>
+<h1 id="3-Shiro注解"><a href="#3-Shiro注解" class="headerlink" title="3.Shiro注解"></a>3.Shiro注解</h1><p>在Shiro中，提供了如下5个注解，可以直接添加在SpringMVC的URL对应的方法上，实现权限配置：</p>
+<h2 id="3-1-RequiresGuest"><a href="#3-1-RequiresGuest" class="headerlink" title="3.1 @RequiresGuest"></a>3.1 @RequiresGuest</h2><p>等同于<code>anon</code></p>
+<h2 id="3-2-RequiresAuthentication"><a href="#3-2-RequiresAuthentication" class="headerlink" title="3.2 @RequiresAuthentication"></a>3.2 @RequiresAuthentication</h2><p>等同于<code>authc</code></p>
+<h2 id="3-3-RequiresUser"><a href="#3-3-RequiresUser" class="headerlink" title="3.3 @RequiresUser"></a>3.3 @RequiresUser</h2><p>等同于<code>user</code>，要求必须登录</p>
+<h2 id="3-4-RequiresRoles"><a href="#3-4-RequiresRoles" class="headerlink" title="3.4 @RequiresRoles"></a>3.4 @RequiresRoles</h2><p>和roles等价，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Target</span>(&#123;ElementType.TYPE, ElementType.METHOD&#125;)
+<span class="hljs-meta">@Retention</span>(RetentionPolicy.RUNTIME)
+<span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> RequiresRoles &#123;
+
+    String[] value();
+	<span class="hljs-comment">//当有多个角色时，AND表示要拥有全部角色，OR表示拥有任意角色即可</span>
+    <span class="hljs-function">Logical <span class="hljs-title">logical</span><span class="hljs-params">()</span> <span class="hljs-keyword">default</span> Logical.AND</span>; 
+&#125;</code></pre></div>
+
+<p>示例代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">// 属于 NORMAL 角色</span>
+<span class="hljs-meta">@RequiresRoles</span>(<span class="hljs-string">"NORMAL"</span>)
+
+<span class="hljs-comment">// 要同时拥有 ADMIN 和 NORMAL 角色</span>
+<span class="hljs-meta">@RequiresRoles</span>(&#123;<span class="hljs-string">"ADMIN"</span>, <span class="hljs-string">"NORMAL"</span>&#125;)
+
+<span class="hljs-comment">// 拥有 ADMIN 或 NORMAL 任一角色即可（OR）</span>
+<span class="hljs-meta">@RequiresRoles</span>(value = &#123;<span class="hljs-string">"ADMIN"</span>, <span class="hljs-string">"NORMAL"</span>&#125;, logical = Logical.OR)</code></pre></div>
+<p>如果验证角色不通过，就会抛出AuthorizationException异常，此时我们可以基于Spring MVC提供的@RestControllerAdvice+@ExceptionHandler注解，实现全局异常的处理。<br>不了解可以看看《芋道 Spring Boot SpringMVC 入门》的「5. 全局异常处理」小节。</p>
+<h2 id="3-5-RequiresPermissions"><a href="#3-5-RequiresPermissions" class="headerlink" title="3.5 @RequiresPermissions"></a>3.5 @RequiresPermissions</h2><p>等价于perms，示例代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">// 拥有 user:add 权限</span>
+<span class="hljs-meta">@RequiresPermissions</span>(<span class="hljs-string">"user:add"</span>)
+
+<span class="hljs-comment">// 要同时拥有 user:add 和 user:update 权限</span>
+<span class="hljs-meta">@RequiresPermissions</span>(&#123;<span class="hljs-string">"user:add"</span>, <span class="hljs-string">"user:update"</span>&#125;)
+
+<span class="hljs-comment">// 拥有 user:add 和 user:update 任一权限即可</span>
+<span class="hljs-meta">@RequiresPermissions</span>(value = &#123;<span class="hljs-string">"user:add"</span>, <span class="hljs-string">"user:update"</span>&#125;, logical = Logical.OR)</code></pre></div>
+<p>同样如果验证权限不通过，则会抛出AuthorizationException异常。</p>
+<h2 id="3-6-使用示例"><a href="#3-6-使用示例" class="headerlink" title="3.6 使用示例"></a>3.6 使用示例</h2><p>新建DemoController类，提供示例API接口，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-meta">@RequestMapping</span>(<span class="hljs-string">"/demo"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoController</span> </span>&#123;
+    <span class="hljs-meta">@RequiresGuest</span>
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/echo"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">demo</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"示例返回"</span>;
+    &#125;
+
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/home"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">home</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"首页"</span>;
+    &#125;
+
+    <span class="hljs-meta">@RequiresRoles</span>(<span class="hljs-string">"ADMIN"</span>)
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/admin"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">admin</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"我是管理员"</span>;
+    &#125;
+
+    <span class="hljs-meta">@RequiresRoles</span>(<span class="hljs-string">"NORMAL"</span>)
+    <span class="hljs-meta">@GetMapping</span>(<span class="hljs-string">"/normal"</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">normal</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"我是普通用户"</span>;
+    &#125;
+&#125;</code></pre></div>
+<p>参考文献：<br><a href="https://mp.weixin.qq.com/s/NmwqOM5rSDlmvs-Bi4P2Ag" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/NmwqOM5rSDlmvs-Bi4P2Ag</a><br>github源码地址：<a href="https://github.com/gavin-yyj/shiro/tree/master/worker/shiro%E7%B3%BB%E5%88%97/shiro-test" target="_blank" rel="noopener">点这里</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/shiro/">shiro</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/shiro/">shiro</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/21/shiro%E7%B3%BB%E5%88%97-1-%E6%80%BB%E8%A7%88/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">shiro系列-1.总览</span>
+                        <span class="visible-mobile">前の記事</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/18/%E8%AE%A4%E8%AF%81%E3%80%81%E6%8E%88%E6%9D%83%E3%80%81%E9%89%B4%E6%9D%83%E5%92%8C%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/">
+                        <span class="hidden-mobile">认证、授权、鉴权和权限控制的理解</span>
+                        <span class="visible-mobile">次の記事</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "shiro系列-shiro入门示例&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

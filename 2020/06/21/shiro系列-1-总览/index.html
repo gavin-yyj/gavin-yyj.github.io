@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>shiro系列-1.总览 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-21 00:21">
+      June 21, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      7.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      98
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h1><h2 id="什么是shiro？"><a href="#什么是shiro？" class="headerlink" title="什么是shiro？"></a>什么是shiro？</h2><p>Apache Shiro是一个功能强大、灵活的，开源的安全框架。它可以干净利落地处理<strong>身份验证</strong>、<strong>授权</strong>、<strong>企业会话管理</strong>和<strong>加密</strong>。<br>shiro能做什么？</p>
+<ul>
+<li>验证身份</li>
+<li>用户访问权限控制，比如：<ul>
+<li>判断用户是否分配了一定的安全角色；</li>
+<li>判断用户是否被授予完成某个操作的权限；</li>
+</ul>
+</li>
+<li>在非 web 或 EJB 容器的环境下可以任意使用Session API</li>
+<li>可以响应认证、访问控制、或者Session生命周期中发生的事件</li>
+<li>可以将一个或以上的用户安全数据源数据整合成一个复合的用户“view”（视图）</li>
+<li>支持单点登录（SSO）功能</li>
+<li>支持提供“Remember Me”服务，获取用户关联信息而无需登录</li>
+<li>…<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><img src="https://img-blog.csdnimg.cn/20200619155347749.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>Authentication（认证）, Authorization（授权）, Session Management（会话管理）, Cryptography（加密）被 Shiro 框架的开发团队称之为应用安全的四大基石。</li>
+<li><strong>Authentication（认证）</strong>：用户身份识别，通常被称为用户“登录”；</li>
+<li><strong>Authorization（授权）</strong>：访问控制，比如某个用户是否具有每个操作的使用权限；</li>
+<li><strong>Session Management（会话管理）</strong>：特定于用户的会话管理，甚至在非web或EJB应用程序；</li>
+<li><strong>Cryptography（加密）</strong>：在对数据源使用加密算法加密的同时，保证易于使用；<br>还提供以下支持：</li>
+<li>web支持：shiro提供的web支持api，可以很轻松的保护web应用程序的安全；</li>
+<li>缓存：缓存是Apache shiro保证安全操作快速、高效的重要手段；</li>
+<li>并发：支持多线程应用程序的并发特性；</li>
+<li>测试：支持单元测试和集成测试，确保代码和预想的一样安全；</li>
+<li>Run As：这个功能允许用户采用其他用户的身份（在许可的前提下），有时在管理方案中很有用；</li>
+<li>Remember Me：跨session记录用户的身份，只有在强制需要时用户才需要登录；</li>
+</ul>
+<h1 id="2-教程"><a href="#2-教程" class="headerlink" title="2 教程"></a>2 教程</h1><h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><ul>
+<li>Java1.5及以上</li>
+<li>Maven2.2.1及以上<h2 id="创建shiro-tutorial工程"><a href="#创建shiro-tutorial工程" class="headerlink" title="创建shiro-tutorial工程"></a>创建shiro-tutorial工程</h2>建议先去github上创建一个项目，然后在该项目下创建shiro-tutorial模块。<h3 id="引入pom-xml依赖"><a href="#引入pom-xml依赖" class="headerlink" title="引入pom.xml依赖"></a>引入pom.xml依赖</h3></li>
+</ul>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">project</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0"</span></span>
+<span class="hljs-tag">         <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">         <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">modelVersion</span>&gt;</span>4.0.0<span class="hljs-tag">&lt;/<span class="hljs-name">modelVersion</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.gavin.shiro<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>shiro-tutorial<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.0-SNAPSHOT<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">properties</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="hljs-tag">&lt;/<span class="hljs-name">project.build.sourceEncoding</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">properties</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">build</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">plugins</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.8.0<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">source</span>&gt;</span>1.6<span class="hljs-tag">&lt;/<span class="hljs-name">source</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">target</span>&gt;</span>1.6<span class="hljs-tag">&lt;/<span class="hljs-name">target</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">encoding</span>&gt;</span>$&#123;project.build.sourceEncoding&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">encoding</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>
+
+            <span class="hljs-comment">&lt;!-- This plugin is only to test run our little application.  It is not</span>
+<span class="hljs-comment">                 needed in most Shiro-enabled applications: --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.codehaus.mojo<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>exec-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">executions</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">execution</span>&gt;</span>
+                        <span class="hljs-tag">&lt;<span class="hljs-name">goals</span>&gt;</span>
+                            <span class="hljs-tag">&lt;<span class="hljs-name">goal</span>&gt;</span>java<span class="hljs-tag">&lt;/<span class="hljs-name">goal</span>&gt;</span>
+                        <span class="hljs-tag">&lt;/<span class="hljs-name">goals</span>&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-name">execution</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">executions</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">classpathScope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-name">classpathScope</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-name">mainClass</span>&gt;</span>Tutorial<span class="hljs-tag">&lt;/<span class="hljs-name">mainClass</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">plugins</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">build</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">dependencies</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.apache.shiro<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>shiro-core<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.4.1<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Shiro uses SLF4J for logging.  We'll use the 'simple' binding</span>
+<span class="hljs-comment">             in this example app.  See http://www.slf4j.org for more info. --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.slf4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>slf4j-simple<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.7.21<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.slf4j<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>jcl-over-slf4j<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>1.7.21<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">dependencies</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">project</span>&gt;</span></code></pre></div>
+
+<h3 id="创建Tutorial-java文件"><a href="#创建Tutorial-java文件" class="headerlink" title="创建Tutorial.java文件"></a>创建Tutorial.java文件</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tutorial</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">transient</span> Logger log = LoggerFactory.getLogger(Tutorial<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        log.info(<span class="hljs-string">"我的第一个shiro应用"</span>);
+        System.exit(<span class="hljs-number">0</span>);
+    &#125;
+&#125;</code></pre></div>
+<h3 id="运行测试"><a href="#运行测试" class="headerlink" title="运行测试"></a>运行测试</h3><p>在项目根目录下执行<code>mvn compile exec:java</code>，出现下面的打印输出就说明程序运行成功。<br><img src="https://img-blog.csdnimg.cn/20200619195549311.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="使用shiro"><a href="#使用shiro" class="headerlink" title="使用shiro"></a>使用shiro</h2><p>在使用shiro之前要理解一件事情就是：shiro几乎所有事情都和一个中心组件SecurityManager有关（这里的SecurityManager跟java.lang.SecurityManager是两码事）。后面会详细说明shiro的设计，这里只是让读者有个概念，每个程序都必定会存在一个SecurityManager。</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>通过配置文件的方式来实现对SecurityManager的配置，Shiro默认提供了一个基本的INI配置文件的方案，当然也可以使用XML,YAML,JSON,Groovy Builder markup等多种形式来配置。</p>
+<h4 id="shiro-ini"><a href="#shiro-ini" class="headerlink" title="shiro.ini"></a>shiro.ini</h4><p>在pom.xml同目录中创建一个src/main/resources子目录，在该子目录下创建一个shiro.ini文件，内容如下：</p>
+<div class="hljs"><pre><code class="hljs text"># &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+# Tutorial INI configuration
+#
+# Usernames&#x2F;passwords are based on the classic Mel Brooks&#39; film &quot;Spaceballs&quot; :)
+# &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+
+# -----------------------------------------------------------------------------
+# Users and their (optional) assigned roles
+# username &#x3D; password, role1, role2, ..., roleN
+# -----------------------------------------------------------------------------
+[users]
+root &#x3D; secret, admin
+guest &#x3D; guest, guest
+presidentskroob &#x3D; 12345, president
+darkhelmet &#x3D; ludicrousspeed, darklord, schwartz
+lonestarr &#x3D; vespa, goodguy, schwartz
+
+# -----------------------------------------------------------------------------
+# Roles with assigned permissions
+# roleName &#x3D; perm1, perm2, ..., permN
+# -----------------------------------------------------------------------------
+[roles]
+admin &#x3D; *
+schwartz &#x3D; lightsaber:*
+goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
+<p>可以看到，在该配置文件中仅仅配置了几个静态的账户，后面会使用更复杂的用户数据，比如：数据库、LDAP【轻型目录访问协议】和活动目录等。</p>
+<h3 id="引用配置"><a href="#引用配置" class="headerlink" title="引用配置"></a>引用配置</h3><p>接下来创建SecurityManager实例，用来引用INI文件，这里只需在main函数中进行处理即可。</p>
+<div class="hljs"><pre><code class="hljs java">
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tutorial</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">transient</span> Logger log = LoggerFactory.getLogger(Tutorial<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        log.info(<span class="hljs-string">"我的第一个shiro应用"</span>);
+
+        <span class="hljs-comment">/** 1.从指定路径加载配置文件 */</span>
+        IniSecurityManagerFactory factory = <span class="hljs-keyword">new</span> IniSecurityManagerFactory(<span class="hljs-string">"classpath:shiro.ini"</span>);
+
+        <span class="hljs-comment">/** 2. 分析INI文件，并根据配置文件返回一个SecurityManager实例 */</span>
+        SecurityManager securityManager = factory.getInstance();
+
+        <span class="hljs-comment">/** 3. 将 SecurityManager 设置成了static (memory) singleton，可以通过 JVM 访问 */</span>
+        SecurityUtils.setSecurityManager(securityManager);
+
+        System.exit(<span class="hljs-number">0</span>);
+    &#125;
+&#125;</code></pre></div>
+<p>这就是我们要做的–仅仅使用三行代码就把Shiro加进了我们的程序，就是这么简单。</p>
+<p>执行mvn compile exec:java 可以看到程序成功的运行（由于 Shiro 默认在 debug 或更底层才记录日志，所以你不会看到任何 Shiro 的日志输出–只要运行时没有错误提示，你就可以知道已经成功了）。</p>
+<p>上面所加入的代码做了下面的事情：</p>
+<p>使用 Shiro 的 IniSecurityManagerFactory 加载了我们的shiro.ini 文件，该文件存在于 classpath 根目录里。这个执行动作反映出 shiro 支持 Factory Method Design Pattern（工厂模式）。classpath：资源的指示前缀，告诉 shiro 从哪里加载 ini 文件（其它前缀，如 url:和 file: 也被支持）。<br>2.factory.getInstance() 方法被调用，该方法分析 INI 文件并根据配置文件返回一个 SecurityManager 实例。</p>
+<p>3.在这个简单示例中，我们将 SecurityManager 设置成了static (memory) singleton，可以通过 JVM 访问，注意如果你在一个 JVM 中加载多个使用 shiro 的程序时不要这样做，在这个简单示例中，这是可以的，但在其它成熟的应用环境中，通常会将 SecurityManager 放在程序指定的存储中（如在 web 中的 ServletContexct 或者 Spring、Guice、 JBoss DI 容器实例）中。</p>
+<h3 id="执行安全操作"><a href="#执行安全操作" class="headerlink" title="执行安全操作"></a>执行安全操作</h3><p>准备好SecurityManager后，可以开始进行我们真正关心的事情了–执行安全操作。<br>其实也就是两个问题：“谁是当前的用户？”，“当前用户是否允许做某件事？”，Shiro的API给当前用户定义了一个新的名词，即“<strong>Subject</strong>”。<br>在几乎所有的环境中，都可以通过如下语句得到当前用户的信息：</p>
+<div class="hljs"><pre><code class="hljs java">Subject currentUser = SecurityUtils.getSubject();</code></pre></div>
+<p>Subject是一个安全术语，意思是“当前运行用户的指定安全视图”，不仅仅局限于一个人，也可以是第三方进程、时钟守护任务、守护进程账户或者其他，可以简单理解为“当前和软件进行交互的事件”。</p>
+<p>在一个独立的程序中调用 getSubject() 会在程序指定位置返回一个基于用户数据的 Subject，在服务器环境（如 web 程序）中，它将获取一个和当前线程或请求相关的基于用户数据的 Subject。</p>
+<p>在取得了Subject后，我们可以利用它做点什么呢？比如：赚点钱~哈哈，开个玩笑哈</p>
+<p>如果你想在应用程序的会话期内给用户提供一些信息，那么我们可以获得他们的session。</p>
+<div class="hljs"><pre><code class="hljs java">Session session = currentUser.getSession();
+session.setAttribute( <span class="hljs-string">"someKey"</span>, <span class="hljs-string">"aValue"</span> );</code></pre></div>
+
+<p>Session是shiro指定的一个实例，提供几乎所有的HttpSession功能，但是同时它又不需要HTTP环境，这句话的意思是在非web程序中，我们也能使用上面这段代码，不必考虑发布环境！从此任何需要 session 的程序不再需要强制使用 HttpSession 或者 EJB Stateful Session,并且，终端可以共享 session 数据。</p>
+<p>现在我们获取了一个Subject和它们的Session，可以来搞事情了，比如：检测其是否被允许做某些事情？检查其角色和权限？等等。</p>
+<p>我们只能对已知用户进行检查，上面的Subject实例代表当前用户，但是当前用户是谁？如果是匿名用户，那我们就让他们至少登录一次。下面的代码就是完成这个任务：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ( !currentUser.isAuthenticated() ) &#123;
+    <span class="hljs-comment">//收集用户的主要信息和凭据，来自GUI中的特定的方式</span>
+    <span class="hljs-comment">//如包含用户名/密码的HTML表格，X509证书，OpenID，等。</span>
+    <span class="hljs-comment">//我们将使用用户名/密码的例子因为它是最常见的。</span>
+    UsernamePasswordToken token = <span class="hljs-keyword">new</span> UsernamePasswordToken(<span class="hljs-string">"lonestarr"</span>, <span class="hljs-string">"vespa"</span>);
+
+    <span class="hljs-comment">//支持'remember me' (无需配置，自带的!):</span>
+    token.setRememberMe(<span class="hljs-keyword">true</span>);
+
+    currentUser.login(token);
+&#125;</code></pre></div>
+<p>如果登录失败呢？那我么就可以捕获所有异常，然后按照自己的方式进行处理：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">try</span> &#123;
+    currentUser.login( token );
+    <span class="hljs-comment">//无异常，说明就是我们想要的!</span>
+&#125; <span class="hljs-keyword">catch</span> ( UnknownAccountException uae ) &#123;
+    <span class="hljs-comment">//username 不存在，给个错误提示?</span>
+&#125; <span class="hljs-keyword">catch</span> ( IncorrectCredentialsException ice ) &#123;
+    <span class="hljs-comment">//password 不匹配，再输入?</span>
+&#125; <span class="hljs-keyword">catch</span> ( LockedAccountException lae ) &#123;
+    <span class="hljs-comment">//账号锁住了，不能登入。给个提示?</span>
+&#125; 
+    ... 更多类型异常 ...
+&#125; <span class="hljs-keyword">catch</span> ( AuthenticationException ae ) &#123;
+    <span class="hljs-comment">//未考虑到的问题 - 错误?</span>
+&#125;</code></pre></div>
+<p>最简单的方式是将异常信息通过人类可以理解的语言返回给用户，不建议直接输出异常原始信息。</p>
+<p>除此之外，我们还可以做些什么呢？<br>显示当前“用户”的信息</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//打印主要信息 (本例子是 username):</span>
+log.info( <span class="hljs-string">"User ["</span> + currentUser.getPrincipal() + <span class="hljs-string">"] logged in successfully."</span> );</code></pre></div>
+<p>也可以判断它们是否拥有某个角色；</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ( currentUser.hasRole( <span class="hljs-string">"schwartz"</span> ) ) &#123;
+    log.info(<span class="hljs-string">"May the Schwartz be with you!"</span> );
+&#125; <span class="hljs-keyword">else</span> &#123;
+    log.info( <span class="hljs-string">"Hello, mere mortal."</span> );
+&#125;</code></pre></div>
+<p>还可以判断它们是否拥有某个特定动作或入口的权限；</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ( currentUser.isPermitted( <span class="hljs-string">"lightsaber:weild"</span> ) ) &#123;
+    log.info(<span class="hljs-string">"You may use a lightsaber ring.  Use it wisely."</span>);
+&#125; <span class="hljs-keyword">else</span> &#123;
+    log.info(<span class="hljs-string">"Sorry, lightsaber rings are for schwartz masters only."</span>);
+&#125;</code></pre></div>
+<p>同样，我们还可以执行非常强大的instance-level（实例级别）的权限检测，检测用户是否具备访问某个类型特定实例的权限：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span> ( currentUser.isPermitted( <span class="hljs-string">"winnebago:drive:eagle5"</span> ) ) &#123;
+    log.info(<span class="hljs-string">"You are permitted to 'drive' the 'winnebago' with license plate (id) 'eagle5'.  "</span> +
+                <span class="hljs-string">"Here are the keys - have fun!"</span>);
+&#125; <span class="hljs-keyword">else</span> &#123;
+    log.info(<span class="hljs-string">"Sorry, you aren't allowed to drive the 'eagle5' winnebago!"</span>);
+&#125;</code></pre></div>
+<p>最后，当用记不再使用系统，可以退出登录：</p>
+<div class="hljs"><pre><code class="hljs java">currentUser.logout(); <span class="hljs-comment">//清除识别信息，设置 session 失效.</span></code></pre></div>
+<h3 id="最终的class"><a href="#最终的class" class="headerlink" title="最终的class"></a>最终的class</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.apache.shiro.SecurityUtils;
+<span class="hljs-keyword">import</span> org.apache.shiro.authc.*;
+<span class="hljs-keyword">import</span> org.apache.shiro.config.IniSecurityManagerFactory;
+<span class="hljs-keyword">import</span> org.apache.shiro.mgt.SecurityManager;
+<span class="hljs-keyword">import</span> org.apache.shiro.session.Session;
+<span class="hljs-keyword">import</span> org.apache.shiro.subject.Subject;
+<span class="hljs-keyword">import</span> org.slf4j.Logger;
+<span class="hljs-keyword">import</span> org.slf4j.LoggerFactory;
+
+<span class="hljs-comment">/**</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@Author</span>: gavin</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@GitHub</span>: https://github.com/gavin-yyj</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@Date</span>: Created in 19:48 2020/6/19</span>
+<span class="hljs-comment"> * <span class="hljs-doctag">@Description</span>:</span>
+<span class="hljs-comment"> */</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Tutorial</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">transient</span> Logger log = LoggerFactory.getLogger(Tutorial<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        log.info(<span class="hljs-string">"我的第一个shiro应用"</span>);
+
+        <span class="hljs-comment">//1.从指定路径加载配置文件</span>
+        IniSecurityManagerFactory factory = <span class="hljs-keyword">new</span> IniSecurityManagerFactory(<span class="hljs-string">"classpath:shiro.ini"</span>);
+
+        <span class="hljs-comment">// 2. 分析INI文件，并根据配置文件返回一个SecurityManager实例</span>
+        SecurityManager securityManager = factory.getInstance();
+
+        <span class="hljs-comment">// 3. 将 SecurityManager 设置成了static (memory) singleton，可以通过 JVM 访问</span>
+        SecurityUtils.setSecurityManager(securityManager);
+
+        <span class="hljs-comment">//获取当前执行的用户</span>
+        Subject currentUser = SecurityUtils.getSubject();
+
+        <span class="hljs-comment">//做点跟Session相关的事</span>
+        Session session = currentUser.getSession();
+        session.setAttribute(<span class="hljs-string">"someKey"</span>,<span class="hljs-string">"aValue"</span>);
+        String value = (String) session.getAttribute(<span class="hljs-string">"someKey"</span>);
+        <span class="hljs-keyword">if</span>(value.equals(<span class="hljs-string">"aValue"</span>))&#123;
+            log.info(<span class="hljs-string">"检索出正确的值："</span>+ value);
+        &#125;
+
+        <span class="hljs-comment">//登录当前用户检验角色和权限</span>
+        <span class="hljs-keyword">if</span>(!currentUser.isAuthenticated())&#123;
+            <span class="hljs-comment">//将用户名和密码包装成token</span>
+            UsernamePasswordToken token = <span class="hljs-keyword">new</span> UsernamePasswordToken(<span class="hljs-string">"lonestarr"</span>, <span class="hljs-string">"vespa"</span>);
+            token.setRememberMe(<span class="hljs-keyword">true</span>);
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">//尝试登录</span>
+                currentUser.login(token);
+            &#125;<span class="hljs-keyword">catch</span> (UnknownAccountException uae)&#123;
+                log.info(<span class="hljs-string">"用户名不正确"</span>);
+            &#125;<span class="hljs-keyword">catch</span> (IncorrectCredentialsException ice)&#123;
+                log.info(<span class="hljs-string">"密码不正确"</span>);
+            &#125;<span class="hljs-keyword">catch</span> (LockedAccountException lae)&#123;
+                log.info(<span class="hljs-string">"账号被锁定"</span>);
+            &#125;
+            <span class="hljs-comment">// ...其他已知异常</span>
+            <span class="hljs-keyword">catch</span> (AuthenticationException e)&#123;
+                log.info(<span class="hljs-string">"其他未知错误，请联系管理员"</span>);
+            &#125;
+        &#125;
+
+        <span class="hljs-comment">//说出他们是谁：</span>
+        <span class="hljs-comment">//打印主要识别信息</span>
+        log.info(<span class="hljs-string">"User["</span>+currentUser.getPrincipal()+<span class="hljs-string">"] logged in successfully."</span>);
+
+        <span class="hljs-comment">//测试角色：</span>
+        <span class="hljs-keyword">if</span>(currentUser.hasRole(<span class="hljs-string">"schwartz"</span>))&#123;
+            log.info(<span class="hljs-string">"你好！schwartz"</span>);
+        &#125;<span class="hljs-keyword">else</span>&#123;
+            log.info(<span class="hljs-string">"你好！普通人"</span>);
+        &#125;
+
+        <span class="hljs-comment">//测试一个权限（非（instance-level)实例级别）</span>
+        <span class="hljs-keyword">if</span>(currentUser.isPermitted(<span class="hljs-string">"lightsaber:weild"</span>))&#123;
+            log.info(<span class="hljs-string">"你可以使用这个光剑戒指，试试吧"</span>);
+        &#125;<span class="hljs-keyword">else</span>&#123;
+            log.info(<span class="hljs-string">"对不起，光剑戒指仅适用于schwartz大师"</span>);
+        &#125;
+
+        <span class="hljs-comment">//一个非常强大的实例级别的权限：</span>
+        <span class="hljs-keyword">if</span>(currentUser.isPermitted(<span class="hljs-string">"winnebago:drive:eagle5"</span>))&#123;
+            log.info(<span class="hljs-string">"您可以使用车牌号为eagle5的winnebago，这是钥匙，玩得开心！"</span>);
+        &#125;<span class="hljs-keyword">else</span>&#123;
+            log.info(<span class="hljs-string">"对不起，您money不够，玩不起"</span>);
+        &#125;
+
+        <span class="hljs-comment">//完成，退出</span>
+        currentUser.logout();
+
+        System.exit(<span class="hljs-number">0</span>);
+    &#125;
+&#125;</code></pre></div>
+<p>运行结果：<br><img src="https://img-blog.csdnimg.cn/20200619214928565.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>这节我们通过一个示例介绍了如何在基础程序中加入Shiro，并理解Shiro的设计理念，Subject 和 SecurityManager。<br>接下来我们将更加深入的理解Shiro的架构及其配置机制。</p>
+<h1 id="3-架构"><a href="#3-架构" class="headerlink" title="3 架构"></a>3 架构</h1><p>Apache Shiro 设计理念是使程序的安全变得简单直观而易于实现，Shiro的核心设计参照大多数用户对安全的思考模式–如何对某人（或某事）在与程序交互的环境中的进行安全控制。<br>比如：我们设计一个按钮，如果我的应用程序的交互对象是已经登录认证过的用户，那么我们展示的这个按钮可以用来查看他们的账户信息；如果该用户没有登录，那么这个按钮将作为一个注册按钮。</p>
+<h2 id="高级概述"><a href="#高级概述" class="headerlink" title="高级概述"></a>高级概述</h2><p>Shio架构包含三个重要的理念：Subject、SecurityManager和Realm，下图展示了这些组件是如何相互作用的，我们将在下面依次对其进行描述：<br><img src="https://img-blog.csdnimg.cn/20200619220838962.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<ul>
+<li><strong>Subject</strong>：Subject本质上是当时运行用户特定的View（视图），而单词“User”经常暗指一个人，Subject可以是一个人，也可以是第三方服务、守护进程账户、时钟守护任务或者其他和当前软件交互的任何事件。<strong>Subject实例都和一个SecurityManager绑定</strong>，当你和一个Subject进行交互，这些交互动作被转换成SecurityManager下Subject特定的交互动作，比如前面提到的按钮操作。</li>
+<li><strong>SecurityManager</strong>：SecurityManager是Shiro架构的核心，配合内部安全组件共同组成安全伞。然而，一旦一个程序配置好了SecurityManager和它的内部对象，程序开发人员几乎花费所有的时间在Subject API上，但是我们要清楚，任何Subject的安全操作中SecurityManager才是幕后真正的举重者。</li>
+<li><strong>Realms</strong>：Realms是Shiro和你的程序安全数据之间的“桥”或者“连接”，当真正需要和安全性相关的数据（例如用户账户）进行交互以执行身份验证（登录）和授权（访问控制）时，Shiro会从一个或多个程序配置的Realm中查找这些东西。<br>Realm本质上是一个特定的安全DAO，它封装与数据源连接的细节，得到Shiro所需的相关数据，在配置Shiro的时候，必须指定至少一个Realm来实现认证（Authentication）和/或授权（Authorization）。SecurityManager可以配置多个复杂的Realm，但是至少保证有一个。<br>Shiro提供开箱即用的Realms来连接安全数据源（或叫地址）如：LDAP、JDBC、文件配置如INI和属性文件等，如果已有的Realm不能满足你的需求，你也可以开发自己的Realm实现，和其他内部组件一样，Shiro SecurityManager管理如何使用Realms获取Subject实例所代表的安全和身份信息。</li>
+</ul>
+<h2 id="详细架构"><a href="#详细架构" class="headerlink" title="详细架构"></a>详细架构</h2><p><img src="https://img-blog.csdnimg.cn/20200619225243989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<ul>
+<li><strong>Subject</strong>：正在与软件交互的一个特定的实体“view”（用户、第三方服务、时钟守护任务等）</li>
+<li><strong>SecurityManager</strong>：shiro的核心，用来协调它管理的组件使之平稳地一起工作，同时它也管理着Shiro中每一个程序用户的视图，所以它知道每个用户如何执行安全操作。</li>
+<li><strong>Authenticator</strong>：Authenticator是负责执行用户的身份验证（登录）并对其作出反应的组件。 当用户尝试登录时，该逻辑由身份验证器执行。 身份验证器知道如何与一个或多个存储相关用户/帐户信息的领域进行协调。 从这些领域获得的数据用于验证用户的身份，以确保用户确实是他们所说的真实身份。</li>
+<li><strong>Authentication Strategy</strong>：如果配置了多个Realm，AuthenticationStrategy将会协调Realm，以确定在一个身份验证成功或失败的条件。（比如：如果在一个方面验证成功了，但是其他方面有验证失败了，那么这次尝试是否成功，由Authentication Strategy说了算）</li>
+<li><strong>Authorizer</strong>：Authorizer是负责程序中用户访问控制的组件，它是最终判断一个用户是否允许做某件事的途径，像Authenticator一样，Authorizer也知道如何通过协调多种后台数据源来访问角色和权限信息，Authorizer利用这些信息来准确判断一个用户是否可以执行给定的动作。</li>
+<li><strong>SessionManager</strong>：SessionManager知道如何创建并管理用户Session生命周期，从而在所有环境中为用户提供一个强有力的Session体验。Shiro 将使用现有的session（如Servlet Container），但如果环境中没有，比如在一个独立的程序或非 web 环境中，它将使用它自己建立的 session 提供相同的作用，sessionDAO 用来使用任何数据源使 session 持久化。</li>
+<li><strong>SessionDAO</strong>：SessionDAO代表SessionManager执行Session持久（CRUD）动作，它允许任何存储的数据连接到session管理基础上。</li>
+<li><strong>CacheManager</strong>：CacheManager为Shiro的其他组件提供创建缓存实例和管理缓存生命周期的功能，利用缓存来提高访问效率，目前主流开源或企业级缓存框架都可以集成到Shiro中。</li>
+<li><strong>Cryptography</strong>：Shiro的crypto包包含了易用且易懂的加密方式，Hashes(即digests)和不同的编码实现。</li>
+<li><strong>Realms</strong>：Realm 是 shiro 和你的应用程序安全数据之间的“桥”或“连接”，当实际要与安全相关的数据进行交互如用户执行身份认证（登录）和授权验证（访问控制）时，shiro 从程序配置的一个或多个Realm 中查找这些数据，你需要配置多少个 Realm 便可配置多少个 Realm（通常一个数据源一个），shiro 将会在认证和授权中协调它们。<h2 id="SecurityManager"><a href="#SecurityManager" class="headerlink" title="SecurityManager"></a>SecurityManager</h2>因为 Shiro API 鼓励以 Subject 为中心的开发方式，大部分开发人员将很少会和 SecurityManager 直接交互（尽管框架开发人员也许发现它非常有用），尽管如此，知道 SecurityManager 如何工作，特别是当在一个程序中进行配置的时候，是非常重要的。<h2 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h2>程序中SecurityManager执行操作并且管理所有程序用户的状态，在Shiro基础的SecurityManager实现中，包含以下内容：</li>
+<li>认证（Authentication）</li>
+<li>授权（Authorization）</li>
+<li>会话管理（Session Management）</li>
+<li>缓存管理（Cache Management）</li>
+<li>Realm协调（Realm coordination）</li>
+<li>事件传导（Event propagation ）</li>
+<li>“RememberMe” 服务（”Remember Me” Services）</li>
+<li>建立Subject(Subject creation)</li>
+<li>退出登录（Logout）</li>
+<li>…</li>
+<li>以上这些功能都放在一个单独的组件中进行管理，为了实现配置的简单、灵活、机动性，Shiro的实现在设计上都是高度模块化的，SecurityManager类及其实现类主要充当轻量级的“容器”组件功能，几乎将所有的行为委托给嵌套/包装的组件，这里可以参考上面的架构图。<br>当组件执行逻辑的时候，SecurityManager知道如何以及何时去协调组件做出正确的动作。<br>SecurityManager 和 JavaBean 兼容，这允许你（或者配置途径）通过标准的JavaBean 访问/设置方法（get/set）很容易地定制插件，这意味着 Shiro 模块可以根据用户行为转化成简易的配置。</li>
+</ul>
+<h1 id="4-配置"><a href="#4-配置" class="headerlink" title="4 配置"></a>4 配置</h1><p>Shiro 的 SecurityManager 的实现和其所依赖的组件都是 JavaBean，所以可以用多种形式对 Shiro 进行配置，比如XML（Spring, JBoss, Guice, 等等），YAML, JSON, Groovy Builder markup等，INI 只是 Shiro 一种最基本的配置方式，使得其可以在任何环境中进行配置。</p>
+<h2 id="在程序中配置"><a href="#在程序中配置" class="headerlink" title="在程序中配置"></a>在程序中配置</h2><p>伪代码如下：</p>
+<div class="hljs"><pre><code class="hljs java">Realm realm = <span class="hljs-comment">//实例化或获得一个Realm的实例。我们将稍后讨论Realm。</span>
+
+SecurityManager securityManager = <span class="hljs-keyword">new</span> DefaultSecurityManager(realm);
+
+<span class="hljs-comment">//使SecurityManager实例通过静态存储器对整个应用程序可见：</span>
+SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
+
+<p>如同我们在架构（Architecture ）中讨论过的，Shiro SecurityMangger 本质上是一个由一套安全组件组成的对象模块视图（graph），因为与 JavaBean兼容，所以可以对所有这些组件调用的 getter 和 setter 方法来配置SecurityManager 和它的内部对象视图。</p>
+<p>例如，你想用一个自定义的 SessionDAO 来定制 Session Management从而配置一个 SecurityManager 实例，你就可以使用 SessionManager 的 setSessionDAO 方法直接 set 这个 SessionDAO。</p>
+<div class="hljs"><pre><code class="hljs java">DefaultSecurityManager securityManager = <span class="hljs-keyword">new</span> DefaultSecurityManager(realm);
+
+SessionDAO sessionDAO = <span class="hljs-keyword">new</span> CustomSessionDAO();
+
+((DefaultSessionManager)securityManager.getSessionManager()).setSessionDAO(sessionDAO);</code></pre></div>
+<p>使用这些函数，你可以配置 SecurityManager 视图（graph）中的任何一部分。</p>
+<p>虽然在程序中配置很简单，但它并不是我们现实中配置的完美解决方案。在几种情况下这种方法可能并不适合你的程序：</p>
+<ul>
+<li><p>它需要你确切知道并实例化一个直接实现（direct<br>implementation），然而更好的做法是你并不需要知道这些实现也不需要知道从哪里找到它们。</p>
+</li>
+<li><p>因为JAVA类型安全的特性，你必须对通过 get* 获取的对象进行强制类型转换，这么多强制转换非常的丑陋、累赘并且会和你的类紧耦合。</p>
+</li>
+<li><p>SecurityUtils.setSecurityManager 方法会将 SecurityManager<br>实例化为虚拟机的单独静态实例，在大多数程序中没有问题，但如果有多个使用 Shiro 的程序在同一个 JVM 中运行时，各程序有自己独立的实例会更好些，而不是共同引用一块静态内存。 </p>
+</li>
+<li><p>改变配置就需要重新编译你的程序。</p>
+</li>
+</ul>
+<p>然而，尽管有这些不足，在程序中定制的这种方法在限制内存（memory-constrained ）的环境中还是很有价值的，像智能电话程序。如果你的程序不是运行在一个限制内存的环境中，你会发现基于文本的配置会更易读易用。</p>
+<h2 id="INI-配置"><a href="#INI-配置" class="headerlink" title="INI 配置"></a>INI 配置</h2><p>大多数程序已经改为使用基于文本的配置，不需要依靠代码就可进行修改；<br>为了确保具有共性的基于文本配置的途径适用于任何环境而且减少对第三方的依赖，Shiro 支持使用 INI 创建 SecurityManager 对象视图（graph）以及它支持的组件，INI 易读易配置，很容易创建并且对大多数程序都很适合。</p>
+<h3 id="通过INI资源创建-SecurityManager"><a href="#通过INI资源创建-SecurityManager" class="headerlink" title="通过INI资源创建 SecurityManager"></a>通过INI资源创建 SecurityManager</h3><p>这里举两个通过INI配置创建SecurityManager的例子。</p>
+<h4 id="从INI资源创建SecurityManager"><a href="#从INI资源创建SecurityManager" class="headerlink" title="从INI资源创建SecurityManager"></a>从INI资源创建SecurityManager</h4><div class="hljs"><pre><code class="hljs java">Factory&lt;SecurityManager&gt; factory = <span class="hljs-keyword">new</span> IniSecurityManagerFactory(<span class="hljs-string">"classpath:shiro.ini"</span>);
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
+
+<h4 id="通过INI实例创建SecurityManager"><a href="#通过INI实例创建SecurityManager" class="headerlink" title="通过INI实例创建SecurityManager"></a>通过INI实例创建SecurityManager</h4><p>INI 配置可以通过org.apache.shiro.config.Ini 类用程序方式创建，这个 INI 类类似于 JDK 的java.util.Properties类，但支持通过section 名分割。如：</p>
+<div class="hljs"><pre><code class="hljs java">Ini ini = <span class="hljs-keyword">new</span> Ini();
+<span class="hljs-comment">//populate the Ini instance as necessary</span>
+...
+Factory&lt;SecurityManager&gt; factory = <span class="hljs-keyword">new</span> IniSecurityManagerFactory(ini);
+SecurityManager securityManager = factory.getInstance();
+SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
+<p>接下里解决如何定义一个Shiro INI配置文件的问题</p>
+<h3 id="INI-Sections"><a href="#INI-Sections" class="headerlink" title="INI Sections"></a>INI Sections</h3><p>INI　基于文本配置，在独立命名的区域内通过成对的键名/键值组成。键名在每个区域内必须唯一，但是在整个配置文件中并不要求唯一，每个区域（session）可以看作是一个独立的Properties定义。<br>注释行可以用“#”或“;”标识，下面是一个关于shiro的示例。</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-comment"># =======================</span>
+<span class="hljs-comment"># Shiro INI configuration</span>
+<span class="hljs-comment"># =======================</span>
+
+<span class="hljs-section">[main]</span>
+<span class="hljs-comment"># Objects and their properties are defined here, </span>
+<span class="hljs-comment"># Such as the securityManager, Realms and anything</span>
+<span class="hljs-comment"># else needed to build the SecurityManager</span>
+
+<span class="hljs-section">[users]</span>
+<span class="hljs-comment"># The 'users' section is for simple deployments</span>
+<span class="hljs-comment"># when you only need a small number of statically-defined </span>
+<span class="hljs-comment"># set of User accounts.</span>
+
+<span class="hljs-section">[roles]</span>
+<span class="hljs-comment"># The 'roles' section is for simple deployments</span>
+<span class="hljs-comment"># when you only need a small number of statically-defined</span>
+<span class="hljs-comment"># roles.</span>
+
+<span class="hljs-section">[urls]</span>
+<span class="hljs-comment"># The 'urls' section is used for url-based security</span>
+<span class="hljs-comment"># in web applications.  We'll discuss this section in the</span>
+<span class="hljs-comment"># Web documentation</span></code></pre></div>
+<h4 id="main"><a href="#main" class="headerlink" title="[main]"></a>[main]</h4><p>[main]区域是配置程序 SecurityManager 实例及其支撑组件的地方，如 Realm。</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[main]</span>
+<span class="hljs-attr">sha256Matcher</span> = org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+<span class="hljs-comment"># 定义一个对象</span>
+<span class="hljs-attr">myRealm</span> = com.company.security.shiro.DatabaseRealm
+<span class="hljs-comment"># 设置对象属性</span>
+<span class="hljs-attr">myRealm.connectionTimeout</span> = <span class="hljs-number">30000</span>
+<span class="hljs-attr">myRealm.username</span> = jsmith
+<span class="hljs-attr">myRealm.password</span> = secret
+<span class="hljs-comment"># 引用值</span>
+<span class="hljs-attr">myRealm.credentialsMatcher</span> = <span class="hljs-variable">$sha256Matcher</span>
+<span class="hljs-comment"># 嵌套属性</span>
+<span class="hljs-attr">securityManager.sessionManager.globalSessionTimeout</span> = <span class="hljs-number">1800000</span></code></pre></div>
+<p><strong>1、定义一个对象</strong><br>这一行实例化了一个类型为 com.company.shiro.realm.MyRealm 的对象实例并且使对象使用 myRealm 作为名称以便于将来引用和配置。</p>
+<p>如果对象实例化时实现了 org.apache.shiro.util.Nameable 接口，Nameable.setName方法将被以该名（在此例中为myRealm）命名的对象调用。</p>
+<p><strong>2、设置对象属性</strong><br>上面代码等价于</p>
+<div class="hljs"><pre><code class="hljs ini">myRealm.setConnectionTimeout(30000);
+myRealm.setUsername("jsmith");
+myRealm.setPassword("secret");</code></pre></div>
+<p>这是因为Shiro默认使用Apache通用的BeanUtils来完成这项复杂的工作，BeanUtils知道如何将这些字符串值转换为适合的原始值类型并调用合适的JavaBeans的setter方法。</p>
+<p><strong>3、引用值</strong><br>如果你想设置的值并不是一个原始值，而是另一个对象怎么办呢？你可以使用一个 $ 符来引用一个之前定义的实例。</p>
+<p><strong>4、嵌套属性</strong><br>通过在等号左侧使用点符号，你可以得到你希望设置对象视图最终的对象/属性；<br><code>securityManager.sessionManager.globalSessionTimeout = 1800000</code>等价于<code>securityManager.getSessionManager().setGlobalSessionTimeout(1800000);</code></p>
+<p><strong>5、字节数组值</strong><br>因为原始的字节数组不能直接在文本中定义，我们必须使用字节数组的文本编码。可以使用64位编码（默认）或者16位编码，使用16位编码必须在字符串前面加上0x前缀；<br><code>securityManager.rememberMeManager.cipherKey = 0x3707344A4093822299F31D008</code></p>
+<p><strong>6、集合属性</strong><br>列表（Lists）、集合（Sets）、图（Maps）可以像其它属性一样设置–直接设置或者像嵌套属性一样，对于列表和集合，只需指定一个逗号分割的值集或者对象引用集。</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-attr">sessionListener1</span> = com.company.my.SessionListenerImplementation
+...
+<span class="hljs-attr">sessionListener2</span> = com.company.my.other.SessionListenerImplementation
+...
+<span class="hljs-attr">securityManager.sessionManager.sessionListeners</span> = <span class="hljs-variable">$sessionListener1</span>, <span class="hljs-variable">$sessionListener2</span></code></pre></div>
+<p>对于图（Maps），你可以指定以逗号分割的键-值对列表，每个键-值之间用冒号分割：</p>
+<div class="hljs"><pre><code class="hljs ini"><span class="hljs-attr">object1</span> = com.company.some.Class
+<span class="hljs-attr">object2</span> = com.company.another.Class
+...
+<span class="hljs-attr">anObject</span> = some.class.with.a.Map.property
+
+<span class="hljs-attr">anObject.mapProperty</span> = key1:<span class="hljs-variable">$object1</span>, key2:<span class="hljs-variable">$object2</span></code></pre></div>
+<p>在上面的例子中，$object1 引用的对象将存于键 key1 之下，也就是map.get(“key1”) 将返回 object1。你也可以使用其它对象作为键值：</p>
+<div class="hljs"><pre><code class="hljs text">anObject.map &#x3D; $objectKey1:$objectValue1, $objectKey2:$objectValue2</code></pre></div>
+<p><strong>注意事项</strong></p>
+<p>1、顺序问题<br>每一个对象实例以及每一个指定的值都将按照其在 [main] 区域中产生的顺序的执行，这些行最终转换为 JavaBeans 的 getter/setter 方法调用，这些方法按同样的顺序调用。<br>2、覆盖实例<br>每个对象都可以被后定义的新实例覆盖：</p>
+<div class="hljs"><pre><code class="hljs text">myRealm &#x3D; com.company.security.MyRealm
+...
+myRealm &#x3D; com.company.security.DatabaseRealm</code></pre></div>
+<p>这样的结果是 myRealm 是 com.company.security.DatabaseRealm 实例而前面的实例不会被使用（会作为垃圾回收）。<br>3、默认Default SecurityManager<br>securityManager实例是特殊的–它已经为你实例化过了并且准备好了，所以你并不需要知道指定的实例化SecurityManager的实现类。</p>
+<p>当然，如果你确实想指定你自己的实现类，你可以像上面的覆盖实例那样定义你自己的实现：</p>
+<div class="hljs"><pre><code class="hljs text">securityManager &#x3D; com.company.security.shiro.MyCustomSecurityManager</code></pre></div>
+<p>当然，很少需要这样–Shiro 的 SecurityManager 实现可以按需求进行定制，你可能要问一下自己（或者用户群）你是否真的需要这样做。</p>
+<h4 id="users"><a href="#users" class="headerlink" title="[users]"></a>[users]</h4><p>[users]区域允许你定义一组静态的用户帐号，这对于那些只有少数用户帐号并且用户帐号不需要在运行时动态创建的环境来说非常有用。下面是一个例子：</p>
+<div class="hljs"><pre><code class="hljs text">[users]
+admin &#x3D; secret
+lonestarr &#x3D; vespa, goodguy, schwartz
+darkhelmet &#x3D; ludicrousspeed, badguy, schwartz</code></pre></div>
+<p>定义非空的[users]或[roles]区域将自动创建<code>org.apache.shiro.realm.text.IniRealm</code>     实例,在[main]区域下生成一个可用的 iniRealm ，你可以像上面配置其它对象那样配置它。</p>
+<p><strong>格式：</strong></p>
+<div class="hljs"><pre><code class="hljs text">username &#x3D; password, roleName1, roleName2, ..., roleNameN</code></pre></div>
+
+<ul>
+<li>等号左边的值是用户名；</li>
+<li>等号右侧第一个值是用户密码，密码是必须的；</li>
+<li>密码之后用逗号分割的值是赋予用户的角色名，角色名是可选的。</li>
+</ul>
+<p><strong>密码加密</strong><br>如果你不希望[users]区域下的密码以明文显示，你可以用你喜欢的哈希算法（MD5, Sha1, Sha256, 等）来加密它们，将加密后的字符串作为密码值，默认的情况下密码用16位编码算法，但也可以用64位编码算法替代（如下）</p>
+<p>指定哈希文本密码值后，您必须告诉Shiro这些密码已加密。 为此，您可以在[main]部分中配置隐式创建的iniRealm，以使用与您指定的哈希算法相对应的适当CredentialsMatcher实现：</p>
+<div class="hljs"><pre><code class="hljs text">[main]
+...
+sha256Matcher &#x3D; org.apache.shiro.authc.credential.Sha256CredentialsMatcher
+...
+iniRealm.credentialsMatcher &#x3D; $sha256Matcher
+...
+
+[users]
+# user1 &#x3D; sha256-hashed-hex-encoded password, role1, role2, ...
+user1 &#x3D; 2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b, role1, role2, ...</code></pre></div>
+<p>如果用64位编码方式进行编码，需要指定：</p>
+<div class="hljs"><pre><code class="hljs text">[main]
+...
+# true &#x3D; hex, false &#x3D; base64:
+sha256Matcher.storedCredentialsHexEncoded &#x3D; false</code></pre></div>
+
+<h4 id="roles"><a href="#roles" class="headerlink" title="[roles]"></a>[roles]</h4><p>[roles]区域允许你将权限和在[users]定义的角色对应起来，同样的，这对于那些只有少数用户帐号并且用户帐号不需要在运行时动态创建的环境来说非常有用。</p>
+<div class="hljs"><pre><code class="hljs text">[roles]
+# &#39;admin&#39; role has all permissions, indicated by the wildcard &#39;*&#39;
+admin &#x3D; *
+# The &#39;schwartz&#39; role can do anything (*) with any lightsaber:
+schwartz &#x3D; lightsaber:*
+# The &#39;goodguy&#39; role is allowed to &#39;drive&#39; (action) the winnebago (type) with
+# license plate &#39;eagle5&#39; (instance specific id)
+goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
+<p><strong>格式</strong><br>[roles]区域下的每一行必须用下面的格式定义角色-权限的键/值对应关系。<br><code>rolename = permissionDefinition1, permissionDefinition2, ..., permissionDefinitionN</code></p>
+<p>注意如果一个特定的权限定义需要用到逗号分隔（如：printer:5thFloor:print,info），你需要将该定义用双引号括起来从而避免出错：”printer:5thFloor:print,info”。</p>
+<p>如果你有不需要权限的角色，不需要将它们列入[roles]区域，仅仅在 [users]区域定义角色名就可以创建它们。</p>
+<h4 id="urls"><a href="#urls" class="headerlink" title="[urls]"></a>[urls]</h4><p>Web章节讨论</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Shiro/">Shiro</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Shiro/">Shiro</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/19/shiro%E7%B3%BB%E5%88%97-shiro%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B/">
+                        <span class="hidden-mobile">shiro系列-shiro入门示例</span>
+                        <span class="visible-mobile">次の記事</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "shiro系列-1.总览&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
