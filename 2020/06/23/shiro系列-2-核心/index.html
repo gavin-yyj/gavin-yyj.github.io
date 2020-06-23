@@ -215,7 +215,8 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="1、认证"><a href="#1、认证" class="headerlink" title="1、认证"></a>1、认证</h1><p>认证（Authentication）：身份验证的过程–也就是证明一个用户的真实身份。为了证明用户的身份，需要提供系统可以理解和相信的身份信息【principals】和证据【credentials】。</p>
+              <p>[TOC]</p>
+<h1 id="1、认证"><a href="#1、认证" class="headerlink" title="1、认证"></a>1、认证</h1><p>认证（Authentication）：身份验证的过程–也就是证明一个用户的真实身份。为了证明用户的身份，需要提供系统可以理解和相信的身份信息【principals】和证据【credentials】。</p>
 <ul>
 <li>Principals（身份）是Subject的“标识属性”，可以是任何与Subject相关的标识，通常用用户名或者邮件地址来作为标识。</li>
 <li>Credentials（证明）：通常是只有Subject直到的机密内容，用来证明他们真正拥有所需的身份，一般有密码，指纹，X.509证书等。</li>
@@ -238,7 +239,7 @@ currentUser.login(token);</code></pre></div>
 <h2 id="Logging-Out-退出登录"><a href="#Logging-Out-退出登录" class="headerlink" title="Logging Out 退出登录"></a>Logging Out 退出登录</h2><p>与验证相对的是释放所有已知的身份信息，当Subject与程序不再交互了，可以调用Subject.logout（）来丢掉所有的身份信息。</p>
 <div class="hljs"><pre><code class="hljs java">currentUser.logout();<span class="hljs-comment">//清除验证信息，使session失效</span></code></pre></div>
 <p>当调用logout，任何现存的session将变得不可用并且所有的身份信息将消失。<br>注意：因为在web程序中记住身份信息往往使用cookies，而cookies只能在Response提交时才能被删除，所以强烈要求在为最终用户调用subject.logout()之后立即将用户引到到一个新页面，确保任何与安全相关的cookies如期删除。</p>
-<h2 id="认证序列"><a href="#认证序列" class="headerlink" title="认证序列"></a>认证序列</h2><p>现在我们看看当一个验证发生时，Shiro内部发生了什么？<br><strong>第1步</strong>：程序代码调用Subject.login方法，向AuthenticationToken（认证令牌）实例的构造函数传递用户的身份和证明；<br><strong>第2步</strong>：Subject实例，通常是一个DelegatingSubject（或其子类）通过调用SecurityManager.login(token)将这个令牌转交给程序的SecurityManager。<br><strong>第3步</strong>：ecurityManager，基本的“安全伞”组件，得到令牌并通过调用 authenticator.authenticate(token)简单地将其转交给它内部的 Authenticator 实例，大部分情况下是一个 ModularRealmAuthenticator 实例，用来支持在验证过程中协调一个或多个Realm实例。<br><strong>第4步</strong>：如果程序配置了多个Realm，ModularRealmAuthenticator实例将使用其配置的AuthenticationStrategy开始一个或多个Realm身份验证的尝试。在Realm被验证调用的整个过程中，AuthenticationStrategy被调用用来回应每个Realm的结果。<br>注意：如果只有一个Realm被配置，则不需要AuthenticationStrategy。<br><strong>第5步</strong>：每一个配置的Realm都被检验看其是否支持提交的AuthenticationToken，如果支持，则该Realm的<code>getAuthenticationInfo</code>方法随着提交的令牌被调用，getAuthenticationInfo方法为特定的Realm提供一次有效的独立的验证尝试。</p>
+<h2 id="认证序列"><a href="#认证序列" class="headerlink" title="认证序列"></a>认证序列</h2><p>现在我们看看当一个验证发生时，Shiro内部发生了什么？<br><strong>第1步</strong>：程序代码调用Subject.login方法，向AuthenticationToken（认证令牌）实例的构造函数传递用户的身份和证明；<br><strong>第2步</strong>：Subject实例，通常是一个<strong>DelegatingSubject</strong>（或其子类）通过调用<code>SecurityManager.login(token)</code>将这个令牌转交给程序的SecurityManager。<br><strong>第3步</strong>：SecurityManager，基本的“安全伞”组件，得到令牌并通过调用 authenticator.authenticate(token)简单地将其转交给它内部的 Authenticator 实例，大部分情况下是一个 <strong>ModularRealmAuthenticator</strong> 实例，用来支持在验证过程中协调一个或多个Realm实例。<br><strong>第4步</strong>：如果程序配置了多个Realm，ModularRealmAuthenticator实例将使用其配置的AuthenticationStrategy开始一个或多个Realm身份验证的尝试。在Realm被验证调用的整个过程中，AuthenticationStrategy被调用用来回应每个Realm的结果。<br>注意：如果只有一个Realm被配置，则不需要AuthenticationStrategy。<br><strong>第5步</strong>：每一个配置的Realm都被检验看其是否支持提交的AuthenticationToken，如果支持，则该Realm的<code>getAuthenticationInfo</code>方法随着提交的令牌被调用，getAuthenticationInfo方法为特定的Realm提供一次有效的独立的验证尝试。</p>
 <h3 id="Authenticator"><a href="#Authenticator" class="headerlink" title="Authenticator"></a>Authenticator</h3><p>如果希望用自定义的Authenticator实现配置SecurityManager，可以在shiro.ini中做这件事：</p>
 <div class="hljs"><pre><code class="hljs ini"><span class="hljs-section">[main]</span>
 ...
@@ -255,7 +256,7 @@ currentUser.login(token);</code></pre></div>
 <span class="hljs-attr">securityManager.authenticator.authenticationStrategy</span> = <span class="hljs-variable">$authcStrategy</span></code></pre></div>
 
 <p>自定义的 AuthenticationStrategy</p>
-<p>如果你希望创建你自己的 AuthenticationStrategy 实现，你可以使用 org.apache.shiro.authc.pam.AbstractAuthenticationStrategy 作为起始点。AbstractAuthenticationStrategy 类自动实现 ‘绑定（bundling）’/聚集（aggregation）行为将来自于每个Realm 的结果收集到一个 AuthenticationInfo 实例中。</p>
+<p>如果你希望创建你自己的 AuthenticationStrategy 实现，你可以使用 <code>org.apache.shiro.authc.pam.AbstractAuthenticationStrategy</code>作为起始点。AbstractAuthenticationStrategy 类自动实现 ‘绑定（bundling）’/聚集（aggregation）行为将来自于每个Realm 的结果收集到一个 AuthenticationInfo 实例中。</p>
 <h2 id="Realm-验证的顺序"><a href="#Realm-验证的顺序" class="headerlink" title="Realm 验证的顺序"></a>Realm 验证的顺序</h2><p>Realm 交互的 ModularRealmAuthenticator 按迭代（iteration）顺序执行。</p>
 <p>ModularRealmAuthenticator 可以访问为 SecurityManager 配置的 Realm 实例，当尝试一次验证时，它将在集合中遍历，支持对提交的 AuthenticationToken 处理的每个 Realm 都将执行 Realm 的 getAuthenticationInfo 方法。</p>
 <p>我们也可以通过shiro.ini配置文件来按照我们自己期望的顺序来配置Realm，Realm将按照他们在INI文件中定义的顺序执行。</p>
@@ -429,9 +430,12 @@ openBankAccount();</code></pre></div>
     Subject currentUser = SecurityUtils.getSubject();
     <span class="hljs-keyword">if</span> (!subject.hasRole(<span class="hljs-string">"administrator"</span>)) &#123;
         <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> AuthorizationException(...);
-    &#125;</code></pre></div>
-<div class="hljs"><pre><code>//Subject 确保是一个 &apos;administrator&apos;
-...</code></pre></div><p>}</p>
+    &#125;
+    <span class="hljs-comment">//Subject 确保是一个 'administrator'</span>
+...
+&#125;</code></pre></div>
+
+
 <h4 id="RequiresUser-注解"><a href="#RequiresUser-注解" class="headerlink" title="RequiresUser 注解"></a>RequiresUser 注解</h4><p>RequiresUser 注解表示要求在访问或调用被注解的类/实例/方法时，当前 Subject 是一个程序用户，“程序用户”是一个已知身份的 Subject，或者在当前 Session 中被验证过或者在以前的 Session 中被记住过。</p>
 <p>例如：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@RequiresUser</span>
@@ -526,7 +530,6 @@ realm.permissionResolver = $permissionResolver
 <p>5.如果证据不符，抛出 AuthenticationException异常。</p>
 <p>这是所有Realm getAuthenticationInfo 实现的最高级别工作流，Realm 在这个过程中可以自由做自己想做的事情，比如记录日志，修改数据，以及其他，只要对于存储的数据和验证尝试来讲是合理的就行。</p>
 <p>仅有一件事情是必须的，如果 credentials （凭证）和给定的 principal （主要信息）匹配，需要返回一个非空的 AuthenticationInfo 实例，用来表示来自数据源的 Subject 账户信息。</p>
-<p>节约时间</p>
 <p>直接实现 Realm 接口也许需要时间并容易出错，大部分用户选择继承 AuthorizingRealm 虚拟类，这个类实现了常用的认证和授权工作流，这会节省你的时间而且不易出错。</p>
 <h3 id="凭证匹配"><a href="#凭证匹配" class="headerlink" title="凭证匹配"></a>凭证匹配</h3><p>在上述 realm 认证工作流中，一个 Realm 必须较验 Subject 提交的凭证（如密码）是否与存储在数据中的凭证相匹配，如果匹配，验证成功，系统保留已认证的终端用户身份。</p>
 <p>检查提交的凭证是否与后台存储数据相匹配是每一个 Realm 的责任而不是 Authenticator 的责任，每一个 Realm 都具备与凭证形式及存储密切相关的技能，可以执行详细的凭证比对，而 Authenticator 只是一个普通的工作流组件。</p>
@@ -635,7 +638,7 @@ sessionDAO = org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO
 sessionDAO.activeSessionsCacheName = myname
 ...</code></pre></div>
 <p>只要确保在 ehcahe.xml 中有一项与名字匹配且你已经配置好了如上所述的 overflowToDisk=”true” 和 eternal=”true”。</p>
-<h2 id="会话集群"><a href="#会话集群" class="headerlink" title="会话集群"></a>会话集群</h2><p>Apache Shiro 会话能力一个非常令人兴奋的事情是,你可以原生的集群 Subject 会话,不需要再担心你的容器环境。也就是说,如果您使用 Shiro 的原生会话并配置一个会话集群,可以,说,部署到 Jetty 和 Tomcat 开发环境,JBoss 或 Geronimo 的生产环境,或任何其他环境，不用担心容器/特定于环境的集群安装或配置。 Shiro 会话集群配置一次，无论您的部署环境如何，都能正常运行</p>
+<h2 id="会话集群"><a href="#会话集群" class="headerlink" title="会话集群"></a>会话集群</h2><p>Apache Shiro 会话能力一个非常令人兴奋的事情是,你可以原生的集群 Subject 会话,不需要再担心你的容器环境。也就是说,如果您使用 Shiro 的原生会话并配置一个会话集群,可以部署到 Jetty 和 Tomcat 开发环境,JBoss 或 Geronimo 的生产环境,或任何其他环境，不用担心容器/特定于环境的集群安装或配置。 Shiro 会话集群配置一次，无论您的部署环境如何，都能正常运行</p>
 <p>因为 Shiro 的基于 pojo 的 n 层体系结构,使会话集群的集群机制非常简单,使会话持久性的水平。 也就是说,如果您配置集群 SessionDAO ,DAO 可以与集群交互机制, Shiro 的 SessionManager 不需要知道集群的问题。</p>
 <h2 id="Sessions和Subject状态"><a href="#Sessions和Subject状态" class="headerlink" title="Sessions和Subject状态"></a>Sessions和Subject状态</h2><h3 id="有状态"><a href="#有状态" class="headerlink" title="有状态"></a>有状态</h3><p>默认地，Shiro 的SecurityManager 实现使用一个Subject 的Session 作为一种策略来为接下来的引用存储Subject 的身份 ID（PrincipalCollection）和验证状态（subject.isAuthenticated()）。这通常发生在一个Subject 登录后或当一个 Subject 的身份 ID 通过Remember 服务被发现后。</p>
 <p>这个默认的方法有几个好处:</p>
@@ -750,7 +753,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
                     
                       <a href="/2020/06/22/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day05/">
                         <span class="hidden-mobile">谷粒商城-Day05</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -783,7 +786,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -810,7 +813,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -819,7 +822,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

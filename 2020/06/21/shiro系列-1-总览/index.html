@@ -215,7 +215,8 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h1><h2 id="什么是shiro？"><a href="#什么是shiro？" class="headerlink" title="什么是shiro？"></a>什么是shiro？</h2><p>Apache Shiro是一个功能强大、灵活的，开源的安全框架。它可以干净利落地处理<strong>身份验证</strong>、<strong>授权</strong>、<strong>企业会话管理</strong>和<strong>加密</strong>。<br>shiro能做什么？</p>
+              <p>[TOC]</p>
+<h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h1><h2 id="什么是shiro？"><a href="#什么是shiro？" class="headerlink" title="什么是shiro？"></a>什么是shiro？</h2><p>Apache Shiro是一个功能强大、灵活的，开源的安全框架。它可以干净利落地处理<strong>身份验证</strong>、<strong>授权</strong>、<strong>企业会话管理</strong>和<strong>加密</strong>。<br>shiro能做什么？</p>
 <ul>
 <li>验证身份</li>
 <li>用户访问权限控制，比如：<ul>
@@ -375,12 +376,12 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
 <p>执行mvn compile exec:java 可以看到程序成功的运行（由于 Shiro 默认在 debug 或更底层才记录日志，所以你不会看到任何 Shiro 的日志输出–只要运行时没有错误提示，你就可以知道已经成功了）。</p>
 <p>上面所加入的代码做了下面的事情：</p>
 <p>使用 Shiro 的 IniSecurityManagerFactory 加载了我们的shiro.ini 文件，该文件存在于 classpath 根目录里。这个执行动作反映出 shiro 支持 Factory Method Design Pattern（工厂模式）。classpath：资源的指示前缀，告诉 shiro 从哪里加载 ini 文件（其它前缀，如 url:和 file: 也被支持）。<br>2.factory.getInstance() 方法被调用，该方法分析 INI 文件并根据配置文件返回一个 SecurityManager 实例。</p>
-<p>3.在这个简单示例中，我们将 SecurityManager 设置成了static (memory) singleton，可以通过 JVM 访问，注意如果你在一个 JVM 中加载多个使用 shiro 的程序时不要这样做，在这个简单示例中，这是可以的，但在其它成熟的应用环境中，通常会将 SecurityManager 放在程序指定的存储中（如在 web 中的 ServletContexct 或者 Spring、Guice、 JBoss DI 容器实例）中。</p>
+<p>3.在这个简单示例中，我们将 SecurityManager 设置成了static (memory) singleton，可以通过 JVM 访问，注意如果你在一个 JVM 中加载多个使用 shiro 的程序时不要这样做，在这个简单示例中，这是可以的，但在其它成熟的应用环境中，通常会将 SecurityManager 放在程序指定的存储中（如在 web 中的 ServletContext 或者 Spring、Guice、 JBoss DI 容器实例）中。</p>
 <h3 id="执行安全操作"><a href="#执行安全操作" class="headerlink" title="执行安全操作"></a>执行安全操作</h3><p>准备好SecurityManager后，可以开始进行我们真正关心的事情了–执行安全操作。<br>其实也就是两个问题：“谁是当前的用户？”，“当前用户是否允许做某件事？”，Shiro的API给当前用户定义了一个新的名词，即“<strong>Subject</strong>”。<br>在几乎所有的环境中，都可以通过如下语句得到当前用户的信息：</p>
 <div class="hljs"><pre><code class="hljs java">Subject currentUser = SecurityUtils.getSubject();</code></pre></div>
 <p>Subject是一个安全术语，意思是“当前运行用户的指定安全视图”，不仅仅局限于一个人，也可以是第三方进程、时钟守护任务、守护进程账户或者其他，可以简单理解为“当前和软件进行交互的事件”。</p>
 <p>在一个独立的程序中调用 getSubject() 会在程序指定位置返回一个基于用户数据的 Subject，在服务器环境（如 web 程序）中，它将获取一个和当前线程或请求相关的基于用户数据的 Subject。</p>
-<p>在取得了Subject后，我们可以利用它做点什么呢？比如：赚点钱~哈哈，开个玩笑哈</p>
+<p>在取得了Subject后，我们可以利用它做点什么呢？</p>
 <p>如果你想在应用程序的会话期内给用户提供一些信息，那么我们可以获得他们的session。</p>
 <div class="hljs"><pre><code class="hljs java">Session session = currentUser.getSession();
 session.setAttribute( <span class="hljs-string">"someKey"</span>, <span class="hljs-string">"aValue"</span> );</code></pre></div>
@@ -544,28 +545,51 @@ log.info( <span class="hljs-string">"User ["</span> + currentUser.getPrincipal()
 </ul>
 <h2 id="详细架构"><a href="#详细架构" class="headerlink" title="详细架构"></a>详细架构</h2><p><img src="https://img-blog.csdnimg.cn/20200619225243989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
-<li><strong>Subject</strong>：正在与软件交互的一个特定的实体“view”（用户、第三方服务、时钟守护任务等）</li>
-<li><strong>SecurityManager</strong>：shiro的核心，用来协调它管理的组件使之平稳地一起工作，同时它也管理着Shiro中每一个程序用户的视图，所以它知道每个用户如何执行安全操作。</li>
-<li><strong>Authenticator</strong>：Authenticator是负责执行用户的身份验证（登录）并对其作出反应的组件。 当用户尝试登录时，该逻辑由身份验证器执行。 身份验证器知道如何与一个或多个存储相关用户/帐户信息的领域进行协调。 从这些领域获得的数据用于验证用户的身份，以确保用户确实是他们所说的真实身份。</li>
-<li><strong>Authentication Strategy</strong>：如果配置了多个Realm，AuthenticationStrategy将会协调Realm，以确定在一个身份验证成功或失败的条件。（比如：如果在一个方面验证成功了，但是其他方面有验证失败了，那么这次尝试是否成功，由Authentication Strategy说了算）</li>
-<li><strong>Authorizer</strong>：Authorizer是负责程序中用户访问控制的组件，它是最终判断一个用户是否允许做某件事的途径，像Authenticator一样，Authorizer也知道如何通过协调多种后台数据源来访问角色和权限信息，Authorizer利用这些信息来准确判断一个用户是否可以执行给定的动作。</li>
-<li><strong>SessionManager</strong>：SessionManager知道如何创建并管理用户Session生命周期，从而在所有环境中为用户提供一个强有力的Session体验。Shiro 将使用现有的session（如Servlet Container），但如果环境中没有，比如在一个独立的程序或非 web 环境中，它将使用它自己建立的 session 提供相同的作用，sessionDAO 用来使用任何数据源使 session 持久化。</li>
-<li><strong>SessionDAO</strong>：SessionDAO代表SessionManager执行Session持久（CRUD）动作，它允许任何存储的数据连接到session管理基础上。</li>
-<li><strong>CacheManager</strong>：CacheManager为Shiro的其他组件提供创建缓存实例和管理缓存生命周期的功能，利用缓存来提高访问效率，目前主流开源或企业级缓存框架都可以集成到Shiro中。</li>
-<li><strong>Cryptography</strong>：Shiro的crypto包包含了易用且易懂的加密方式，Hashes(即digests)和不同的编码实现。</li>
-<li><strong>Realms</strong>：Realm 是 shiro 和你的应用程序安全数据之间的“桥”或“连接”，当实际要与安全相关的数据进行交互如用户执行身份认证（登录）和授权验证（访问控制）时，shiro 从程序配置的一个或多个Realm 中查找这些数据，你需要配置多少个 Realm 便可配置多少个 Realm（通常一个数据源一个），shiro 将会在认证和授权中协调它们。<h2 id="SecurityManager"><a href="#SecurityManager" class="headerlink" title="SecurityManager"></a>SecurityManager</h2>因为 Shiro API 鼓励以 Subject 为中心的开发方式，大部分开发人员将很少会和 SecurityManager 直接交互（尽管框架开发人员也许发现它非常有用），尽管如此，知道 SecurityManager 如何工作，特别是当在一个程序中进行配置的时候，是非常重要的。<h2 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h2>程序中SecurityManager执行操作并且管理所有程序用户的状态，在Shiro基础的SecurityManager实现中，包含以下内容：</li>
-<li>认证（Authentication）</li>
-<li>授权（Authorization）</li>
-<li>会话管理（Session Management）</li>
-<li>缓存管理（Cache Management）</li>
-<li>Realm协调（Realm coordination）</li>
-<li>事件传导（Event propagation ）</li>
-<li>“RememberMe” 服务（”Remember Me” Services）</li>
-<li>建立Subject(Subject creation)</li>
-<li>退出登录（Logout）</li>
-<li>…</li>
-<li>以上这些功能都放在一个单独的组件中进行管理，为了实现配置的简单、灵活、机动性，Shiro的实现在设计上都是高度模块化的，SecurityManager类及其实现类主要充当轻量级的“容器”组件功能，几乎将所有的行为委托给嵌套/包装的组件，这里可以参考上面的架构图。<br>当组件执行逻辑的时候，SecurityManager知道如何以及何时去协调组件做出正确的动作。<br>SecurityManager 和 JavaBean 兼容，这允许你（或者配置途径）通过标准的JavaBean 访问/设置方法（get/set）很容易地定制插件，这意味着 Shiro 模块可以根据用户行为转化成简易的配置。</li>
+<li><p><strong>Subject</strong>：正在与软件交互的一个特定的实体“view”（用户、第三方服务、时钟守护任务等）</p>
+</li>
+<li><p><strong>SecurityManager</strong>：shiro的核心，用来协调它管理的组件使之平稳地一起工作，同时它也管理着Shiro中每一个程序用户的视图，所以它知道每个用户如何执行安全操作。</p>
+</li>
+<li><p><strong>Authenticator</strong>：Authenticator是负责执行用户的身份验证（登录）并对其作出反应的组件。 当用户尝试登录时，该逻辑由身份验证器执行。 身份验证器知道如何与一个或多个存储相关用户/帐户信息的领域进行协调。 从这些领域获得的数据用于验证用户的身份，以确保用户确实是他们所说的真实身份。</p>
+</li>
+<li><p><strong>Authentication Strategy</strong>：如果配置了多个Realm，AuthenticationStrategy将会协调Realm，以确定在一个身份验证成功或失败的条件。（比如：如果在一个方面验证成功了，但是其他方面有验证失败了，那么这次尝试是否成功，由Authentication Strategy说了算）</p>
+</li>
+<li><p><strong>Authorizer</strong>：Authorizer是负责程序中用户访问控制的组件，它是最终判断一个用户是否允许做某件事的途径，像Authenticator一样，Authorizer也知道如何通过协调多种后台数据源来访问角色和权限信息，Authorizer利用这些信息来准确判断一个用户是否可以执行给定的动作。</p>
+</li>
+<li><p><strong>SessionManager</strong>：SessionManager知道如何创建并管理用户Session生命周期，从而在所有环境中为用户提供一个强有力的Session体验。Shiro 将使用现有的session（如Servlet Container），但如果环境中没有，比如在一个独立的程序或非 web 环境中，它将使用它自己建立的 session 提供相同的作用，sessionDAO 用来使用任何数据源使 session 持久化。</p>
+</li>
+<li><p><strong>SessionDAO</strong>：SessionDAO用于将session持久化到数据库，实现对其增删改查。</p>
+</li>
+<li><p><strong>CacheManager</strong>：CacheManager为Shiro的其他组件提供创建缓存实例和管理缓存生命周期的功能，利用缓存来提高访问效率，目前主流开源或企业级缓存框架都可以集成到Shiro中。</p>
+</li>
+<li><p><strong>Cryptography</strong>：Shiro的crypto包包含了易用且易懂的加密方式，Hashes(即digests)和不同的编码实现。</p>
+</li>
+<li><p><strong>Realms</strong>：Realm 是 shiro 和你的应用程序安全数据之间的“桥”或“连接”，当实际要与安全相关的数据进行交互如用户执行身份认证（登录）和授权验证（访问控制）时，shiro 从程序配置的一个或多个Realm 中查找这些数据，你需要配置多少个 Realm 便可配置多少个 Realm（通常一个数据源一个），shiro 将会在认证和授权中协调它们。</p>
+<h2 id="SecurityManager"><a href="#SecurityManager" class="headerlink" title="SecurityManager"></a>SecurityManager</h2><p>因为 Shiro API 鼓励以 Subject 为中心的开发方式，大部分开发人员将很少会和 SecurityManager 直接交互（尽管框架开发人员也许发现它非常有用），尽管如此，知道 SecurityManager 如何工作，特别是当在一个程序中进行配置的时候，是非常重要的。</p>
+<h2 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h2><p>程序中SecurityManager执行操作并且管理所有程序用户的状态，在Shiro基础的SecurityManager实现中，包含以下内容：</p>
+</li>
+<li><p>认证（Authentication）</p>
+</li>
+<li><p>授权（Authorization）</p>
+</li>
+<li><p>会话管理（Session Management）</p>
+</li>
+<li><p>缓存管理（Cache Management）</p>
+</li>
+<li><p>Realm协调（Realm coordination）</p>
+</li>
+<li><p>事件传导（Event propagation ）</p>
+</li>
+<li><p>“RememberMe” 服务（”Remember Me” Services）</p>
+</li>
+<li><p>建立Subject(Subject creation)</p>
+</li>
+<li><p>退出登录（Logout）</p>
+</li>
+<li><p>…</p>
+</li>
 </ul>
+<p>   以上这些功能都放在一个单独的组件中进行管理，为了实现配置的简单、灵活、机动性，Shiro的实现在设计上都是高度模块化的，SecurityManager类及其实现类主要充当轻量级的“容器”组件功能，几乎将所有的行为委托给嵌套/包装的组件，这里可以参考上面的架构图。</p>
+<p>   当组件执行逻辑的时候，SecurityManager知道如何以及何时去协调组件做出正确的动作。<br>   SecurityManager 和 JavaBean 兼容，这允许你（或者配置途径）通过标准的JavaBean 访问/设置方法（get/set）很容易地定制插件，这意味着 Shiro 模块可以根据用户行为转化成简易的配置。</p>
 <h1 id="4-配置"><a href="#4-配置" class="headerlink" title="4 配置"></a>4 配置</h1><p>Shiro 的 SecurityManager 的实现和其所依赖的组件都是 JavaBean，所以可以用多种形式对 Shiro 进行配置，比如XML（Spring, JBoss, Guice, 等等），YAML, JSON, Groovy Builder markup等，INI 只是 Shiro 一种最基本的配置方式，使得其可以在任何环境中进行配置。</p>
 <h2 id="在程序中配置"><a href="#在程序中配置" class="headerlink" title="在程序中配置"></a>在程序中配置</h2><p>伪代码如下：</p>
 <div class="hljs"><pre><code class="hljs java">Realm realm = <span class="hljs-comment">//实例化或获得一个Realm的实例。我们将稍后讨论Realm。</span>
@@ -585,11 +609,11 @@ SessionDAO sessionDAO = <span class="hljs-keyword">new</span> CustomSessionDAO()
 <p>使用这些函数，你可以配置 SecurityManager 视图（graph）中的任何一部分。</p>
 <p>虽然在程序中配置很简单，但它并不是我们现实中配置的完美解决方案。在几种情况下这种方法可能并不适合你的程序：</p>
 <ul>
-<li><p>它需要你确切知道并实例化一个直接实现（direct<br>implementation），然而更好的做法是你并不需要知道这些实现也不需要知道从哪里找到它们。</p>
+<li><p>它需要你确切知道并实例化一个直接实现（direct implementation），然而更好的做法是你并不需要知道这些实现也不需要知道从哪里找到它们。</p>
 </li>
 <li><p>因为JAVA类型安全的特性，你必须对通过 get* 获取的对象进行强制类型转换，这么多强制转换非常的丑陋、累赘并且会和你的类紧耦合。</p>
 </li>
-<li><p>SecurityUtils.setSecurityManager 方法会将 SecurityManager<br>实例化为虚拟机的单独静态实例，在大多数程序中没有问题，但如果有多个使用 Shiro 的程序在同一个 JVM 中运行时，各程序有自己独立的实例会更好些，而不是共同引用一块静态内存。 </p>
+<li><p>SecurityUtils.setSecurityManager 方法会将 SecurityManager实例化为虚拟机的单独静态实例，在大多数程序中没有问题，但如果有多个使用 Shiro 的程序在同一个 JVM 中运行时，各程序有自己独立的实例会更好些，而不是共同引用一块静态内存。 </p>
 </li>
 <li><p>改变配置就需要重新编译你的程序。</p>
 </li>
@@ -601,14 +625,14 @@ SessionDAO sessionDAO = <span class="hljs-keyword">new</span> CustomSessionDAO()
 SecurityManager securityManager = factory.getInstance();
 SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
 
-<h4 id="通过INI实例创建SecurityManager"><a href="#通过INI实例创建SecurityManager" class="headerlink" title="通过INI实例创建SecurityManager"></a>通过INI实例创建SecurityManager</h4><p>INI 配置可以通过org.apache.shiro.config.Ini 类用程序方式创建，这个 INI 类类似于 JDK 的java.util.Properties类，但支持通过section 名分割。如：</p>
+<h4 id="通过INI实例创建SecurityManager"><a href="#通过INI实例创建SecurityManager" class="headerlink" title="通过INI实例创建SecurityManager"></a>通过INI实例创建SecurityManager</h4><p>INI 配置可以通过<code>org.apache.shiro.config.Ini</code>类用程序方式创建，这个 INI 类类似于 JDK 的<code>java.util.Properties</code>类，但支持通过section 名分割。如：</p>
 <div class="hljs"><pre><code class="hljs java">Ini ini = <span class="hljs-keyword">new</span> Ini();
 <span class="hljs-comment">//populate the Ini instance as necessary</span>
 ...
 Factory&lt;SecurityManager&gt; factory = <span class="hljs-keyword">new</span> IniSecurityManagerFactory(ini);
 SecurityManager securityManager = factory.getInstance();
 SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
-<p>接下里解决如何定义一个Shiro INI配置文件的问题</p>
+<p>接下来解决如何定义一个Shiro INI配置文件的问题</p>
 <h3 id="INI-Sections"><a href="#INI-Sections" class="headerlink" title="INI Sections"></a>INI Sections</h3><p>INI　基于文本配置，在独立命名的区域内通过成对的键名/键值组成。键名在每个区域内必须唯一，但是在整个配置文件中并不要求唯一，每个区域（session）可以看作是一个独立的Properties定义。<br>注释行可以用“#”或“;”标识，下面是一个关于shiro的示例。</p>
 <div class="hljs"><pre><code class="hljs ini"><span class="hljs-comment"># =======================</span>
 <span class="hljs-comment"># Shiro INI configuration</span>
@@ -646,8 +670,8 @@ SecurityUtils.setSecurityManager(securityManager);</code></pre></div>
 <span class="hljs-attr">myRealm.credentialsMatcher</span> = <span class="hljs-variable">$sha256Matcher</span>
 <span class="hljs-comment"># 嵌套属性</span>
 <span class="hljs-attr">securityManager.sessionManager.globalSessionTimeout</span> = <span class="hljs-number">1800000</span></code></pre></div>
-<p><strong>1、定义一个对象</strong><br>这一行实例化了一个类型为 com.company.shiro.realm.MyRealm 的对象实例并且使对象使用 myRealm 作为名称以便于将来引用和配置。</p>
-<p>如果对象实例化时实现了 org.apache.shiro.util.Nameable 接口，Nameable.setName方法将被以该名（在此例中为myRealm）命名的对象调用。</p>
+<p><strong>1、定义一个对象</strong><br>这一行实例化了一个类型为 <code>com.company.shiro.realm.MyRealm</code>的对象实例并且使对象使用 myRealm 作为名称以便于将来引用和配置。</p>
+<p>如果对象实例化时实现了 <code>org.apache.shiro.util.Nameable</code>接口，Nameable.setName方法将被以该名（在此例中为myRealm）命名的对象调用。</p>
 <p><strong>2、设置对象属性</strong><br>上面代码等价于</p>
 <div class="hljs"><pre><code class="hljs ini">myRealm.setConnectionTimeout(30000);
 myRealm.setUsername("jsmith");
@@ -676,7 +700,7 @@ myRealm.setPassword("secret");</code></pre></div>
 <div class="hljs"><pre><code class="hljs text">myRealm &#x3D; com.company.security.MyRealm
 ...
 myRealm &#x3D; com.company.security.DatabaseRealm</code></pre></div>
-<p>这样的结果是 myRealm 是 com.company.security.DatabaseRealm 实例而前面的实例不会被使用（会作为垃圾回收）。<br>3、默认Default SecurityManager<br>securityManager实例是特殊的–它已经为你实例化过了并且准备好了，所以你并不需要知道指定的实例化SecurityManager的实现类。</p>
+<p>这样的结果是 myRealm 是<code>com.company.security.DatabaseRealm</code> 实例而前面的实例不会被使用（会作为垃圾回收）。<br>3、默认Default SecurityManager<br>securityManager实例是特殊的–它已经为你实例化过了并且准备好了，所以你并不需要知道指定的实例化SecurityManager的实现类。</p>
 <p>当然，如果你确实想指定你自己的实现类，你可以像上面的覆盖实例那样定义你自己的实现：</p>
 <div class="hljs"><pre><code class="hljs text">securityManager &#x3D; com.company.security.shiro.MyCustomSecurityManager</code></pre></div>
 <p>当然，很少需要这样–Shiro 的 SecurityManager 实现可以按需求进行定制，你可能要问一下自己（或者用户群）你是否真的需要这样做。</p>
@@ -760,7 +784,7 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
                       <a href="/2020/06/21/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E-Day04/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">谷粒商城-Day04</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -769,7 +793,7 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
                     
                       <a href="/2020/06/19/shiro%E7%B3%BB%E5%88%97-shiro%E5%85%A5%E9%97%A8%E7%A4%BA%E4%BE%8B/">
                         <span class="hidden-mobile">shiro系列-shiro入门示例</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -802,7 +826,7 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -829,7 +853,7 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -838,7 +862,7 @@ goodguy &#x3D; winnebago:drive:eagle5</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
