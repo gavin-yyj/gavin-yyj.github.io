@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring Security官方文档总结 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-06-23 23:50">
+      June 23, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      12.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      143
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-引导"><a href="#1-引导" class="headerlink" title="1. 引导"></a>1. 引导</h1><h3 id="跨站请求伪造（CSRF）"><a href="#跨站请求伪造（CSRF）" class="headerlink" title="跨站请求伪造（CSRF）"></a>跨站请求伪造（CSRF）</h3><p><strong>什么是跨站请求伪造？</strong></p>
+<p>简单来说，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站，并运行一些操作（如发邮件，发消息，转账等），由于浏览器曾经认证过该网站，所以被访问的网站会认为是真正的用户操作而去运行，这利用了web中用户身份验证的一个漏洞：<strong>简单的身份验证只能保证请求来自某个用户的浏览器，而不能保证请求本身是用户资源发出的。</strong></p>
+<p><strong>产生的原因：</strong><br>CSRF攻击的可能原因是受害者网站的HTTP请求与攻击者网站的请求完全相同。这意味着没有办法拒绝来自邪恶网站的请求并允许来自银行网站的请求。</p>
+<p><strong>如何防御？</strong><br>为了防御CSRF攻击，我们需要确保恶意站点无法提供请求中的某些内容，因此我们可以区分这两个请求。<br>Spring提供了两种机制来防御CSRF攻击：</p>
+<ul>
+<li>同步器令牌模式</li>
+<li>在会话Cookie上指定SameSite属性</li>
+</ul>
+<h4 id="同步器令牌模式"><a href="#同步器令牌模式" class="headerlink" title="同步器令牌模式"></a>同步器令牌模式</h4><p>该解决方案是为了确保我们每个Http请求除了我们的会话cookie外，还必须在HTTP请求中包含一个安全的，随机生成的值，称为CSRF令牌。<br>提交HTTP请求时，服务器必须查找预期的CSRF令牌，并将其与HTTP请求中的实际CSRF令牌进行比较。如果值不匹配，则应拒绝HTTP请求。<br>此外，实际的CSRF令牌应该位于浏览器不会自动包含的HTTP请求的一部分中。例如，在HTTP参数或HTTP header中要求实际的CSRF令牌能防止CSRF攻击。在cookie中要求实际CSRF令牌不起作用，因为浏览器会自动将cookie包含在HTTP请求中。<br>同时也不能在HTTP GET中包含随机令牌，因为这有可能导致令牌泄漏。</p>
+<h4 id="SameSite属性"><a href="#SameSite属性" class="headerlink" title="SameSite属性"></a>SameSite属性</h4><p>防止CSRF攻击的一种新兴方法是在cookie上指定SameSite属性。<br>Spring Security不直接控制session和cookie的创建，因此不提供对SameSite属性的支持。<br>这里也不做过多介绍，感兴趣的可以点击<a href="https://www.jianshu.com/p/66f77b8f1759" target="_blank" rel="noopener">这里</a>进行了解。</p>
+<h3 id="什么情况下使用CSRF保护"><a href="#什么情况下使用CSRF保护" class="headerlink" title="什么情况下使用CSRF保护"></a>什么情况下使用CSRF保护</h3><p>官方建议是对普通用户可能由浏览器处理的任何请求使用CSRF保护（即使你的应用程序是无状态的也可能会受到CSRF攻击）。如果仅创建非浏览器客户端使用的服务，则可能需要禁用CSRF保护。</p>
+<h1 id="2-Servlet安全性（全局角度）"><a href="#2-Servlet安全性（全局角度）" class="headerlink" title="2. Servlet安全性（全局角度）"></a>2. Servlet安全性（全局角度）</h1><h2 id="2-1-过滤器链（Filters）"><a href="#2-1-过滤器链（Filters）" class="headerlink" title="2.1 过滤器链（Filters）"></a>2.1 过滤器链（Filters）</h2><blockquote>
+<p>SpringSecurity 采用的是责任链的设计模式，它有一条很长的过滤器链。</p>
+</blockquote>
+<p>下面通过单个HTTP请求的处理程序的典型分层图来说明过滤器链的使用。<br><img src="https://img-blog.csdnimg.cn/20200517025709729.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="图1.FilterChain"><br>客户向应用程序发送一个请求，容器创建一个FilterChain，其中包含过滤器和Servlet，根据请求URI的路径处理HttpServletRequest。在Spring MVC应用程序中，Servlet是DispatcherServlet的一个实例。一个Servlet最多只能处理一个HttpServletRequest和HttpServletResponse，但是，可以使用多个过滤器来进行如下操作：</p>
+<ul>
+<li>阻止下游过滤器或Servlet被调用。在这个情况下，过滤器通常会编写HttpServletResponse</li>
+<li>修改下游过滤器和Servlet使用的HttpServletRequest或HttpServletResponse</li>
+</ul>
+<p>FilterChain的用法例子：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;
+    <span class="hljs-comment">// do something before the rest of the application</span>
+    chain.doFilter(request, response); <span class="hljs-comment">// invoke the rest of the application</span>
+    <span class="hljs-comment">// do something after the rest of the application</span>
+&#125;</code></pre></div>
+<p>由此可以看出，过滤器仅仅会对下游的过滤器和servlet带来影响，因此在实际代码编写中，尤其要考虑调用的先后顺序。</p>
+<h2 id="2-2-DelegatingFiterProxy（重要）"><a href="#2-2-DelegatingFiterProxy（重要）" class="headerlink" title="2.2 DelegatingFiterProxy（重要）"></a>2.2 DelegatingFiterProxy（重要）</h2><p>Spring提供了一个名为<strong>DelegatingFilterProxy</strong>的过滤器实现，它允许在Servlet容器的生命周期和Spring的ApplicationContext之间架桥。Servlet容器允许使用自己的标准注册过滤器，但它不知道Spring定义的bean。可以通过标准的Servlet容器机制注册DelegatingFilterProxy，但将所有工作委托给实现Filter的Spring Bean。<br><img src="https://img-blog.csdnimg.cn/20200517144639975.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="图2. DelegatingFilterProxy"><br>DelegatingFilterProxy 执行的伪代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain chain)</span> </span>&#123;
+    <span class="hljs-comment">// Lazily get Filter that was registered as a Spring Bean</span>
+    <span class="hljs-comment">// For the example in DelegatingFilterProxy delegate is an instance of Bean Filter0</span>
+    Filter delegate = getFilterBean(someBeanName);
+    <span class="hljs-comment">// delegate work to the Spring Bean</span>
+    delegate.doFilter(request, response);
+&#125;</code></pre></div>
+
+<p>首先思考一个问题，在SpringBoot中是如何注册 DelegatingFilterProxy 呢？</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration
+
+<span class="hljs-meta">@Bean</span>
+	<span class="hljs-meta">@ConditionalOnBean</span>(name = DEFAULT_FILTER_NAME)
+	<span class="hljs-function"><span class="hljs-keyword">public</span> DelegatingFilterProxyRegistrationBean <span class="hljs-title">securityFilterChainRegistration</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">			SecurityProperties securityProperties)</span> </span>&#123;
+		DelegatingFilterProxyRegistrationBean registration = <span class="hljs-keyword">new</span> DelegatingFilterProxyRegistrationBean(
+				DEFAULT_FILTER_NAME);
+		registration.setOrder(securityProperties.getFilter().getOrder());
+		registration.setDispatcherTypes(getDispatcherTypes(securityProperties));
+		<span class="hljs-keyword">return</span> registration;
+	&#125;</code></pre></div>
+<p>代码中DelegatingFilterProxyRegistrationBean 的作用便是在 SpringBoot 环境下通过 TomcatStarter 等内嵌容器启动类来注册一个 DelegatingFilterProxy。<br><strong>DelegatingFilterProxy 是 SpringSecurity 的“门面”，而它本身是 Spring Web 包中的类，并不是 SpringSecurity 中的类。这是因为 Spring 考虑到了多种使用场景，自然希望将侵入性降到最低，所以使用了这个委托代理类来代理真正的 SpringSecurityFilterChain。</strong>DelegatingFilterProxy 实现了 javax.servlet.Filter 接口，使得它可以作为一个 java web 的标准过滤器，其职责也很简单，只负责调用真正的 SpringSecurityFilterChain。<br>下面来看看它的源码（有删减）：</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.web.filter.DelegatingFilterProxy
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DelegatingFilterProxy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+
+   <span class="hljs-keyword">private</span> WebApplicationContext webApplicationContext;
+   <span class="hljs-comment">// springSecurityFilterChain</span>
+   <span class="hljs-keyword">private</span> String targetBeanName;
+   <span class="hljs-comment">// &lt;1&gt; 关键点</span>
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> Filter delegate;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Object delegateMonitor = <span class="hljs-keyword">new</span> Object();
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DelegatingFilterProxy</span><span class="hljs-params">(String targetBeanName, WebApplicationContext wac)</span> </span>&#123;
+      Assert.hasText(targetBeanName, <span class="hljs-string">"Target Filter bean name must not be null or empty"</span>);
+      <span class="hljs-keyword">this</span>.setTargetBeanName(targetBeanName);
+      <span class="hljs-keyword">this</span>.webApplicationContext = wac;
+      <span class="hljs-keyword">if</span> (wac != <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">this</span>.setEnvironment(wac.getEnvironment());
+      &#125;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initFilterBean</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+      <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.delegateMonitor) &#123;
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.delegate == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.targetBeanName == <span class="hljs-keyword">null</span>) &#123;
+               <span class="hljs-keyword">this</span>.targetBeanName = getFilterName();
+            &#125;
+            <span class="hljs-comment">// 获取Spring根应用程序上下文并尽早初始化委托，如果可能的话。如果根应用程序上下文将在此之后启动过滤器代理，我们将不得不求助于延迟初始化。</span>
+            WebApplicationContext wac = findWebApplicationContext();
+            <span class="hljs-keyword">if</span> (wac != <span class="hljs-keyword">null</span>) &#123;
+               <span class="hljs-keyword">this</span>.delegate = initDelegate(wac);
+            &#125;
+         &#125;
+      &#125;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain filterChain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+
+      <span class="hljs-comment">// 过滤器代理支持懒加载</span>
+      Filter delegateToUse = <span class="hljs-keyword">this</span>.delegate;
+      <span class="hljs-keyword">if</span> (delegateToUse == <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.delegateMonitor) &#123;
+            delegateToUse = <span class="hljs-keyword">this</span>.delegate;
+            <span class="hljs-keyword">if</span> (delegateToUse == <span class="hljs-keyword">null</span>) &#123;
+               WebApplicationContext wac = findWebApplicationContext();
+               delegateToUse = initDelegate(wac);
+            &#125;
+            <span class="hljs-keyword">this</span>.delegate = delegateToUse;
+         &#125;
+      &#125;
+
+      <span class="hljs-comment">// 让代理过滤器执行实际的过滤行为</span>
+      invokeDelegate(delegateToUse, request, response, filterChain);
+   &#125;
+
+   <span class="hljs-comment">// 初始化过滤器代理</span>
+   <span class="hljs-comment">// &lt;2&gt;</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> Filter <span class="hljs-title">initDelegate</span><span class="hljs-params">(WebApplicationContext wac)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+      Filter delegate = wac.getBean(getTargetBeanName(), Filter<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+      <span class="hljs-keyword">if</span> (isTargetFilterLifecycle()) &#123;
+         delegate.init(getFilterConfig());
+      &#125;
+      <span class="hljs-keyword">return</span> delegate;
+   &#125;
+
+
+   <span class="hljs-comment">// 调用代理过滤器	</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">invokeDelegate</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">         Filter delegate, ServletRequest request, ServletResponse response, FilterChain filterChain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+      delegate.doFilter(request, response, filterChain);
+   &#125;
+
+&#125;</code></pre></div>
+<p>通过阅读源码可以发现，整个DelegatingFilterProxy 类都是围绕delegate来处理，在初始化过滤器代理的时候，DelegatingFilterProxy 尝试去容器中获取名为 targetBeanName 的类，而 targetBeanName 的默认值便是 Filter 的名称，也就是 springSecurityFilterChain！说白了，DelegatingFilterProxy 只是名称和 targetBeanName 叫 springSecurityFilterChain，真正容器中的 Bean(name=”springSecurityFilterChain”) 其实并不是它，而是我们接下来将讲到的FilterChainProxy。</p>
+<h2 id="2-3-FilterChainProxy（重要）"><a href="#2-3-FilterChainProxy（重要）" class="headerlink" title="2.3 FilterChainProxy（重要）"></a>2.3 FilterChainProxy（重要）</h2><p>Spring Security的Servlet支持包含在FilterChainProxy中。FilterChainProxy是Spring Security提供的一个特殊的过滤器，它允许通过SecurityFilterChain委托给多个过滤器实例。因为FilterChainProxy是一个Bean，它通常被包装在一个DelegatingFilterProxy中。<br><img src="https://img-blog.csdnimg.cn/20200517145354762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="Figure 3. FilterChainProxy"></p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.web.FilterChainProxy
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FilterChainProxy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+   <span class="hljs-comment">// &lt;1&gt; 包含了多个 SecurityFilterChain</span>
+   <span class="hljs-keyword">private</span> List&lt;SecurityFilterChain&gt; filterChains;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FilterChainProxy</span><span class="hljs-params">(SecurityFilterChain chain)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>(Arrays.asList(chain));
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FilterChainProxy</span><span class="hljs-params">(List&lt;SecurityFilterChain&gt; filterChains)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>.filterChains = filterChains;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterPropertiesSet</span><span class="hljs-params">()</span> </span>&#123;
+      filterChainValidator.validate(<span class="hljs-keyword">this</span>);
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response,</span></span>
+<span class="hljs-function"><span class="hljs-params">         FilterChain chain)</span> <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+         doFilterInternal(request, response, chain);
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilterInternal</span><span class="hljs-params">(ServletRequest request, ServletResponse response,</span></span>
+<span class="hljs-function"><span class="hljs-params">         FilterChain chain)</span> <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+
+      FirewalledRequest fwRequest = firewall
+            .getFirewalledRequest((HttpServletRequest) request);
+      HttpServletResponse fwResponse = firewall
+            .getFirewalledResponse((HttpServletResponse) response);
+	  <span class="hljs-comment">// &lt;1&gt;	</span>
+      List&lt;Filter&gt; filters = getFilters(fwRequest);
+
+      <span class="hljs-keyword">if</span> (filters == <span class="hljs-keyword">null</span> || filters.size() == <span class="hljs-number">0</span>) &#123;
+         fwRequest.reset();
+         chain.doFilter(fwRequest, fwResponse);
+         <span class="hljs-keyword">return</span>;
+      &#125;
+
+      VirtualFilterChain vfc = <span class="hljs-keyword">new</span> VirtualFilterChain(fwRequest, chain, filters);
+      vfc.doFilter(fwRequest, fwResponse);
+   &#125;
+
+   <span class="hljs-comment">/**</span>
+<span class="hljs-comment">    * &lt;1&gt; 可能会有多个过滤器链，返回第一个和请求 URL 匹配的过滤器链</span>
+<span class="hljs-comment">    */</span>
+   <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;Filter&gt; <span class="hljs-title">getFilters</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+      <span class="hljs-keyword">for</span> (SecurityFilterChain chain : filterChains) &#123;
+         <span class="hljs-keyword">if</span> (chain.matches(request)) &#123;
+            <span class="hljs-keyword">return</span> chain.getFilters();
+         &#125;
+      &#125;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+   &#125;
+
+&#125;</code></pre></div>
+<p>看 FilterChainProxy 的名字就可以发现，它依旧不是真正实施过滤的类，它内部维护了一个 SecurityFilterChain，这个过滤器链才是请求真正对应的过滤器链，并且同一个 Spring 环境下，可能同时存在多个安全过滤器链，如 private List filterChains 所示，需要经过 chain.matches(request) 判断到底哪个过滤器链匹配成功，每个 request 最多只会经过一个 SecurityFilterChain。为何要这么设计？因为 Web 环境下可能有多种安全保护策略，每种策略都需要有自己的一条链路，所以实际每次请求，最多只有一个安全过滤器链被返回！<br>所以说，<strong>SecurityFilterChain 才是真正意义上的 SpringSecurityFilterChain</strong>：</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.web.DefaultSecurityFilterChain
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DefaultSecurityFilterChain</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">SecurityFilterChain</span> </span>&#123;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> RequestMatcher requestMatcher;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;Filter&gt; filters;
+	<span class="hljs-comment">//这里的List filters就包含了 UsernamePasswordAuthenticationFilter，SecurityContextPersistenceFilter，FilterSecurityInterceptor 等常用的 Filter。</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Filter&gt; <span class="hljs-title">getFilters</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> filters;
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">matches</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+      <span class="hljs-keyword">return</span> requestMatcher.matches(request);
+   &#125;
+&#125;</code></pre></div>
+
+<h2 id="2-4-SecurityFiterChain（重要）"><a href="#2-4-SecurityFiterChain（重要）" class="headerlink" title="2.4 SecurityFiterChain（重要）"></a>2.4 SecurityFiterChain（重要）</h2><p>SecurityFilterChain由FilterChainProxy使用，以确定应为此请求调用哪个Spring安全过滤器。<br><img src="https://img-blog.csdnimg.cn/20200517145736434.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="图4. SecurityFilterChain"><br>SecurityFilterChain中的安全过滤器通常是bean，但是它们是在FilterChainProxy中注册的，而不是委托给FilterProxy。<br>那么SecurityFiterChain是如何注册的？<br>在我们写SecurityConfig配置类的时候，一般都会使用<code>@EnableWebSecurity</code>注解和继承<code>WebSecurityConfigurerAdapter</code>来进行安全配置，来到WebSecurity类中：</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.config.annotation.web.builders.WebSecurity
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSecurity</span> <span class="hljs-keyword">extends</span></span>
+<span class="hljs-class">      <span class="hljs-title">AbstractConfiguredSecurityBuilder</span>&lt;<span class="hljs-title">Filter</span>, <span class="hljs-title">WebSecurity</span>&gt; <span class="hljs-keyword">implements</span></span>
+<span class="hljs-class">      <span class="hljs-title">SecurityBuilder</span>&lt;<span class="hljs-title">Filter</span>&gt;, <span class="hljs-title">ApplicationContextAware</span> </span>&#123;
+    
+    <span class="hljs-meta">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">protected</span> Filter <span class="hljs-title">performBuild</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+		<span class="hljs-keyword">int</span> chainSize = ignoredRequests.size()+ securityFilterChainBuilders.size();
+		List&lt;SecurityFilterChain&gt; securityFilterChains = <span class="hljs-keyword">new</span> ArrayList&lt;SecurityFilterChain&gt;(
+				chainSize);
+		<span class="hljs-keyword">for</span> (RequestMatcher ignoredRequest : ignoredRequests) &#123;
+			securityFilterChains.add(<span class="hljs-keyword">new</span> DefaultSecurityFilterChain(ignoredRequest));
+		&#125;
+		<span class="hljs-keyword">for</span> (SecurityBuilder&lt;? extends SecurityFilterChain&gt; securityFilterChainBuilder : securityFilterChainBuilders) &#123;
+			securityFilterChains.add(securityFilterChainBuilder.build());
+		&#125;
+        <span class="hljs-comment">// &lt;1&gt; FilterChainProxy 由 WebSecurity 构建</span>
+		FilterChainProxy filterChainProxy = <span class="hljs-keyword">new</span> FilterChainProxy(securityFilterChains);
+		<span class="hljs-keyword">if</span> (httpFirewall != <span class="hljs-keyword">null</span>) &#123;
+			filterChainProxy.setFirewall(httpFirewall);
+		&#125;
+		filterChainProxy.afterPropertiesSet();
+
+		Filter result = filterChainProxy;
+		postBuildAction.run();
+		<span class="hljs-keyword">return</span> result;
+	&#125;
+&#125;</code></pre></div>
+<p>总结起来就是：<strong>一个名称 SpringSecurityFilterChain，借助于 Spring 的 IOC 容器，完成了 DelegatingFilterProxy 到 FilterChainProxy 的连接，并借助于 FilterChainProxy 内部维护的 List 中的某一个 SecurityFilterChain 来完成最终的过滤。</strong></p>
+<h3 id="使用FilterChainProxy的好处"><a href="#使用FilterChainProxy的好处" class="headerlink" title="使用FilterChainProxy的好处"></a>使用FilterChainProxy的好处</h3><p>FilterChainProxy为直接向Servlet容器或 DelegatingFilterProxy注册提供了许多好处。<br>首先，它为Spring Security的所有Servlet支持提供了一个起点。因此，如果您正尝试对Spring Security的Servlet支持进行故障排除，那么在FilterChainProxy中添加一个调试点是一个很好的起点。<br>第二，由于FilterChainProxy是Spring安全使用的核心，它可以执行非可选的任务。例如，它清除SecurityContext以避免内存泄漏。它还可以使用Spring Security的HttpFirewall来保护应用程序免受某些类型的攻击。<br>此外，它在确定何时应该调用SecurityFilterChain方面提供了更大的灵活性。在Servlet容器中，仅根据URL调用过滤器。但是，FilterChainProxy可以通过利用RequestMatcher接口根据HttpServletRequest中的任何内容确定调用。<br>事实上，FilterChainProxy可以用来决定应该使用哪个SecurityFilterChain。这允许在应用程序中为不同的片提供完全独立的配置。<br><img src="https://img-blog.csdnimg.cn/20200517150636845.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="图5.多个SecurityFilterChain"><br>在上图中，FilterChainProxy决定应该使用哪个SecurityFilterChain。只有第一个匹配的SecurityFilterChain才会被调用。如果一个URL的/api/messages/被请求，它将首先匹配SecurityFilterChain0的模式/api/<strong>，所以只有SecurityFilterChain0将被调用，即使它也匹配SecurityFilterChain<del>n</del>。如果一个/messages/的URL被请求，它将不匹配SecurityFilterChain0的/api/</strong>模式，所以FilterChainProxy将继续尝试每个SecurityFilterChain。<br>注意SecurityFilterChain<del>0</del>只配置了三个安全过滤器实例。但是，SecurityFilterChain<del>n</del>配置了四个安全过滤器。需要注意的是，每个SecurityFilterChain都可以是唯一的，并在隔离状态下进行配置。事实上，如果应用程序希望Spring security忽略某些请求，SecurityFilterChain可能没有安全过滤器。</p>
+<h2 id="2-5-SecurityFilter"><a href="#2-5-SecurityFilter" class="headerlink" title="2.5 SecurityFilter"></a>2.5 SecurityFilter</h2><p>【<a href="https://www.cnkirito.moe/spring-security-4/" target="_blank" rel="noopener">建议参考这篇博客</a>】<br>所有的过滤器汇总：<br>ChannelProcessingFilter<br>ConcurrentSessionFilter<br>WebAsyncManagerIntegrationFilter<br><strong>SecurityContextPersistenceFilter</strong>：两个主要职责：请求来临时创建 SecurityContext 安全上下文信息，请求结束时清空 SecurityContextHolder。<br>HeaderWriterFilter<br>CorsFilter<br>CsrfFilter：默认开启的一个过滤器，用于防止 csrf 攻击<br>LogoutFilter：处理注销的过滤器<br>OAuth2AuthorizationRequestRedirectFilter<br>Saml2WebSsoAuthenticationRequestFilter<br>X509AuthenticationFilter<br>AbstractPreAuthenticatedProcessingFilter<br>CasAuthenticationFilter<br>OAuth2LoginAuthenticationFilter<br>Saml2WebSsoAuthenticationFilter<br><strong>UsernamePasswordAuthenticationFilter</strong>：表单提交了 username 和 password，被封装成 token 进行一系列的认证，便是主要通过这个过滤器完成的，在表单认证的方法中，这是最最关键的过滤器。<br>ConcurrentSessionFilter<br>OpenIDAuthenticationFilter<br>DefaultLoginPageGeneratingFilter<br>DefaultLogoutPageGeneratingFilter<br>DigestAuthenticationFilter<br>BearerTokenAuthenticationFilter<br>BasicAuthenticationFilter<br>RequestCacheAwareFilter<br>SecurityContextHolderAwareRequestFilter<br>JaasApiIntegrationFilter<br>RememberMeAuthenticationFilter<br><strong>AnonymousAuthenticationFilter</strong>：匿名身份过滤器<br>OAuth2AuthorizationCodeGrantFilter<br><strong>SessionManagementFilter</strong>： 和 session 相关的过滤器，内部维护了一个 SessionAuthenticationStrategy，两者组合使用，常用来防止 session-fixation protection attack，以及限制同一用户开启多个会话的数量<br><strong>ExceptionTranslationFilter</strong>：这个过滤器本身不处理异常，而是将认证过程中出现的异常交给内部维护的一些类去处理<br><strong>FilterSecurityInterceptor</strong>：决定了访问特定路径应该具备的权限，访问的用户的角色，权限是什么？访问的路径需要什么样的角色和权限？这些判断和处理都是由该类进行的。<br>SwitchUserFilter</p>
+<h2 id="2-6-处理安全异常"><a href="#2-6-处理安全异常" class="headerlink" title="2.6 处理安全异常"></a>2.6 处理安全异常</h2><p>ExceptionTranslationFilter允许将AccessDeniedException和AuthenticationException转换为HTTP响应。<br>ExceptionTranslationFilter作为安全过滤器之一插入到FilterChainProxy中。<br><img src="https://img-blog.csdnimg.cn/20200517154307927.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="处理安全异常流程"></p>
+<ol>
+<li>首先，ExceptionTranslationFilter调用FilterChain.doFilter(request,response)将调用应用程序的其余部分。<ol start="2">
+<li>如果用户未通过身份验证或为AuthenticationException，则开始身份验证。</li>
+<li>1 该SecurityContextHolder中被清除出</li>
+<li>2 将HttpServletRequest保存在中RequestCache。用户成功通过身份验证后，将RequestCache用于重播原始请求。</li>
+<li>3 AuthenticationEntryPoint用于从客户机请求凭据。例如，它可能重定向到登录页面或发送WWW-Authenticate头。</li>
+<li>否则，如果是AccessDeniedException，则拒绝访问。调用AccessDeniedHandler处理拒绝的访问。</li>
+</ol>
+</li>
+</ol>
+<p><strong>ExceptionTranslationFilter伪代码</strong></p>
+<div class="hljs"><pre><code class="hljs Markup">try &#123;
+    filterChain.doFilter(request, response); &#x2F;&#x2F;1
+&#125; catch (AccessDeniedException | AuthenticationException e) &#123;
+    if (!authenticated || e instanceof AuthenticationException) &#123;
+        startAuthentication(); &#x2F;&#x2F;2
+    &#125; else &#123;
+        accessDenied(); &#x2F;&#x2F;3
+    &#125;
+&#125;</code></pre></div>
+
+<h1 id="3-认证"><a href="#3-认证" class="headerlink" title="3.认证"></a>3.认证</h1><h2 id="3-1-认证组件"><a href="#3-1-认证组件" class="headerlink" title="3.1 认证组件"></a>3.1 认证组件</h2><p><strong>SecurityContextHolder</strong>  - 用于存储安全上下文（security context）的信息。当前操作的用户是谁，该用户是否已经被认证，他拥有哪些角色权限… 这些都被保存在 SecurityContextHolder 中。SecurityContextHolder 默认使用 ThreadLocal 策略来存储认证信息。在用户登录时自动绑定认证信息到当前线程，在用户退出时，自动清除当前线程的认证信息。</p>
+<p><strong>SecurityContext</strong> -从securitycontextHolder中获取，并包含当前已验证用户的身份验证。</p>
+<p><strong>Authentication</strong>  -直接继承自 Principal 类，而 Principal 是位于 java.security 包中的。可以见得，Authentication 在 spring security 中是<strong>最高级别的身份 / 认证的抽象</strong>。</p>
+<p><strong>GrantedAuthority</strong>-在Authentication（例如角色，范围等）上授予委托人的权限</p>
+<p><strong>AuthenticationManager</strong>-定义Spring Security的Filters如何执行身份验证的API 。<br>AuthenticationManager（接口）是认证相关的核心接口，也是发起认证的出发点，因为在实际需求中，我们可能会允许用户使用用户名 + 密码登录，同时允许用户使用邮箱 + 密码，手机号码 + 密码登录，甚至，可能允许用户使用指纹登录，所以说 AuthenticationManager 一般不直接认证，AuthenticationManager 接口的常用实现类 ProviderManager 内部会维护一个 List<AuthenticationProvider> 列表，存放多种认证方式，实际上这是委托者模式的应用（Delegate）。也就是说，核心的认证入口始终只有一个：AuthenticationManager，不同的认证方式：用户名 + 密码（UsernamePasswordAuthenticationToken），邮箱 + 密码，手机号码 + 密码登录则对应了三个 AuthenticationProvider。</p>
+<p><strong>ProviderManager</strong>-AuthenticationManager的常用实现类。<br>ProviderManager 中的 List，会依照次序去认证，认证成功则立即返回，若认证失败则返回 null，下一个 AuthenticationProvider 会继续尝试认证，如果所有认证器都无法认证成功，则 ProviderManager 会抛出一个 ProviderNotFoundException 异常。</p>
+<p><strong>AuthenticationProvider</strong>-用于ProviderManager执行特定类型的身份验证，最常用的一个实现便是DaoAuthenticationProvider。顾名思义，Dao 正是数据访问层的缩写，也暗示了这个身份认证器的实现思路。<br>用户前台提交了用户名和密码，而数据库中保存了用户名和密码，认证便是负责比对同一个用户名，提交的密码和保存的密码是否相同便是了。在 Spring Security 中。提交的用户名和密码，被封装成了 UsernamePasswordAuthenticationToken，而根据用户名加载用户的任务则是交给了 UserDetailsService，在 DaoAuthenticationProvider 中，对应的方法便是 retrieveUser，虽然有两个参数，但是 retrieveUser 只有第一个参数起主要作用，返回一个 UserDetails。还需要完成 UsernamePasswordAuthenticationToken 和 UserDetails 密码的比对，这便是交给 additionalAuthenticationChecks 方法完成的，如果这个 void 方法没有抛异常，则认为比对成功。</p>
+<p><strong>Request Credentials with AuthenticationEntryPoint</strong> -用于从客户端请求凭证（即，重定向到登录页面，发送WWW-Authenticate响应等）</p>
+<p><strong>AbstractAuthenticationProcessingFilter</strong>-用于认证的基础。这也为高级身份验证流程以及各个部分如何协同工作提供了一个好主意。</p>
+<h2 id="3-2认证机制"><a href="#3-2认证机制" class="headerlink" title="3.2认证机制"></a>3.2认证机制</h2><p><strong>Username and Password</strong> - 使用用户名和密码来进行身份验证</p>
+<p><strong>OAuth 2.0 Login</strong> - 使用OpenID Connect和非标准OAuth 2.0登录（即GitHub）登录的OAuth 2.0</p>
+<p><strong>SAML 2.0 Login</strong> - SAML 2.0 Log In</p>
+<p><strong>Central Authentication Server (CAS)</strong> - 中央身份验证服务器（CAS）支持</p>
+<p><strong>Remember Me</strong> - 将用户信息保存在cookie中，在浏览器关闭后重新打开，用户再去访问hello接口，此时会携带cookie中的remember-me到服务端，服务端拿到值以后，可以方便的计算出用户名和过期时间，再根据用户名查询到用户密码，然后通过MD5散列函数计算出散列值，再将计算出的散列值和浏览器传递来的散列值进行对比，就能确认这个令牌是否有效。</p>
+<p><strong>JAAS Authentication</strong> - 使用JAAS进行认证</p>
+<p><strong>OpenID</strong> - OpenID身份验证（请勿与OpenID Connect混淆）</p>
+<p><strong>Pre-Authentication Scenarios</strong> - 使用诸如SiteMinder或Java EE安全性之类的外部机制进行身份验证，但仍使用Spring Security进行授权和防范常见漏洞。</p>
+<p><strong>X509 Authentication</strong> -X509验证</p>
+<h2 id="3-3-SecurityContextHolder"><a href="#3-3-SecurityContextHolder" class="headerlink" title="3.3 SecurityContextHolder"></a>3.3 SecurityContextHolder</h2><p><img src="https://img-blog.csdnimg.cn/20200517165322654.png" srcset="/img/loading.gif" alt="Security身份验证模型"><br>如何设置SecurityContextHolder</p>
+<div class="hljs"><pre><code class="hljs java">SecurityContext context = SecurityContextHolder.createEmptyContext(); <span class="hljs-comment">//1</span>
+Authentication authentication =
+    <span class="hljs-keyword">new</span> TestingAuthenticationToken(<span class="hljs-string">"username"</span>, <span class="hljs-string">"password"</span>, <span class="hljs-string">"ROLE_USER"</span>);<span class="hljs-comment">//2 </span>
+context.setAuthentication(authentication);
+
+SecurityContextHolder.setContext(context);<span class="hljs-comment">//3</span></code></pre></div>
+<p>&lt;1&gt;：我们首先创建一个空的SecurityContext，重要的是创建一个新SecurityContext实例，而不是使用它SecurityContextHolder.getContext().setAuthentication(authentication)来避免跨多个线程的竞争条件。<br>&lt;2&gt;：接下来，我们创建一个新Authentication对象。Spring Security并不关心Authentication在上设置了哪种类型的实现SecurityContext。我们在这里使用TestingAuthenticationToken它是因为它非常简单。更常见的生产方案是UsernamePasswordAuthenticationToken(userDetails, password, authorities)。<br>&lt;3&gt;：最后，我们可以在SecurityContext上设置SecurityContext。</p>
+<p>如果想访问当前认证的用户，可以参考如下代码：</p>
+<div class="hljs"><pre><code class="hljs java">SecurityContext context = SecurityContextHolder.getContext();
+Authentication authentication = context.getAuthentication();
+String username = authentication.getName();
+Object principal = authentication.getPrincipal();
+Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAuthorities();</code></pre></div>
+<p>缺省情况下，会SecurityContextHolder使用ThreadLocal来存储这些详细信息，这意味着SecurityContext即使SecurityContext未将显式地传递给这些方法的参数，该方法也始终可用于同一执行线程中的方法。ThreadLocal如果在处理当前委托人的请求之后要清除线程，则以这种方式使用是非常安全的。Spring Security的FilterChainProxy确保SecurityContext is always cleared.</p>
+<h2 id="3-4-SecurityContext"><a href="#3-4-SecurityContext" class="headerlink" title="3.4 SecurityContext"></a>3.4 SecurityContext</h2><p>从SecurityContextHolder中所得。该SecurityContext包含认证对象的所有信息。</p>
+<h2 id="3-5-Authentication"><a href="#3-5-Authentication" class="headerlink" title="3.5 Authentication"></a>3.5 Authentication<img src="https://img-blog.csdnimg.cn/20200517171946822.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="继承关系"></h2><p>Authentication在Spring Security中有两个主要目的：</p>
+<ul>
+<li>AuthenticationManager的输入，提供用户提供的用于身份验证的凭据。在此场景中使用时，isAuthenticated()返回false。</li>
+<li>表示当前已验证的用户。当前的身份验证可以从SecurityContext中获得。</li>
+</ul>
+<p>接口源码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.security.core;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Authentication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Principal</span>, <span class="hljs-title">Serializable</span> </span>&#123;
+    Collection&lt;? extends GrantedAuthority&gt; getAuthorities(); <span class="hljs-comment">//1</span>
+
+    <span class="hljs-function">Object <span class="hljs-title">getCredentials</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// 2</span>
+
+    <span class="hljs-function">Object <span class="hljs-title">getDetails</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// 3</span>
+    
+    <span class="hljs-function">Object <span class="hljs-title">getPrincipal</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// 4</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAuthenticated</span><span class="hljs-params">()</span></span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setAuthenticated</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> var1)</span> <span class="hljs-keyword">throws</span> IllegalArgumentException</span>;
+&#125;</code></pre></div>
+<p>(1)：权限信息列表，默认是 GrantedAuthority 接口的一些实现类，通常是代表权限信息的一系列字符串。<br>(2)：密码信息，用户输入的密码字符串，在认证过后通常会被移除，用于保障安全。<br>(3)：细节信息，web 应用中的实现接口通常为 WebAuthenticationDetails，它记录了访问者的 ip 地址和 sessionId 的值。<br>(4)：敲黑板！！！最重要的身份信息，大部分情况下返回的是 UserDetails 接口的实现类，也是框架中的常用接口之一。</p>
+<h2 id="3-6-GrantedAuthority"><a href="#3-6-GrantedAuthority" class="headerlink" title="3.6 GrantedAuthority"></a>3.6 GrantedAuthority</h2><p>GrantedAuthoritys是授予用户的高级权限。主要是角色或范围。<br>可以从authentication.getauthoritys()方法获得GrantedAuthoritys。此方法提供授予的权限对象的集合。这些权限通常是“角色”，例如ROLE_ADMINISTRATOR或ROLE_HR_SUPERVISOR。稍后将为web授权、方法授权和域对象授权配置这些角色。</p>
+<h2 id="3-7-AuthenticationManager"><a href="#3-7-AuthenticationManager" class="headerlink" title="3.7 AuthenticationManager"></a>3.7 AuthenticationManager</h2><p>AuthenticationManager（接口）是认证相关的核心接口，也是发起认证的出发点，因为在实际需求中，我们可能会允许用户使用用户名 + 密码登录，同时允许用户使用邮箱 + 密码，手机号码 + 密码登录，甚至，可能允许用户使用指纹登录，所以说 AuthenticationManager 一般不直接认证，AuthenticationManager 接口的实现类去完成认证工作。</p>
+<h2 id="3-8-ProviderManager"><a href="#3-8-ProviderManager" class="headerlink" title="3.8 ProviderManager"></a>3.8 ProviderManager</h2><p>ProviderManager是AuthenticationManager最常用的实现。ProviderManager委托给AuthenticationProvider列表。每个AuthenticationProvider都有机会指示身份验证应该成功、失败，或者指示它不能做出决定并允许下游的AuthenticationProvider作出决定。在默认策略下，只需要通过一个 AuthenticationProvider 的认证，即可被认为是登录成功。如果所有配置的authenticationprovider都不能进行身份验证，那么身份验证将失败，出现ProviderNotFoundException，这是一个特殊的AuthenticationException，表明ProviderManager不支持Aut类型。<br><img src="https://img-blog.csdnimg.cn/20200517181019629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="ProviderManager"><br>事实上，多个ProviderManager实例可能共享同一个父AuthenticationManager。在有多个SecurityFilterChain实例的场景中经常见到，这些实例有一些共同的身份验证(共享的父AuthenticationManager)，但也有不同的身份验证机制(不同的ProviderManager实例)。<br><img src="https://img-blog.csdnimg.cn/20200517181558524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="multiple ProviderManager"><br>默认情况下，ProviderManager将尝试从成功的身份验证请求返回的Authentication对象中清除任何敏感的凭据信息。这可以防止密码等信息在HttpSession中保留的时间超过必要的时间。<br>例如，当您使用用户对象的缓存来提高无状态应用程序的性能时，这可能会导致问题。如果身份验证包含对缓存中的对象的引用(例如UserDetails实例)，并且该对象的凭据已被删除，则不再能够根据缓存的值进行身份验证。如果使用缓存，则需要考虑这一点。一个明显的解决方案是，首先在缓存实现中或在创建返回的Authentication对象的AuthenticationProvider中复制对象。</p>
+<h2 id="3-9-AuthenticationProvider"><a href="#3-9-AuthenticationProvider" class="headerlink" title="3.9 AuthenticationProvider"></a>3.9 AuthenticationProvider</h2><p>可以将多个AuthenticationProvider注入到ProviderManager中。每个AuthenticationProvider执行特定类型的身份验证。例如，DaoAuthenticationProvider支持基于用户名/密码的身份验证，而JwtAuthenticationProvider支持对JWT令牌进行身份验证。<br>AuthenticationProvider 最最最常用的一个实现便是 <strong>DaoAuthenticationProvider</strong>。顾名思义，Dao 正是数据访问层的缩写，也暗示了这个身份认证器的实现思路。</p>
+<p>接下来分析DaoAuthenticationProvider是如何认证用户的？</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.authentication.dao.DaoAuthenticationProvider
+<span class="hljs-comment">//1.根据用户名加载用户</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">final</span> UserDetails <span class="hljs-title">retrieveUser</span><span class="hljs-params">(String username,</span></span>
+<span class="hljs-function"><span class="hljs-params">			UsernamePasswordAuthenticationToken authentication)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+		prepareTimingAttackProtection();
+		<span class="hljs-keyword">try</span> &#123;
+			UserDetails loadedUser = <span class="hljs-keyword">this</span>.getUserDetailsService().loadUserByUsername(username);
+			<span class="hljs-keyword">if</span> (loadedUser == <span class="hljs-keyword">null</span>) &#123;
+				<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> InternalAuthenticationServiceException(
+						<span class="hljs-string">"UserDetailsService returned null, which is an interface contract violation"</span>);
+			&#125;
+			<span class="hljs-keyword">return</span> loadedUser;
+		&#125;
+		<span class="hljs-keyword">catch</span> (UsernameNotFoundException ex) &#123;
+			<span class="hljs-comment">//各种异常处理</span>
+		&#125;
+		<span class="hljs-comment">//...省略剩下的catch块</span>
+	&#125;
+	<span class="hljs-comment">//2.完成密码的比对工作</span>
+	<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">additionalAuthenticationChecks</span><span class="hljs-params">(UserDetails userDetails,</span></span>
+<span class="hljs-function"><span class="hljs-params">			UsernamePasswordAuthenticationToken authentication)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+		<span class="hljs-keyword">if</span> (authentication.getCredentials() == <span class="hljs-keyword">null</span>) &#123;
+			logger.debug(<span class="hljs-string">"Authentication failed: no credentials provided"</span>);
+
+			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadCredentialsException(messages.getMessage(
+					<span class="hljs-string">"AbstractUserDetailsAuthenticationProvider.badCredentials"</span>,
+					<span class="hljs-string">"Bad credentials"</span>));
+		&#125;
+
+		String presentedPassword = authentication.getCredentials().toString();
+
+		<span class="hljs-keyword">if</span> (!passwordEncoder.matches(presentedPassword, userDetails.getPassword())) &#123;
+			logger.debug(<span class="hljs-string">"Authentication failed: password does not match stored value"</span>);
+
+			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadCredentialsException(messages.getMessage(
+					<span class="hljs-string">"AbstractUserDetailsAuthenticationProvider.badCredentials"</span>,
+					<span class="hljs-string">"Bad credentials"</span>));
+		&#125;
+	&#125;</code></pre></div>
+
+<p>在 Spring Security 中。提交的用户名和密码，被封装成了 UsernamePasswordAuthenticationToken，而根据用户名加载用户的任务则是交给了 UserDetailsService，在 DaoAuthenticationProvider 中，对应的方法便是 retrieveUser，虽然有两个参数，但是 retrieveUser 只有第一个参数起主要作用，返回一个 UserDetails。还需要完成 UsernamePasswordAuthenticationToken 和 UserDetails 密码的比对，这便是交给 additionalAuthenticationChecks 方法完成的，如果这个 void 方法没有抛异常，则认为比对成功。</p>
+<h2 id="3-10-AuthenticationEntryPoint"><a href="#3-10-AuthenticationEntryPoint" class="headerlink" title="3.10  AuthenticationEntryPoint"></a>3.10  AuthenticationEntryPoint</h2><p>AuthenticationEntryPoint 是认证的入口点，用于发送HTTP响应，以从客户端请求凭据。</p>
+<p>有时，客户端会主动包含凭据（例如用户名/密码）以请求资源。在这些情况下，Spring Security无需提供HTTP响应即可从客户端请求凭证，因为它们已包含在内。</p>
+<p>如果ExceptionTranslationFilter检测到 AuthenticationException（认证异常），则将会交给内部的 AuthenticationEntryPoint 去处理，如果检测到 AccessDeniedException（访问异常），需要先判断当前用户是不是匿名用户，如果是匿名访问，则和前面一样运行 AuthenticationEntryPoint，否则会委托给 AccessDeniedHandler 去处理，而 AccessDeniedHandler 的默认实现，是 AccessDeniedHandlerImpl。所以 ExceptionTranslationFilter 内部的 AuthenticationEntryPoint 是至关重要的。</p>
+<p>比如说，客户端将向未经授权访问的资源发出未经身份验证的请求。在这种情况下，AuthenticationEntryPoint的实现用于从客户机请求凭据。AuthenticationEntryPoint实现可能会重定向到登录页面，响应一个WWW-Authenticate头。</p>
+<h2 id="3-11-AbstractAuthenticationProcessingFilter"><a href="#3-11-AbstractAuthenticationProcessingFilter" class="headerlink" title="3.11 AbstractAuthenticationProcessingFilter"></a>3.11 AbstractAuthenticationProcessingFilter</h2><p>AbstractAuthenticationProcessingFilter用作对用户凭证进行身份验证的基础过滤器。在认证凭证之前，Spring Security通常使用AuthenticationEntryPoint请求凭证。<br>接下来，AbstractAuthenticationProcessingFilter可以验证提交给它的任何身份验证请求。<br><img src="https://img-blog.csdnimg.cn/20200517184444256.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="工作流程"><br>（1）：当用户提交其凭证时，AbstractAuthenticationProcessingFilter从HttpServletRequest创建一个要进行身份验证的Authentication。创建的Authentication类型取决于AbstractAuthenticationProcessingFilter的子类。例如，UsernamePasswordAuthenticationFilter根据在HttpServletRequest中提交的用户名和密码创建UsernamePasswordAuthenticationToken。<br>（2）：接下来，将Authentication传递到AuthenticationManager中进行身份验证。<br>（3）：如果身份验证失败，则将该Authentication从SecurityContextHolder中被清除出去，RememberMeServices.loginFail被调用（如果开启了记住我功能），AuthenticationFailureHandler 被调用。<br>（4）：如果身份验证成功，则</p>
+<ul>
+<li>SessionAuthenticationStrategy 收到新登录通知；</li>
+<li>该Authentication被设置在SecurityContextHolder中。稍后将SecurityContextPersistenceFilter保存SecurityContext到HttpSession；</li>
+<li>RememberMeServices.loginSuccess被调用（如果开启了记住我功能）；</li>
+<li>ApplicationEventPublisher发布InteractiveAuthenticationSuccessEvent。</li>
+</ul>
+<h2 id="3-12-Username-Password-Authentication"><a href="#3-12-Username-Password-Authentication" class="headerlink" title="3.12 Username/Password Authentication"></a>3.12 Username/Password Authentication</h2><p>验证用户身份的最常见方法之一是验证用户名和密码。这样，Spring Security为使用用户名和密码进行身份验证提供了全面的支持。</p>
+<p><strong>读取用户名和密码</strong><br>Spring Security提供了以下内置机制，用于从中读取用户名和密码HttpServletRequest：</p>
+<ul>
+<li>表单登录</li>
+<li>基本认证</li>
+<li>摘要式身份验证</li>
+</ul>
+<p><strong>储存机制</strong></p>
+<ul>
+<li>用于读取用户名和密码的每种受支持的机制都可以利用任何受支持的存储机制：</li>
+<li>带有内存身份验证的简单存储</li>
+<li>具有JDBC身份验证的关系数据库</li>
+<li>使用UserDetailsService的自定义数据存储</li>
+<li>具有LDAP认证的 LDAP存储</li>
+</ul>
+<h3 id="表单登录"><a href="#表单登录" class="headerlink" title="表单登录"></a>表单登录</h3><p><img src="https://img-blog.csdnimg.cn/20200517185816784.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt=".重定向到登录页面"></p>
+<ol>
+<li>首先，用户向未经授权的资源发出未经身份验证的请求/private。</li>
+<li>Spring Security 通过抛出AccessDeniedException来表示FilterSecurityInterceptor拒绝未认证的请求。</li>
+<li>由于用户未进行身份验证，ExceptionTranslationFilter启动启动身份验证，并使用配置的AuthenticationEntryPoint向登录页面发送重定向。在大多数情况下，AuthenticationEntryPoint是LoginUrlAuthenticationEntryPoint的实例。</li>
+<li>然后，浏览器将请求将其重定向到的登录页面。</li>
+<li>应用程序中的某些内容必须呈现登录页面。</li>
+</ol>
+<p>提交用户名和密码等信息后，将对用户名和密码进行UsernamePasswordAuthenticationFilter身份验证。该UsernamePasswordAuthenticationFilter扩展AbstractAuthenticationProcessingFilter，所以这张图看起来应该非常相似。<img src="https://img-blog.csdnimg.cn/20200517190118241.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="验证用户名和密码"></p>
+<ol>
+<li><p>当用户提交其用户名和密码时，UsernamePasswordAuthenticationFilter会通过UsernamePasswordAuthenticationToken从中Authentication提取用户名和密码来创建，这是一种HttpServletRequest。</p>
+</li>
+<li><p>接下来，将UsernamePasswordAuthenticationToken传递到AuthenticationManager中进行身份验证。AuthenticationManager外观的细节取决于用户信息的存储方式。</p>
+</li>
+<li><p>如果身份验证失败，则将该Authentication从SecurityContextHolder中被清除出去，RememberMeServices.loginFail被调用（如果开启了记住我功能），AuthenticationFailureHandler 被调用。</p>
+</li>
+<li><p>如果身份验证成功，则</p>
+<ul>
+<li>SessionAuthenticationStrategy 收到新登录通知；</li>
+<li>该Authentication被设置在SecurityContextHolder中。稍后将SecurityContextPersistenceFilter保存SecurityContext到HttpSession；</li>
+<li>RememberMeServices.loginSuccess被调用（如果开启了记住我功能）；</li>
+<li>ApplicationEventPublisher发布InteractiveAuthenticationSuccessEvent。</li>
+</ul>
+</li>
+</ol>
+<h3 id="基本认证"><a href="#基本认证" class="headerlink" title="基本认证"></a>基本认证</h3><p><img src="https://img-blog.csdnimg.cn/20200517190615814.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="发送www验证头"></p>
+<ol>
+<li>首先，用户向未经授权的资源发出未经身份验证的请求/private。</li>
+<li>Spring Security 通过抛出来FilterSecurityInterceptor表示未认证的请求被拒绝AccessDeniedException。</li>
+<li>由于用户没有经过身份验证，ExceptionTranslationFilter启动Authentication进行身份验证。配置的AuthenticationEntryPoint是BasicAuthenticationEntryPoint的一个实例，它发送一个WWW-Authenticate头。RequestCache通常是一个NullRequestCache，它不保存请求，因为客户机能够重新播放它最初请求的请求。<br>当客户端收到WWW-Authenticate标头时，它知道应该使用用户名和密码重试。以下是正在处理的用户名和密码的流程。<br><img src="https://img-blog.csdnimg.cn/20200517191017240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="验证用户名和密码"><br>基本流程同表单登录<h3 id="内存中身份验证"><a href="#内存中身份验证" class="headerlink" title="内存中身份验证"></a>内存中身份验证</h3>Spring Security的InMemoryUserDetailsManager实现UserDetailsService为在内存中检索的基于用户名/密码的身份验证提供支持。 通过实现接口InMemoryUserDetailsManager提供管理。 </li>
+</ol>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> UserDetailsService <span class="hljs-title">users</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-comment">// The builder will ensure the passwords are encoded before saving in memory</span>
+    UserBuilder users = User.withDefaultPasswordEncoder();
+    UserDetails user = users
+        .username(<span class="hljs-string">"user"</span>)
+        .password(<span class="hljs-string">"password"</span>)
+        .roles(<span class="hljs-string">"USER"</span>)
+        .build();
+    UserDetails admin = users
+        .username(<span class="hljs-string">"admin"</span>)
+        .password(<span class="hljs-string">"password"</span>)
+        .roles(<span class="hljs-string">"USER"</span>, <span class="hljs-string">"ADMIN"</span>)
+        .build();
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> InMemoryUserDetailsManager(user, admin);
+&#125;</code></pre></div>
+<h3 id="JDBC验证"><a href="#JDBC验证" class="headerlink" title="JDBC验证"></a>JDBC验证</h3><p>Spring Security的JdbcDaoImpl实现了UserDetailsService，为使用JDBC检索的基于用户名/密码的身份验证提供支持。JdbcUserDetailsManager扩展了JdbcDaoImpl，通过UserDetailsManager接口提供对用户详细信息的管理。当Spring Security配置为接受用户名/密码进行身份验证时，将使用基于UserDetails的身份验证。<br><img src="https://img-blog.csdnimg.cn/20200517192443191.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="继承关系"></p>
+<ol>
+<li><p>准备数据库用于存放用户信息，权限信息，以及用户权限关联表，Spring Security为基于JDBC的身份验证提供默认查询以及与默认查询一起使用的相应默认架构（路径：org/springframework/security/core/userdetails/jdbc/users.ddl）<br>默认的用户模式：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function">create table <span class="hljs-title">users</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">    username varchar_ignorecase(<span class="hljs-number">50</span>)</span> not <span class="hljs-keyword">null</span> primary key,</span>
+<span class="hljs-function">    password <span class="hljs-title">varchar_ignorecase</span><span class="hljs-params">(<span class="hljs-number">50</span>)</span> not <span class="hljs-keyword">null</span>,</span>
+<span class="hljs-function">    enabled <span class="hljs-keyword">boolean</span> not <span class="hljs-keyword">null</span></span>
+<span class="hljs-function">)</span>;
+
+<span class="hljs-function">create table <span class="hljs-title">authorities</span> <span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">    username varchar_ignorecase(<span class="hljs-number">50</span>)</span> not <span class="hljs-keyword">null</span>,</span>
+<span class="hljs-function">    authority <span class="hljs-title">varchar_ignorecase</span><span class="hljs-params">(<span class="hljs-number">50</span>)</span> not <span class="hljs-keyword">null</span>,</span>
+<span class="hljs-function">    constraint fk_authorities_users foreign <span class="hljs-title">key</span><span class="hljs-params">(username)</span> references <span class="hljs-title">users</span><span class="hljs-params">(username)</span></span>
+<span class="hljs-function">)</span>;
+<span class="hljs-function">create unique index ix_auth_username on <span class="hljs-title">authorities</span> <span class="hljs-params">(username,authority)</span></span>;</code></pre></div>
+</li>
+<li><p>设置数据源</p>
+</li>
+<li><p>配置JdbcUserDetailsManager让我们通过JDBC的方式将数据库和Spring Security连接起来。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(AuthenticationManagerBuilder auth)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+		<span class="hljs-comment">//userService是UserDetailsService的实现类</span>
+      auth.userDetailsService(userService);
+  &#125;</code></pre></div></li>
+<li><p>UserDetails</p>
+</li>
+</ol>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">UserDetails</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Serializable</span> </span>&#123;
+	<span class="hljs-comment">//获取用户权限集</span>
+	Collection&lt;? extends GrantedAuthority&gt; getAuthorities();
+	<span class="hljs-comment">//获得用户名</span>
+	<span class="hljs-function">String <span class="hljs-title">getUsername</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-comment">//账户是否过期</span>
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccountNonExpired</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-comment">//账户是否锁定</span>
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccountNonLocked</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-comment">//凭证是否过期</span>
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isCredentialsNonExpired</span><span class="hljs-params">()</span></span>;
+	<span class="hljs-comment">//账户是否可用</span>
+	<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isEnabled</span><span class="hljs-params">()</span></span>;
+&#125;</code></pre></div>
+<p>一般我们都是实现该接口，另外加上自己想要的信息，比如手机号，地址等等。</p>
+<ol start="4">
+<li>UserDetailsService</li>
+</ol>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">UserDetailsService</span> </span>&#123;
+	
+	<span class="hljs-function">UserDetails <span class="hljs-title">loadUserByUsername</span><span class="hljs-params">(String username)</span> <span class="hljs-keyword">throws</span> UsernameNotFoundException</span>;
+&#125;</code></pre></div>
+<p>里面就一个方法，根据用户名返回用户信息，这里可以根据不同的验证方式来定制我们自己所需的UserDetailsService实现类。UserDetailsService由DaoAuthenticationProvider用于检索用户名、密码和其他属性，用于使用用户名和密码进行身份验证。Spring Security提供了基于内存和JDBC的UserDetailsService的实现类。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Service</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserService</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">UserDetailsService</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    UserDao userDao;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> UserDetails <span class="hljs-title">loadUserByUsername</span><span class="hljs-params">(String username)</span> <span class="hljs-keyword">throws</span> UsernameNotFoundException </span>&#123;
+        User user = userDao.findUserByUsername(username);
+        <span class="hljs-keyword">if</span>(user==<span class="hljs-keyword">null</span>)&#123;
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UsernameNotFoundException(<span class="hljs-string">"用户不存在"</span>);
+        &#125;
+        <span class="hljs-keyword">return</span> user;
+    &#125;
+&#125;</code></pre></div>
+
+<ol start="5">
+<li>密码编码器</li>
+</ol>
+<p>可以根据需要选择PasswordEncoder接口的实现类。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+   <span class="hljs-function">PasswordEncoder <span class="hljs-title">passwordEncoder</span><span class="hljs-params">()</span></span>&#123;
+       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> BCryptPasswordEncoder();
+   &#125;</code></pre></div>
+
+<ol start="6">
+<li>DaoAuthenticationProvider<br>DaoAuthenticationProvider是AuthenticationProvider的一种实现类，利用UserDetailsService和PasswordEncoder验证用户名和密码。<br><img src="https://img-blog.csdnimg.cn/20200517201812740.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="用法"></li>
+</ol>
+<p>1、从读取用户名和密码的Authentication Filter将一个UsernamePasswordAuthenticationToken传递给由ProviderManager实现的AuthenticationManager。</p>
+<p>2、ProviderManager被配置为使用DaoAuthenticationProvider类型的AuthenticationProvider</p>
+<p>3、 DaoAuthenticationProvider从UserDetailsService中查找用户详细信息。</p>
+<p>4、 然后，DaoAuthenticationProvider使用PasswordEncoder验证上一步返回的用户详细信息上的密码</p>
+<p>5、当身份验证成功时，返回的身份验证类型为UsernamePasswordAuthenticationToken，其主体是配置的UserDetailsService返回的用户详细信息。最终，返回的UsernamePasswordAuthenticationToken将由Authentication Filter在securitycontextHolder中设置</p>
+<h2 id="3-13-Session-Management（会话管理）"><a href="#3-13-Session-Management（会话管理）" class="headerlink" title="3.13 Session Management（会话管理）"></a>3.13 Session Management（会话管理）</h2><p>HTTP会话相关的功能由SessionManagementFilter和SessionAuthenticationStrategy接口的组合来处理，该接口是过滤器委托给的。典型的用法包括会话固定保护攻击预防、会话超时检测和对已验证用户可以同时打开多少会话的限制。</p>
+<h3 id="超时检测"><a href="#超时检测" class="headerlink" title="超时检测"></a>超时检测</h3><p>配置Spring Security来检测提交的无效会话ID，并将用户重定向到适当的URL。这是通过以下session-management元素实现的：</p>
+<div class="hljs"><pre><code class="hljs markup">&lt;http&gt;
+...
+&lt;session-management invalid-session-url&#x3D;&quot;&#x2F;invalidSession.htm&quot; &#x2F;&gt;
+&lt;&#x2F;http&gt;</code></pre></div>
+<p>请注意，如果使用此机制来检测会话超时，则在用户注销然后重新登录而不关闭浏览器的情况下，它可能会错误地报告错误。这是因为在使会话无效时不会清除会话cookie，即使用户已注销，会话cookie也会重新提交。您可以通过在注销时显式删除JSESSIONID cookie，例如通过在注销处理程序中使用以下语法：</p>
+<div class="hljs"><pre><code class="hljs markup">&lt;http&gt;
+&lt;logout delete-cookies&#x3D;&quot;JSESSIONID&quot; &#x2F;&gt;
+&lt;&#x2F;http&gt;</code></pre></div>
+<p>不幸的是，不能保证它可以与每个servlet容器一起使用，因此您需要在您的环境中对其进行测试，这里不展开讨论。</p>
+<h3 id="并发会话控制"><a href="#并发会话控制" class="headerlink" title="并发会话控制"></a>并发会话控制</h3><p>如果您希望限制单个用户登录应用程序的能力，Spring Security会通过以下简单的补充来支持此功能。首先，您需要向文件中添加以下侦听器，web.xml以使Spring Security保持有关会话生命周期事件的最新信息：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+ <span class="hljs-function">HttpSessionEventPublisher <span class="hljs-title">httpSessionEventPublisher</span><span class="hljs-params">()</span></span>&#123;
+     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HttpSessionEventPublisher();
+ &#125;</code></pre></div>
+<p>然后将以下行添加到您的应用程序上下文：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    http.authorizeRequests()
+	.sessionManagement()
+	.maximumSessions(<span class="hljs-number">1</span>)</code></pre></div>
+<p>这将防止用户多次登录，第二次登录将使第一次登录无效。如果您希望避免再次登录，在这种情况下，您可以使用</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    http.authorizeRequests()
+	.sessionManagement()
+	.maximumSessions(<span class="hljs-number">1</span>)
+	.maxSessionsPreventsLogin(<span class="hljs-keyword">true</span>);</code></pre></div>
+<p>然后，第二次登录将被拒绝。“拒绝”是指如果用户authentication-failure-url正在使用基于表单的登录名，则该用户将被发送到该页面。如果第二次身份验证是通过另一个非交互机制（例如“ remember-me”）进行的，则“未授权”（401）错误将发送给客户端。相反，如果要使用错误页面，则可以将属性添加session-authentication-error-url到session-management元素。</p>
+<h2 id="3-14-Remember-Me-Authentication"><a href="#3-14-Remember-Me-Authentication" class="headerlink" title="3.14 Remember-Me Authentication"></a>3.14 Remember-Me Authentication</h2><p>“记住我”或“持久登录”身份验证是指网站能够记住会话之间的主体身份。通常，这是通过向浏览器发送一个cookie来实现的，该cookie在以后的会话中被检测到并引起自动登录。Spring Security提供了进行这些操作所需的钩子，并具有两个具体的“记住我”实现。一种使用散列来保留基于cookie的令牌的安全性，另一种使用数据库或其他持久性存储机制来存储生成的令牌。<br>请注意，两个实现都需要一个UserDetailsService。如果您正在使用不使用的身份验证提供程序UserDetailsService（例如LDAP提供程序），那么除非您UserDetailsService在应用程序上下文中也有bean，否则它将无法工作。</p>
+<h3 id="简单的基于哈希的令牌方法"><a href="#简单的基于哈希的令牌方法" class="headerlink" title="简单的基于哈希的令牌方法"></a>简单的基于哈希的令牌方法</h3><p>这种方法使用哈希来实现有用的“记住我”策略。本质上，在成功进行交互式身份验证后，会将cookie发送到浏览器，该cookie的组成如下：</p>
+<div class="hljs"><pre><code class="hljs markup">base64(username + &quot;:&quot; + expirationTime + &quot;:&quot; +
+md5Hex(username + &quot;:&quot; + expirationTime + &quot;:&quot; password + &quot;:&quot; + key))
+
+username:          As identifiable to the UserDetailsService
+password:          That matches the one in the retrieved UserDetails
+expirationTime:    The date and time when the remember-me token expires, expressed in milliseconds
+key:               A private key to prevent modification of the remember-me token</code></pre></div>
+<p>因此，“记住我”令牌仅在指定的期限内有效，并且前提是用户名，密码和密钥不变。值得注意的是，这存在潜在的安全问题，因为捕获的“记住我”令牌将可从任何用户代理使用，直到令牌到期为止。这与摘要身份验证相同。如果委托人知道已捕获令牌，则他们可以轻松更改密码并立即使所有出现问题的“记住我”令牌失效。如果需要更重要的安全性，则应使用下一节所述的方法。另外，根本不应该使用“记住我”服务。<br>开启“记住我”功能：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+     http.authorizeRequests()
+		.rememberMe()
+		.key(<span class="hljs-string">"yyj"</span>)</code></pre></div>
+
+<h3 id="持久令牌方法"><a href="#持久令牌方法" class="headerlink" title="持久令牌方法"></a>持久令牌方法</h3><p>持久化令牌就是在基本的自动登录功能实现的基础上，又增加了新的校验参数，来提高系统的安全性。<br>在持久化令牌中，新增了两个经过MD5散列函数计算的校验参数，一个是series，另一个是token，其中series只有当用户在使用用户名/密码登录的时候才会生成或者更新，而token只要有新的会话就会重新生成，这就避免了一个用户同时在多端登录。<br>持久化令牌的具体处理类在PersistentTokenBasedRememberMeServices中。<br>首先我们需要一张表来记录令牌信息，这张表我们可以完全自定义，也可以使用系统默认提供的JDBC来操作，如果使用默认的JDBC，即JdbcTokenRepositoryImpl。<br>这里提供了一个JdbcTokenRepositoryImpl实例，并为其配置DataSource数据源，最后通过tokenRepository将JdbcTokenRepositoryImpl实例纳入配置中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+   <span class="hljs-function">JdbcTokenRepositoryImpl <span class="hljs-title">jdbcTokenRepository</span><span class="hljs-params">()</span></span>&#123;
+       JdbcTokenRepositoryImpl jdbcTokenRepository = <span class="hljs-keyword">new</span> JdbcTokenRepositoryImpl();
+       jdbcTokenRepository.setDataSource(dataSource);
+       <span class="hljs-keyword">return</span> jdbcTokenRepository;
+   &#125;
+<span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+       http.authorizeRequests()
+		.rememberMe()
+		.key(<span class="hljs-string">"yyj"</span>)
+		.tokenRepository(jdbcTokenRepository())</code></pre></div>
+<h2 id="3-15-Handling-Logouts"><a href="#3-15-Handling-Logouts" class="headerlink" title="3.15 Handling Logouts"></a>3.15 Handling Logouts</h2><h3 id="注销Java配置"><a href="#注销Java配置" class="headerlink" title="注销Java配置"></a>注销Java配置</h3><p>使用时WebSecurityConfigurerAdapter，将自动应用注销功能。默认设置是访问URL /logout，将通过以下方式注销用户：</p>
+<ul>
+<li>使HTTP会话无效</li>
+<li>清理配置的所有RememberMe身份验证</li>
+<li>清除 SecurityContextHolder</li>
+<li>重定向到 /login?logout</li>
+</ul>
+<p>但是，与配置登录功能相似，您还可以使用各种选项来进一步自定义注销要求：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    http
+        .logout(logout -&gt; logout                           <span class="hljs-comment">//1                      </span>
+            .logoutUrl(<span class="hljs-string">"/my/logout"</span>)                       <span class="hljs-comment">//2                   </span>
+            .logoutSuccessUrl(<span class="hljs-string">"/my/index"</span>)                 <span class="hljs-comment">//3                </span>
+            .logoutSuccessHandler(logoutSuccessHandler)    <span class="hljs-comment">//4             </span>
+            .invalidateHttpSession(<span class="hljs-keyword">true</span>)                   <span class="hljs-comment">//5          </span>
+            .addLogoutHandler(logoutHandler)               <span class="hljs-comment">//6       </span>
+            .deleteCookies(cookieNamesToClear)             <span class="hljs-comment">//7     </span>
+        )
+        ...
+&#125;</code></pre></div>
+
+
+<ul>
+<li>提供注销支持。使用时会自动应用WebSecurityConfigurerAdapter。</li>
+<li>触发注销的URL(默认为/logout)。如果启用了CSRF保护(默认)，那么请求也必须是POST。</li>
+<li>注销发生后重定向到的URL。默认值为/login?logout。</li>
+<li>让我们指定一个定制的 LogoutSuccessHandler。如果指定，将logoutSuccessUrl()被忽略。</li>
+<li>指定HttpSession在注销时是否使无效。默认情况下是这样。SecurityContextLogoutHandler在幕后进行配置。</li>
+<li>添加一个LogoutHandler。默认情况下SecurityContextLogoutHandler被添加为最后一个LogoutHandler。</li>
+<li>允许指定成功注销后将删除的cookie名称。这是CookieClearingLogoutHandler显式添加快捷方式。</li>
+</ul>
+<p>通常，为了自定义注销功能，可以添加 LogoutHandler 和/或 LogoutSuccessHandler 实现。</p>
+<h3 id="注销成功处理程序"><a href="#注销成功处理程序" class="headerlink" title="注销成功处理程序"></a>注销成功处理程序</h3><p>LogoutSuccessHandler在成功注销后，将调用LogoutFilter，以处理例如重定向或转发到适当的目的地，不过可能会引起异常。<br>有如下两种实现可供选择：</p>
+<ul>
+<li>SimpleUrlLogoutSuccessHandler</li>
+<li>HttpStatusReturningLogoutSuccessHandler</li>
+</ul>
+<p>正如上面提到的，您不需要直接指定SimpleUrlLogoutSuccessHandler。相反，fluent API通过设置logoutSuccessUrl()提供了一个快捷方式。这将在幕后设置SimpleUrlLogoutSuccessHandler。在注销之后，提供的URL将被重定向到。默认是/login?logout<br>在REST API类型的场景中，HttpStatusReturningLogoutSuccessHandler非常有趣。LogoutSuccessHandler允许您提供要返回的纯HTTP状态代码，而不是在成功注销后重定向到URL。如果没有配置状态码200将默认返回。</p>
+<h2 id="3-16Authentication-Events"><a href="#3-16Authentication-Events" class="headerlink" title="3.16Authentication Events"></a>3.16Authentication Events</h2><p>对于成功或失败的每个身份验证，分别触发AuthenticationSuccessEvent或AuthenticationFailureEvent。</p>
+<p>要收听这些事件，您必须首先发布AuthenticationEventPublisher。Spring Security DefaultAuthenticationEventPublisher可能会做得很好：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+<span class="hljs-keyword">public</span> AuthenticationEventPublisher authenticationEventPublisher
+        (ApplicationEventPublisher applicationEventPublisher) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefaultAuthenticationEventPublisher(applicationEventPublisher);
+&#125;</code></pre></div>
+<p>然后，您可以使用Spring的@EventListener支持：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AuthenticationEvents</span> </span>&#123;
+    <span class="hljs-meta">@EventListener</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onSuccess</span><span class="hljs-params">(AuthenticationSuccessEvent success)</span> </span>&#123;
+        <span class="hljs-comment">// ...</span>
+    &#125;
+
+    <span class="hljs-meta">@EventListener</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onFailure</span><span class="hljs-params">(AuthenticationFailureEvent failures)</span> </span>&#123;
+        <span class="hljs-comment">// ...</span>
+    &#125;
+&#125;</code></pre></div>
+<h3 id="添加异常映射"><a href="#添加异常映射" class="headerlink" title="添加异常映射"></a>添加异常映射</h3><p>默认情况下，DefaultAuthenticationEventPublisher将发布以下事件的AuthenticationFailureEvent:<br><img src="https://img-blog.csdnimg.cn/20200517212651484.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="异常映射"><br>发布者进行精确Exception匹配，这意味着这些异常的子类也不会产生事件。<br>为此，您可能希望通过以下setAdditionalExceptionMappings方法向发布者提供其他映射：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
+<span class="hljs-keyword">public</span> AuthenticationEventPublisher authenticationEventPublisher
+        (ApplicationEventPublisher applicationEventPublisher) &#123;
+    Map&lt;Class&lt;? extends AuthenticationException&gt;,
+        Class&lt;? extends AuthenticationFailureEvent&gt;&gt; mapping =
+            Collections.singletonMap(FooException<span class="hljs-class">.<span class="hljs-keyword">class</span>, <span class="hljs-title">FooEvent</span>.<span class="hljs-title">class</span>)</span>;
+    AuthenticationEventPublisher authenticationEventPublisher =
+        <span class="hljs-keyword">new</span> DefaultAuthenticationEventPublisher(applicationEventPublisher);
+    authenticationEventPublisher.setAdditionalExceptionMappings(mapping);
+    <span class="hljs-keyword">return</span> authenticationEventPublisher;
+&#125;</code></pre></div>
+
+<h1 id="4-授权"><a href="#4-授权" class="headerlink" title="4.授权"></a>4.授权</h1><p>pring Security中的高级授权功能代表了其受欢迎程度的最令人信服的原因之一。无论选择哪种身份验证方式（使用Spring Security提供的机制和提供程序，还是与容器或其他非Spring Security身份验证机构集成），您都会发现可以在应用程序中以一致且简单的方式使用授权服务。</p>
+<h2 id="4-1-授权架构"><a href="#4-1-授权架构" class="headerlink" title="4.1 授权架构"></a>4.1 授权架构</h2><h3 id="Authorities"><a href="#Authorities" class="headerlink" title="Authorities"></a>Authorities</h3><p>之前讲Authentication时就提到了getAuthorities()方法用来返回GrantedAuthority集合。而这些GrantedAuthority集合就代表了已授予委托人的权限。授予权限对象由AuthenticationManager插入到身份验证对象中，然后在进行授权决策时由AccessDecisionManager 读取。<br>GrantedAuthority 是一个只有一个方法的接口:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function">String <span class="hljs-title">getAuthority</span><span class="hljs-params">()</span></span>;</code></pre></div>
+<p>此方法允许AccessDecisionManager获取授予权限的精确字符串表示形式。通过返回一个表示为字符串的形式，大多数AccessDecisionManager都可以轻松地“读取”授予的权限。如果授予的权限不能精确地表示为字符串，则认为授予的权限是“复杂的”，而getAuthority()必须返回null。<br>“复杂”授予权限的一个示例是存储应用于不同客户帐号的操作和权限阈值列表的实现。将这个复杂的授予权限表示为字符串非常困难，因此getAuthority()方法应该返回null。这将向任何AccessDecisionManager表明，它将需要专门支持GrantedAuthority实现，以便理解其内容。<br>Spring安全性包括一个具体的授予权限实现SimpleGrantedAuthority。这允许将任何用户指定的字符串转换为授予的权限。安全体系结构中包含的所有AuthenticationProvider都使用SimpleGrantedAuthority填充Authentication对象。</p>
+<h3 id="调用前处理"><a href="#调用前处理" class="headerlink" title="调用前处理"></a>调用前处理</h3><p>Spring Security提供了拦截器，用于控制对安全对象的访问，例如方法调用或Web请求。由做出关于是否允许进行调用的预调用决定AccessDecisionManager。<br><strong>AccessDecisionManager</strong><br>由AccessDecisionManager调用，AbstractSecurityInterceptor并负责做出最终的访问控制决策。该AccessDecisionManager接口包含三种方法：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">decide</span><span class="hljs-params">(Authentication authentication, Object secureObject,</span></span>
+<span class="hljs-function"><span class="hljs-params">    Collection&lt;ConfigAttribute&gt; attrs)</span> <span class="hljs-keyword">throws</span> AccessDeniedException</span>;
+
+<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">supports</span><span class="hljs-params">(ConfigAttribute attribute)</span></span>;
+
+<span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">supports</span><span class="hljs-params">(Class clazz)</span></span>;</code></pre></div>
+<p>AccessDecisionManager的decide()方法被传递所有它需要的相关信息，以便进行授权决策。特别是，传递安全对象允许检查实际安全对象调用中包含的那些参数。例如，让我们假设安全对象是一个MethodInvocation。可以很容易地查询任何客户参数的MethodInvocation，然后在AccessDecisionManager中实现某种安全逻辑，以确保允许主体对该客户进行操作。如果请求被拒绝，则抛出AccessDeedException异常。</p>
+<p>在启动时，supports(ConfigAttribute)由方法调用此方法AbstractSecurityInterceptor，以确定是否AccessDecisionManager可以处理传递的ConfigAttribute。supports(Class)安全拦截器实现调用该方法，以确保配置的AccessDecisionManager支持安全拦截器将呈现的安全对象的类型，一般都默认返回true。</p>
+<h3 id="调用处理后"><a href="#调用处理后" class="headerlink" title="调用处理后"></a>调用处理后</h3><p>尽管在继续进行安全对象调用之前AccessDecisionManager由AbstractSecurityInterceptor调用了，但是某些应用程序需要一种修改安全对象调用实际返回的对象的方法。尽管您可以轻松实现自己的AOP问题来实现这一目标，但Spring Security提供了一个方便的挂钩，该挂钩具有几种与其ACL功能集成的具体实现。<img src="https://img-blog.csdnimg.cn/20200517220854745.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="调用处理后"><br>与Spring Security的许多其他部分一样，AfterInvocationManager具有一个具体的实现AfterInvocationProviderManager，它轮询AfterInvocationProviders 的列表。每个AfterInvocationProvider都允许修改返回对象或抛出一个AccessDeniedException。实际上，由于前一个提供程序的结果将传递到列表中的下一个，因此多个提供程序可以修改对象。</p>
+<p>请注意，如果你使用AfterInvocationManager，你仍然需要配置属性，让MethodSecurityInterceptor的AccessDecisionManager允许的操作。如果您使用的是典型的Spring Security包含的AccessDecisionManager实现，则没有为特定的安全方法调用定义配置属性，则将导致每个人AccessDecisionVoter都放弃投票。反之，如果AccessDecisionManager属性“ allowIfAllAbstainDecisions”为false，AccessDeniedException则会抛出一个。您可以通过（i）将“ allowIfAllAbstainDecisions”设置为true（尽管通常不建议这样做）或（ii）只需确保至少有一个配置属性AccessDecisionVoter将被投票授予访问权限来避免此潜在问题。后一种（推荐）方法通常是通过ROLE_USER或ROLE_AUTHENTICATED配置属性。</p>
+<h3 id="层次角色"><a href="#层次角色" class="headerlink" title="层次角色"></a>层次角色</h3><p>通常要求应用程序中的特定角色应自动“包括”其他角色。例如，在具有“管理员”和“用户”角色概念的应用程序中，您可能希望管理员能够执行普通用户可以执行的所有操作。为此，您可以确保还为所有管理员用户分配了“用户”角色。或者，您可以修改每个需要“用户”角色也要包括“管理员”角色的访问约束。<br>使用角色层次结构可以配置哪些角色(或权限)应该包括其他角色。Spring Security的RoleVoter的扩展版本RoleHierarchyVoter配置了一个RoleHierarchy，从这个RoleHierarchy中可以获得分配给用户的所有“可到达的权限”。一个典型的配置可能是这样的:</p>
+<div class="hljs"><pre><code class="hljs java">&lt;bean id=<span class="hljs-string">"roleVoter"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"org.springframework.security.access.vote.RoleHierarchyVoter"</span>&gt;
+    &lt;constructor-arg ref=<span class="hljs-string">"roleHierarchy"</span> /&gt;
+&lt;/bean&gt;
+&lt;bean id=<span class="hljs-string">"roleHierarchy"</span>
+        <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl"</span>&gt;
+    &lt;property name=<span class="hljs-string">"hierarchy"</span>&gt;
+        &lt;value&gt;
+            ROLE_ADMIN &gt; ROLE_STAFF
+            ROLE_STAFF &gt; ROLE_USER
+            ROLE_USER &gt; ROLE_GUEST
+        &lt;/value&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</code></pre></div>
+<p>在这里，我们在层次结构中具有四个角色ROLE_ADMIN ⇒ ROLE_STAFF ⇒ ROLE_USER ⇒ ROLE_GUEST。ROLE_ADMIN当AccessDecisionManager使用上述配置评估安全性约束时，通过身份验证的用户的行为就好像他们具有所有四个角色一样RoleHierarchyVoter。该&gt;符号可以被认为是“包含”的意思。</p>
+<p>角色层次结构为简化应用程序的访问控制配置数据和/或减少需要分配给用户的权限数量提供了一种方便的方法。对于更复杂的要求，您可能希望在应用程序需要的特定访问权限与分配给用户的角色之间定义逻辑映射，并在加载用户信息时在两者之间进行转换。</p>
+<h2 id="4-2-使用FilterSecurityInterceptor授权HttpServletRequest"><a href="#4-2-使用FilterSecurityInterceptor授权HttpServletRequest" class="headerlink" title="4.2 使用FilterSecurityInterceptor授权HttpServletRequest"></a>4.2 使用FilterSecurityInterceptor授权HttpServletRequest</h2><p><img src="https://img-blog.csdnimg.cn/2020051722160634.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt=".授权HttpServletRequest"><br>1、首先，FilterSecurityInterceptor从SecurityContextHolder中获得认证。</p>
+<p>2、其次，FilterSecurityInterceptor创建一个FilterInvocation从HttpServletRequest，HttpServletResponse和FilterChain被传入FilterSecurityInterceptor。</p>
+<p>3、其次，它通过FilterInvocation以SecurityMetadataSource获得ConfigAttributes。</p>
+<p>4、最后，它将身份验证、FilterInvocation和ConfigAttributes传递给AccessDecisionManager。</p>
+<p>5、如果授权被拒绝，AccessDeniedException则抛出。在这种情况下，ExceptionTranslationFilter将处理AccessDeniedException。</p>
+<p>6、如果授予访问权限，则FilterSecurityInterceptor继续执行FilterChain，该链接可允许应用程序正常处理。</p>
+<p>默认情况下，Spring Security的授权将要求对所有请求进行身份验证。显式配置如下所示：<br>每个请求都必须被认证：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    http
+        <span class="hljs-comment">// ...</span>
+        .authorizeRequests(authorize -&gt; authorize
+            .anyRequest().authenticated()
+        );
+&#125;</code></pre></div>
+<p>授权请求：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    http
+        <span class="hljs-comment">// ...</span>
+        .authorizeRequests(authorize -&gt; authorize    <span class="hljs-comment">//1                              </span>
+            .mvcMatchers(<span class="hljs-string">"/resources/**"</span>, <span class="hljs-string">"/signup"</span>, <span class="hljs-string">"/about"</span>).permitAll() <span class="hljs-comment">//2        </span>
+            .mvcMatchers(<span class="hljs-string">"/admin/**"</span>).hasRole(<span class="hljs-string">"ADMIN"</span>)    <span class="hljs-comment">//3                         </span>
+            .mvcMatchers(<span class="hljs-string">"/db/**"</span>).access(<span class="hljs-string">"hasRole('ADMIN') and hasRole('DBA')"</span>) <span class="hljs-comment">//4  </span>
+            .anyRequest().denyAll()    <span class="hljs-comment">//5                                            </span>
+        );
+&#125;</code></pre></div>
+
+<p>（1）指定了多个授权规则。每个规则均按其声明顺序进行考虑。<br>（2）我们指定了任何用户都可以访问的多个URL模式。具体来说，如果URL以“ / resources /”开头，等于“ / signup”或等于“ / about”，则任何用户都可以访问请求。<br>（3）任何以“/admin/”开头的URL都将被限制为具有“ROLE_ADMIN”角色的用户。您将注意到，由于我们调用hasRole方法，所以不需要指定“ROLE_”前缀。<br>（4）任何以“ / db /”开头的URL都要求用户同时具有“ ROLE_ADMIN”和“ ROLE_DBA”。您会注意到，由于我们使用的是hasRole表达式，因此无需指定“ ROLE_”前缀。<br>（5）任何尚未匹配的URL都会被拒绝访问。如果您不想意外忘记更新授权规则，这是一个很好的策略。</p>
+<h2 id="4-3-基于表达式的访问控制"><a href="#4-3-基于表达式的访问控制" class="headerlink" title="4.3 基于表达式的访问控制"></a>4.3 基于表达式的访问控制</h2><p>常见的内置表达式：<br><img src="https://img-blog.csdnimg.cn/20200517223030564.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="常见的内置表达式"></p>
+<p>注：以上文档主要来自Spring Security的官方文档，自己通过翻译软件翻译了一部分用于学习，其中也参考了一些大佬的博客，在这里推荐一位博主【<a href="https://www.cnkirito.moe/" target="_blank" rel="noopener">https://www.cnkirito.moe/</a>】，看了他的Spring Security系列文章，受益颇多，在此表示感谢。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/06/23/shiro%E7%B3%BB%E5%88%97-2-%E6%A0%B8%E5%BF%83/">
+                        <span class="hidden-mobile">shiro系列-2.核心</span>
+                        <span class="visible-mobile">次の記事</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">キーワード</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring Security官方文档总结&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
