@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring Boot核心知识点 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-10 20:41">
+      July 10, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      56
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="什么是Spring-Boot"><a href="#什么是Spring-Boot" class="headerlink" title="什么是Spring Boot"></a>什么是Spring Boot</h2><p>Spring Boot是Spring开源组织下的子项目，是Spring组件一站式解决方案，主要是简化了使用Spring的难度，简省了繁重的配置，提供了各种启动器，方便开发者快速上手。</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li>容易上手，提升开发效率，为 Spring 开发提供一个更快、更广泛的入门体验。</li>
+<li>开箱即用，远离繁琐的配置。</li>
+<li>提供了一系列大型项目通用的非业务性功能，例如：内嵌服务器、安全管理、运行数据监控、运行状况检查和外部化配置等。</li>
+<li>没有代码生成，也不需要XML配置。</li>
+<li>避免大量的 Maven 导入和各种版本冲突。</li>
+</ul>
+<p>Spring Boot 的核心注解是哪个？它主要由哪几个注解组成的？<br>启动类上面的注解是<strong>@SpringBootApplication</strong>，它也是 Spring Boot 的核心注解，主要组合包含了以下 3 个注解：</p>
+<ul>
+<li>@SpringBootConfiguration：组合了 @Configuration 注解，实现配置文件的功能。</li>
+<li>@EnableAutoConfiguration：打开自动配置的功能，也可以关闭某个自动配置的选项，如关闭数据源自动配置功能：<br>@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })。</li>
+<li>@ComponentScan：Spring组件扫描。</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><h2 id="什么是JavaConfig？"><a href="#什么是JavaConfig？" class="headerlink" title="什么是JavaConfig？"></a>什么是JavaConfig？</h2><p>Spring JavaConfig是Spring社区的产品，它提供了一种纯Java方法来配置Spring IoC容器。因此，它有助于避免使用XML配置。使用JavaConfig 的优点是：</p>
+<ul>
+<li><p><strong>面向对象的配置</strong>。由于配置在JavaConfig中定义为类，因此用户可以充分利用Java中面向对象的功能。一个配置类可以子类化另一个，覆盖其@Bean方法等。</p>
+</li>
+<li><p><strong>减少或消除XML配置</strong>。已经证明了基于依赖注入原理的外部化配置的好处。但是，许多开发人员不希望在XML和Java之间来回切换。JavaConfig为开发人员提供了一种纯Java方法来配置Spring容器，该容器在概念上类似于XML配置。在技术上可以仅使用JavaConfig配置类来配置容器，但是在实践中，许多人发现将JavaConfig与XML混合匹配是理想的。</p>
+</li>
+<li><p><strong>类型安全和重构友好</strong>。JavaConfig提供了一种类型安全的方法来配置Spring容器。由于Java5.0支持泛型，现在可以按类型而不是按名称检索bean，而不需要任何强制转换或基于字符串的查找。</p>
+</li>
+</ul>
+<h2 id="Spring-Boot自动配置原理是什么"><a href="#Spring-Boot自动配置原理是什么" class="headerlink" title="Spring Boot自动配置原理是什么"></a>Spring Boot自动配置原理是什么</h2><p>1、当Spring Boot启动的时候，就从主方法里面进行启动<br><img src="https://img-blog.csdnimg.cn/20200710101037566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>它主要是加载了<code>@SpringBootApplication</code>注解主配置类，主配置类里边最主要的功能就是SpringBoot开启了一个<code>@EnableAutoConfiguration</code>注解实现自动配置功能。<br><img src="https://img-blog.csdnimg.cn/20200710101253888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>2、@EnableAutoConfiguration主要利用了一个<code>EnableAutoConfigurationImportSelector</code>选择器给Spring容器中来导入一些组件。<br><img src="https://img-blog.csdnimg.cn/20200710101436552.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>3、导入的组件<br>通过查看EnableAutoConfigurationImportSelector的父类<code>selectImports</code>中的<code>selectImports</code>方法查看具体导入了哪些组件？<br>在selectImports这个方法里面主要有一个configurations，并且这个configurations最终会被返回。<br><img src="https://img-blog.csdnimg.cn/20200710101813789.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>configurations用来获取候选的配置：<br><img src="https://img-blog.csdnimg.cn/20200710101836972.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>作用就是利用<code>SpringFactoriesLoader.loadFactoryNames</code>从类路径下得到一些资源。<br>4、那么得到哪些资源呢？<br>它是扫描javajar包类路径下的<code>META-INF/spring.factories</code>这个文件<br><img src="https://img-blog.csdnimg.cn/20200710102130303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>那么扫描到的这些文件作用是把这个文件的urls拿到之后遍历每一个url，最终把这些文件整成一个properties对象。<br><img src="https://img-blog.csdnimg.cn/2020071010225564.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>然后它从properties对象里边获取一些值，用这些获取到的值来加载我们最终要返回的这个结果，这个结果就是我们要交给Spring容器中的所有组件，这个factoryClassNames就是我们传过来的Class的类名。<br>而传过来的Class是调用这个<code>getSpringFactoriesLoaderFactoryClass()</code>这个方法，得到从properties中获取到EnableAutoConfiguration.class类名对应的值，然后把它们添加在容器中。<br><img src="https://img-blog.csdnimg.cn/20200710112151709.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>5、Springjar包的META-INF下的spring.factories这个文件找到配置所有EnableAutoConfiguration的值加入到Spring容器中，每一个xxxAutoConfiguration类都是容器中的一个组件，并都加入到容器中。<br>加入到容器中之后的作用就是用它们来做自动配置，这就是Springboot自动配置之源，也就是自动配置的开始，只有这些自动配置类进入到容器中以后，接下来这个自动配置类才开始进行启动<br>6、每一个自动配置类进行自动配置功能</p>
+<p>以一个自动配置类HttpEncodingAutoConfiguration（HTTP的编码自动配置）为例来解释SpringBoot的自动配置原理：<br>1). 这个HttpEncodingAutoConfiguration类上面标注了一大堆的注解：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>    
+<span class="hljs-comment">//表示这是一个配置类，类似于以前编写的配置文件一样，也可以给容器中添加组件</span>
+<span class="hljs-meta">@EnableConfigurationProperties</span>(HttpEncodingProperties<span class="hljs-class">.<span class="hljs-keyword">class</span>) </span>
+<span class="hljs-class">//启用<span class="hljs-title">ConfigurationProperties</span>功能：</span>
+<span class="hljs-class">//这个<span class="hljs-title">ConfigurationProperties</span>里面引入了一个类，这个类就是启用指定类的<span class="hljs-title">ConfigurationProperties</span>功能</span>
+<span class="hljs-class">//有了这个@<span class="hljs-title">EnableConfigurationPropertie</span>注解以后相当于把配置文件中对应值就和这个<span class="hljs-title">HttpEncodingProperties</span>.<span class="hljs-title">class</span>类绑定起来了。</span>
+<span class="hljs-class">@<span class="hljs-title">ConditionalOnWebApplication</span> </span>
+<span class="hljs-class">//判断当前是不是<span class="hljs-title">web</span>应用，@<span class="hljs-title">Conditional</span>是<span class="hljs-title">spring</span>底层，根据不同的条件来进行自己不同的条件判断，如果满足指定的条件，那么整个配置类里边的配置才会生效。</span>
+<span class="hljs-class">@<span class="hljs-title">ConditionalOnClass</span>(<span class="hljs-title">CharacterEncodingFilter</span>.<span class="hljs-title">class</span>)</span>
+<span class="hljs-class">//判断当前项目里边有没有<span class="hljs-title">CharacterEncodingFilter</span>这个类，</span>
+<span class="hljs-class">//这个<span class="hljs-title">CharacterEncodingFilter</span>类是<span class="hljs-title">Springmvc</span>中乱码解决的过滤器。</span>
+<span class="hljs-class">@<span class="hljs-title">ConditionalOnProperty</span>(<span class="hljs-title">prefix</span> </span>= <span class="hljs-string">"spring.http.encoding"</span>, value = <span class="hljs-string">"enabled"</span>, matchIfMissing = <span class="hljs-keyword">true</span>)
+<span class="hljs-comment">//@ConditionalOnProperty注解是来判断配置文件中是否存在某个配置，就是是否存在</span>
+<span class="hljs-comment">//spring.http.encoding.enabled这个配置，matchIfMissing = true即使配置文件</span>
+<span class="hljs-comment">//中不配置spring.http.encoding.enabled=true这个属性，也是默认生效的</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpEncodingAutoConfiguration</span> </span>&#123;</code></pre></div>
+<p>点进去HttpEncodingProperties这个类，发现这个HttpEncodingProperties类上面标注了@ConfigurationProperties注解<br><img src="https://img-blog.csdnimg.cn/20200710114825931.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>xxx.Properties配置文件中该配置什么，是根据HttpEncodingProperties这个类中定义的属性来定的。<br>7、这个HttpEncodingProperties类就是根据当前不同的条件判断，决定这个配置类是否生效。<br>如果一旦生效了，所有的配置类都成功了，就给容器中添加各种组件，这些组件的属性是从对应的properties类中获取的，而这properties类里边的每一个属性又是和配置文件绑定的；<br>这个HttpEncodingAutoConfiguration只有一个有参构造器，在只有一个有参构造器的情况下，参数的值就会从容器中拿。<br>8、而容器中它怎么去拿到呢？<br>相当于是前面的这个@EnableConfigurationProperties(HttpEncodingProperties.class) 注解，这个@EnableConfigurationProperties注解的作用就是<strong>把HttpEncodingProperties.class和配置文件进行绑定起来并把HttpEncodingProperties加入到容器中</strong>。<br>接下来这个自动配置类，通过一个有参构造器把这个属性拿到，而这个属性已经和SpringBoot映射了，接下来要用什么编码，就是去HttpEncodingProperties这个类里边获取对应的属性。</p>
+<p>用好SpringBoot只要把握这几点：</p>
+<ul>
+<li>SpringBoot启动会加载大量的自动配置类，我们首先要做的就是检查我们需要的功能SpringBoot有没有帮我们写好自动配置类：</li>
+<li>如果有就再来看这个自动配置类中到底配置了哪些组件，Springboot自动配置类里边只要我们要用的组件有，我们就不需要再来配置了；</li>
+<li>但是如果说没有我们所需要的组件，那么我们就需要自己来写一个配置类来把我们相应的组件配置起来。</li>
+<li>给容器中自动配置类添加组件的时候，会从properties类中获取某些属性，而这些属性我们就可以在配置文件指定这些属性的值。</li>
+</ul>
+<h2 id="Spring-Boot配置加载顺序"><a href="#Spring-Boot配置加载顺序" class="headerlink" title="Spring Boot配置加载顺序"></a>Spring Boot配置加载顺序</h2><p>SpringBoot也可以从以下位置加载配置； 优先级从高到低；高优先级的配置覆盖低优先级的配置，所有的配置会形成<strong>互补配置</strong><br>1.命令行参数<br>所有的配置都可以在命令行上进行指定</p>
+<div class="hljs"><pre><code class="hljs java">java -jar spring-boot-<span class="hljs-number">02</span>-config-<span class="hljs-number">02</span>-<span class="hljs-number">0.0</span><span class="hljs-number">.1</span>-SNAPSHOT.jar --server.port=<span class="hljs-number">8087</span> --server.context-path=/abc</code></pre></div>
+<p>多个配置用空格分开； –配置项=值<br>2.来自java:comp/env的JNDI属性<br>3.Java系统属性（System.getProperties()）<br>4.操作系统环境变量<br>5.RandomValuePropertySource配置的random.<em>属性值<br>*</em>由jar包外向jar包内进行寻找；<br>优先加载带profile**<br>6.jar包外部的application-{profile}.properties或application.yml(带spring.profile)配置文件<br>7.jar包内部的application-{profile}.properties或application.yml(带spring.profile)配置文件<br>再来加载不带profile<br>8.jar包外部的application.properties或application.yml(不带spring.profile)配置文件<br>9.jar包内部的application.properties或application.yml(不带spring.profile)配置文件<br>java -jar spring-boot-02-config-02-0.0.1-SNAPSHOT.jar<br><img src="https://img-blog.csdnimg.cn/20200710120932504.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>10.@Configuration注解类上的@PropertySource<br>11.通过SpringApplication.setDefaultProperties指定的默认属性</p>
+<h2 id="什么是YAML"><a href="#什么是YAML" class="headerlink" title="什么是YAML"></a>什么是YAML</h2><p>YAML 是一种数据序列化语言。它通常用于配置文件。与属性文件相比，如果我们想要在配置文件中添加复杂的属性，YAML 文件就更加结构化，而且更少混淆。可以看出 YAML 具有分层配置数据。</p>
+<h2 id="YAML配置的好处"><a href="#YAML配置的好处" class="headerlink" title="YAML配置的好处"></a>YAML配置的好处</h2><ol>
+<li>支持注释</li>
+<li>良好的层级结构</li>
+<li>格式松散</li>
+<li>书写方便</li>
+</ol>
+<p>相比 properties 配置文件，YAML 还有一个缺点，就是不支持 @PropertySource 注解导入自定义的 YAML 配置。</p>
+<h2 id="Spring-Boot核心配置文件是什么？说说它们之间的区别？"><a href="#Spring-Boot核心配置文件是什么？说说它们之间的区别？" class="headerlink" title="Spring Boot核心配置文件是什么？说说它们之间的区别？"></a>Spring Boot核心配置文件是什么？说说它们之间的区别？</h2><p>spring boot 核心配置文件是bootstrap和application<br>1.加载顺序上的区别</p>
+<ul>
+<li>bootstrap.yml（bootstrap.properties）先加载</li>
+<li>application.yml（application.properties）后加载</li>
+<li>在 Spring Boot 中有两种上下文，一种是 bootstrap, 另外一种是 application, bootstrap是应用程序的父上下文，也就是说 bootstrap 加载优先于 applicaton。bootstrap主要用于从额外的资源来加载配置信息，还可以在本地外部配置文件中解密属性。这两个上下文共用一个环境，它是任何Spring应用程序的外部属性的来源。bootstrap里面的属性会优先加载，它们默认也不能被本地相同配置覆盖。</li>
+</ul>
+<p>2.bootstrap和application 的应用场景。</p>
+<ul>
+<li>bootstrap.yml 和application.yml 都可以用来配置参数。</li>
+<li>bootstrap.yml 可以理解成<strong>系统级别</strong>的一些参数配置，这些参数一般是不会变动的。</li>
+<li>application.yml 可以用来定义<strong>应用级别</strong>的，主要用于 Spring Boot 项目的自动化配置。</li>
+</ul>
+<p>bootstrap 配置文件有以下几个应用场景：</p>
+<ul>
+<li>使用 Spring Cloud Config 配置中心时，这时需要在 bootstrap<br>配置文件中添加连接到配置中心的配置属性来加载外部配置中心的配置信息；</li>
+<li>一些固定的不能被覆盖的属性</li>
+<li>一些加密/解密的场景；</li>
+</ul>
+<h2 id="什么是-Spring-Profiles？"><a href="#什么是-Spring-Profiles？" class="headerlink" title="什么是 Spring Profiles？"></a>什么是 Spring Profiles？</h2><p>Spring Profiles允许用户根据配置文件（dev，test，prod等）来注册bean。因此，当应用程序在开发中运行时，只有某些bean可以加载，而在生产环境中，某些其他bean可以加载。假设我们的要求是Swagger文档仅适用于QA环境，并且禁用所有其他文档。这可以使用配置文件来完成。Spring Boot使得使用配置文件非常简单。</p>
+<h1 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h1><h2 id="如何实现Spring-Boot应用程序的安全性"><a href="#如何实现Spring-Boot应用程序的安全性" class="headerlink" title="如何实现Spring Boot应用程序的安全性"></a>如何实现Spring Boot应用程序的安全性</h2><p>为了实现Spring Boot的安全性，我们使用spring-boot-starter-security依赖项，并且进行相关安全配置，配置类必须扩展WebSecurityConfigurerAdapter，并覆盖其方法。</p>
+<h2 id="比较Spring-Security和Shiro的优缺点"><a href="#比较Spring-Security和Shiro的优缺点" class="headerlink" title="比较Spring Security和Shiro的优缺点"></a>比较Spring Security和Shiro的优缺点</h2><ol>
+<li>Shiro比Spring Security更容易理解、使用；</li>
+<li>Spring Security有更好的社区支持；</li>
+<li>Apache Shiro在处理密码学方面有一个额外的模块；</li>
+<li>Spring Security对Spring结合较好，如果项目中没有用到Spring，建议用Shiro；</li>
+<li>Shiro功能强大，且简单、灵活，不跟任何的框架或者容器绑定，可以独立运行；</li>
+</ol>
+<h2 id="Spring-Boot-解决跨域问题"><a href="#Spring-Boot-解决跨域问题" class="headerlink" title="Spring Boot 解决跨域问题"></a>Spring Boot 解决跨域问题</h2><p>跨域可以在前端通过JSONP(JSON with Padding)来解决，但是JSONP只可以发送GET请求，在RESTful风格的应用中显得很鸡肋。<br>因此推荐在后端通过<strong>CORS</strong>（Cross-origin resource sharing，跨域资源共享） 来解决跨域问题。<br><strong>跨域问题产生的根源是浏览器的“同源策略”。</strong><br>1、同源策略<br>所谓同源，是指协议、域名以及端口要相同，同源策略是浏览器最核心、最基础的安全功能。</p>
+<p>2、CORS解决方案<br>它是一个W3C标准，是一份浏览器技术的规范，提供了Web服务从不同网域传来沙盒脚本的方法，以避开浏览器的同源策略。<br>这种解决方案并非 Spring Boot 特有的，在传统的 SSM 框架中，就可以通过 CORS 来解决跨域问题，只不过之前我们是在 XML 文件中配置 CORS ，现在可以通过实现WebMvcConfigurer接口，然后重写addCorsMappings方法解决跨域问题。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CorsConfig</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">WebMvcConfigurer</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addCorsMappings</span><span class="hljs-params">(CorsRegistry registry)</span> </span>&#123;
+        registry.addMapping(<span class="hljs-string">"/**"</span>)
+                .allowedOrigins(<span class="hljs-string">"*"</span>)
+                .allowCredentials(<span class="hljs-keyword">true</span>)
+                .allowedMethods(<span class="hljs-string">"GET"</span>, <span class="hljs-string">"POST"</span>, <span class="hljs-string">"PUT"</span>, <span class="hljs-string">"DELETE"</span>, <span class="hljs-string">"OPTIONS"</span>)
+                .maxAge(<span class="hljs-number">3600</span>);
+    &#125;
+&#125;</code></pre></div>
+<p>项目中前后端分离部署，所以需要解决跨域的问题。<br>我们使用cookie存放用户登录的信息，在spring拦截器进行权限控制，当权限不符合时，直接返回给用户固定的json结果。<br>当用户登录以后，正常使用；当用户退出登录状态时或者token过期时，由于拦截器和跨域的顺序有问题，出现了跨域的现象。<br>我们知道<strong>一个http请求，先走filter，到达servlet后才进行拦截器的处理</strong>，如果我们把cors放在filter里，就可以优先于权限拦截器执行。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CorsConfig</span> </span>&#123;
+
+    <span class="hljs-meta">@Bean</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> CorsFilter <span class="hljs-title">corsFilter</span><span class="hljs-params">()</span> </span>&#123;
+        CorsConfiguration corsConfiguration = <span class="hljs-keyword">new</span> CorsConfiguration();
+        corsConfiguration.addAllowedOrigin(<span class="hljs-string">"*"</span>);
+        corsConfiguration.addAllowedHeader(<span class="hljs-string">"*"</span>);
+        corsConfiguration.addAllowedMethod(<span class="hljs-string">"*"</span>);
+        corsConfiguration.setAllowCredentials(<span class="hljs-keyword">true</span>);
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = <span class="hljs-keyword">new</span> UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration(<span class="hljs-string">"/**"</span>, corsConfiguration);
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> CorsFilter(urlBasedCorsConfigurationSource);
+    &#125;
+&#125;</code></pre></div>
+<h2 id="什么是-CSRF-攻击？"><a href="#什么是-CSRF-攻击？" class="headerlink" title="什么是 CSRF 攻击？"></a>什么是 CSRF 攻击？</h2><p>CSRF 代表跨站请求伪造。这是一种网络攻击方式，利用网站对于用户网页浏览器的信任，挟持用户当前已登录的web应用程序，去执行并非用户本意的操作。</p>
+<p>CSRF攻击实例：</p>
+<ol>
+<li>用户登录、浏览正规但是具有漏洞的网站webA，webA通过用户的验证，并在用户的浏览器中产生Cookie；</li>
+<li>攻击者webB通过在webA中添加图片链接等方式诱导用户访问网站webB；</li>
+<li>在用户被诱导到webB后，webB会利用用户的浏览器访问第三方网站webA，并发出操作请求（用户自身并不知情）；</li>
+<li>用户的浏览器根据webB的要求，带着之前产生的Cookie访问webA；</li>
+<li>网站webA接收到用户浏览器的请求，webA无法分辨请求由何处发出，由于浏览器访问时带上用户的Cookie，因此webA会响应浏览器的请求，如此一来，攻击网站webB就达到了模拟用户操作的目的。</li>
+</ol>
+<h1 id="整合第三方项目"><a href="#整合第三方项目" class="headerlink" title="整合第三方项目"></a>整合第三方项目</h1><h2 id="什么是WebSocket"><a href="#什么是WebSocket" class="headerlink" title="什么是WebSocket"></a>什么是WebSocket</h2><p><img src="https://img-blog.csdnimg.cn/20200710152146412.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>WebSocket是一种在<strong>单个TCP连接</strong>上进行<strong>全双工通讯</strong>的网络通信协议，因为HTTP协议的通信只能由客户端发起，在某些特殊的场景下，如：聊天室，假如用HTTP协议，那么只能轮询获取服务端有没有消息，而WebSocket是<strong>双向</strong>的，客户端和服务端都可以进行消息发送，另外WebSocket是全双工的，客户端和服务端通信相互独立；WebSocket 消息数据交换要比HTTP开销更小，效率更高。</p>
+<h2 id="什么是Spring-Data"><a href="#什么是Spring-Data" class="headerlink" title="什么是Spring Data"></a>什么是Spring Data</h2><p>Spring Data是Spring的一个子项目，用于<strong>简化数据库访问</strong>，支持NoSQL和关系数据存储，其主要目标是使数据库的访问变得方便快捷。</p>
+<h2 id="什么是-FreeMarker-模板？"><a href="#什么是-FreeMarker-模板？" class="headerlink" title="什么是 FreeMarker 模板？"></a>什么是 FreeMarker 模板？</h2><p>FreeMarker 是一款模板引擎： 即一种基于模板和要改变的数据， 并用来生成输出文本(HTML网页，电子邮件，配置文件，源代码等)的通用工具。 它不是面向最终用户的，而是一个Java类库，是一款程序员可以嵌入他们所开发产品的组件。</p>
+<h2 id="什么是Apache-kafka"><a href="#什么是Apache-kafka" class="headerlink" title="什么是Apache kafka"></a>什么是Apache kafka</h2><p>Apache Kafka 是一个分布式数据流处理平台，可以实时发布、订阅、存储和处理数据流。它设计为处理多种来源的数据流，并将它们交付到多个消费者。简而言之，它可以移动大量数据，不仅是从 A 点移到 B 点，而是能从 A 到 Z 的多个点移到任何您想要的位置，并且可以同时进行。<br>Apache Kafka 可以取代传统的企业级消息传递系统。它最初是 Linkedin 为处理每天 1.4 万亿条消息而开发的一个内部系统，现已成为应用于各式各样企业需求的开源数据流处理解决方案。</p>
+<h2 id="什么是Swagger"><a href="#什么是Swagger" class="headerlink" title="什么是Swagger"></a>什么是Swagger</h2><p>Swagger 广泛用于可视化 API，使用 Swagger UI 为前端开发人员提供在线沙箱。Swagger 是用于生成 RESTful Web 服务的可视化表示的工具，规范和完整框架实现。它使文档能够与服务器相同的速度更新。当通过 Swagger 正确定义时，消费者可以使用最少量的实现逻辑来理解远程服务并与其进行交互。因此，Swagger 消除了调用服务时的猜测。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="如何重新加载-Spring-Boot-上的更改，而无需重新启动服务器？Spring-Boot项目如何热部署？"><a href="#如何重新加载-Spring-Boot-上的更改，而无需重新启动服务器？Spring-Boot项目如何热部署？" class="headerlink" title="如何重新加载 Spring Boot 上的更改，而无需重新启动服务器？Spring Boot项目如何热部署？"></a>如何重新加载 Spring Boot 上的更改，而无需重新启动服务器？Spring Boot项目如何热部署？</h2><p>使用DEV工具来实现，Spring Boot有一个开发工具（DevTools）模块，会将文件更改自动部署到服务器，无需重新启动服务器，消除了每次手动部署更改的需要，以此来提高开发人员的生产力。</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
+
+<h2 id="Spring-Boot中的starter到底是什么"><a href="#Spring-Boot中的starter到底是什么" class="headerlink" title="Spring Boot中的starter到底是什么"></a>Spring Boot中的starter到底是什么</h2><ul>
+<li>首先它提供了一个自动化配置类（xxxAutoConfiguration），在这个配置类中通过条件注解来决定一个配置是否生效；</li>
+<li>然后提供一系列默认配置，允许开发者根据实际情况自定义相关配置，然后通过类型安全的属性注入将这些配置属性注入进来。</li>
+</ul>
+<h2 id="spring-boot-starter-parent-有什么用"><a href="#spring-boot-starter-parent-有什么用" class="headerlink" title="spring-boot-starter-parent 有什么用 ?"></a>spring-boot-starter-parent 有什么用 ?</h2><ul>
+<li>定义了Java编译版本为1.8</li>
+<li>使用UTF-8格式编码</li>
+<li>提供Dependency Management进行项目依赖的版本管理</li>
+<li>默认的资源过滤和插件管理</li>
+</ul>
+<h2 id="Spring-Boot-打成的-jar-和普通的-jar-有什么区别"><a href="#Spring-Boot-打成的-jar-和普通的-jar-有什么区别" class="headerlink" title="Spring Boot 打成的 jar 和普通的 jar 有什么区别 ?"></a>Spring Boot 打成的 jar 和普通的 jar 有什么区别 ?</h2><p>Spring Boot项目最终打包成的jar是可执行的jar，这种jar可以直接通过<code>Java -jar xxx.jar</code>命令来运行，这种jar不可以作为普通的jar被其他项目依赖，即使依赖了也无法使用其中的类。<br>Spring Boot的jar无法被其他项目依赖，主要还是它跟普通jar的结构不同，普通的jar包，解压后直接就是包名，包里就是我们的代码，而Spring Boot打包成的可执行jar解压后，在<code>\BOOT-INF\classes</code>目录下才是我们的代码，因此无法直接被引用。</p>
+<h2 id="微服务分布式session共享解决方案"><a href="#微服务分布式session共享解决方案" class="headerlink" title="微服务分布式session共享解决方案"></a>微服务分布式session共享解决方案</h2><ol>
+<li><p>tomcat的session共享<br>优点：不需要额外开发，只需搭建tomcat集群即可<br>缺点：tomcat 是全局session复制，集群内每个tomcat的session完全同步（也就是任何时候都完全一样的) 在大规模应用的时候，用户过多，集群内tomcat数量过多，session的全局复制会导致集群性能下降， 因此，tomcat的数量不能太多，而且依赖tomcat容器移植性不好(所以不采用)</p>
+</li>
+<li><p>cookie同步session 如JWT(json web token)<br>这种完全把客户的登陆信息保存在客户端的cookie中，每次请求带着cookie中的Token<br>优点：由于完全舍弃了session 会减轻服务器端的压力<br>缺点：是把信息暴露在外，就算有加密算法还是存在安全问题；禁止使用cookie的情况下无效。</p>
+</li>
+<li><p><strong>redis 集中管理session(常用)</strong><br>优点：redis为内存数据库，读写效率高，并可在集群环境下做高可用</p>
+</li>
+</ol>
+<h2 id="Spring-Boot-中如何实现定时任务"><a href="#Spring-Boot-中如何实现定时任务" class="headerlink" title="Spring Boot 中如何实现定时任务 ?"></a>Spring Boot 中如何实现定时任务 ?</h2><p>定时任务也是一个常见的需求，Spring Boot 中对于定时任务的支持主要还是来自 Spring 框架。</p>
+<p>在 Spring Boot 中使用定时任务主要有两种不同的方式，一个就是使用 Spring 中的 <strong>@Scheduled</strong> 注解，另一个则是使用第三方框架 <strong>Quartz</strong>。</p>
+<ul>
+<li>使用 Spring 中的 @Scheduled 的方式主要通过 @Scheduled 注解来实现。</li>
+<li>使用 Quartz ，则按照 Quartz 的方式，定义 Job 和 Trigger 即可。</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/SSM%E6%A1%86%E6%9E%B6/">SSM框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/SSM%E6%A1%86%E6%9E%B6/Spring-Boot/">Spring Boot</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Boot/">Spring Boot</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
+                        <span class="hidden-mobile">MyBatis核心知识点</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring Boot核心知识点&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
