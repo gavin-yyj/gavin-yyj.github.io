@@ -240,22 +240,24 @@
 </ul>
 <h2 id="Spring-Boot自动配置原理是什么"><a href="#Spring-Boot自动配置原理是什么" class="headerlink" title="Spring Boot自动配置原理是什么"></a>Spring Boot自动配置原理是什么</h2><p>1、当Spring Boot启动的时候，就从主方法里面进行启动<br><img src="https://img-blog.csdnimg.cn/20200710101037566.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>它主要是加载了<code>@SpringBootApplication</code>注解主配置类，主配置类里边最主要的功能就是SpringBoot开启了一个<code>@EnableAutoConfiguration</code>注解实现自动配置功能。<br><img src="https://img-blog.csdnimg.cn/20200710101253888.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>2、@EnableAutoConfiguration主要利用了一个<code>EnableAutoConfigurationImportSelector</code>选择器给Spring容器中来导入一些组件。<br><img src="https://img-blog.csdnimg.cn/20200710101436552.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>3、导入的组件<br>通过查看EnableAutoConfigurationImportSelector的父类<code>selectImports</code>中的<code>selectImports</code>方法查看具体导入了哪些组件？<br>在selectImports这个方法里面主要有一个configurations，并且这个configurations最终会被返回。<br><img src="https://img-blog.csdnimg.cn/20200710101813789.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>configurations用来获取候选的配置：<br><img src="https://img-blog.csdnimg.cn/20200710101836972.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>作用就是利用<code>SpringFactoriesLoader.loadFactoryNames</code>从类路径下得到一些资源。<br>4、那么得到哪些资源呢？<br>它是扫描javajar包类路径下的<code>META-INF/spring.factories</code>这个文件<br><img src="https://img-blog.csdnimg.cn/20200710102130303.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>那么扫描到的这些文件作用是把这个文件的urls拿到之后遍历每一个url，最终把这些文件整成一个properties对象。<br><img src="https://img-blog.csdnimg.cn/2020071010225564.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>然后它从properties对象里边获取一些值，用这些获取到的值来加载我们最终要返回的这个结果，这个结果就是我们要交给Spring容器中的所有组件，这个factoryClassNames就是我们传过来的Class的类名。<br>而传过来的Class是调用这个<code>getSpringFactoriesLoaderFactoryClass()</code>这个方法，得到从properties中获取到EnableAutoConfiguration.class类名对应的值，然后把它们添加在容器中。<br><img src="https://img-blog.csdnimg.cn/20200710112151709.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>5、Springjar包的META-INF下的spring.factories这个文件找到配置所有EnableAutoConfiguration的值加入到Spring容器中，每一个xxxAutoConfiguration类都是容器中的一个组件，并都加入到容器中。<br>加入到容器中之后的作用就是用它们来做自动配置，这就是Springboot自动配置之源，也就是自动配置的开始，只有这些自动配置类进入到容器中以后，接下来这个自动配置类才开始进行启动<br>6、每一个自动配置类进行自动配置功能</p>
 <p>以一个自动配置类HttpEncodingAutoConfiguration（HTTP的编码自动配置）为例来解释SpringBoot的自动配置原理：<br>1). 这个HttpEncodingAutoConfiguration类上面标注了一大堆的注解：</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>    
-<span class="hljs-comment">//表示这是一个配置类，类似于以前编写的配置文件一样，也可以给容器中添加组件</span>
-<span class="hljs-meta">@EnableConfigurationProperties</span>(HttpEncodingProperties<span class="hljs-class">.<span class="hljs-keyword">class</span>) </span>
-<span class="hljs-class">//启用<span class="hljs-title">ConfigurationProperties</span>功能：</span>
-<span class="hljs-class">//这个<span class="hljs-title">ConfigurationProperties</span>里面引入了一个类，这个类就是启用指定类的<span class="hljs-title">ConfigurationProperties</span>功能</span>
-<span class="hljs-class">//有了这个@<span class="hljs-title">EnableConfigurationPropertie</span>注解以后相当于把配置文件中对应值就和这个<span class="hljs-title">HttpEncodingProperties</span>.<span class="hljs-title">class</span>类绑定起来了。</span>
-<span class="hljs-class">@<span class="hljs-title">ConditionalOnWebApplication</span> </span>
-<span class="hljs-class">//判断当前是不是<span class="hljs-title">web</span>应用，@<span class="hljs-title">Conditional</span>是<span class="hljs-title">spring</span>底层，根据不同的条件来进行自己不同的条件判断，如果满足指定的条件，那么整个配置类里边的配置才会生效。</span>
-<span class="hljs-class">@<span class="hljs-title">ConditionalOnClass</span>(<span class="hljs-title">CharacterEncodingFilter</span>.<span class="hljs-title">class</span>)</span>
-<span class="hljs-class">//判断当前项目里边有没有<span class="hljs-title">CharacterEncodingFilter</span>这个类，</span>
-<span class="hljs-class">//这个<span class="hljs-title">CharacterEncodingFilter</span>类是<span class="hljs-title">Springmvc</span>中乱码解决的过滤器。</span>
-<span class="hljs-class">@<span class="hljs-title">ConditionalOnProperty</span>(<span class="hljs-title">prefix</span> </span>= <span class="hljs-string">"spring.http.encoding"</span>, value = <span class="hljs-string">"enabled"</span>, matchIfMissing = <span class="hljs-keyword">true</span>)
-<span class="hljs-comment">//@ConditionalOnProperty注解是来判断配置文件中是否存在某个配置，就是是否存在</span>
-<span class="hljs-comment">//spring.http.encoding.enabled这个配置，matchIfMissing = true即使配置文件</span>
-<span class="hljs-comment">//中不配置spring.http.encoding.enabled=true这个属性，也是默认生效的</span>
-<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpEncodingAutoConfiguration</span> </span>&#123;</code></pre></div>
+<div class="hljs"><pre><code class="hljs java">	<span class="hljs-meta">@Configuration</span>    
+	<span class="hljs-comment">//表示这是一个配置类，类似于以前编写的配置文件一样，也可以给容器中添加组件</span>
+
+	<span class="hljs-meta">@EnableConfigurationProperties</span>(HttpEncodingProperties<span class="hljs-class">.<span class="hljs-keyword">class</span>) </span>
+<span class="hljs-class">	//启用<span class="hljs-title">ConfigurationProperties</span>功能：</span>
+<span class="hljs-class">	//这个<span class="hljs-title">ConfigurationProperties</span>里面引入了一个类，这个类就是启用指定类的<span class="hljs-title">ConfigurationProperties</span>功能,</span>
+<span class="hljs-class">	//有了这个@<span class="hljs-title">EnableConfigurationPropertie</span>注解以后相当于把配置文件中对应值就和这个<span class="hljs-title">HttpEncodingProperties</span>.<span class="hljs-title">class</span>类绑定起来了。</span>
+<span class="hljs-class"></span>
+<span class="hljs-class">	@<span class="hljs-title">ConditionalOnWebApplication</span> </span>
+<span class="hljs-class">	//判断当前是不是<span class="hljs-title">web</span>应用，@<span class="hljs-title">Conditional</span>是<span class="hljs-title">spring</span>底层，根据不同的条件来进行自己不同的条件判断，如果满足指定的条件，那么整个配置类里边的配置才会生效。</span>
+<span class="hljs-class"></span>
+<span class="hljs-class">	@<span class="hljs-title">ConditionalOnClass</span>(<span class="hljs-title">CharacterEncodingFilter</span>.<span class="hljs-title">class</span>)</span>
+<span class="hljs-class">	//判断当前项目里边有没有<span class="hljs-title">CharacterEncodingFilter</span>这个类，该类是<span class="hljs-title">Springmvc</span>中乱码解决的过滤器。</span>
+<span class="hljs-class"></span>
+<span class="hljs-class">	@<span class="hljs-title">ConditionalOnProperty</span>(<span class="hljs-title">prefix</span> </span>= <span class="hljs-string">"spring.http.encoding"</span>, value = <span class="hljs-string">"enabled"</span>, matchIfMissing = <span class="hljs-keyword">true</span>)
+	<span class="hljs-comment">//@ConditionalOnProperty注解是来判断配置文件中是否存在某个配置，就是是否存在spring.http.encoding.enabled这个配置，</span>
+<span class="hljs-comment">//matchIfMissing = true即使配置文件中不配置spring.http.encoding.enabled=true这个属性，也是默认生效的</span>
+	<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpEncodingAutoConfiguration</span> </span>&#123;</code></pre></div>
 <p>点进去HttpEncodingProperties这个类，发现这个HttpEncodingProperties类上面标注了@ConfigurationProperties注解<br><img src="https://img-blog.csdnimg.cn/20200710114825931.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>xxx.Properties配置文件中该配置什么，是根据HttpEncodingProperties这个类中定义的属性来定的。<br>7、这个HttpEncodingProperties类就是根据当前不同的条件判断，决定这个配置类是否生效。<br>如果一旦生效了，所有的配置类都成功了，就给容器中添加各种组件，这些组件的属性是从对应的properties类中获取的，而这properties类里边的每一个属性又是和配置文件绑定的；<br>这个HttpEncodingAutoConfiguration只有一个有参构造器，在只有一个有参构造器的情况下，参数的值就会从容器中拿。<br>8、而容器中它怎么去拿到呢？<br>相当于是前面的这个@EnableConfigurationProperties(HttpEncodingProperties.class) 注解，这个@EnableConfigurationProperties注解的作用就是<strong>把HttpEncodingProperties.class和配置文件进行绑定起来并把HttpEncodingProperties加入到容器中</strong>。<br>接下来这个自动配置类，通过一个有参构造器把这个属性拿到，而这个属性已经和SpringBoot映射了，接下来要用什么编码，就是去HttpEncodingProperties这个类里边获取对应的属性。</p>
 <p>用好SpringBoot只要把握这几点：</p>
 <ul>
@@ -408,6 +410,12 @@
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/07/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-Map/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构-Map</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">

@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      2.2k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      24
        分钟
     </span>
   
@@ -301,7 +301,13 @@
 <li>对null key 和null value的支持：HashMap允许null作为键，但是只能有一个，可以有多个键所对应的值为null；HashTable中键值对都不允许为null</li>
 <li>初始容量大小和每次扩容量大小：创建时如果不指定容量初始值，HashTable默认的初始值大小为11，之后每次扩容容量变为原来的2n+1，HashMap的初始容量为16，之后每次扩容为原来的2倍。</li>
 </ol>
-<h2 id="HashMap和ConcurrentHashMap的区别"><a href="#HashMap和ConcurrentHashMap的区别" class="headerlink" title="HashMap和ConcurrentHashMap的区别"></a>HashMap和ConcurrentHashMap的区别</h2><p>1、ConcurrentHashMap对整个桶数组进行了分割分段（Segment），然后在每个分段上都用locak锁进行保护，在JDK1.8以后摒弃了Segment的概念，而是直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，并发控制采用<strong>synchronized</strong>和<strong>CAS</strong>来操作；HashMap没有锁机制，不是线程安全的。<br>2、HashMap的键值对允许有null，ConcurrentHashMap都不允许。</p>
+<h2 id="HashMap和ConcurrentHashMap的区别"><a href="#HashMap和ConcurrentHashMap的区别" class="headerlink" title="HashMap和ConcurrentHashMap的区别"></a>HashMap和ConcurrentHashMap的区别</h2><h3 id="1-谈谈你理解的HashMap，讲讲其中的get、put过程"><a href="#1-谈谈你理解的HashMap，讲讲其中的get、put过程" class="headerlink" title="1. 谈谈你理解的HashMap，讲讲其中的get、put过程"></a>1. 谈谈你理解的HashMap，讲讲其中的get、put过程</h3><p>HashMap的主干是一个Entry数组，Entry是HashMap的基本组成单元，每一个Entry包含一个key-value键值对，JDK1.8以前，HashMap由数组+链表组成，数组是HashMap的主体，链表则是主要为了解决哈希冲突而存在的，如果定位到的数组位置不包含链表（当前Entry的next指向null），那么查找、添加仅需一次寻址即可，如果定位的数组包含链表，对于添加操作，其时间复杂度为O(n)，首先遍历链表，存在即覆盖，否则新增；对于查找操作，需遍历链表，然后通过key对象的equals方法逐一进行比较。</p>
+<p>HashMap默认的initialCapacity为16，loadFactory默认为0.75。</p>
+<p>当发生哈希冲突并且size大于阈值的时候，需要进行数组扩容，扩容时，需要新建一个长度为之前数组2倍的新的数组，然后将当前的Entry数组中的元素全部传输过去，扩容后的新数组长度为之前的2倍，好处是可以利用位运算提高取模速度，快速计算出元素新的下标。</p>
+<h3 id="2-HashMap在JDK1-8做了什么优化"><a href="#2-HashMap在JDK1-8做了什么优化" class="headerlink" title="2. HashMap在JDK1.8做了什么优化"></a>2. HashMap在JDK1.8做了什么优化</h3><ul>
+<li>JDK1.8增加了红黑树来进行优化，当链表长度超过8时，链表就转为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能；</li>
+<li>Entry改为Node</li>
+</ul>
 <h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable和comparator的区别"><a href="#comparable和comparator的区别" class="headerlink" title="comparable和comparator的区别"></a>comparable和comparator的区别</h2><ul>
 <li>comparable接口出自java.lang包，它有一个compareTo(Object obj)方法用来排序；</li>
 <li>comparator接口出自java.util包，它有一个compare(Object obj1,Object obj2)方法用来排序</li>

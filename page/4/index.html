@@ -179,6 +179,95 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/">0. Redis--引导</a>
+
+      <a href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、Redis简介Redis是一个开源的内存中的数据结构存储系统，它可以用作：数据库、缓存和消息中间件。
+它支持多种类型的数据结构，如字符串（String），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：String、L</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/">10. Redis--如何优化缓存架构</a>
+
+      <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、为什么要用缓存集群啥叫热 Key 和大 Value 呢?简单来说，热 Key，就是你的缓存集群中的某个 Key 瞬间被数万甚至十万的并发请求打爆。
+大 Value，就是你的某个 Key 对应的 Value 可能有 GB 级的大小，导致查询 Value 的时候出现网络相关的故障问题。
+先来看看下面的一幅图：
+
+简单来说，假设你手头有个系统，他本身是集群部署的，然后后面有一套缓存集群，这个集群不管</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/">9. Redis--Redis缓存问题</a>
 
       <a href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/" class="index-excerpt">
@@ -575,112 +664,6 @@ Set/SortedSet类型的key个数
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/05/1-Redis-%E5%AE%89%E8%A3%85Redis/">1. Redis--安装Redis</a>
-
-      <a href="/2020/06/05/1-Redis-%E5%AE%89%E8%A3%85Redis/" class="index-excerpt">
-        
-        
-          
-        
-        <div>1.1 什么是 RedisRedis 是使用 C 语言开发的一个开源的高性能键值对（key-value）数据库。它通过提供多种键值数据类型来适应不同场景下的存储需求，Redis 支持以下五种数据类型：
-
-String 类型
-List 类型
-Set 类型
-SortedSet 类型
-Hash类型
-
-1.2 Redis 应用场景
-缓存
-分布式集群架构中session分离
-任务队列
-…
-
-1.3 安装 R</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-05
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/13-Netty-%E4%BD%BF%E7%94%A8UDP%E5%B9%BF%E6%92%AD%E4%BA%8B%E4%BB%B6/">13.Netty--使用UDP广播事件</a>
-
-      <a href="/2020/06/03/13-Netty-%E4%BD%BF%E7%94%A8UDP%E5%B9%BF%E6%92%AD%E4%BA%8B%E4%BB%B6/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-UDP概述
-一个广播应用程序示例
-
-
-UDP的基础知识面向连接的传输（如TCP）管理了两个网络端点之间的连接的建立，在连接的生命周期内的有序和可靠的消息传输，以及最后连接的有序终止。类似于UDP这样的无连接协议中，并没有持久化连接这样的概念，并且每个消息（一个UDP数据报）都是一个单独的传输单元。
-UDP广播UDP提供了向多个接收者发送消息的额外传输模式：多播：传播到一个预定义</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/java/">java</a>
-            
-              <a href="/categories/java/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
