@@ -179,6 +179,67 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">7.Netty--EventLoop和线程模型</a>
+
+      <a href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+线程模型概述
+事件循环的概念和实现
+任务调度
+实现细节
+
+
+线程模型概述基本的线程池化模式可以描述为：
+
+从池的空闲列表中选择一个Thread，并且指派它去运行一个已提交的任务（一个Runnable的实现）；
+
+当任务完成时，将该Thread返回给该列表，使其可被重用。
+
+
+
+（1）要执行的任务；
+（2）任务递交给了线程池；
+（3）从线程池中拉取一个可用的Thread，并执行任</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-01
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/05/31/6-Netty-ChannelHandler%E5%92%8CChannelPipeline/">6.Netty--ChannelHandler和ChannelPipeline</a>
 
       <a href="/2020/05/31/6-Netty-ChannelHandler%E5%92%8CChannelPipeline/" class="index-excerpt">
@@ -223,9 +284,9 @@ ChannelAct</div>
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -280,9 +341,9 @@ ByteBuf的APIJava NIO虽然提供了ByteBuffer作为字节容器，但是其使�
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -333,9 +394,9 @@ public class PlainOioServer &#123;
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -384,9 +445,9 @@ ChannelHandler和ChannelPipeline
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -442,9 +503,9 @@ ChannelHandler和ChannelPipeline
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -499,9 +560,9 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/java/">java</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
             
-              <a href="/categories/java/Netty/">Netty</a>
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
             
           </div>
         
@@ -653,53 +714,6 @@ ServerSocket serverSocket = new ServerSocket(portNumber);//1
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-6-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86/">SpringBoot集成Spring Security(6)--登录管理</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-6-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86/" class="index-excerpt">
-        
-        
-          
-        
-        <div>一、自定义认证成功、失败处理有些时候我们想要在认证成功后做一些业务处理，例如添加积分；有些时候我们想要在认证失败后也做一些业务处理，例如记录日志。
-在之前的文章中，关于认证成功、失败后的处理都是如下配置的：
-http.authorizeRequests()
-    // 如果有允许匿名的url，填在下面
-//    .antMatchers().permitAll()
-    .anyReques</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -736,7 +750,7 @@ http.authorizeRequests()
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -745,7 +759,7 @@ http.authorizeRequests()
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

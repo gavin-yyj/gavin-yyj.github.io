@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.5k 字
+      5.2k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      48
+      57
        分钟
     </span>
   
@@ -215,7 +215,8 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="Spring概述"><a href="#Spring概述" class="headerlink" title="Spring概述"></a>Spring概述</h1><h2 id="什么是Spring"><a href="#什么是Spring" class="headerlink" title="什么是Spring"></a>什么是Spring</h2><p>Spring是一个轻量级的Java开发框架，目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题，<strong>简化Java开发</strong>，其设计理念是通过IoC容器实现对象耦合关系的管理，从而实现<strong>解耦</strong>。</p>
+              <hr>
+<h1 id="Spring概述"><a href="#Spring概述" class="headerlink" title="Spring概述"></a>Spring概述</h1><h2 id="什么是Spring"><a href="#什么是Spring" class="headerlink" title="什么是Spring"></a>什么是Spring</h2><p>Spring是一个轻量级的Java开发框架，目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题，<strong>简化Java开发</strong>，其设计理念是通过IoC容器实现对象耦合关系的管理，从而实现<strong>解耦</strong>。</p>
 <h2 id="Spring的优缺点"><a href="#Spring的优缺点" class="headerlink" title="Spring的优缺点"></a>Spring的优缺点</h2><p>优点：</p>
 <ul>
 <li>方便解耦，简化开发（将所有对象的创建和依赖关系的维护交给Spring管理）</li>
@@ -246,17 +247,18 @@
 <li>单例模式：Bean默认是单例模式</li>
 <li>代理模式：AOP功能用到了JDK的动态代理和CGLIB字节码生成技术；</li>
 <li>模板方法模式：用来解决代码重复的问题，如：JpaTemplate，RestTemplate</li>
-<li>观察者模式：当一个对象的状态发生改变时，所有依赖于它的对象都能得到通知，如监听器功能。<h1 id="Spring控制反转（IoC）"><a href="#Spring控制反转（IoC）" class="headerlink" title="Spring控制反转（IoC）"></a>Spring控制反转（IoC）</h1><h2 id="什么是Spring-IoC容器"><a href="#什么是Spring-IoC容器" class="headerlink" title="什么是Spring IoC容器"></a>什么是Spring IoC容器</h2>控制反转是将传统上由程序代码直接操控的对象的调用权交给容器，通过容器来实现对象组件的装配和管理，所谓的“控制反转”概念就是对组件对象控制权的转移，从程序代码本身转移到了外部容器，实现了<strong>解耦</strong>。</li>
+<li>观察者模式：当一个对象的状态发生改变时，所有依赖于它的对象都能得到通知，如监听器功能。</li>
 </ol>
+<h1 id="Spring控制反转（IoC）"><a href="#Spring控制反转（IoC）" class="headerlink" title="Spring控制反转（IoC）"></a>Spring控制反转（IoC）</h1><h2 id="什么是Spring-IoC容器"><a href="#什么是Spring-IoC容器" class="headerlink" title="什么是Spring IoC容器"></a>什么是Spring IoC容器</h2><p>控制反转是将传统上由程序代码直接操控的对象的调用权交给容器，通过容器来实现对象组件的装配和管理，所谓的“控制反转”概念就是对组件对象控制权的转移，从程序代码本身转移到了外部容器，实现了<strong>解耦</strong>。</p>
 <p>Spring IoC负责创建对象，并管理这些对象的整个生命周期。</p>
 <h2 id="Spring-IoC的实现机制"><a href="#Spring-IoC的实现机制" class="headerlink" title="Spring IoC的实现机制"></a>Spring IoC的实现机制</h2><p>工厂模式+反射机制</p>
-<h2 id="BeanFactory和ApplicationContext的区别"><a href="#BeanFactory和ApplicationContext的区别" class="headerlink" title="BeanFactory和ApplicationContext的区别"></a>BeanFactory和ApplicationContext的区别</h2><p>BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。<br>区别：<br>依赖关系：</p>
+<h2 id="BeanFactory和ApplicationContext的区别"><a href="#BeanFactory和ApplicationContext的区别" class="headerlink" title="BeanFactory和ApplicationContext的区别"></a>BeanFactory和ApplicationContext的区别</h2><p>BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。<br><strong>区别：</strong><br>依赖关系：</p>
 <ul>
 <li><p>BeanFactory：是Spring里面最底层的接口，包含了各种Bean的定义，读取bean配置文档，管理bean的加载、实例化，控制bean的生命周期，维护bean之间的依赖关系。</p>
 </li>
 <li><p>ApplicationContext接口作为BeanFactory的派生，除了提供BeanFactory所具有的功能外，还提供了更完整的框架功能：</p>
 <ul>
-<li>继承MessageSource，因此支持国际化。</li>
+<li>继承MessageSource，因此支持国际化（i18n）。</li>
 <li>统一的资源文件访问方式。</li>
 <li>提供在监听器中注册bean的事件。</li>
 <li>同时加载多个配置文件。</li>
@@ -272,21 +274,21 @@
 <p>创建方式：</p>
 <ul>
 <li>BeanFactory通常以编程的方式被创建</li>
-<li>ApplicationContext还能以声明的方式创建，如使用ContextLoader。</li>
+<li>ApplicationContext还能以<strong>声明</strong>的方式创建，如使用ContextLoader。</li>
 </ul>
 <h2 id="ApplicationContext通常的实现是什么？"><a href="#ApplicationContext通常的实现是什么？" class="headerlink" title="ApplicationContext通常的实现是什么？"></a>ApplicationContext通常的实现是什么？</h2><ul>
 <li>FileSystemXmlApplicationContext：通过程序在初始化的时候，导入Bean配置文件，然后得到Bean实例。</li>
 <li>ClassPathXmlApplicationContext：从类路径下的xml文件中加载bean的配置文件；</li>
 <li>XmlWebApplicationContext：在B/S系统中,通常在web.xml初始化bean的配置文件，然后由WebAppliCationContextUtil得到ApplicationContext</li>
 </ul>
-<h2 id="什么是依赖注入（DI）"><a href="#什么是依赖注入（DI）" class="headerlink" title="什么是依赖注入（DI）"></a>什么是依赖注入（DI）</h2><p>依赖注入（Dependency Injection，DI），是组件之间依赖关系由容器在运行期决定，即由容器动态的将某个依赖关系注入到组件之中。依赖注入的目的并非为软件系统带来更多功能，而是为了<strong>提升组件重用的频率</strong>，并为系统搭建一个<strong>灵活</strong>、<strong>可扩展</strong>的平台。通过依赖注入机制，只需要通过简单的配置，而无需任何代码就可指定目标需要的资源，完成自身的业务逻辑，而不需要关心具体的资源来自何处，由谁实现。<br><strong>依赖注入是实现控制反转的方法和手段。</strong></p>
+<h2 id="什么是依赖注入（DI）"><a href="#什么是依赖注入（DI）" class="headerlink" title="什么是依赖注入（DI）"></a>什么是依赖注入（DI）</h2><p>依赖注入（Dependency Injection，DI），是组件之间依赖关系由容器在运行期决定，即由容器动态地将某个依赖关系注入到组件之中。依赖注入的目的并非为软件系统带来更多功能，而是为了<strong>提升组件重用的频率</strong>，并为系统搭建一个<strong>灵活</strong>、<strong>可扩展</strong>的平台。通过依赖注入机制，只需要通过简单的配置，而无需任何代码就可指定目标需要的资源，完成自身的业务逻辑，而不需要关心具体的资源来自何处，由谁实现。<br><strong>依赖注入是实现控制反转的方法和手段。</strong></p>
 <h2 id="依赖注入的常见实现方式"><a href="#依赖注入的常见实现方式" class="headerlink" title="依赖注入的常见实现方式"></a>依赖注入的常见实现方式</h2><ul>
 <li><p>setter注入</p>
 </li>
 <li><p>构造方法注入</p>
 </li>
 <li><p>注解注入</p>
- <div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Controller</span>
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UserController</span> </span>&#123;
     <span class="hljs-comment">// 使用注解自动注入</span>
     <span class="hljs-meta">@Autowired</span>()
@@ -313,25 +315,52 @@
 <p>有状态就是有数据存储功能，有状态对象就是有实例变量的对象，可以保存数据，是非线程安全的，所以要使用prototype保证安全；</p>
 <p>无状态就是一次操作，不能保存数据，无状态对象就是没有实例变量的对象，线程安全，因此使用singleton性能更好。</p>
 </blockquote>
+<h3 id="Spring配置bean实例化有哪些方式？"><a href="#Spring配置bean实例化有哪些方式？" class="headerlink" title="Spring配置bean实例化有哪些方式？"></a>Spring配置bean实例化有哪些方式？</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-number">1</span>）使用类构造器实例化(默认无参数)
+&lt;bean id="bean1" class="cn.itcast.spring.b_instance.Bean1"&gt;&lt;/bean&gt;
+<span class="hljs-number">2</span>）使用静态工厂方法实例化(简单工厂模式)
+<span class="hljs-comment">//下面这段配置的含义：调用Bean2Factory的getBean2方法得到bean2</span>
+&lt;bean id=<span class="hljs-string">"bean2"</span> 
+<span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"cn.itcast.spring.b_instance.Bean2Factory"</span> factory-method=<span class="hljs-string">"getBean2"</span>&gt;
+&lt;/bean&gt;
+<span class="hljs-number">3</span>）使用实例工厂方法实例化(工厂方法模式)
+<span class="hljs-comment">//先创建工厂实例bean3Facory，再通过工厂实例创建目标bean实例</span>
+&lt;bean id=<span class="hljs-string">"bean3Factory"</span> <span class="hljs-class"><span class="hljs-keyword">class</span></span>=<span class="hljs-string">"cn.itcast.spring.b_instance.Bean3Factory"</span>&gt;
+&lt;/bean&gt;
+&lt;bean id=<span class="hljs-string">"bean3"</span> factory-bean=<span class="hljs-string">"bean3Factory"</span> factory-method=<span class="hljs-string">"getBean3"</span>&gt;
+&lt;/bean&gt;</code></pre></div>
+<h3 id="Spring配置bean实例化有哪些方式"><a href="#Spring配置bean实例化有哪些方式" class="headerlink" title="Spring配置bean实例化有哪些方式"></a>Spring配置bean实例化有哪些方式</h3><p>1）使用类构造器实例化(默认无参数)</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"bean1"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"cn.itcast.spring.b_instance.Bean1"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>2）使用静态工厂方法实例化(简单工厂模式)<br>下面这段配置的含义：调用Bean2Factory的getBean2方法得到bean2</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"bean2"</span> </span>
+<span class="hljs-tag"><span class="hljs-attr">class</span>=<span class="hljs-string">"cn.itcast.spring.b_instance.Bean2Factory"</span> <span class="hljs-attr">factory-method</span>=<span class="hljs-string">"getBean2"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>3）使用实例工厂方法实例化(工厂方法模式)<br>先创建工厂实例bean3Facory，再通过工厂实例创建目标bean实例</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"bean3Factory"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"cn.itcast.spring.b_instance.Bean3Factory"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"bean3"</span> <span class="hljs-attr">factory-bean</span>=<span class="hljs-string">"bean3Factory"</span> <span class="hljs-attr">factory-method</span>=<span class="hljs-string">"getBean3"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
 <h2 id="Spring如何解决线程并发问题"><a href="#Spring如何解决线程并发问题" class="headerlink" title="Spring如何解决线程并发问题"></a>Spring如何解决线程并发问题</h2><p>在Spring中，绝大部分Bean都可以声明为singleton作用域（不是线程安全的），因为Spring对一些Bean中非线程安全状态采用<strong>ThreadLocal</strong>进行处理，解决线程安全问题。<br>ThreadLocal会为每个线程提供一个独立的变量副本，从而隔离多个线程对数据的访问冲突，在编写多线程代码时，可以把不安全的变量封装进ThreadLocal。</p>
 <h2 id="Bean的生命周期"><a href="#Bean的生命周期" class="headerlink" title="Bean的生命周期"></a>Bean的生命周期</h2><ol>
 <li>实例化：Spring对Bean进行实例化；</li>
 <li>属性赋值：Spring将值和Bean的引用注入到Bean对应的属性中；</li>
 <li>初始化：<ul>
-<li>如果这个Bean已经实现了BeanNameAware接口，会调用它实现的setBeanName(String)方法，此处传递的就是Spring配置文件中Bean的id值</li>
+<li>如果这个Bean已经实现了BeanNameAware接口，会调用它实现的setBeanName(String)方法，此处传递的就是Spring配置文件中Bean的id值；</li>
 <li>如果这个Bean已经实现了BeanFactoryAware接口，会调用它实现的setBeanFactory(setBeanFactory(BeanFactory)传递的是Spring工厂自身（可以用这个方式来获取其它Bean，只需在Spring配置文件中配置一个普通的Bean就可以）；</li>
 <li>如果这个Bean已经实现了ApplicationContextAware接口，会调用setApplicationContext(ApplicationContext)方法，传入Spring上下文（同样这个方式也可以实现步骤4的内容，但比4更好，因为ApplicationContext是BeanFactory的子接口，有更多的实现方法）；</li>
 <li>如果这个Bean关联了BeanPostProcessor接口，将会调用postProcessBeforeInitialization(Object obj, String s)方法，BeanPostProcessor经常被用作是Bean内容的更改，并且由于这个是在Bean初始化结束时调用那个的方法，也可以被应用于内存或缓存技术；</li>
 <li>如果Bean在Spring配置文件中配置了init-method属性会自动调用其配置的初始化方法。</li>
-<li>如果这个Bean关联了BeanPostProcessor接口，将会调用postProcessAfterInitialization(Object obj, String s)方法、；</li>
+<li>如果这个Bean关联了BeanPostProcessor接口，将会调用postProcessAfterInitialization(Object obj, String s)方法；</li>
 </ul>
 </li>
-<li>销毁：当容器关闭时，调用Bean的销毁方法</li>
+<li>销毁：当容器关闭时，调用Bean的销毁方法（A：使用配置文件指定的destroy-method属性；B：实现org.springframwork.bean.factory.DisposeableBean接口）</li>
 </ol>
 <p>注意：Spring 容器可以管理 singleton 作用域下 bean 的生命周期，在此作用域下，Spring 能够精确地知道bean何时被创建，何时初始化完成，以及何时被销毁。而<strong>对于 prototype 作用域的bean，Spring只负责创建</strong>，当容器创建了 bean 的实例后，bean 的实例就交给了客户端的代码管理，Spring容器将不再跟踪其生命周期，并且不会管理那些被配置成prototype作用域的bean的生命周期。  </p>
 <h2 id="Bean生命周期方法"><a href="#Bean生命周期方法" class="headerlink" title="Bean生命周期方法"></a>Bean生命周期方法</h2><p>bean 标签有两个重要的属性（init-method和destroy-method）。用它们你可以自己定制初始化和注销方法。相应的注解是@PostConstruct和@PreDestroy。</p>
+<h2 id="Bean注入属性有几种方式？"><a href="#Bean注入属性有几种方式？" class="headerlink" title="Bean注入属性有几种方式？"></a>Bean注入属性有几种方式？</h2><p>接口注入、构造器注入、set注入。</p>
 <h2 id="Component-和-Bean-有什么区别？"><a href="#Component-和-Bean-有什么区别？" class="headerlink" title="@Component 和 @Bean 有什么区别？"></a>@Component 和 @Bean 有什么区别？</h2><p>它们的作用对象不同：@Component 作用于类，而 @Bean 注解作用于方法。</p>
-<p>@Component 通常是通过类路径扫描来自动侦测和装配对象到 Spring 容器中，比如 @ComponentScan 注解就是定义扫描路径中的类装配到 Spring 的 Bean 容器中；@Bean 注解是告诉 Spring 这是某个类的实例，当我需要用它的时把它给我，@Bean 注解比 @Component 注解自定义性更强，很多地方我们只能通过 @Bean 注解来注册 Bean，比如当我们引用第三方库中的类需要装配到 Spring容器时，则只能通过 @Bean 来实现。</p>
+<p>@Component 通常是通过类路径扫描来自动侦测和装配对象到 Spring 容器中，比如 @ComponentScan 注解就是定义扫描路径中的类装配到 Spring 的 Bean 容器中；@Bean 注解是告诉 Spring 这是某个类的实例，当我需要用它时把它给我，@Bean 注解比 @Component 注解自定义性更强，很多地方我们只能通过 @Bean 注解来注册 Bean，比如当我们引用第三方库中的类需要装配到 Spring容器时，则只能通过 @Bean 来实现。</p>
 <h2 id="使用-Autowired注解自动装配的过程是怎样的？"><a href="#使用-Autowired注解自动装配的过程是怎样的？" class="headerlink" title="使用@Autowired注解自动装配的过程是怎样的？"></a>使用@Autowired注解自动装配的过程是怎样的？</h2><p>使用@Autowired注解来自动装配指定的bean。在使用@Autowired注解之前需要在Spring配置文件进行配置，&lt;context:annotation-config /&gt;。</p>
 <p>在启动spring IoC时，容器自动装载了一个AutowiredAnnotationBeanPostProcessor后置处理器，当容器扫描到@Autowied、@Resource或@Inject时，就会在IoC容器自动查找需要的bean，并装配给该对象的属性。在使用@Autowired时，首先在容器中查询对应类型的bean：</p>
 <ul>
@@ -350,6 +379,7 @@
         <span class="hljs-keyword">return</span> name;
     &#125;
 &#125;</code></pre></div>
+
 <h2 id="Autowired和-Resource之间的区别"><a href="#Autowired和-Resource之间的区别" class="headerlink" title="@Autowired和@Resource之间的区别"></a>@Autowired和@Resource之间的区别</h2><p>@Autowired可用于：构造函数、成员变量、Setter方法<br>@Autowired和@Resource之间的区别</p>
 <ul>
 <li>@Autowired默认是按照<strong>类型</strong>装配注入的，默认情况下它要求依赖对象必须存在（可以设置它required属性为false）。</li>
@@ -358,6 +388,23 @@
 <h2 id="RequestMapping-注解有什么用？"><a href="#RequestMapping-注解有什么用？" class="headerlink" title="@RequestMapping 注解有什么用？"></a>@RequestMapping 注解有什么用？</h2><p>用来标识 http 请求地址与 Controller 类的方法之间的映射，可以注释到类上，也可以注释到方法上。</p>
 <h1 id="Spring数据访问"><a href="#Spring数据访问" class="headerlink" title="Spring数据访问"></a>Spring数据访问</h1><h2 id="Spring-DAO有什么用"><a href="#Spring-DAO有什么用" class="headerlink" title="Spring DAO有什么用"></a>Spring DAO有什么用</h2><p>Spring DAO（数据访问对象）使得JDB、Hibernate或JDO这样的数据访问技术更容易以一种统一的方式工作，使得用户容易在持久层技术之间切换，而无需考虑捕获每种技术不同的异常。</p>
 <h2 id="JdbcTemplate是什么"><a href="#JdbcTemplate是什么" class="headerlink" title="JdbcTemplate是什么"></a>JdbcTemplate是什么</h2><p>JdbcTemplate类提供了很多便利的方法解决诸如把数据库数据编程基本数据类型或对象，执行写好的或可调用的数据库操作语句，提供自定义的数据错误处理。</p>
+<h2 id="Spring的事务管理"><a href="#Spring的事务管理" class="headerlink" title="Spring的事务管理"></a>Spring的事务管理</h2><p>事务就是对一系列的数据库操作（比如插入多条数据）进行统一的提交或回滚操作，如果插入成功，那么一起成功，如果中间有一条出现异常，那么回滚之前的所有操作。这样可以防止出现脏数据，防止数据库数据出现问题。</p>
+<p>Spring有自己的事务管理机制，一般是使用TransactionManager进行管理，可以通过Spring的注入来完成此功能，Spring提供了几个有关事务处理的类：</p>
+<ul>
+<li>TransactionDefinition：事务属性定义；</li>
+<li>TransactionStatus：代表了当前事务，可以提交、回滚；</li>
+<li>PlatformTransactionManager：Spring提供用于管理事务的基础接口，其下有一个实现的抽象类AbstractPlatformTransactionManager，我们使用的事务管理类如：DataSourceTransactionManager等都是这个类的子类。</li>
+</ul>
+<p>一般事务定义步骤：</p>
+<div class="hljs"><pre><code class="hljs java">TransactionDefinition td = newTransactionDefinition();
+TransactionStatus ts = transactionManager.getTransaction(td);
+<span class="hljs-keyword">try</span>&#123; 
+    <span class="hljs-comment">//do sth</span>
+    transactionManager.commit(ts);
+&#125;<span class="hljs-keyword">catch</span>(Exception e)&#123;
+    transactionManager.rollback(ts);
+&#125;</code></pre></div>
+
 <h2 id="Spring支持的事务管理类型及其实现方式"><a href="#Spring支持的事务管理类型及其实现方式" class="headerlink" title="Spring支持的事务管理类型及其实现方式"></a>Spring支持的事务管理类型及其实现方式</h2><p>Spring支持两种类型的事务管理：</p>
 <ul>
 <li>编程式事务管理：通过编程的方式管理事务，灵活但难以维护；</li>
@@ -372,12 +419,14 @@
 </ul>
 <h2 id="事务的传播属性"><a href="#事务的传播属性" class="headerlink" title="事务的传播属性"></a>事务的传播属性</h2><p>　<strong>PROPAGATION_REQUIRED</strong> – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。<br>　<strong>PROPAGATION_SUPPORTS</strong> – 支持当前事务，如果当前没有事务，就以非事务方式执行。<br>　<strong>PROPAGATION_MANDATORY</strong> – 支持当前事务，如果当前没有事务，就抛出异常。<br>　<strong>PROPAGATION_REQUIRES_NEW</strong> – 新建事务，如果当前存在事务，把当前事务挂起。<br>　<strong>PROPAGATION_NOT_SUPPORTED</strong> – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。<br>　<strong>PROPAGATION_NEVER</strong> – 以非事务方式执行，如果当前存在事务，则抛出异常。<br>　<strong>PROPAGATION_NESTED</strong>–如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED</p>
 <h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><h2 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h2><p>AOP(Aspect-Oriented Programming)，一般称为面向切面编程，作为面向对象的一种补充，用于<strong>将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“切面”（Aspect），减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。可用于<strong>权限认证</strong>、日志、事务处理等。</p>
-<h2 id="AOP的名词解释"><a href="#AOP的名词解释" class="headerlink" title="AOP的名词解释"></a>AOP的名词解释</h2><p>通知（Advice）：你想要的功能，如：安全，事务，日志等；</p>
-<p>连接点（JoinPoint）：Spring<strong>允许</strong>你使用通知的地方，一般是方法前后；</p>
-<p>切入点（Pointcut）：连接点是可以使用通知的地方，而切入点是你<strong>想要</strong>使用通知的地方；</p>
-<p>切面（Aspect）：通知和切入点的结合，通知说明了<strong>干什么和什么时候干</strong>（时间是通过方法名中的before、after、around等确定的），切入点说明了<strong>在哪干</strong>（指定使用通知的方法）；</p>
-<p>目标（target）：被通知的对象，也就是真正的业务逻辑，被通知的对象可以在毫不知情的情况下，被织入切面，而自己专注于业务本身的逻辑；</p>
-<p>织入（weaving）：把切面应用到目标对象来创建新的代理对象的过程；</p>
+<h2 id="AOP的名词解释"><a href="#AOP的名词解释" class="headerlink" title="AOP的名词解释"></a>AOP的名词解释</h2><ul>
+<li>通知（Advice）：在切面的某个特定的连接点（Joinpoint）上执行的动作。通知有各种类型，其中包括“around”、“before”和“after”等通知。<br>通知的类型将在后面部分进行讨论。许多AOP框架，包括Spring，都是以拦截器做通知模型， 并维护一个以连接点为中心的拦截器链。</li>
+<li>连接点（JoinPoint）：Spring<strong>允许</strong>你使用通知的地方，一般是方法前后；</li>
+<li>切入点（Pointcut）：连接点是可以使用通知的地方，而切入点是你<strong>想要</strong>使用通知的地方；</li>
+<li>切面（Aspect）：<strong>通知</strong>和<strong>切入点</strong>的结合，通知说明了<strong>干什么和什么时候干</strong>（时间是通过方法名中的before、after、around等确定的），切入点说明了<strong>在哪干</strong>（指定使用通知的方法）；</li>
+<li>目标（target）：被通知的对象，也就是真正的业务逻辑，被通知的对象可以在毫不知情的情况下，被织入切面，而自己专注于业务本身的逻辑；</li>
+<li>织入（weaving）：把切面应用到目标对象来创建新的代理对象的过程；</li>
+</ul>
 <h2 id="Spring-AOP和AspectJ-AOP有什么区别"><a href="#Spring-AOP和AspectJ-AOP有什么区别" class="headerlink" title="Spring AOP和AspectJ AOP有什么区别"></a>Spring AOP和AspectJ AOP有什么区别</h2><p>AOP实现的关键在于代理模式，AOP代理主要分为静态代理和动态代理，静态代理的代表是AspectJ，动态代理则有Spring AOP和CGLIB。<br>区别：</p>
 <ul>
 <li>AspectJ是静态代理的增强，AOP框架会在编译阶段生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</li>
@@ -431,7 +480,7 @@
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -440,7 +489,7 @@
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -473,7 +522,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -500,7 +549,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -509,7 +558,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

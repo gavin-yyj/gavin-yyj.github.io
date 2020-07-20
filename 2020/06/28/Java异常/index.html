@@ -226,7 +226,7 @@
 <h2 id="抛出异常（throw，不是必须处理）"><a href="#抛出异常（throw，不是必须处理）" class="headerlink" title="抛出异常（throw，不是必须处理）"></a>抛出异常（throw，不是必须处理）</h2><p>在<strong>方法内</strong>，用throw来抛出一个Throwable类型的异常。一旦遇到到throw语句，后面的代码将不被执行。然后，便是进行异常处理——包含该异常的try-catch最终处理，也可以向上层抛出。注意我们只能抛出Throwable类和其子类的对象。</p>
 <h2 id="Throw和Throws的区别是什么？"><a href="#Throw和Throws的区别是什么？" class="headerlink" title="Throw和Throws的区别是什么？"></a>Throw和Throws的区别是什么？</h2><ul>
 <li>throw关键字用在方法内部，只能用于抛出一种异常，用来抛出方法或代码块中的异常，受检异常和非受检异常都可以被抛出；</li>
-<li>throws关键字用在方法声明上，可以抛出多个异常，用来标识该方法可能抛出的异常列表，一个方法用throws标识了可能抛出的异常列表，调用该方法的方法中必须包含可处理该异常的代码，否则也要在方法签名中用throws关键字声明相应的异常。</li>
+<li>throws关键字用在方法声明上，可以声明多个异常，用来标识该方法可能抛出的异常列表，一个方法用throws标识了可能抛出的异常列表，调用该方法的方法中必须包含可处理该异常的代码，否则也要在方法签名中用throws关键字声明相应的异常。</li>
 </ul>
 
             </article>
@@ -261,7 +261,7 @@
                       <a href="/2020/06/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java并发编程</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -270,7 +270,7 @@
                     
                       <a href="/2020/06/28/Java%E9%9B%86%E5%90%88/">
                         <span class="hidden-mobile">Java集合</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -303,7 +303,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -330,7 +330,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -339,7 +339,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
