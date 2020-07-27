@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>アーカイブ - 杨玉杰|个人博客</title>
+  <title>归档 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -171,12 +171,36 @@
                 
 
 <div class="list-group">
-  <p class="h4">合計 66 件のポスト</p>
+  <p class="h4">共计 70 篇文章</p>
   <hr>
   
     
       
       <p class="h5">2020</p>
+    
+    <a href="/2020/07/27/TCP%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">TCP重传、滑动窗口、流量控制、拥塞控制</span>
+      <span style="float: right;">07-27</span>
+    </a>
+  
+    
+    <a href="/2020/07/27/Spring-Cloud%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Spring Cloud面试题汇总</span>
+      <span style="float: right;">07-27</span>
+    </a>
+  
+    
+    <a href="/2020/07/27/Netty%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Netty面试题汇总</span>
+      <span style="float: right;">07-27</span>
+    </a>
+  
+    
+    <a href="/2020/07/27/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="list-group-item list-group-item-action">
+      <span class="archive-post-title">Redis面试题汇总</span>
+      <span style="float: right;">07-27</span>
+    </a>
+  
     
     <a href="/2020/07/19/Spring-Cloud-%E5%BC%80%E7%AF%87/" class="list-group-item list-group-item-action">
       <span class="archive-post-title">Spring Cloud 开篇</span>
@@ -213,31 +237,19 @@
       <span style="float: right;">07-10</span>
     </a>
   
-    
-    <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">MyBatis核心知识点</span>
-      <span style="float: right;">07-10</span>
-    </a>
-  
-    
-    <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Spring核心知识点</span>
-      <span style="float: right;">07-09</span>
-    </a>
-  
-    
-    <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">MySQL数据库</span>
-      <span style="float: right;">07-07</span>
-    </a>
-  
-    
-    <a href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">JVM浅析</span>
-      <span style="float: right;">07-01</span>
-    </a>
-  
 </div>
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/archives/2020/07/page/2/">2</a><a class="extend next" rel="next" href="/archives/2020/07/page/2/"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+  
+  <script>
+    for (ele of document.getElementById("pagination").getElementsByTagName("a")) {
+      ele.href += '#board';
+    }
+  </script>
 
 
 
@@ -261,7 +273,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -270,7 +282,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -330,7 +342,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "アーカイブ&nbsp;",
+        "归档&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

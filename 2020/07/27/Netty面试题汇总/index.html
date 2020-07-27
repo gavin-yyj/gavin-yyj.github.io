@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Netty面试题汇总 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-07-27 14:32">
+      July 27, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.7k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      39
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-Netty是什么？"><a href="#1-Netty是什么？" class="headerlink" title="1. Netty是什么？"></a>1. Netty是什么？</h1><p>Netty是一个<strong>异步事件驱动</strong>的网络应用程序框架，用于快速开发可维护性的高性能协议服务器和客户端，Netty是基于NIO的，它封装了JDK的NIO，让我们使用起来更加方便灵活。</p>
+<h1 id="2-Netty的特点是什么？"><a href="#2-Netty的特点是什么？" class="headerlink" title="2. Netty的特点是什么？"></a>2. Netty的特点是什么？</h1><ul>
+<li>高并发：Netty是一款基于NIO开发的网络通信框架，对比于BIO，它的并发性能得到了很大提高。</li>
+<li>传输快：Netty的传输依赖于零拷贝特性，尽量减少不必要的内存拷贝，实现了更高效率的传输。</li>
+<li>封装好：Netty封装了NIO操作的很多细节，提供了易于使用的接口。</li>
+</ul>
+<h1 id="3-Netty有哪些优势？"><a href="#3-Netty有哪些优势？" class="headerlink" title="3. Netty有哪些优势？"></a>3. Netty有哪些优势？</h1><ul>
+<li>使用简单：封装了NIO的很多细节，使用更加简单；</li>
+<li>功能强大：预置了多种编解码功能，支持多种主流协议；</li>
+<li>定制能力强：可以通过ChannelHandler对通信框架进行灵活地扩展；</li>
+<li>性能高：通过与其他业界主流的NIO框架对比，Netty的综合性能最优；</li>
+<li>稳定：Netty修复了已经发现的所有NIO的bug，让开发人员可以专注于业务本身；</li>
+<li>社区活跃：Netty是活跃的开源项目，版本迭代周期短，bug修复速度快。</li>
+</ul>
+<h1 id="4-Netty的应用场景有哪些？"><a href="#4-Netty的应用场景有哪些？" class="headerlink" title="4. Netty的应用场景有哪些？"></a>4. Netty的应用场景有哪些？</h1><ul>
+<li>互联网行业：阿里分布式服务框架：Dubbo，默认使用Netty作为基础通信组件，还有RocketMQ也是使用Netty作为通讯的基础。</li>
+<li>游戏行业：Netty作为高性能的基础通信组件，它本身提供了TCP/UDP和HTTP协议栈，非常方便定制和开发私有协议栈，账号登录服务器，地图服务器之间可以方便的通过Netty进行高性能的通信；</li>
+<li>大数据领域：Hadoop的高性能通信和序列化组件Avro的RPC框架默认采用Netty进行跨界点通信。</li>
+</ul>
+<h1 id="5-Netty高性能表现在哪些方面？"><a href="#5-Netty高性能表现在哪些方面？" class="headerlink" title="5. Netty高性能表现在哪些方面？"></a>5. Netty高性能表现在哪些方面？</h1><ul>
+<li>IO线程模型：同步非阻塞，用最少的资源做更多的事情；</li>
+<li>内存零拷贝：尽量减少不必要的内存拷贝，实现了更高效率的传输；</li>
+<li>内存池设计：申请的内存可以重用，主要指直接内存，内部实现是用一棵二叉查找树管理内存分配情况；</li>
+<li>串行化处理读写：避免使用锁带来的性能开销；</li>
+<li>高性能序列化协议：支持protobuf等高性能序列化协议；</li>
+</ul>
+<h1 id="6-BIO、NIO和AIO的区别？"><a href="#6-BIO、NIO和AIO的区别？" class="headerlink" title="6. BIO、NIO和AIO的区别？"></a>6. BIO、NIO和AIO的区别？</h1><ul>
+<li>BIO：一个连接一个线程，客户端有连接请求时服务器端就需要开启一个线程进行处理，线程开销大；</li>
+<li>伪异步IO：将请求连接放入线程池，一对多；</li>
+<li>NIO：一个请求一个线程，但客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有I/O请求时才启动一个线程进行处理；</li>
+<li>AIO：一个有效请求一个线程，客户端的I/O请求都是由OS先完成了再通知服务器应用去启动线程进行处理；</li>
+<li>BIO是面向流的，NIO是面向缓冲区的，BIO的各种流是阻塞的，而NIO是非阻塞的，BIO的Stream是单向的,而NIO的channel是双向的;</li>
+<li>NIO的特点：事件驱动模型，单线程处理多任务，非阻塞I/O，I/O读写不再阻塞，而是返回0，基于块的传输比基于流的传输更高效，零拷贝技术、多路IO复用大大提高了Java网络应用的可伸缩性和实用性，基于Reactor线程模型。</li>
+</ul>
+<p>在Reactor模式中，事件分发器等待某个事件或某个操作的发生，事件分发器就把这个事件传给事先注册的事件处理函数或者回调函数，由后者来做实际的读写操作，如在Reactor中实现读：注册读就绪事件和相应的事件处理器-&gt;事件分发器等待事件-&gt;事件到来-&gt;激活分发器-&gt;分发器调用事件对应的处理器-&gt;事件处理器完成实际的读操作-&gt;处理读到的数据-&gt;注册新的事件-&gt;然后返还控制权。</p>
+<h1 id="7-NIO的组成？"><a href="#7-NIO的组成？" class="headerlink" title="7. NIO的组成？"></a>7. NIO的组成？</h1><ul>
+<li>Buffer：与channel进行交互，数据从channel读入缓冲区，从缓冲区写入channel中；</li>
+<li>clear方法：使缓冲区为一系列新的通道<strong>读取</strong>或相对放置操作做好准备，它将限制设置为容量大小，将当前位置设置为0；</li>
+<li>flip方法：使缓冲区为一系列新的通道写入或相对获取操作做好准备，它将限制设置为当前位置，然后将当前位置设置为0；</li>
+<li>rewind方法：重读此缓冲区，将position设置为0；</li>
+<li>DirectByteBuffer：可减少一次系统空间到用户空间的拷贝，但Buffer创建和销毁的成本更高，不可控，通常会用内存池来提高性能，直接缓冲区主要分配给那些一首基础系统的本机I/O操作影响的大型、持久的缓冲区，如果数据量比较小的中小应用，可以考虑使用heapBuffer，由JVM进行管理；</li>
+<li>Channel：表示IO源与目标打开的连接，是双向的，但不能直接访问数据，只能与Buffer进行交互；</li>
+<li>Selector：可使一个单独的线程管理多个Channel，open方法可创建Selector，register方法向多路复用器注册通道，可以监听的事件类型：读、写、连接、accept。注册事件后会产生一个SelectionKey：它表示SelectableChannel和Selector之间的注册关系，wakeup方法：使尚未返回的第一个选择操作立即返回。<h1 id="8-Netty的线程模型？"><a href="#8-Netty的线程模型？" class="headerlink" title="8. Netty的线程模型？"></a>8. Netty的线程模型？</h1>Netty的线程模型是基于Reactor模型的。<h2 id="Netty单线程模型"><a href="#Netty单线程模型" class="headerlink" title="Netty单线程模型"></a>Netty单线程模型</h2>Reactor单线程模型，是指所有的I/O操作都在同一个NIO线程上完成，此时NIO线程的职责包括：接收新连接请求，读写操作等。<br><img src="https://img-blog.csdnimg.cn/20200725172205341.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>在一些小容量应用场景下，可以使用单线程模型，但是对于高负载、高并发的应用场景却不合适，主要原因是：</li>
+<li>一个NIO线程同时处理成百上千的连接，性能上无法支撑，即使NIO线程的CPU负荷达到100%，也无法满足海量消息的编码、解码、读取和发送；</li>
+<li>当NIO线程负载过重之后，处理速度将变慢，这会导致大量客户端连接超时，超时之后往往会进行重发，这更加重了NIO线程的负载，最终会导致大量消息积压和处理超时，成为系统的性能瓶颈；</li>
+<li>可靠性问题：一旦NIO线程意外跑飞，或者进入死循环，会导致整个系统通信模块不可用，不能接收和处理外部消息，造成节点故障。</li>
+</ul>
+<h2 id="Reactor多线程模型"><a href="#Reactor多线程模型" class="headerlink" title="Reactor多线程模型"></a>Reactor多线程模型</h2><p>Reactor多线程模型与单线程模型最大的区别就是有一组NIO线程来处理连接读写操作，一个NIO线程处理Accept，一个NIO线程可以处理多个连接事件，一个连接事件只能属于一个NIO线程。<br><img src="https://img-blog.csdnimg.cn/20200725173009137.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>在绝大多数场景下，Reactor多线程模型可以满足性能要求，但是在个别特殊场景下，一个NIO线程负责监听和处理所有的客户端连接可能会存在性能问题。例如并发百万客户端连接，或者服务端需要对客户端握手进行安全认证，但是认证本身非常损耗性能，在这类场景下，单独一个Acceptor线程可能会存在性能不足的问题，为了解决性能问题，产生了第三种Reactor线程模型–主从Reactor多线程模型。</p>
+<h2 id="Reactor主从多线程模型"><a href="#Reactor主从多线程模型" class="headerlink" title="Reactor主从多线程模型"></a>Reactor主从多线程模型</h2><p>主从Reactor线程模型的特点是：服务端用于接收客户端连接的不再是一个单独的NIO线程，而是一个独立的NIO线程池，Acceptor接收到客户端TCP连接请求并处理完成后（可能包含接入认证等），将新创建的SocketChannel注册到I/O线程池的某个I/O线程上，由它负责SocketChannel的读写和编解码工作，<strong>Acceptor线程池仅仅用于客户端的登录，握手和安全认证</strong>，一旦链路建立成功，就将链路注册到后端subReactor线程池的I/O线程上，由I/O线程负责后续的I/O操作。<br><img src="https://img-blog.csdnimg.cn/20200725174138228.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h1 id="9-TCP粘包-拆包的原因及解决方法？"><a href="#9-TCP粘包-拆包的原因及解决方法？" class="headerlink" title="9. TCP粘包/拆包的原因及解决方法？"></a>9. TCP粘包/拆包的原因及解决方法？</h1><h2 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h2><p>应用程序写入的字节大小大于套接字发送缓冲区的大小，会发生拆包现象，而应用程序写入数据小于套接字缓冲区大小，网卡将应用多次写入的数据发送到网络上，这将会发生粘包现象；</p>
+<h2 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h2><ul>
+<li>消息定长</li>
+<li>包尾增加特殊字符分割</li>
+</ul>
+<h1 id="10-什么是Netty的零拷贝？"><a href="#10-什么是Netty的零拷贝？" class="headerlink" title="10. 什么是Netty的零拷贝？"></a>10. 什么是Netty的零拷贝？</h1><p>Netty的“零拷贝”主要体现在三个方面：</p>
+<ul>
+<li>Netty的接收和发送ByteBuffer采用DIRECT BUFFERS，使用堆外直接内存进行socket读写，不需要进行字节缓冲区的二次拷贝，如果使用传统的堆内存（HEAP BUFFERS）进行socket读写，JVM会将堆内存Buffer拷贝一份到直接内存中，然后才写入Socket中，相对于堆外直接内存，消息在发送过程中多了一次缓冲区的内存拷贝；</li>
+<li>第二种“零拷贝”的实现是CompositeByteBuf，它对外将多个ByteBuf封装成一个ByteBuf，对外提供统一封装后的ByteBuf接口；</li>
+<li>第三种“零拷贝”就是文件传输，Netty文件传输类DefaultFileRegion通过transferTo方法将文件发送到目标Channel中，很多操作系统直接将文件缓冲区的内容发送到目标Channel中，而不需要通过循环拷贝的方式，这是一种更加高效的传输方式，提升了传输性能，降低了CPU和内存占用，实现了文件传输的“零拷贝”。</li>
+</ul>
+<h1 id="11-Netty中有哪几种重要组件？"><a href="#11-Netty中有哪几种重要组件？" class="headerlink" title="11. Netty中有哪几种重要组件？"></a>11. Netty中有哪几种重要组件？</h1><ul>
+<li><strong>Channel</strong>：Netty网络操作抽象类，它除了包括基本的I/O操作，如bind、connect、read、write等；</li>
+<li><strong>EventLoop</strong>：主要是配合Channel处理I/O操作，用来处理连接的生命周期中所发生的事情；</li>
+<li><strong>ChannelFuture</strong>：Netty框架中所有的I/O操作都是异步的，因此我们需要ChannelFuture的addListener()注册一个ChannelFutureListener监听事件，当操作执行成功或者失败时，监听就会自动触发返回结果；</li>
+<li><strong>ChannelHandler</strong>：充当了所有处理入站和出站数据的逻辑容器，ChannelHandler主要用来处理各种事件，比如：连接，数据接收，异常，数据转换等；</li>
+<li><strong>ChannelPipeline</strong>：为ChannelHandler链提供了容器，当channel创建时，就会被自动分配到它专属的ChannelPipeline，这个关联是永久性的。</li>
+</ul>
+<h1 id="12-Netty发送消息有几种方式？"><a href="#12-Netty发送消息有几种方式？" class="headerlink" title="12. Netty发送消息有几种方式？"></a>12. Netty发送消息有几种方式？</h1><p>Netty有两种发送消息的方式：</p>
+<ul>
+<li>直接写入Channel中，消息从ChannelPipeline当中尾部开始移动；</li>
+<li>写入和ChannelHandler绑定的ChannelHandlerContext中，消息从ChannelPipeline中的下一个ChannelHandler中移动。</li>
+</ul>
+<h1 id="13-默认情况Netty-开启多少线程，何时启动？"><a href="#13-默认情况Netty-开启多少线程，何时启动？" class="headerlink" title="13. 默认情况Netty 开启多少线程，何时启动？"></a>13. 默认情况Netty 开启多少线程，何时启动？</h1><p>Netty默认是CPU处理器数的两倍，bind完之后启动。</p>
+<h1 id="14-了解哪几种序列化协议？"><a href="#14-了解哪几种序列化协议？" class="headerlink" title="14. 了解哪几种序列化协议？"></a>14. 了解哪几种序列化协议？</h1><p>序列化（编码）是将对象序列化为二进制形式（字节数组），主要用于网络传输，数据持久化等，而反序列化（解码）则是将从网络，磁盘等读取的字节数组还原成原始对象，主要用于网络传输对象的解码，以便完成远程调用。</p>
+<p>影响序列化性能的关键因素：序列化后的码流大小（网络带宽的占用）、序列化的性能（CPU资源占用）、是否支持跨语言（异构系统的对接和开发语言切换）。</p>
+<p>Java默认提供的序列化：无法跨语言、序列化后的码流台打、序列化的性能差。</p>
+<h2 id="XML"><a href="#XML" class="headerlink" title="XML"></a>XML</h2><p>优点：人机可读性好，可指定元素或特性的名称；<br>缺点：序列化数据只包含数据本身以及类的结构，不包括类型标识和程序集信息；只能序列化公共属性和字段；不能序列化方法，文件庞大，文件格式复杂，传输占带宽；<br>适用场景：当作配置文件存储数据，实时数据转换</p>
+<h2 id="JSON"><a href="#JSON" class="headerlink" title="JSON"></a>JSON</h2><p>一种轻量级的数据交换格式。<br>优点：兼容性高，数据格式比较简单，易于读写，序列化后数据较小，可扩展性好，兼容性好，与XML相比，其协议比较简单，解析速度比较快；<br>缺点：数据的描述性比XML差，不适合性能要求为ms级别的情况，额外空间开销比较大；<br>适用场景：跨防火墙访问、基于Web browser的Ajax请求，传输数据量相对小，实时性要求相对低的服务；</p>
+<h2 id="Fastjson"><a href="#Fastjson" class="headerlink" title="Fastjson"></a>Fastjson</h2><p>采用一种“假定有序快速匹配”的算法。<br>优点：接口简单易用，目前Java语言中最快的Json库；<br>缺点：过于注重快，而偏离了“标准”及功能性，代码质量不高，文档不全；<br>适用场景：协议交互，Web输出，Android客户端</p>
+<h2 id="Protobuf"><a href="#Protobuf" class="headerlink" title="Protobuf"></a>Protobuf</h2><p>将数据结构以.proto文件进行描述，通过代码生成工具可以生成对应数据结构的POJO对象和Protobuf相关的方法和属性。<br>优点：序列化后码流小，性能高，结构化数据存储格式（XML、JSON等），通过标识字段的顺序，可以实现协议的前后兼容，结构化的文档更容易管理和维护。<br>缺点：需要依赖与工具生成代码，支持的语言相对较少，官方只支持Java，C++，python；<br>适用场景：对性能要求高的RPC调用，具有良好的跨防火墙的访问属性，适用应用层对象的持久化。</p>
+<h1 id="15-Netty支持哪些心跳类型设置"><a href="#15-Netty支持哪些心跳类型设置" class="headerlink" title="15. Netty支持哪些心跳类型设置"></a>15. Netty支持哪些心跳类型设置</h1><ul>
+<li>readerIdleTime：为读超时时间</li>
+<li>writerIdleTime：为写超时时间</li>
+<li>allIdleTime：所有类型的超时时间</li>
+</ul>
+<h1 id="16-Netty和Tomcat的区别"><a href="#16-Netty和Tomcat的区别" class="headerlink" title="16. Netty和Tomcat的区别"></a>16. Netty和Tomcat的区别</h1><ul>
+<li>作用不同：Tomcat是Servlet容器，可以视为Web服务器，而Netty是异步事件驱动的网络应用程序框架和工具用于简化网络编程，例如：TCP和UDP套接字服务器。</li>
+<li>协议不同：Tomcat是基于http协议的Web服务器，而Netty能通过变成自定义各种协议，因为Netty本身能编码/解码字节流，所以Netty可以实现HTTP服务器，FTP服务器，UDP服务器，RPC服务器，WebSocket服务器，Redis的Proxy服务器，MySQL的Proxy服务器等。</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Netty/">Netty</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/07/27/Spring-Cloud%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring Cloud面试题汇总</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/27/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">
+                        <span class="hidden-mobile">Redis面试题汇总</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Netty面试题汇总&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
