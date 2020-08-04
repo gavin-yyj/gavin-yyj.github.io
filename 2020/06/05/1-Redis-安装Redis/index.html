@@ -215,7 +215,7 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="1-1-什么是-Redis"><a href="#1-1-什么是-Redis" class="headerlink" title="1.1 什么是 Redis"></a>1.1 什么是 Redis</h2><p>Redis 是使用 C 语言开发的一个开源的高性能键值对（key-value）数据库。它通过提供多种键值数据类型来适应不同场景下的存储需求，Redis 支持以下五种数据类型：</p>
+              <h2 id="1-1-什么是-Redis"><a href="#1-1-什么是-Redis" class="headerlink" title="1.1 什么是 Redis"></a>1.1 什么是 Redis</h2><p>Redis 是使用 C 语言开发的一个开源的<strong>高性能键值对</strong>（key-value）数据库。它通过提供多种键值数据类型来适应不同场景下的存储需求，Redis 支持以下五种数据类型：</p>
 <ul>
 <li>String 类型</li>
 <li>List 类型</li>
@@ -240,7 +240,7 @@
 <p><code>:tag</code>是可选的，tag表示软件的版本，默认是latest。</p>
 <h2 id="1-4-根据镜像启动redis"><a href="#1-4-根据镜像启动redis" class="headerlink" title="1.4 根据镜像启动redis"></a>1.4 根据镜像启动redis</h2></li>
 </ol>
-<p><img src="https://img-blog.csdnimg.cn/20200605202515325.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="!\[在这里插入图片描述\](https://img-blog.csdnimg.cn/20200605202139539.png?x-oss-process=image/watermark,type_ZmFuZ3"><br>其中 Port 表示redis的端口号，PID 表示改进程的 pid 号，下方光标不停的闪动，此时 redis 就已经启动了。<br>新开一个窗口，运行redis-cli<br><img src="https://img-blog.csdnimg.cn/20200605202656380.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>测试效果：<br><img src="https://img-blog.csdnimg.cn/20200605202757404.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>其中 Port 表示redis的端口号，PID 表示改进程的 pid 号，下方光标不停的闪动，此时 redis 就已经启动了。<br>新开一个窗口，运行redis-cli<br><img src="https://img-blog.csdnimg.cn/20200605202656380.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>测试效果：<br><img src="https://img-blog.csdnimg.cn/20200605202757404.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <blockquote>
 <p>Tips:如果我们要连接远程Redis，可以加参数： <code>-h IP地址</code><br>如果要指定端口，可以加参数：<code>-p 端口号</code></p>
 </blockquote>

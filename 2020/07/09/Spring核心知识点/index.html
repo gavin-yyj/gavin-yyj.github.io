@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.2k 字
+      8.3k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      57
+      94
        分钟
     </span>
   
@@ -252,6 +252,117 @@
 <h1 id="Spring控制反转（IoC）"><a href="#Spring控制反转（IoC）" class="headerlink" title="Spring控制反转（IoC）"></a>Spring控制反转（IoC）</h1><h2 id="什么是Spring-IoC容器"><a href="#什么是Spring-IoC容器" class="headerlink" title="什么是Spring IoC容器"></a>什么是Spring IoC容器</h2><p>控制反转是将传统上由程序代码直接操控的对象的调用权交给容器，通过容器来实现对象组件的装配和管理，所谓的“控制反转”概念就是对组件对象控制权的转移，从程序代码本身转移到了外部容器，实现了<strong>解耦</strong>。</p>
 <p>Spring IoC负责创建对象，并管理这些对象的整个生命周期。</p>
 <h2 id="Spring-IoC的实现机制"><a href="#Spring-IoC的实现机制" class="headerlink" title="Spring IoC的实现机制"></a>Spring IoC的实现机制</h2><p>工厂模式+反射机制</p>
+<h2 id="IOC容器的加载流程-refresh方法"><a href="#IOC容器的加载流程-refresh方法" class="headerlink" title="IOC容器的加载流程(refresh方法)"></a>IOC容器的加载流程(refresh方法)</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">refresh</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> BeansException, IllegalStateException </span>&#123;
+    Object var1 = <span class="hljs-keyword">this</span>.startupShutdownMonitor;
+    <span class="hljs-comment">// 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛</span>
+    <span class="hljs-keyword">synchronized</span>(<span class="hljs-keyword">this</span>.startupShutdownMonitor) &#123;
+        
+        <span class="hljs-comment">// 准备工作，记录下容器的启动时间、标记“已启动”状态、处理配置文件中的占位符</span>
+        <span class="hljs-keyword">this</span>.prepareRefresh();
+        
+        <span class="hljs-comment">// 这步比较关键，这步完成后，配置文件就会解析成一个个 Bean 定义，注册到 BeanFactory 中，</span>
+        <span class="hljs-comment">// 当然，这里说的 Bean 还没有初始化，只是配置信息都提取出来了，</span>
+        <span class="hljs-comment">// 注册也只是将这些信息都保存到了注册中心(说到底核心是一个 beanName-&gt; beanDefinition 的 map)</span>
+        ConfigurableListableBeanFactory beanFactory = <span class="hljs-keyword">this</span>.obtainFreshBeanFactory();
+        
+        <span class="hljs-comment">// 设置 BeanFactory 的类加载器，添加几个 BeanPostProcessor，手动注册几个特殊的 bean</span>
+        <span class="hljs-keyword">this</span>.prepareBeanFactory(beanFactory);
+
+        <span class="hljs-keyword">try</span> &#123;
+            <span class="hljs-comment">// 【这里需要知道 BeanFactoryPostProcessor 这个知识点，Bean 如果实现了此接口，</span>
+            <span class="hljs-comment">// 那么在容器初始化以后，Spring 会负责调用里面的 postProcessBeanFactory 方法。】</span>
+
+            <span class="hljs-comment">// 这里是提供给子类的扩展点，到这里的时候，所有的 Bean 都加载、注册完成了，但是都还没有初始化</span>
+            <span class="hljs-comment">// 具体的子类可以在这步的时候添加一些特殊的 BeanFactoryPostProcessor 的实现类或做点什么事</span>
+            <span class="hljs-keyword">this</span>.postProcessBeanFactory(beanFactory);
+            
+            <span class="hljs-comment">// 调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 回调方法</span>
+            <span class="hljs-keyword">this</span>.invokeBeanFactoryPostProcessors(beanFactory);
+            
+            <span class="hljs-comment">// 注册 BeanPostProcessor 的实现类，注意看和 BeanFactoryPostProcessor 的区别</span>
+            <span class="hljs-comment">// 此接口两个方法: postProcessBeforeInitialization 和 postProcessAfterInitialization</span>
+            <span class="hljs-comment">// 两个方法分别在 Bean 初始化之前和初始化之后得到执行。这里仅仅是注册，之后会看到回调这两方法的时机</span>
+            <span class="hljs-keyword">this</span>.registerBeanPostProcessors(beanFactory);
+            
+         	<span class="hljs-comment">// 初始化当前 ApplicationContext 的 MessageSource，国际化这里就不展开说了，不然没完没了了    </span>
+            <span class="hljs-keyword">this</span>.initMessageSource();
+            
+            <span class="hljs-comment">// 初始化当前 ApplicationContext 的事件广播器，这里也不展开了</span>
+            <span class="hljs-keyword">this</span>.initApplicationEventMulticaster();
+            
+            <span class="hljs-comment">// 从方法名就可以知道，典型的模板方法(钩子方法)，不展开说</span>
+         	<span class="hljs-comment">// 具体的子类可以在这里初始化一些特殊的 Bean（在初始化 singleton beans 之前）</span>
+            <span class="hljs-keyword">this</span>.onRefresh();
+            
+            <span class="hljs-comment">// 注册事件监听器，监听器需要实现 ApplicationListener 接口。这也不是我们的重点，过</span>
+            <span class="hljs-keyword">this</span>.registerListeners();
+            
+            <span class="hljs-comment">// 重点，重点，重点</span>
+            <span class="hljs-comment">// 初始化所有的 singleton beans</span>
+            <span class="hljs-comment">//（lazy-init 的除外）</span>
+            <span class="hljs-keyword">this</span>.finishBeanFactoryInitialization(beanFactory);
+            
+            <span class="hljs-comment">// 最后，广播事件，ApplicationContext 初始化完成，不展开</span>
+            <span class="hljs-keyword">this</span>.finishRefresh();
+        &#125; <span class="hljs-keyword">catch</span> (BeansException var9) &#123;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.logger.isWarnEnabled()) &#123;
+                <span class="hljs-keyword">this</span>.logger.warn(<span class="hljs-string">"Exception encountered during context initialization - cancelling refresh attempt: "</span> + var9);
+            &#125;
+
+            <span class="hljs-comment">// 销毁已经初始化的 singleton 的 Beans，以免有些 bean 会一直占用资源</span>
+            <span class="hljs-keyword">this</span>.destroyBeans();
+            <span class="hljs-keyword">this</span>.cancelRefresh(var9);
+            <span class="hljs-comment">// 把异常往外抛</span>
+            <span class="hljs-keyword">throw</span> var9;
+        &#125; <span class="hljs-keyword">finally</span> &#123;
+            <span class="hljs-keyword">this</span>.resetCommonCaches();
+        &#125;
+
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="1-加锁"><a href="#1-加锁" class="headerlink" title="1. 加锁"></a>1. 加锁</h3><p>首先是一个synchronized加锁，不然你先调用一次refresh()，然后这次还没处理完，有调用一次，就会乱套。</p>
+<h3 id="2-prepareRefresh"><a href="#2-prepareRefresh" class="headerlink" title="2. prepareRefresh()"></a>2. prepareRefresh()</h3><p>做准备工作，记录容器的启动时间，标记“已启动”状态，处理配置文件中的占位符。</p>
+<h3 id="3-注册BeanDefinition到BeanFactory"><a href="#3-注册BeanDefinition到BeanFactory" class="headerlink" title="3. 注册BeanDefinition到BeanFactory"></a>3. 注册BeanDefinition到BeanFactory</h3><div class="hljs"><pre><code class="hljs java">ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</code></pre></div>
+
+<p>将配置文件解析成一个个Bean，并且注册到BeanFactory中，注意这里只是注册进去，并没有初始化。</p>
+<h4 id="注册实现原理"><a href="#注册实现原理" class="headerlink" title="注册实现原理"></a>注册实现原理</h4><p><strong>BeanDefinition(Bean定义)</strong></p>
+<p>在IOC实现中，我们在XML中描述的Bean信息最后都将保存至BeanDefinition对象中，xml-bean中设置的属性最后都会体现在BeanDefinition中，如：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/18628873-7553de4d8ddfbb11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1136/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><strong>BeanDefinitionRegistry(Bean注册器)</strong></p>
+<p>xml-bean中的id作为当前Bean的存储key注册到了BeanDefinitionRegistry注册器中，name作为别名key注册到了AliasRegistry注册中心，最后都是指向其对应的BeanDefinition。</p>
+<p><strong>BeanDefinitionReader（Bean定义读取）</strong></p>
+<p>BeanDefinition中存储了xml-bean信息，而BeanDefinitionRegister基于ID和name保存了Bean的定义，下图是从xml-Bean到BeanDefinition然后再注册至BeanDefinitionRegister的整个过程。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/18628873-50f575074eb4c65c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/687/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p>从上图可以看出，Bean的定义是由BeanDefinitionReader从xml中读取配置并构建出BeanDefinition，然后再基于别名注册BeanDefinitionRegister中。</p>
+<h3 id="4-prepareBeanFactory（beanFactory）"><a href="#4-prepareBeanFactory（beanFactory）" class="headerlink" title="4. prepareBeanFactory（beanFactory）"></a>4. prepareBeanFactory（beanFactory）</h3><p>设置BeanFactory的类加载器，然后添加几个BeanPostProcessor，手动注册几个特殊的bean，这里都是Spring里面的特殊处理。</p>
+<h3 id="5-postProcessBeanFactory（beanFactory）"><a href="#5-postProcessBeanFactory（beanFactory）" class="headerlink" title="5. postProcessBeanFactory（beanFactory）"></a>5. postProcessBeanFactory（beanFactory）</h3><p>提供给子类的扩展点，到这里所有的Bean都加载，注册完成了，但是都还没有初始化，具体的子类可以在这步的时候添加一些特殊的BeanFactoryPostProcessor的实现类，来完成一些其他的操作。</p>
+<p><strong>BeanPostProcessor接口</strong>：如果我们想在Spring容器中完成Bean实例化、配置以及其他初始化方法前后要添加一些自己逻辑处理，我们需要定义一个或多个BeanPostProcessor接口实现类，然后注册到Spring IOC容器中。</p>
+<h3 id="6-执行容器中实现的BeanFactoryPostProcessor的子类（如果有的话）"><a href="#6-执行容器中实现的BeanFactoryPostProcessor的子类（如果有的话）" class="headerlink" title="6. 执行容器中实现的BeanFactoryPostProcessor的子类（如果有的话）"></a>6. 执行容器中实现的BeanFactoryPostProcessor的子类（如果有的话）</h3><div class="hljs"><pre><code class="hljs java">invokeBeanFactoryPostProcessors(beanFactory);</code></pre></div>
+
+<p>这个方法是调用 BeanFactoryPostProcessor 各个实现类的 postProcessBeanFactory(factory) 方法；</p>
+<h3 id="7-后置处理器的实现BeanPostProcessors"><a href="#7-后置处理器的实现BeanPostProcessors" class="headerlink" title="7. 后置处理器的实现BeanPostProcessors"></a>7. 后置处理器的实现BeanPostProcessors</h3><div class="hljs"><pre><code class="hljs java">registerBeanPostProcessors(beanFactory);</code></pre></div>
+
+<p>这个方法注册 BeanPostProcessor 的实现类，和上面的BeanFactoryPostProcessor 是有区别的，这个方法调用的其实是PostProcessorRegistrationDelegate类的registerBeanPostProcessors方法；这个类里面有个内部类BeanPostProcessorChecker，BeanPostProcessorChecker里面有两个方法<strong>postProcessBeforeInitialization和postProcessAfterInitialization</strong>，这两个方法分别在 Bean 初始化之前和初始化之后得到执行。</p>
+<h3 id="8-国际化"><a href="#8-国际化" class="headerlink" title="8. 国际化"></a>8. 国际化</h3><div class="hljs"><pre><code class="hljs java">initMessageSource();</code></pre></div>
+
+<h3 id="9-初始化事件广播器"><a href="#9-初始化事件广播器" class="headerlink" title="9. 初始化事件广播器"></a>9. 初始化事件广播器</h3><div class="hljs"><pre><code class="hljs java">initApplicationEventMulticaster();</code></pre></div>
+
+<h3 id="10-初始化一些特殊的Bean"><a href="#10-初始化一些特殊的Bean" class="headerlink" title="10. 初始化一些特殊的Bean"></a>10. 初始化一些特殊的Bean</h3><div class="hljs"><pre><code class="hljs java">onRefresh();</code></pre></div>
+
+<p>方法初始化一些特殊的 Bean（在初始化 singleton beans 之前）</p>
+<h3 id="11-注册事件监听器"><a href="#11-注册事件监听器" class="headerlink" title="11. 注册事件监听器"></a>11. 注册事件监听器</h3><div class="hljs"><pre><code class="hljs java">registerListeners();</code></pre></div>
+
+<p>方法注册事件监听器，监听器需要实现 ApplicationListener 接口</p>
+<h3 id="12-初始化Bean"><a href="#12-初始化Bean" class="headerlink" title="12. 初始化Bean"></a>12. 初始化Bean</h3><div class="hljs"><pre><code class="hljs java">finishBeanFactoryInitialization(beanFactory);</code></pre></div>
+
+<p>初始化所有的 singleton beans（单例bean），懒加载（non-lazy-init）的除外（spring默认不是懒加载，如果设定了懒加载，则bean的初始化由getbean方法触发）。</p>
+<p>从调用过程可以总结出以下几点：<br> 1.调用BeanFactory.getBean() 会触发Bean的实例化。<br> 2.DefaultSingletonBeanRegistry 中缓存了单例Bean<br> 3.Bean的创建与初始化是由AbstractAutowireCapableBeanFactory 完成的。</p>
+<h3 id="13-广播事件，告诉上下文，容器已经创建好，随时可以调用"><a href="#13-广播事件，告诉上下文，容器已经创建好，随时可以调用" class="headerlink" title="13. 广播事件，告诉上下文，容器已经创建好，随时可以调用"></a>13. 广播事件，告诉上下文，容器已经创建好，随时可以调用</h3><div class="hljs"><pre><code class="hljs java">finishRefresh();</code></pre></div>
+
+<p>方法是最后一步，广播事件，ApplicationContext 初始化完成。</p>
+<h2 id="Ioc容器的加载过程简单概括："><a href="#Ioc容器的加载过程简单概括：" class="headerlink" title="Ioc容器的加载过程简单概括："></a>Ioc容器的加载过程简单概括：</h2><p>1.刷新预处理<br> 2.将配置信息解析，注册到BeanFactory<br> 3.设置bean的类加载器<br> 4.如果有第三方想再bean加载注册完成后，初始化前做点什么(例如修改属性的值，修改bean的scope为单例或者多例。)，提供了相应的模板方法，后面还调用了这个方法的实现，并且把这些个实现类注册到对应的容器中<br> 5.初始化当前的事件广播器<br> 6.初始化所有的bean。（懒加载不执行这一步）<br> 7.广播applicationcontext初始化完成。</p>
 <h2 id="BeanFactory和ApplicationContext的区别"><a href="#BeanFactory和ApplicationContext的区别" class="headerlink" title="BeanFactory和ApplicationContext的区别"></a>BeanFactory和ApplicationContext的区别</h2><p>BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。<br><strong>区别：</strong><br>依赖关系：</p>
 <ul>
 <li><p>BeanFactory：是Spring里面最底层的接口，包含了各种Bean的定义，读取bean配置文档，管理bean的加载、实例化，控制bean的生命周期，维护bean之间的依赖关系。</p>
@@ -268,12 +379,12 @@
 </ul>
 <p>加载方式：</p>
 <ul>
-<li>BeanFactory采用的是延迟加载的形式来注入Bean</li>
+<li>BeanFactory采用的是<strong>延迟加载</strong>的形式来注入Bean</li>
 <li>ApplicationContext在容器启动时一次性创建所有的Bean。这样在容器启动时，就可以发现Spring中存在的配置错误，但是不足之处在于占用内存空间，从而导致程序启动较慢。</li>
 </ul>
 <p>创建方式：</p>
 <ul>
-<li>BeanFactory通常以编程的方式被创建</li>
+<li>BeanFactory通常以编<strong>程</strong>的方式被创建</li>
 <li>ApplicationContext还能以<strong>声明</strong>的方式创建，如使用ContextLoader。</li>
 </ul>
 <h2 id="ApplicationContext通常的实现是什么？"><a href="#ApplicationContext通常的实现是什么？" class="headerlink" title="ApplicationContext通常的实现是什么？"></a>ApplicationContext通常的实现是什么？</h2><ul>
@@ -418,25 +529,185 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <li>SERIALIZABLE(可串行化)：<br>最高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，但是效率太差，性能开销也大，几乎不使用。</li>
 </ul>
 <h2 id="事务的传播属性"><a href="#事务的传播属性" class="headerlink" title="事务的传播属性"></a>事务的传播属性</h2><p>　<strong>PROPAGATION_REQUIRED</strong> – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。<br>　<strong>PROPAGATION_SUPPORTS</strong> – 支持当前事务，如果当前没有事务，就以非事务方式执行。<br>　<strong>PROPAGATION_MANDATORY</strong> – 支持当前事务，如果当前没有事务，就抛出异常。<br>　<strong>PROPAGATION_REQUIRES_NEW</strong> – 新建事务，如果当前存在事务，把当前事务挂起。<br>　<strong>PROPAGATION_NOT_SUPPORTED</strong> – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。<br>　<strong>PROPAGATION_NEVER</strong> – 以非事务方式执行，如果当前存在事务，则抛出异常。<br>　<strong>PROPAGATION_NESTED</strong>–如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED</p>
-<h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><h2 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h2><p>AOP(Aspect-Oriented Programming)，一般称为面向切面编程，作为面向对象的一种补充，用于<strong>将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“切面”（Aspect），减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。可用于<strong>权限认证</strong>、日志、事务处理等。</p>
+<h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><h2 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h2><p>AOP(Aspect-Oriented Programming)，一般称为面向切面编程，作为面向对象的一种补充，用于<strong>将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“<strong>切面</strong>”（Aspect），以减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。可用于<strong>权限认证</strong>、日志、事务处理等。AOP底层原理就是动态代理的实现。</p>
 <h2 id="AOP的名词解释"><a href="#AOP的名词解释" class="headerlink" title="AOP的名词解释"></a>AOP的名词解释</h2><ul>
-<li>通知（Advice）：在切面的某个特定的连接点（Joinpoint）上执行的动作。通知有各种类型，其中包括“around”、“before”和“after”等通知。<br>通知的类型将在后面部分进行讨论。许多AOP框架，包括Spring，都是以拦截器做通知模型， 并维护一个以连接点为中心的拦截器链。</li>
-<li>连接点（JoinPoint）：Spring<strong>允许</strong>你使用通知的地方，一般是方法前后；</li>
-<li>切入点（Pointcut）：连接点是可以使用通知的地方，而切入点是你<strong>想要</strong>使用通知的地方；</li>
-<li>切面（Aspect）：<strong>通知</strong>和<strong>切入点</strong>的结合，通知说明了<strong>干什么和什么时候干</strong>（时间是通过方法名中的before、after、around等确定的），切入点说明了<strong>在哪干</strong>（指定使用通知的方法）；</li>
-<li>目标（target）：被通知的对象，也就是真正的业务逻辑，被通知的对象可以在毫不知情的情况下，被织入切面，而自己专注于业务本身的逻辑；</li>
-<li>织入（weaving）：把切面应用到目标对象来创建新的代理对象的过程；</li>
+<li><strong>通知（Advice）</strong>：在切面的某个特定的连接点（Joinpoint）上执行的动作。通知有各种类型，其中包扩“around”，“before”和“after”等通知。<br>通知的类型将在后面部分进行讨论。许多AOP框架，包括Spring，都是以拦截器做通知模型， 并维护一个以连接点为中心的拦截器链。</li>
+<li><strong>连接点（JoinPoint）</strong>：Spring<strong>允许</strong>你使用通知的地方，一般是方法前后；</li>
+<li><strong>切入点（Pointcut）</strong>：连接点是可以使用通知的地方，而切入点是你<strong>想要</strong>使用通知的地方；</li>
+<li><strong>切面（Aspect）</strong>：<strong>通知</strong>和<strong>切入点</strong>的结合，通知说明了<strong>干什么和什么时候干</strong>（时间是通过方法名中的before、after、around等确定的），切入点说明了<strong>在哪干</strong>（指定使用通知的方法）；</li>
+<li><strong>目标（target）</strong>：被通知的对象，也就是真正的业务逻辑，被通知的对象可以在毫不知情的情况下，被织入切面，而自己专注于业务本身的逻辑；</li>
+<li><strong>织入（weaving）</strong>：把切面应用到目标对象来创建新的代理对象的过程；</li>
 </ul>
 <h2 id="Spring-AOP和AspectJ-AOP有什么区别"><a href="#Spring-AOP和AspectJ-AOP有什么区别" class="headerlink" title="Spring AOP和AspectJ AOP有什么区别"></a>Spring AOP和AspectJ AOP有什么区别</h2><p>AOP实现的关键在于代理模式，AOP代理主要分为静态代理和动态代理，静态代理的代表是AspectJ，动态代理则有Spring AOP和CGLIB。<br>区别：</p>
 <ul>
-<li>AspectJ是静态代理的增强，AOP框架会在编译阶段生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</li>
-<li>Spring AOP使用的动态代理，AOP框架不会去修改字节码，而是每次运行时在内存中临时为方法生成一个AOP对象，这个AOP对象包含了目标对象的全部方法，并且在特定的切点做了增强处理，并回调原对象的方法。</li>
+<li>AspectJ是静态代理的增强，AOP框架会在<strong>编译阶段</strong>生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</li>
+<li>Spring AOP使用的动态代理，AOP框架不会去修改字节码，而是每次<strong>运行时</strong>在内存中临时为方法生成一个AOP对象，这个AOP对象包含了目标对象的全部方法，并且在特定的切点做了增强处理，并回调原对象的方法。</li>
 </ul>
-<p>静态代理与动态代理区别在于生成AOP代理对象的时机不同，相对来说AspectJ的静态代理方式具有更好的性能，但是AspectJ需要特定的编译器进行处理，而Spring AOP则无需特定的编译器处理。</p>
-<h2 id="JDK动态代理和CGLIB动态代理的区别"><a href="#JDK动态代理和CGLIB动态代理的区别" class="headerlink" title="JDK动态代理和CGLIB动态代理的区别"></a>JDK动态代理和CGLIB动态代理的区别</h2><ul>
-<li>JDK动态代理只提供接口的代理，不支持类的代理，核心InvocationHandler接口和Proxy类，InvocationHandler 通过invoke()方法反射来调用目标类中的代码，动态地将横切逻辑和业务编织在一起；接着，Proxy利用 InvocationHandler动态创建一个符合某一接口的的实例, 生成目标类的代理对象。</li>
-<li>如果代理类没有实现 InvocationHandler 接口，那么Spring AOP会选择使用CGLIB来动态代理目标类。CGLIB（Code Generation Library）是一个代码生成的类库，可以在运行时动态地生成指定类的一个子类对象，并覆盖其中特定方法并添加增强代码，从而实现AOP。CGLIB是通过继承的方式做的动态代理，因此如果某个类被标记为final，那么它是无法使用CGLIB做动态代理的。</li>
+<p>静态代理与动态代理区别在于生成AOP代理对象的时机不同，相对来说<strong>AspectJ的静态代理方式具有更好的性能</strong>，但是<strong>AspectJ需要特定的编译器进行处理，而Spring AOP则无需特定的编译器处理</strong>。</p>
+<h2 id="静态代理、JDK动态代理、CGLIB动态代理"><a href="#静态代理、JDK动态代理、CGLIB动态代理" class="headerlink" title="静态代理、JDK动态代理、CGLIB动态代理"></a>静态代理、JDK动态代理、CGLIB动态代理</h2><h3 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h3><p>建一个接口，接口中定义相应（代理对象和目标对象都要实现）的方法。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Subject</span></span>&#123;
+	<span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>;
+&#125;</code></pre></div>
+
+<p>目标类（实现上述接口）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RealSubject</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Subject</span></span>&#123;
+	<span class="hljs-meta">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">tset</span><span class="hljs-params">()</span></span>&#123;
+	System.out.printin(<span class="hljs-string">"target method"</span>);
+	&#125;
+&#125;</code></pre></div>
+
+<p>代理类（实现上述接口）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Proxy</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Subject</span></span>&#123;
+	<span class="hljs-keyword">private</span> RealSubject realSubject;
+	
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Proxy</span><span class="hljs-params">(RealSubject realSubject)</span></span>&#123;
+	<span class="hljs-keyword">this</span>.realSubject = realSubject;
+	&#125;
+
+	<span class="hljs-meta">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>&#123;
+        System.out.printin(<span class="hljs-string">"Before"</span>);
+        <span class="hljs-keyword">try</span>&#123;
+        	realSubject.test();
+        &#125;<span class="hljs-keyword">catch</span>(Exception e)&#123;
+            System.out.println(<span class="hljs-string">"ex:"</span>+e.getmessage());
+            <span class="hljs-keyword">throw</span> e;
+        &#125;<span class="hljs-keyword">finally</span>&#123;
+        	System.out.println(<span class="hljs-string">"After"</span>);
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<p>客户端调用</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;
+        <span class="hljs-comment">//通过接口</span>
+        Subject subject = <span class="hljs-keyword">new</span> Proxy(<span class="hljs-keyword">new</span> RealSubject());
+        subject.test();
+    &#125;
+&#125;</code></pre></div>
+
+<p>静态代理缺点：不灵活，重复代码多。静态代理的代表是AspectJ，AspectJ是静态代理的增强，AOP框架会在<strong>编译阶段</strong>生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</p>
+<h3 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h3><p>JDK动态代理只提供<strong>接口</strong>的代理，不支持类的代理，核心<code>InvocationHandler</code>接口和<code>Proxy</code>类，InvocationHandler 通过invoke()方法反射来调用目标类中的代码，动态地将横切逻辑和业务编织在一起；接着，<strong>Proxy利用 InvocationHandler动态创建一个符合某一接口的实例, 生成目标类的代理对象。</strong></p>
+<ul>
+<li><p>类：java.lang.reflect.Proxy（通过该类动态生成代理类）</p>
+</li>
+<li><p>代理类实现接口：InvocationHandler</p>
+</li>
+<li><p>JDK动态代理只能基于接口动态代理。</p>
+</li>
 </ul>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">JdkProxySubject</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">InvocationHandler</span></span>&#123;
+    <span class="hljs-comment">//引入要代理的真实对象</span>
+    <span class="hljs-keyword">private</span> RealSubject realSubject;
+
+    <span class="hljs-comment">//用构造器注入目标方法，给我们要代理的真实对象赋初值</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">JdkProxySubject</span><span class="hljs-params">(RealSubject realSubject)</span></span>&#123;
+    	<span class="hljs-keyword">this</span>.realSubJect=realSubject;
+    &#125;
+    <span class="hljs-comment">//实现接口的方法</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">invoke</span><span class="hljs-params">(Object proxy,Method method,Object[] args)</span><span class="hljs-keyword">throws</span> Throwable</span>&#123;
+        System.out.println(<span class="hljs-string">"before"</span>);
+        Object result = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">try</span>&#123;
+        <span class="hljs-comment">//调用目标方法</span>
+        <span class="hljs-comment">//利用反射构造目标对象</span>
+        <span class="hljs-comment">//当代理对象调用真实对象的方法时，其会自动的跳转到代理对象关联的handler对象的invoke方法来进行调用</span>
+        result=method.invoke(realSubject,args);
+
+        &#125;<span class="hljs-keyword">catch</span>(Exception e)&#123;
+            System.out.println(<span class="hljs-string">"ex:"</span>+e.getMessage());
+            <span class="hljs-keyword">throw</span> e; 
+        &#125;<span class="hljs-keyword">finally</span>&#123;
+        	System.out.println(<span class="hljs-string">"after"</span>);
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;</code></pre></div>
+
+<p>客户端调用（使用Proxy）</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span></span>&#123;
+  <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;
+    <span class="hljs-comment">//使用Proxy构造对象</span>
+    <span class="hljs-comment">//参数</span>
+    <span class="hljs-comment">//java泛型需要转换一下</span>
+    <span class="hljs-comment">/* 通过Proxy的newProxyInstance方法来创建我们的代理对象，我们来看看其三个参数</span>
+<span class="hljs-comment">    * 第一个参数 getClassLoader() ，我们这里使用Client这个类的ClassLoader对象来加载我们的代理对象</span>
+<span class="hljs-comment">    * 第二个参数表示我要代理的是该真实对象，这样我就能调用这组接口中的方法了</span>
+<span class="hljs-comment">    * 第三个参数handler， 我们这里将这个代理对象关联到了上方的 InvocationHandler 这个对象上</span>
+<span class="hljs-comment">    */</span>     
+    Subject subject = (Subject) java.lang.reflect.Proxy.newProxyInstance(Client.class.getClassLoader(),new Class[]&#123;Subject.class&#125;,new JdkProxySubject(new RralSubject()));
+    <span class="hljs-comment">//调用方法</span>
+    subject.test;
+    &#125;
+&#125;</code></pre></div>
+
+<h4 id="原理解析"><a href="#原理解析" class="headerlink" title="原理解析"></a>原理解析</h4><p>过程：调用Proxy.newProxyInstance生成代理类的实现类；</p>
+<p>InvocationHandler接口：</p>
+<p>每一个动态代理类都必须要实现InvocationHandler这个接口，并且每个代理类的实例都关联到了一个hadler，当我们通过代理对象调用一个方法的时候，这个方法的调用就会被转发为由InvocationHandler这个接口的invoke()方法来进行调用:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function">Object <span class="hljs-title">invoke</span><span class="hljs-params">(Object proxy, Method method, Object[] args)</span> <span class="hljs-keyword">throws</span> Throwable</span>&#123;&#125;</code></pre></div>
+
+<ul>
+<li>proxy:　　指代我们所代理的那个真实对象</li>
+<li>method:　指代的是我们所要调用真实对象的某个方法的Method对象</li>
+<li>args:　　   指代的是调用真实对象某个方法时接受的参数</li>
+</ul>
+<p>Proxy类：</p>
+<p>Proxy这个类的作用就是用来动态创建一个代理对象的类，它提供了许多的方法，我们经常使用的是newProxyInstance()这个方法，这个方法的作用是得到一个动态的代理对象，其接收三个参数：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title">newProxyInstance</span><span class="hljs-params">(ClassLoader loader, Class&lt;?&gt;[] interfaces, InvocationHandler h)</span> <span class="hljs-keyword">throws</span> IllegalArgumentException</span>&#123;&#125;</code></pre></div>
+
+<ul>
+<li>loader：一个ClassLoader对象，定义了由哪个ClassLoader对象来对生成的代理对象进行加载；</li>
+<li>interfaces：一个Interface对象的数组，表示的是我将要给我需要代理的对象提供一组什么接口，如果我提供了一组接口给它，那么这个代理对象就宣称实现了该接口，这样我就能调用这组接口中的方法；</li>
+<li>h：一个InvocationHandler对象，表示当我这个动态代理对象在调用方法的时候，会关联到哪一个InvocationHandler对象上。</li>
+</ul>
+<h3 id="CGLIB代理"><a href="#CGLIB代理" class="headerlink" title="CGLIB代理"></a>CGLIB代理</h3><p><strong>如果代理类没有实现 InvocationHandler 接口，那么Spring AOP会选择使用CGLIB来动态代理目标类。</strong>CGLIB（Code Generation Library）是一个代码生成的类库，可以在运行时动态地生成指定类的一个子类对象，并覆盖其中特定方法并添加增强代码，从而实现AOP。CGLIB是通过<strong>继承</strong>的方式做的动态代理，因此如果某个类被标记为final，那么它是无法使用CGLIB做动态代理的。</p>
+<p>代理类：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CglibMethodInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MethodInterceptor</span></span>&#123;<span class="hljs-comment">//主要的方法拦截类，它是Callback接口的子接口，需要用户实现</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">intercept</span><span class="hljs-params">(Object obj,Method method,Object[] args,MethodProxy proxy )</span><span class="hljs-keyword">throws</span> Throwable</span>&#123;
+        System.out.println(<span class="hljs-string">"before cgplib"</span>);
+        Object result = <span class="hljs-keyword">null</span>;
+        <span class="hljs-keyword">try</span>&#123;
+            <span class="hljs-comment">//利用反射创建代理对象 </span>
+            result = proxy.invokeSuper(obj,args);
+        &#125;<span class="hljs-keyword">catch</span>(Exception e)&#123;
+            System.out.println(<span class="hljs-string">"ex:"</span>+e.getMessage());
+            <span class="hljs-keyword">throw</span> e;
+        &#125;<span class="hljs-keyword">finally</span>&#123;
+        	System.out.println(<span class="hljs-string">"after cglib"</span>);
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;</code></pre></div>
+
+<p>调用类：</p>
+<div class="hljs"><pre><code class="hljs java"> <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;
+        <span class="hljs-comment">// 主要的增强类</span>
+        Enhancer enhancer=<span class="hljs-keyword">new</span> Enhancer();
+        <span class="hljs-comment">//  目标类 , 设置父类，被增强的类</span>
+        enhancer.setSuperclass(RealSubject<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+        <span class="hljs-comment">// 回调对象</span>
+        enhancer.setCallback(<span class="hljs-keyword">new</span> CglibMethodInterceptor());
+        <span class="hljs-comment">//生成代理类对象，用cglibProxy来增强RealSubject</span>
+        Subject subject=enhancer.create();
+        subject.test();
+    &#125;
+&#125;</code></pre></div>
+
+<h4 id="原理解析-1"><a href="#原理解析-1" class="headerlink" title="原理解析"></a>原理解析</h4><p>Cglib是一个优秀的动态代理框架，它的底层使用ASM在内存中动态的生成被代理类的子类，使用CGLIB即使代理类没有实现任何接口也可以实现动态代理功能。CGLIB具有简单易用，它的运行速度要远远快于JDK的Proxy动态代理：<br>CGLIB的核心类：</p>
+<ul>
+<li>net.sf.cglib.proxy.Enhancer – 主要的增强类</li>
+<li>net.sf.cglib.proxy.MethodInterceptor – 主要的方法拦截类，它是Callback接口的子接口，需要用户实现</li>
+<li>net.sf.cglib.proxy.MethodProxy – JDK的java.lang.reflect.Method类的代理类，可以方便的实现对源对象方法的调用,如使用：</li>
+</ul>
+<div class="hljs"><pre><code class="hljs java">Object o = methodProxy.invokeSuper(proxy, args);<span class="hljs-comment">//虽然第一个参数是被代理对象，也不会出现死循环的问题。</span></code></pre></div>
+
+
+
 <h2 id="Spring通知类型"><a href="#Spring通知类型" class="headerlink" title="Spring通知类型"></a>Spring通知类型</h2><p>通过在代理类中包裹切面，Spring在运行期把切面织入到Spring管理的bean中，代理封装了目标类，并拦截被通知方法的调用，再把调用转发给真正的目标bean，当代理拦截到方法调用时，在调用目标bean方法之前，会执行切面逻辑。<br>Spring切面有5种类型的通知：</p>
 <ul>
 <li>前置通知（Before）：在目标方法被调用之前调用通知功能；</li>

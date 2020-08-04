@@ -485,7 +485,7 @@
         &#125;);
     &#125;</code></pre></div>
 
-<p>编写Netty应用程序的一个一般原则：尽可能地重用EventLoop，以减少线程创建所带来的开销。</p>
+<p>编写Netty应用程序的一个一般原则：<strong>尽可能地重用EventLoop，以减少线程创建所带来的开销</strong>。</p>
 <h2 id="在引导过程中添加多个ChannelHandler"><a href="#在引导过程中添加多个ChannelHandler" class="headerlink" title="在引导过程中添加多个ChannelHandler"></a>在引导过程中添加多个ChannelHandler</h2><p>之前的代码中，我们调用handler（）或者childHandler（）方法来添加单个的ChannelHandler。Netty提供了一个特殊的ChannelInboundHandlerAdapter（）子类：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChannelInitializer</span>&lt;<span class="hljs-title">C</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Channel</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span></span></code></pre></div>
 

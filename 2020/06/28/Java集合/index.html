@@ -238,9 +238,10 @@
 <li>vector：效率低，不建议使用；</li>
 <li>stack：继承自vector</li>
 <li>Hashtable：</li>
+<li>ConcurrentHashMap</li>
 <li>Enumeration：枚举</li>
 </ul>
-<h2 id="Java集合的快速失效机制“fail-fast”"><a href="#Java集合的快速失效机制“fail-fast”" class="headerlink" title="Java集合的快速失效机制“fail-fast”"></a>Java集合的快速失效机制“fail-fast”</h2><p>“fail-fast”是Java集合的一种错误检测机制，当多个线程对集合进行结构上的改变操作时，就有可能产生fail-fast机制。</p>
+<h2 id="Java集合的快速失效机制“fail-fast”"><a href="#Java集合的快速失效机制“fail-fast”" class="headerlink" title="Java集合的快速失效机制“fail-fast”"></a>Java集合的快速失效机制“fail-fast”</h2><p>“fail-fast”是Java集合的一种错误检测机制，当<strong>多个线程对集合进行结构上的改变操作</strong>时，就有可能产生fail-fast机制。</p>
 <p>原因：迭代器在遍历时直接访问集合中的内容，并且在遍历过程中使用一个modCount变量，集合在被遍历期间如果内容发生变化，就会改变modCount的值。<br>每当迭代器使用hasNext()/next()遍历下一个元素之前，都会检测modCount变量是否为预期的值，如果是就返回遍历，否则抛出异常，终止遍历。</p>
 <p>解决办法：<br>1、在遍历过程中，所有涉及到改变modCount值的地方都加上synchronized；<br>2、使用CopyOnWriteArrayList来代替ArrayList</p>
 <h1 id="Collection-1"><a href="#Collection-1" class="headerlink" title="Collection"></a>Collection</h1><h2 id="如何边遍历边移除Collection中的元素"><a href="#如何边遍历边移除Collection中的元素" class="headerlink" title="如何边遍历边移除Collection中的元素"></a>如何边遍历边移除Collection中的元素</h2><p>正确写法：</p>
@@ -263,6 +264,11 @@
 <li>性能：ArrayList在性能方面优于Vector</li>
 <li>扩容：ArrayList扩容每次增加0.5倍，Vector增加1倍。</li>
 </ul>
+<h2 id="ArrayList和LinkedList的区别"><a href="#ArrayList和LinkedList的区别" class="headerlink" title="ArrayList和LinkedList的区别"></a>ArrayList和LinkedList的区别</h2><ol>
+<li>ArrayList是实现了基于动态数组的数据结构，LinkedList是基于链表结构。</li>
+<li>对于随机访问的get和set方法，ArrayList要优于LinkedList，因为LinkedList要移动指针。</li>
+<li>对于新增和删除操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。</li>
+</ol>
 <h2 id="List和Set的区别"><a href="#List和Set的区别" class="headerlink" title="List和Set的区别"></a>List和Set的区别</h2><p>List和Set都是继承自Collection接口</p>
 <p>List特点：有序（元素存入集合的顺序和取出的顺序一致），元素可以重复，可以插入多个null元素；支持for循环，可以通过下标来遍历，查找元素效率高，插入删除元素效率低。</p>
 <p>Set特点：无序，不可以存储重复元素，只允许存入一个null元素；只能通过迭代来获取数据，删除和插入效率高，检索元素效率低。</p>
@@ -301,13 +307,12 @@
 <li>对null key 和null value的支持：HashMap允许null作为键，但是只能有一个，可以有多个键所对应的值为null；HashTable中键值对都不允许为null</li>
 <li>初始容量大小和每次扩容量大小：创建时如果不指定容量初始值，HashTable默认的初始值大小为11，之后每次扩容容量变为原来的2n+1，HashMap的初始容量为16，之后每次扩容为原来的2倍。</li>
 </ol>
-<h2 id="HashMap和ConcurrentHashMap的区别"><a href="#HashMap和ConcurrentHashMap的区别" class="headerlink" title="HashMap和ConcurrentHashMap的区别"></a>HashMap和ConcurrentHashMap的区别</h2><h3 id="1-谈谈你理解的HashMap，讲讲其中的get、put过程"><a href="#1-谈谈你理解的HashMap，讲讲其中的get、put过程" class="headerlink" title="1. 谈谈你理解的HashMap，讲讲其中的get、put过程"></a>1. 谈谈你理解的HashMap，讲讲其中的get、put过程</h3><p>HashMap的主干是一个Entry数组，Entry是HashMap的基本组成单元，每一个Entry包含一个key-value键值对，JDK1.8以前，HashMap由数组+链表组成，数组是HashMap的主体，链表则是主要为了解决哈希冲突而存在的，如果定位到的数组位置不包含链表（当前Entry的next指向null），那么查找、添加仅需一次寻址即可，如果定位的数组包含链表，对于添加操作，其时间复杂度为O(n)，首先遍历链表，存在即覆盖，否则新增；对于查找操作，需遍历链表，然后通过key对象的equals方法逐一进行比较。</p>
-<p>HashMap默认的initialCapacity为16，loadFactory默认为0.75。</p>
-<p>当发生哈希冲突并且size大于阈值的时候，需要进行数组扩容，扩容时，需要新建一个长度为之前数组2倍的新的数组，然后将当前的Entry数组中的元素全部传输过去，扩容后的新数组长度为之前的2倍，好处是可以利用位运算提高取模速度，快速计算出元素新的下标。</p>
-<h3 id="2-HashMap在JDK1-8做了什么优化"><a href="#2-HashMap在JDK1-8做了什么优化" class="headerlink" title="2. HashMap在JDK1.8做了什么优化"></a>2. HashMap在JDK1.8做了什么优化</h3><ul>
+<h2 id="HashMap在JDK1-8做了什么优化"><a href="#HashMap在JDK1-8做了什么优化" class="headerlink" title="HashMap在JDK1.8做了什么优化"></a>HashMap在JDK1.8做了什么优化</h2><ul>
 <li>JDK1.8增加了红黑树来进行优化，当链表长度超过8时，链表就转为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能；</li>
-<li>Entry改为Node</li>
+<li>在JDK1.7中，插入链表节点使用头插法，JDK1.8中变为了尾插法，这是因为头插法在并发下调用transfer()方法，可能会导致链表死循环，以及数据的丢失。</li>
+<li>hash()方法，将hash值高位（前16位）参与到取模的运算中，使得计算结果的不确定性增强，降低发生哈希碰撞的概率。</li>
 </ul>
+<h2 id="ConcurrentHashMap在JDK1-8做了哪些优化？"><a href="#ConcurrentHashMap在JDK1-8做了哪些优化？" class="headerlink" title="ConcurrentHashMap在JDK1.8做了哪些优化？"></a>ConcurrentHashMap在JDK1.8做了哪些优化？</h2><p>ConcurrentHashMap在Java 8 里抛弃了Segment的概念，直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，Node是ConcurrentHashMap存储结构的基本单元，继承于HashMap中的Entry，用于存储数据，并发控制使用Synchronized和CAS来操作。</p>
 <h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable和comparator的区别"><a href="#comparable和comparator的区别" class="headerlink" title="comparable和comparator的区别"></a>comparable和comparator的区别</h2><ul>
 <li>comparable接口出自java.lang包，它有一个compareTo(Object obj)方法用来排序；</li>
 <li>comparator接口出自java.util包，它有一个compare(Object obj1,Object obj2)方法用来排序</li>

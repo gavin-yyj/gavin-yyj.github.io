@@ -218,18 +218,18 @@
               <p>Redis 的高性能是由其将所有数据都存储在了内存中，需要使用时直接从内存调用即可。为了使 Redis 在重启之后仍然能保证数据不丢失，需要将数据从内存同步到数据库中，这一过程就是<code>持久化</code>。</p>
 <p>Redis 支持两种持久化方式，一种是 <code>RDB方式</code>，一种是 <code>AOF方式</code>。可以单独使用其中一种或将两种结合使用。</p>
 <ul>
-<li>RDB (默认) 在<strong>指定的时间间隔</strong>内将内存中的数据快照写入磁盘。</li>
+<li>RDB (默认) 在<strong>指定的时间间隔</strong>内将内存中的数据<strong>快照</strong>写入磁盘。</li>
 <li>AOF 以<strong>日志</strong>的形式记录服务器处理的<strong>每一个写操作</strong>，在Redis服务器启动之初会读取该文件来重新构建数据库，以保证启动后数据库中的数据是完整的。</li>
 </ul>
 <h2 id="一、RDB"><a href="#一、RDB" class="headerlink" title="一、RDB"></a>一、RDB</h2><h3 id="1-1-实现步骤"><a href="#1-1-实现步骤" class="headerlink" title="1.1 实现步骤"></a>1.1 实现步骤</h3><ol>
 <li>Redis 执行 <code>fork</code> 命令创建子进程。</li>
-<li>父进程继续处理 client 请求，子进程负责将内存内容写入到临时文件。由于 OS 的写时复制机制父子进程会共享相同的物理页面，当父进程处理写请求时OS会为父进程要修改的页面创建副本，而不是写共享的页面。所以子进程的地址空间内的数据是 fork 时刻整个数据库的一个<strong>快照</strong>。</li>
+<li>父进程继续处理 client 请求，子进程负责将内存内容写入到临时文件。由于 OS 的<strong>写时复制机制</strong>父子进程会共享相同的物理页面，<strong>当父进程处理写请求时OS会为父进程要修改的页面创建副本</strong>，而不是写共享的页面。所以子进程的地址空间内的数据是 fork 时刻整个数据库的一个<strong>快照</strong>。</li>
 <li>当子进程将快照写入临时文件完毕后，用临时文件替换原来的快照文件，然后子进程退出。</li>
 </ol>
 <p>需要注意的是，每次 RDB 都是将<strong>内存数据完整写入到磁盘一次</strong>，并<strong>不是在原有数据的基础上增加数据</strong>。如果数据量大的话，而且写操作比较多，必然会引起大量的磁盘IO操作，可能会严重影响性能。</p>
 <h3 id="1-2-优势"><a href="#1-2-优势" class="headerlink" title="1.2 优势"></a>1.2 优势</h3><ol>
 <li>一旦采用该方式，那么你的整个 Redis 数据库将<strong>只包含一个文件</strong>，这样非常<strong>方便备份</strong>。</li>
-<li>方便移植，我们可以很容易的将一个一个 RDB 文件移动到其他的存储介质上。</li>
+<li><strong>方便移植</strong>，我们可以很容易的将一个一个 RDB 文件移动到其他的存储介质上。</li>
 <li>RDB 在恢复大数据集时的速度比 AOF 的<strong>恢复速度要快</strong>。</li>
 <li>RDB 可以<strong>最大化 Redis 的性能</strong>（父进程在保存 RDB 文件时唯一要做的就是 fork 出一个子进程，然后这个子进程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 IO 操作）。</li>
 </ol>
@@ -253,13 +253,13 @@
 </ol>
 <p>需要注意的是，重写AOF文件的操作并没有读取旧的AOF文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的AOF文件，这点和快照有点类似。</p>
 <h3 id="2-2-优势"><a href="#2-2-优势" class="headerlink" title="2.2 优势"></a>2.2 优势</h3><ol>
-<li>AOF 提供的三种同步策略，使得数据安全性更高。</li>
+<li>AOF 提供的三种同步策略，使得数据<strong>安全性更高</strong>。</li>
 <li>因为 AOF 对日志文件的写入操作采用的是<code>append 模式</code>，因此在写入过程中即使出现宕机现象，也不会破坏日志文件已经存在的内容。</li>
 <li>如果 AOF 日志文件过大，Redis可以自动启用 <code>rewrite 机制</code>，使 Redis 以 append 模式不断的将修改数据写入到老的磁盘文件中，同时 Redis 还会创建一个新的文件用于记录此期间有哪些命令被执行。因此在进行 rewrite 切换时可以更好的保证数据安全性。</li>
 </ol>
 <h3 id="2-3-劣势"><a href="#2-3-劣势" class="headerlink" title="2.3 劣势"></a>2.3 劣势</h3><ol>
 <li>对于相同数量的数据集而言，AOF 文件通常要大于 RDB 文件。</li>
-<li>根据同步策略的不同，AOF 在运行效率上往往会慢于 RDB。</li>
+<li>根据同步策略的不同，AOF 在运行效率上往往会<strong>慢</strong>于 RDB。</li>
 </ol>
 <h3 id="2-4-AOF-配置"><a href="#2-4-AOF-配置" class="headerlink" title="2.4 AOF 配置"></a>2.4 AOF 配置</h3><p>AOF 默认是关闭的，修改配置文件 <code>redis.conf</code> 来打开 AOF：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606122949195.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>

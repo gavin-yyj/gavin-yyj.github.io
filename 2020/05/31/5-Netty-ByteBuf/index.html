@@ -270,7 +270,7 @@
         &#125;
     &#125;</code></pre></div>
 
-<h4 id="复合缓冲区"><a href="#复合缓冲区" class="headerlink" title="复合缓冲区"></a>复合缓冲区</h4><p>Netty通过一个ByteBuf子类CompositeByteBuf来提供一个将多个缓冲区表示为单个合并缓冲区的虚拟表示。</p>
+<h4 id="复合缓冲区"><a href="#复合缓冲区" class="headerlink" title="复合缓冲区"></a>复合缓冲区</h4><p>Netty通过一个ByteBuf子类<strong>CompositeByteBuf来提供一个将多个缓冲区表示为单个合并缓冲区</strong>的虚拟表示。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">byteBufComposite</span><span class="hljs-params">()</span> </span>&#123;
         CompositeByteBuf messageBuf = Unpooled.compositeBuffer();
         ByteBuf headerBuf = BYTE_BUF_FROM_SOMEWHERE; <span class="hljs-comment">// can be backing or direct</span>
@@ -313,8 +313,8 @@
 <h3 id="可丢弃字节"><a href="#可丢弃字节" class="headerlink" title="可丢弃字节"></a>可丢弃字节</h3><p>可丢弃字节的分段包含了已经被读过的字节。通过调用discardReadBytes()方法，可以丢弃它们并回收空间，变成可写字节，但是不建议频繁调用discardReadBytes()方法，因为可读字节必须被移动到缓冲区的开始位置。</p>
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTY2MjFjZGQ2MjQwNzdkODcucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <h3 id="可读字节"><a href="#可读字节" class="headerlink" title="可读字节"></a>可读字节</h3><p>存储了实际数据，任何名称以read 或者skip 开头的操作都将检索或者跳过位于当前readerIndex 的数据，并且将它增加已读字节数。</p>
-<h3 id="可写字节"><a href="#可写字节" class="headerlink" title="可写字节"></a>可写字节</h3><p>拥未定义内容的、写入就绪的内存区域，任何名称以write开头的操作都将从当前的writerIndex处开始写数据，并将它增加已经写入的字节数。</p>
-<h3 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h3><p>通过调用markReaderIndex()、markWriterIndex()、resetWriterIndex()和resetReaderIndex()来标记和重置ByteBuf 的readerIndex 和writerIndex。可以通过调用clear()方法来将readerIndex 和writerIndex 都设置为0，但是这并不会清除内存中的内容。</p>
+<h3 id="可写字节"><a href="#可写字节" class="headerlink" title="可写字节"></a>可写字节</h3><p>拥有未定义内容的、写入就绪的内存区域，任何名称以write开头的操作都将从当前的writerIndex处开始写数据，并将它增加已经写入的字节数。</p>
+<h3 id="索引管理"><a href="#索引管理" class="headerlink" title="索引管理"></a>索引管理</h3><p>通过调用markReaderIndex()、markWriterIndex()、resetWriterIndex()和resetReaderIndex()来标记和重置ByteBuf 的readerIndex 和writerIndex。可以通过调用<code>clear()</code>方法来将readerIndex 和writerIndex 都设置为0，但是这并不会清除内存中的内容。</p>
 <p>clear（）方法调用前：</p>
 <p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy84MTk2OTQxLTZlMzMxM2E5NTA4NmRkMDgucG5n?x-oss-process=image/format,png" srcset="/img/loading.gif" alt="img"></p>
 <p>clear（）方法调用后：</p>

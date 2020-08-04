@@ -237,7 +237,7 @@
 <p>（3）从线程池中拉取一个可用的Thread，并执行任务，当任务完成时，将该Thread返回给空闲列表，使其可被重用</p>
 <h2 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h2><p>EventLoop是协同设计的一部分，采用了两个基本的API：并发和网络编程。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200602155018734.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>一个EventLoop将由一个永远都不会改变的Thread驱动，同时任务（Runnable或者Callable）可以直接提交给EventLoop实现，以立即执行或者调度执行。根据配置和可用核心不同，可能会创建多个EventLoop实例用以优化资源的使用，并且单个EventLoop可能会被指派用于服务多个Channel。</p>
+<p><strong>一个EventLoop将由一个永远都不会改变的Thread驱动，同时任务（Runnable或者Callable）可以直接提交给EventLoop实现，以立即执行或者调度执行。根据配置和可用核心不同，可能会创建多个EventLoop实例用以优化资源的使用，并且单个EventLoop可能会被指派用于服务多个Channel。</strong></p>
 <h3 id="Netty4中的I-O和事件处理"><a href="#Netty4中的I-O和事件处理" class="headerlink" title="Netty4中的I/O和事件处理"></a>Netty4中的I/O和事件处理</h3><p>所有的I/O操作和事件都由已经被分配给了EventLoop的那个Thread来处理。</p>
 <h2 id="任务调度"><a href="#任务调度" class="headerlink" title="任务调度"></a>任务调度</h2><p>常见的用例是：发送心跳消息到远程节点，以检查连接是否还活着。</p>
 <h3 id="JDK的任务调度API"><a href="#JDK的任务调度API" class="headerlink" title="JDK的任务调度API"></a>JDK的任务调度API</h3><p>java.util.concurrent.Executors类的工厂方法</p>
@@ -294,7 +294,7 @@
  &#125;</code></pre></div>
 
 <p>如果要调度任务以每隔60s执行一次，则使用ScheduleAtFixedRate()方法。</p>
-<p>要想取消或者检查（被调度任务的）执行状态，可以使用每隔异步操作所返回的ScheduledFuture。</p>
+<p>要想取消或者检查（被调度任务的）执行状态，可以使用每个异步操作所返回的ScheduledFuture。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">cancelingTaskUsingScheduledFuture</span><span class="hljs-params">()</span></span>&#123;
        Channel ch = CHANNEL_FROM_SOMEWHERE; <span class="hljs-comment">// get reference from somewhere</span>
        <span class="hljs-comment">//...</span>

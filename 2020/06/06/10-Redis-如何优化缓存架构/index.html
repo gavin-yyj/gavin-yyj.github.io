@@ -248,9 +248,9 @@
 <p><img src="https://img-blog.csdnimg.cn/20200606163226832.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="三、基于流式计算技术的缓存热点自动发现"><a href="#三、基于流式计算技术的缓存热点自动发现" class="headerlink" title="三、基于流式计算技术的缓存热点自动发现"></a>三、基于流式计算技术的缓存热点自动发现</h1><p>其实这里关键的一点，就是对于这种热点缓存，你的系统需要能够在热点缓存突然发生的时候，直接发现他，然后瞬间立马实现毫秒级的<strong>自动负载均衡</strong>。</p>
 <p>那么我们就先来说说，你如何自动发现热点缓存问题?首先你要知道，一般出现缓存热点的时候，你的每秒并发肯定是很高的，可能每秒都几十万甚至上百万的请求量过来，这都是有可能的。</p>
-<p>所以，此时完全可以基于大数据领域的流式计算技术来进行实时数据访问次数的统计，比如 Storm、Spark Streaming、Flink，这些技术都是可以的。</p>
+<p>所以，此时完全可以基于大数据领域的<strong>流式计算技术</strong>来进行实时数据访问次数的统计，比如 Storm、Spark Streaming、Flink，这些技术都是可以的。</p>
 <p>然后一旦在实时数据访问次数统计的过程中，比如发现一秒之内，某条数据突然访问次数超过了 1000，就直接立马把这条数据判定为是热点数据，可以将这个发现出来的热点数据写入比如 Zookeeper 中。</p>
-<p>当然，你的系统如何判定热点数据，可以根据自己的业务还有经验值来就可以了。</p>
+<p>当然，你的系统如何判定热点数据，可以根据自己的业务还有经验来就可以了。</p>
 <p>大家看看下面这张图，看看整个流程是如何进行的：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606163237932.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>当然肯定有人会问，那你的流式计算系统在进行数据访问次数统计的时候，会不会也存在说单台机器被请求每秒几十万次的问题呢?</p>
@@ -268,7 +268,7 @@
 <p>我们再来画一幅图，一起来看看这个过程：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606163305719.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="五、限流熔断保护"><a href="#五、限流熔断保护" class="headerlink" title="五、限流熔断保护"></a>五、限流熔断保护</h1><p>除此之外，在每个系统内部，还应该专门加一个对热点数据访问的限流熔断保护措施。</p>
-<p>每个系统实例内部，都可以加一个熔断保护机制，假设缓存集群最多每秒承载4万读请求，那么你一共有 100 个系统实例。</p>
+<p>每个系统实例内部，都可以加一个<strong>熔断保护机制</strong>，假设缓存集群最多每秒承载4万读请求，那么你一共有 100 个系统实例。</p>
 <p>你自己就该限制好，每个系统实例每秒最多请求缓存集群读操作不超过 400 次，一超过就可以熔断掉，不让请求缓存集群，直接返回一个空白信息，然后用户稍后会自行再次重新刷新页面之类的。</p>
 <p>通过系统层自己直接加限流熔断保护措施，可以很好的保护后面的缓存集群、数据库集群之类的不要被打死，我们来看看下面的图：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606163320488.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>

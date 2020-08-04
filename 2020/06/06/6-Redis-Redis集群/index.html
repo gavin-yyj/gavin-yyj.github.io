@@ -222,7 +222,7 @@
 <h3 id="1-2-负载均衡"><a href="#1-2-负载均衡" class="headerlink" title="1.2 负载均衡"></a>1.2 负载均衡</h3><p>当我们搭建了集群后，其是如何实现负载均衡的呢？</p>
 <p>Redis 集群中内置了 <strong>16384</strong> 个<code>哈希槽（slot）</code>，它会把所有的物理节点都映射到<strong>[0,16383]</strong>的slot上。</p>
 <p>当我们需要在Redis集群中放置一个 key-value 时，Redis 先对 key 使用 <code>crc16</code> 算法得出一个结果，然后将结果<strong>对16384取余</strong>，这样<strong>每一个 key 都会对应一个编号在0 ~16383的 哈希槽</strong>。</p>
-<p>Redis 会根据节点数量大致均等的将哈希槽映射到不同的节点。例如我们有三个节点，其每个节点哈希槽范围为：0 ~ 5000，5001 ~ 10000，10001~ 16383。</p>
+<p>Redis 会根据节点数量大致均等地将哈希槽映射到不同的节点。例如我们有三个节点，其每个节点哈希槽范围为：0 ~ 5000，5001 ~ 10000，10001~ 16383。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606130442462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>当我们存储一个名为 Hello1 的 key 时，其通过 <code>crc16</code> 算法计算出的结果为1500，Redis 集群就会将这个 key 放在对应1500的<code>哈希槽</code>中，又因为哈希槽0~ 5000被映射到了 Server1，则 Hello1 就被放置在了 Server1。</p>
 <p><img src="https://img-blog.csdnimg.cn/2020060613054833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
@@ -372,7 +372,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
 <p>最后说两句：</p>
 <ol>
 <li>如果你不是伪集群，真的在服务器上搭建了集群，即 <code>真集群</code>，那么只需要在任意一台上执行 <code>redis-trib.rb</code> 即可。</li>
-<li>在真集群的情况下，除了在配置文件中要 <code>bind 0.0.0.0</code> 以外，还要注意关闭防火墙，不然无法搭建。</li>
+<li>在真集群的情况下，除了在配置文件中要 <code>bind 0.0.0.0</code> 以外，还要注意<strong>关闭防火墙</strong>，不然无法搭建。</li>
 <li>如果关闭所有 redis 客户端后，想要重新开启集群，在客户端都启动后，进入任意客户端执行<code>cluster nodes</code>即可。</li>
 <li>如果想要重新生成集群，需要删除每个 Redis 中生成的持久化文件。</li>
 </ol>

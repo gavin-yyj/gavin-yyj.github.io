@@ -219,8 +219,8 @@
 <p>为了实现可靠性传输，需要考虑很多事情，例如数据的破坏、丢包、重复以及分片顺序混乱等问题。如不能解决这些问题，也就无从谈起可靠传输。</p>
 <p>TCP 是通过序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现可靠性传输的。</p>
 <p>今天，将重点介绍 TCP 的<strong>重传机制</strong>、<strong>滑动窗口</strong>、<strong>流量控制</strong>、<strong>拥塞控制</strong>。<br><img src="https://img-blog.csdnimg.cn/20200727151426832.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h1 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h1><p>TCP实现可靠传输的方式之一是通过序列号和确认应答。</p>
-<p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个确认应答消息，表示已收到消息。<br><img src="https://img-blog.csdnimg.cn/20200727151811427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果数据在传输过程中丢失了？TCP针对数据包丢失的情况，会用重传机制来解决。</p>
+<h1 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h1><p>TCP实现可靠传输的方式之一是通过<strong>序列号</strong>和<strong>确认应答</strong>。</p>
+<p>在TCP中，当发送端的数据到达接收主机时，接收端主机会返回一个确认应答消息，表示已收到消息。<br><img src="https://img-blog.csdnimg.cn/20200727151811427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果数据在传输过程中丢失了？TCP针对数据包丢失的情况，会用<strong>重传机制</strong>来解决。</p>
 <p>常见的重传机制有：</p>
 <ul>
 <li>超时重传</li>
@@ -234,7 +234,7 @@
 <li>数据包丢失</li>
 <li>确认应答丢失</li>
 </ul>
-<p><strong>超时时间应该设置为多少？</strong><br><img src="https://img-blog.csdnimg.cn/20200727152310356.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>RTT就是数据从网络一端传送到另一端所需要的的时间，也就是包的往返时间。</p>
+<p><strong>超时时间应该设置为多少？</strong><br><img src="https://img-blog.csdnimg.cn/20200727152310356.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>RTT就是数据从网络一端传送到另一端再回来所需要的的时间，也就是包的往返时间。</p>
 <p>超时重传时间是以<strong>RTO</strong>（Retransmission Timeout）表示，其值应该略大于报文往返RTT的值。</p>
 <p>如果超时重发的数据再次超时，又需要重传的时候，TCP的策略是<strong>超时间隔加倍</strong>。</p>
 <p>超时触发重传存在的问题是，超时周期可能相对较长，可以利用【快速重传】机制来解决超时重发的时间等待。</p>
@@ -249,7 +249,7 @@
 </ul>
 <p>快速重传的工作方式是当收到三个相同的ack报文时，会在定时器过期之前，重传丢失的报文段。</p>
 <p>快速重传机制只解决了超时时间的问题，但是重传的时候不知道该重传哪些TCP报文，于是就有了SACK方法。</p>
-<h2 id="SACK方法"><a href="#SACK方法" class="headerlink" title="SACK方法"></a>SACK方法</h2><p>SACK（Selective Acknowledgement，选择性确认），这种方式需要在TCP头部【选项】字段里加一个SACK的东西，它可以将缓存的地图发送给发送方，这样发送方就可以知道哪些数据收到了，哪些数据没有收到，知道了这些信息，就可以只重传丢失的数据。</p>
+<h2 id="SACK方法"><a href="#SACK方法" class="headerlink" title="SACK方法"></a>SACK方法</h2><p>SACK（Selective Acknowledgement，<strong>选择性确认</strong>），这种方式需要在TCP头部【选项】字段里加一个SACK的东西，它可以将缓存的地图发送给发送方，这样发送方就可以知道哪些数据收到了，哪些数据没有收到，知道了这些信息，就可以只重传丢失的数据。</p>
 <p>如下图，发送方收到了三次同样的ack确认报文，于是就会触发快速重发机制，通过SACK信息发现只有200~299这段数据丢失，则重发时就只选择这个TCP段进行重发。<br><img src="https://img-blog.csdnimg.cn/20200727154904354.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果要支持SACK，必须双方都要支持。</p>
 <h2 id="Duplicate-SACK"><a href="#Duplicate-SACK" class="headerlink" title="Duplicate SACK"></a>Duplicate SACK</h2><p>Duplicate SACK又称D-SACK，其主要使用了SACK来告诉发送方有哪些数据被重复接收了。</p>
 <p>作用一：解决ack丢包问题<br><img src="https://img-blog.csdnimg.cn/20200727155659840.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
@@ -467,6 +467,12 @@
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2020/07/29/LRU%E7%AE%97%E6%B3%95/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LRU算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">

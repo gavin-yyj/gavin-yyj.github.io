@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      33
+      32
        分钟
     </span>
   
@@ -316,7 +316,7 @@
 <td>当调用ChannelInboundHandler.fireUserEventTriggered()方法时被调用</td>
 </tr>
 </tbody></table>
-<p>当某个ChannelInboundHandler的实现重写了channelRead（）方法时，它将负责显示地释放与池化的ByteBuf实例相关的内存。</p>
+<p>当某个ChannelInboundHandler的实现重写了channelRead（）方法时，它将负责显式地释放与池化和ByteBuf实例相关的内存。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DiscardHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
     <span class="hljs-meta">@Override</span>
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">channelRead</span><span class="hljs-params">(ChannelHandlerContext ctx, Object msg)</span> </span>&#123;
@@ -398,8 +398,6 @@
 <h2 id="ChannelPipeline接口"><a href="#ChannelPipeline接口" class="headerlink" title="ChannelPipeline接口"></a>ChannelPipeline接口</h2><p>每个新建的Channel都会被分配一个新的ChannelPipeline，Channel既不能附加另一个ChannelPipeline，也不能分离当前的。</p>
 <p>根据事件的起源，事件将会被ChannelInboundHandler或者ChannelOutboundHandler处理，随后通过调用ChannelHandlerContext的实现，它将被转发给同一超类型的下一个ChannelHandler。</p>
 <p>ChannelHandlerContext的作用就是使得ChannelHandler能够和它的ChannelPipeline以及其他的ChannelHandler交互。</p>
-<p>下图是一个典型的同时具有入站和出站ChannelHandler的ChannelPipeline的布局：</p>
-<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590999092320&di=27fc68aadc3a9af02ab63d0231dcb6d5&imgtype=0&src=http%3A%2F%2Fimg3.imgtn.bdimg.com%2Fit%2Fu%3D1589654393%2C4151543914%26fm%3D214%26gp%3D0.jpg" srcset="/img/loading.gif" alt="img"></p>
 <p>Netty总是将ChannelPipeline的入站口作为头部，而将出站口作为尾部，在ChannelPipeline传播事件时，它会测试ChannelPipeline中下一个ChannelHandler的类型是否和事件的运动方向相匹配，如果不匹配就跳过，直到找到和该事件所期望的方向相匹配的为止。</p>
 <h3 id="修改ChannelPipeline"><a href="#修改ChannelPipeline" class="headerlink" title="修改ChannelPipeline"></a>修改ChannelPipeline</h3><p>通过调用ChannelPipeline上的相关方法，ChannelHandler可以添加、删除或者替换其他的ChannelHandler，从而实时地修改ChannelPipeline的布局。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">modifyPipeline</span><span class="hljs-params">()</span> </span>&#123;
@@ -431,8 +429,8 @@
 <ul>
 <li>ChannelPipeline有着丰富的API用以被调用、以响应入站和出站事件。</li>
 </ul>
-<h2 id="ChannelHandlerContext接口"><a href="#ChannelHandlerContext接口" class="headerlink" title="ChannelHandlerContext接口"></a>ChannelHandlerContext接口</h2><p>前面也提到了，ChannelHandlerContext代表了ChannelHandler和ChannelPipeline之间的关联，ChannelHandlerContext的主要功能就是管理它所关联的ChannelHandler和在同一个ChannelPipeline中的其他ChannelHandler之间的交互。</p>
-<p>ChannelHandlerContext本身很多方法在Channel和ChannelPipeline中也存在，但是如果调用Channel或者ChannelPipeline上的这些方法，它们将沿着整个ChannelPipeline进行传播，而调用位于ChannelHandlerContext上的这些方法，则将从当前所关联的ChannelHandler开始，并且只会传播给位于该ChannelPipeline中的下一个能够处理该事件的ChannelHandler因此它会产生更短的事件流，性能会得到提高。</p>
+<h2 id="ChannelHandlerContext接口"><a href="#ChannelHandlerContext接口" class="headerlink" title="ChannelHandlerContext接口"></a>ChannelHandlerContext接口</h2><p>前面也提到了，ChannelHandlerContext代表了ChannelHandler和ChannelPipeline之间的关联，<strong>ChannelHandlerContext的主要功能就是管理它所关联的ChannelHandler和在同一个ChannelPipeline中的其他ChannelHandler之间的交互。</strong></p>
+<p>ChannelHandlerContext本身很多方法在Channel和ChannelPipeline中也存在，但是如果调用Channel或者ChannelPipeline上的这些方法，它们将沿着整个ChannelPipeline进行传播，而调用位于ChannelHandlerContext上的这些方法，则将从当前所关联的ChannelHandler开始，并且只会传播给位于该ChannelPipeline中的下一个能够处理该事件的ChannelHandler，因此它会产生更短的事件流，性能会得到提高。</p>
 <p>另外，ChannelHandlerContext和ChannelHandler之间的关联（绑定）是永远不会改变的，所以缓存对它的引用是安全的。</p>
 <h3 id="使用ChannelHandlerContext"><a href="#使用ChannelHandlerContext" class="headerlink" title="使用ChannelHandlerContext"></a>使用ChannelHandlerContext</h3><p>Channel、ChannelPipeline、ChannelHandler以及ChannelHandlerContext之间的关系如下图：</p>
 <p><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=777592249,3155125613&fm=15&gp=0.jpg" srcset="/img/loading.gif" alt="img"></p>
@@ -500,20 +498,20 @@
 </ul>
 <p>添加ChannelFutureListener到ChannelFuture的代码如下：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addingChannelFutureListener</span><span class="hljs-params">()</span></span>&#123;
-        Channel channel = CHANNEL_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
-        ByteBuf someMessage = SOME_MSG_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
-        <span class="hljs-comment">//...</span>
-        io.netty.channel.ChannelFuture future = channel.write(someMessage);
-        future.addListener(<span class="hljs-keyword">new</span> ChannelFutureListener() &#123;
-            <span class="hljs-meta">@Override</span>
-            <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">operationComplete</span><span class="hljs-params">(io.netty.channel.ChannelFuture f)</span> </span>&#123;
-                <span class="hljs-keyword">if</span> (!f.isSuccess()) &#123;
-                    f.cause().printStackTrace();
-                    f.channel().close();
-                &#125;
+    Channel channel = CHANNEL_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
+    ByteBuf someMessage = SOME_MSG_FROM_SOMEWHERE; <span class="hljs-comment">// get reference to pipeline;</span>
+    <span class="hljs-comment">//...</span>
+    io.netty.channel.ChannelFuture future = channel.write(someMessage);
+    future.addListener(<span class="hljs-keyword">new</span> ChannelFutureListener() &#123;
+        <span class="hljs-meta">@Override</span>
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">operationComplete</span><span class="hljs-params">(io.netty.channel.ChannelFuture f)</span> </span>&#123;
+            <span class="hljs-keyword">if</span> (!f.isSuccess()) &#123;
+                f.cause().printStackTrace();
+                f.channel().close();
             &#125;
-        &#125;);
-    &#125;</code></pre></div>
+        &#125;
+    &#125;);
+&#125;</code></pre></div>
 
 
 

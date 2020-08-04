@@ -224,7 +224,7 @@
 <li>引导</li>
 </ul>
 </blockquote>
-<p>学习Netty是因为它是基于Java NIO 的异步和事件驱动的实现，保证了高负载下应用程序性能的最大化和可伸缩性；同时它包含了一组设计模式，实现了应用程序逻辑从网络层解耦，简化了开发过程，最大限度地提高了可测试性、模块化以及代码的可重用性。</p>
+<p>学习Netty是因为它是基于Java NIO 的<strong>异步</strong>和<strong>事件驱动</strong>的实现，保证了高负载下应用程序性能的最大化和可伸缩性；同时它包含了一组设计模式，实现了<strong>应用程序逻辑从网络层解耦</strong>，简化了开发过程，最大限度地提高了可测试性、模块化以及代码的可重用性。</p>
 <h2 id="1-Channel、EventLoop和ChannelFuture"><a href="#1-Channel、EventLoop和ChannelFuture" class="headerlink" title="1. Channel、EventLoop和ChannelFuture"></a>1. Channel、EventLoop和ChannelFuture</h2><ul>
 <li><p>Channel：Socket；</p>
 </li>
@@ -233,8 +233,8 @@
 <li><p>ChannelFuture：异步通知</p>
 </li>
 </ul>
-<h3 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h3><p>基本的I/O操作（bind、connect、read、write）都依赖于底层网络传送所提供的原语，也就是Socket，而Netty中的Channel就是简化Socket编程的复杂性。</p>
-<h3 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h3><p>用于处理连接的生命周期中所发生的事件。</p>
+<h3 id="Channel接口"><a href="#Channel接口" class="headerlink" title="Channel接口"></a>Channel接口</h3><p>基本的I/O操作（bind、connect、read、write）都依赖于底层网络传送所提供的原语，也就是Socket，而<strong>Netty中的Channel就是简化Socket编程的复杂性</strong>。</p>
+<h3 id="EventLoop接口"><a href="#EventLoop接口" class="headerlink" title="EventLoop接口"></a>EventLoop接口</h3><p>用于<strong>处理连接的生命周期中所发生的事件</strong>。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200531232619159.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>其关系是：</p>
 <ul>
@@ -246,7 +246,7 @@
 </ul>
 <h3 id="ChannelFuture"><a href="#ChannelFuture" class="headerlink" title="ChannelFuture"></a>ChannelFuture</h3><p>正因为Netty中所有的I/O操作都是异步的，其执行结果不会立即返回，所以Netty提供了ChannelFuture接口，其addListener()方法注册了一个ChannelFutureListener，以便在某个操作完成时(无论是否成功)都能得到通知。</p>
 <h2 id="2-ChannelHandler和ChannelPipeline"><a href="#2-ChannelHandler和ChannelPipeline" class="headerlink" title="2. ChannelHandler和ChannelPipeline"></a>2. ChannelHandler和ChannelPipeline</h2><p>管理数据流以及执行应用程序处理逻辑的组件</p>
-<h3 id="ChannelHandler接口"><a href="#ChannelHandler接口" class="headerlink" title="ChannelHandler接口"></a>ChannelHandler接口</h3><p>充当了所有处理入站和出站数据的应用程序逻辑的容器，因为<code>ChannelHandler</code>的方法是由<strong>网络事件触发</strong>的。</p>
+<h3 id="ChannelHandler接口"><a href="#ChannelHandler接口" class="headerlink" title="ChannelHandler接口"></a>ChannelHandler接口</h3><p>充当了<strong>所有处理入站和出站数据的应用程序逻辑的容器</strong>，因为<code>ChannelHandler</code>的方法是由<strong>网络事件触发</strong>的。</p>
 <h3 id="ChannelPipeline接口"><a href="#ChannelPipeline接口" class="headerlink" title="ChannelPipeline接口"></a>ChannelPipeline接口</h3><p>提供了ChannelHandler链的容器，并定义了用于在该链上传播入站和出站事件流的API，当Channel被创建时，他会被自动的分配到它专属的ChannelPipeline。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//在创建Channel时向ChannelPipeline中添加一个EchoClientHandler实例</span>
 .handler(<span class="hljs-keyword">new</span> ChannelInitializer&lt;SocketChannel&gt;() &#123;
@@ -292,7 +292,7 @@
 </tr>
 </tbody></table>
 <p>为什么ServerBootStrap需要两个EventLoopGroup呢？</p>
-<p>因为服务器需要两组不同的Channel，第一组将只包含一个ServerChannel，代表服务器自身的已绑定到某个本地端口的正在监听的套接字，而第二组将包含所有已创建的用来处理传入客户端连接的Channel。</p>
+<p>因为服务器需要两组不同的Channel，第一组将只包含一个ServerChannel，代表服务器自身的已绑定到某个本地端口的正在监听的套接字，而第二组将包含所有已创建的用来<strong>处理传入客户端连接的Channel</strong>。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200531232645361.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 
             </article>

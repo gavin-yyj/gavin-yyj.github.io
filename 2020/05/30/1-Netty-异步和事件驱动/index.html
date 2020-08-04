@@ -265,8 +265,8 @@ String request,response;
 <li>Future</li>
 <li>事件和Channelhandler</li>
 </ul>
-<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p>简单理解就是传入或者传出数据的载体，可以被打开或者被关闭，连接或者断开连接。</p>
-<h3 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h3><p>回调其实就是一个方法，回调函数不是由该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或条件进行响应。Netty内部使用了回调来处理事件，当一个回调被触发时，相关的事件被一个ChannelHandler的实现来处理，</p>
+<h3 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h3><p>简单理解就是<strong>传入或者传出数据的载体</strong>，可以被打开或者被关闭，连接或者断开连接。</p>
+<h3 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h3><p>回调其实就是一个方法，回调函数不是由该函数的实现方直接调用，而是<strong>在特定的事件或条件发生时由另外的一方调用</strong>的，用于对该事件或条件进行响应。Netty内部使用了回调来处理事件，当一个回调被触发时，相关的事件被一个ChannelHandler的实现来处理，</p>
 <p>看下面一段代码：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectHandler</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ChannelInboundHandlerAdapter</span> </span>&#123;
     <span class="hljs-meta">@Override</span>
@@ -277,7 +277,7 @@ String request,response;
 
 <p>当一个新的连接已经被建立时，ChannelHandler的channelActive()回调方法将会被调用，并将打印一条信息。</p>
 <h3 id="Future"><a href="#Future" class="headerlink" title="Future"></a>Future</h3><p>可以看作是一个异步操作的结果的占位符，可以在未来提供对其结果的访问；</p>
-<p>Netty提供了自己的ChannelFuture，用于在执行异步操作的时候使用。</p>
+<p>Netty提供了自己的ChannelFuture，用于<strong>在执行异步操作的时候使用</strong>。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectExample</span> </span>&#123;
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Channel CHANNEL_FROM_SOMEWHERE = <span class="hljs-keyword">new</span> NioSocketChannel();
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">connect</span><span class="hljs-params">()</span> </span>&#123;

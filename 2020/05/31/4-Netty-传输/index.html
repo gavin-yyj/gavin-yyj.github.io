@@ -403,8 +403,8 @@
 <p>我们发现使用Netty框架，从阻塞传输切换到非阻塞传输代码要做的更改非常小。</p>
 <h2 id="传输API"><a href="#传输API" class="headerlink" title="传输API"></a>传输API</h2><p>传输API 的核心就是Channel接口，它被用于所有的I/O操作，其层次结构如下图所示：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200531232951464.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<p>如图所示，每个Channel都将会被分配一个ChannelPipeline和ChannelConfig，ChannelConfig包含了该Channel的所有配置设置，并且支持热更新。</p>
-<p>ChannelPipeline持有所有将应用于入站和出站数据以及事件的ChannelHandler实例，这些ChannelHandler实现了应用程序用于处理状态变化以及数据处理的逻辑。</p>
+<p>如图所示，每个Channel都将会被分配一个ChannelPipeline和ChannelConfig，ChannelConfig包含了该Channel的所有配置设置，并且支持<strong>热更新</strong>。</p>
+<p>ChannelPipeline持有所有将应用于入站和出站数据以及事件的ChannelHandler实例，这些<strong>ChannelHandler实现了应用程序用于处理状态变化以及数据处理的逻辑</strong>。</p>
 <p>ChannelHandler的典型用途包括：</p>
 <ul>
 <li>将数据从一种格式转换为另一种格式：</li>
@@ -443,11 +443,11 @@
 </tr>
 <tr>
 <td align="center">write</td>
-<td align="left">将数据写到远程节点，这个数据将被传递给ChannelPipeline，并且排队直到它被冲刷</td>
+<td align="left">将数据写到缓冲区，这个数据将被传递给ChannelPipeline，并且排队直到它被冲刷</td>
 </tr>
 <tr>
 <td align="center">flush</td>
-<td align="left">将之前已写的数据冲刷到底层传输，如一个Socket</td>
+<td align="left">将缓冲区数据冲刷到底层传输，如一个Socket</td>
 </tr>
 <tr>
 <td align="center">writeAndFlush</td>
@@ -547,7 +547,7 @@
 <p>处理流程如下：</p>
 <p><img src="https://img-blog.csdnimg.cn/20200531232937617.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>知识点扩展：</p>
-<p>零拷贝：零拷贝时一种目前只有在使用NIO和Epoll传输时才可使用的特性，可以快速高效地将数据从文件系统移动到网络接口，而不需要将其从<strong>内核空间</strong>复制到<strong>用户空间</strong>，因此CPU不需要为数据在内存之间的拷贝消耗资源。但是它对于实现了数据加密或者压缩的文件系统是不可用的，只能传输文件的原始内容。</p>
+<p>零拷贝：零拷贝时一种目前只有在使用NIO和Epoll传输时才可使用的特性，<strong>可以快速高效地将数据从文件系统移动到网络接口</strong>，而不需要将其从<strong>内核空间</strong>复制到<strong>用户空间</strong>，因此CPU不需要为数据在内存之间的拷贝消耗资源。但是它对于实现了数据加密或者压缩的文件系统是不可用的，只能传输文件的原始内容。</p>
 
             </article>
             <hr>

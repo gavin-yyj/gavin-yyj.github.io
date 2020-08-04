@@ -243,7 +243,7 @@
 <p>预编译：<br>SQL 预编译指的是数据库驱动在发送 SQL 语句和参数给 DBMS 之前对 SQL 语句进行编译，这样 DBMS 执行 SQL 时，就不需要重新编译。<br>为什么需要预编译？<br>JDBC 中使用对象 PreparedStatement 来抽象预编译语句，使用预编译。预编译阶段可以优化 SQL 的执行。预编译之后的 SQL 多数情况下可以直接执行，DBMS 不需要再次编译，越复杂的SQL，编译的复杂度将越大，预编译阶段可以合并多次操作为一个操作。同时预编译语句对象可以重复利用。把一个 SQL 预编译后产生的 PreparedStatement 对象缓存下来，下次对于同一个SQL，可以直接使用这个缓存的 PreparedState 对象。Mybatis默认情况下，将对所有的 SQL 进行预编译。</p>
 </blockquote>
 <blockquote>
-<p>PrepareStatement对象防止sql注入的方式是把用户非法输入的单引号用\反斜杠做了转义，从而达到了防止sql注入的目的</p>
+<p>PrepareStatement对象防止sql注入的方式是把用户非法输入的单引号用\反斜杠做了转义，从而达到了防止sql注入的目的。</p>
 </blockquote>
 <h2 id="7-当实体类中的属性名和表中的字段名不一样-，怎么办-？"><a href="#7-当实体类中的属性名和表中的字段名不一样-，怎么办-？" class="headerlink" title="7. 当实体类中的属性名和表中的字段名不一样 ，怎么办 ？"></a>7. 当实体类中的属性名和表中的字段名不一样 ，怎么办 ？</h2><p>第1种： 通过在查询的sql语句中定义字段名的<strong>别名</strong>，让字段名的别名和实体类的属性名一致。</p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">”selectorder”</span> <span class="hljs-attr">parametertype</span>=<span class="hljs-string">”int”</span> <span class="hljs-attr">resultetype</span>=<span class="hljs-string">”me.gacl.domain.order”</span>&gt;</span>

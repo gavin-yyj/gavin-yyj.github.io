@@ -216,8 +216,8 @@
             
             <article class="markdown-body">
               <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="什么是Redis"><a href="#什么是Redis" class="headerlink" title="什么是Redis"></a>什么是Redis</h2><p>Redis是一个使用C语言编写的，开源的高性能<strong>非关系型</strong>的<strong>键值对</strong>数据库。</p>
-<p>Redis可以存储键和五种不同类型的值之间的映射，键的类型只能为字符串，值支持五种数据类型：String，List，Set，Hash，ZSet。</p>
-<p>与传统数据库不同的是Redis的数据是存储在<strong>内存</strong>中，所以读写速度非常快，因此Redis被广泛应用在缓存方向，每秒可以处理超过10万次读写操作，是已知性能最快的key-value 数据库，另外，Redis也经常用来做分布式锁，除此之外，Redis支持事务，持久化，LUA脚本，LRU驱动事件，多种集群方案。</p>
+<p>Redis可以存储键和五种不同类型的值之间的映射，<strong>键的类型只能为字符串</strong>，值支持五种数据类型：String，List，Set，Hash，ZSet。</p>
+<p>与传统数据库不同的是Redis的数据是存储在<strong>内存</strong>中，所以读写速度非常快，因此Redis被广泛应用在缓存方向，每秒可以处理超过10万次读写操作，是已知性能最快的key-value 数据库，另外，Redis也经常用来做<strong>分布式锁</strong>，除此之外，Redis支持<strong>事务</strong>，<strong>持久化</strong>，<strong>LUA脚本</strong>，<strong>LRU驱动事件</strong>，多种<strong>集群</strong>方案。</p>
 <h2 id="Redis有哪些优缺点"><a href="#Redis有哪些优缺点" class="headerlink" title="Redis有哪些优缺点"></a>Redis有哪些优缺点</h2><p>优点：</p>
 <ul>
 <li>读写性能优异，Redis能读的速度是110000次/s，写的速度是81000次/s</li>
@@ -234,13 +234,13 @@
 <li>Redis较难支持在线扩容，当集群容量达到上限时在线扩容会变得很复杂，为避免这一问题，运维人员在系统上线时必须确保有足够的空间，这对资源造成了很大的浪费。</li>
 </ul>
 <h2 id="为什么要用缓存"><a href="#为什么要用缓存" class="headerlink" title="为什么要用缓存"></a>为什么要用缓存</h2><p>主要从“高性能”和“高并发”这两点来看待这个问题。<br>高性能：<br><img src="https://img-blog.csdnimg.cn/2020072609180374.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>高并发：<br>直接操作缓存能够承受的请求是远远大于直接访问数据库的。<br><img src="https://img-blog.csdnimg.cn/20200726091913177.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="为什么要用Redis而不用map-guava做缓存"><a href="#为什么要用Redis而不用map-guava做缓存" class="headerlink" title="为什么要用Redis而不用map/guava做缓存"></a>为什么要用Redis而不用map/guava做缓存</h2><p>缓存分为本地缓存和分布式缓存，以Java为例，使用自带的map或者guava实现的是本地缓存，最主要的特点是轻量以及快速，生命周期随着JVM的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
+<h2 id="为什么要用Redis而不用map-guava做缓存"><a href="#为什么要用Redis而不用map-guava做缓存" class="headerlink" title="为什么要用Redis而不用map/guava做缓存"></a>为什么要用Redis而不用map/guava做缓存</h2><p>缓存分为本地缓存和分布式缓存，以Java为例，使用自带的map或者guava实现的是本地缓存，最主要的特点是轻量以及快速，生命周期随着JVM的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，<strong>缓存不具有一致性</strong>。</p>
 <p>使用Redis或Memcached之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，<strong>缓存具有一致性</strong>，缺点是需要保持Redis或Memcached服务的高可用，整个程序架构上较为复杂。</p>
 <h2 id="Redis为什么这么快"><a href="#Redis为什么这么快" class="headerlink" title="Redis为什么这么快"></a>Redis为什么这么快</h2><ul>
-<li>完全基于内存，绝大部分请求都是纯粹的内存操作，非常快速。数据存在内存中，类似于HashMap，查找和操作的时间复杂度都为O(1)；</li>
+<li><strong>完全基于内存</strong>，绝大部分请求都是纯粹的内存操作，非常快速。数据存在内存中，类似于HashMap，查找和操作的时间复杂度都为O(1)；</li>
 <li>数据结构简单，对数据操作也简单，Redis的数据结构是专门进行设计的；</li>
-<li>采用单线程，避免了不必要的上下文切换和竞争条件，也不存在多进程或者多线程导致的切换而消耗CPU，不用去考虑各种锁的问题，不存在加锁释放锁操作，因为没有可能出现死锁而导致的性能消耗；</li>
-<li>使用多路I/O复用模型，非阻塞IO；</li>
+<li><strong>采用单线程，避免了不必要的上下文切换和竞争条件</strong>，也不存在多进程或者多线程导致的切换而消耗CPU，不用去考虑各种锁的问题，不存在加锁释放锁操作，因为没有可能出现死锁而导致的性能消耗；</li>
+<li>使用<strong>多路I/O复用模型</strong>，非阻塞IO；</li>
 <li>使用底层模型不同，它们之间底层实现方式以及与客户端之间通信的应用协议不一样，Redis直接构建了VM机制，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。</li>
 </ul>
 <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="Redis有哪些数据类型"><a href="#Redis有哪些数据类型" class="headerlink" title="Redis有哪些数据类型"></a>Redis有哪些数据类型</h2><p><img src="https://img-blog.csdnimg.cn/2020072609412168.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
@@ -331,21 +331,21 @@
 <li>事务执行EXEC</li>
 </ul>
 <p>事务执行过程中，如果服务端收到有EXEC,DISCARD,WATCH,MULTI之外的请求，将会把请求放入队列中排队。</p>
-<h2 id="Redis事务相关命令"><a href="#Redis事务相关命令" class="headerlink" title="Redis事务相关命令"></a>Redis事务相关命令</h2><p>Redis事务功能是通过MULTI,EXEC,DISCARD和WATCH四个原语实现的，Redis会将一个事务中所有命令序列化，然后按顺序执行。</p>
+<h2 id="Redis事务相关命令"><a href="#Redis事务相关命令" class="headerlink" title="Redis事务相关命令"></a>Redis事务相关命令</h2><p>Redis事务功能是通过<strong>MULTI</strong>,<strong>EXEC</strong>,<strong>DISCARD</strong>和<strong>WATCH</strong>四个原语实现的，Redis会将一个事务中所有命令序列化，然后按顺序执行。</p>
 <ol>
-<li>Redis不支持回滚，“Redis在事务失败时不进行回滚，而是继续执行余下的命令”，所以Redis的内部可以保持简单且快速；</li>
+<li>Redis不支持回滚，“<strong>Redis在事务失败时不进行回滚，而是继续执行余下的命令</strong>”，所以Redis的内部可以保持简单且快速；</li>
 <li>如果在一个事务中的命令出现错误，那么所有的命令都不会执行；</li>
 <li>如果在一个事务中出现运行错误，那么正确的命令会被执行。</li>
 </ol>
 <p>四个原语：</p>
 <ul>
-<li>WATCH命令是一个乐观锁，可以为Redis事务提供check-and-set（CAS）行为，可以监控一个或多个键，一旦其中有一个键被修改，之后的事务就都不会执行，监控一直持续到EXEC命令；</li>
+<li>WATCH命令是一个乐观锁，可以为Redis事务提供check-and-set（CAS）行为，可以<strong>监控一个或多个键，一旦其中有一个键被修改，之后的事务就都不会执行，监控一直持续到EXEC命令</strong>；</li>
 <li><strong>MULTI命令用于开启一个事务</strong>，它总是返回OK，MULTI执行之后，客户端可以继续向服务器发送任意多条命令，这些命令不会立即被执行，而是被放到一个<strong>队列</strong>中，当EXEC命令被调用时，所有队列中的命令才会被执行。</li>
 <li><strong>EXEC：执行所有事务块内的命令</strong>，返回事务块内所有命令的返回值，按命令执行的先后顺序排列，当操作被打断时，返回空值nil。</li>
-<li>通过调用DISCARD，客户端可以清空事务队列，并放弃执行事务，并且客户端会从事务状态中退出。</li>
+<li>通过调用<strong>DISCARD</strong>，客户端可以清空事务队列，并放弃执行事务，并且客户端会从事务状态中退出。</li>
 <li>UNWATCH命令可以取消WATCH对所有key的监控。</li>
 </ul>
-<h2 id="事务管理（ACID）概述"><a href="#事务管理（ACID）概述" class="headerlink" title="事务管理（ACID）概述"></a>事务管理（ACID）概述</h2><p><strong>原子性（Atomicity）</strong><br>原子性是指事务是一个不可分割的工作单位，事务中操作要么都发生，要么都不发生。<br><strong>一致性（Consistency）</strong><br>事务前后数据的完整性必须保持一致。<br><strong>隔离性（Isolation）</strong><br>多个事务并发执行时，一个事务的执行不应影响其他其他事务的执行。<br><strong>持久性（Durability）</strong><br>持久性是指一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来即使数据库发生故障也不应该对其有任何影响。</p>
+<h2 id="事务管理（ACID）概述"><a href="#事务管理（ACID）概述" class="headerlink" title="事务管理（ACID）概述"></a>事务管理（ACID）概述</h2><p><strong>原子性（Atomicity）</strong><br>原子性是指事务是一个<strong>不可分割的工作单位</strong>，事务中操作要么都发生，要么都不发生。<br><strong>一致性（Consistency）</strong><br>事务前后数据的完整性必须保持一致。<br><strong>隔离性（Isolation）</strong><br>多个事务并发执行时，一个事务的执行不应影响其他其他事务的执行。<br><strong>持久性（Durability）</strong><br>持久性是指一个事务一旦被提交，它对数据库中数据的改变就是永久性的，接下来即使数据库发生故障也不应该对其有任何影响。</p>
 <p>Redis的事务总是具有ACID中的<strong>一致性</strong>和<strong>隔离性</strong>，其他特性是不支持的，当服务器运行在AOF持久化模式下，并且appendfsync选项的值为always时，事务也具有持久性。</p>
 <h2 id="Redis事务支持隔离性吗"><a href="#Redis事务支持隔离性吗" class="headerlink" title="Redis事务支持隔离性吗"></a>Redis事务支持隔离性吗</h2><p>Redis是单进程程序，并且它保证在执行事务时，不会对事务进行中断，事务可以运行直到执行完所有事务队列中的命令为止，因此<strong>Redis的事务总是带有隔离性的</strong>。</p>
 <h2 id="Redis事务保证原子性吗？支持回滚吗？"><a href="#Redis事务保证原子性吗？支持回滚吗？" class="headerlink" title="Redis事务保证原子性吗？支持回滚吗？"></a>Redis事务保证原子性吗？支持回滚吗？</h2><p>Redis中，单条命令是原子性执行的，但<strong>事务不保证原子性，且没有回滚</strong>，事务中任意命令执行失败，其余的命令仍会被执行。</p>
@@ -387,7 +387,7 @@
 <p><strong>分布式寻址算法</strong></p>
 <ul>
 <li>hash算法（大量缓存重建）</li>
-<li>一致性hash算法（自动缓存迁移）+虚拟节点（自动负载均衡）</li>
+<li>一致性hash算法（自动缓存迁移）+ 虚拟节点（自动负载均衡）</li>
 <li>Redis cluster的hash slot算法</li>
 </ul>
 <p><strong>优点</strong></p>
@@ -427,7 +427,7 @@
 <li>slave node做复制的时候，不会阻塞master node的正常工作，也不会阻塞对自己的查询操作，它会用旧的数据集来提供服务，但是复制完成的时候，需要删除旧数据集，加载新数据集，这个时候就会暂停对外服务了；</li>
 <li>slave node主要用来进行横向扩容，做读写分离，扩容的slave node可以提高读的吞吐量。</li>
 </ul>
-<p>注意：如果采用了主从架构，那么建议必须开启master node的持久化，不建议用slave node作为master node的数据热备，因为那样的话，如果你关闭了master的持久化，可能在master宕机重启的时候数据是空的，然后可能一经过复制，salve node的数据也丢了。</p>
+<p>注意：<strong>如果采用了主从架构，那么建议必须开启master node的持久化</strong>，不建议用slave node作为master node的数据热备，因为那样的话，如果你关闭了master的持久化，可能在master宕机重启的时候数据是空的，然后可能一经过复制，salve node的数据也丢了。</p>
 <p>另外，master的各种备份方案也需要做，万一本地的所有文件丢失了，从备份中挑选一份RDB去恢复master，这样才能确保启动的时候是有数据的，即使采用了后续讲解的高可用机制，slave node可以自动接管master node，但也可能sentinel还没检测到master failure，master node就自动重启了，还是可能导致上面所有的slave node数据被清空。</p>
 <p><strong>Redis主从复制的核心原理</strong><br>当启动一个slave node的时候，它会发送一个<code>PSYNC</code>命令给master node。</p>
 <p>如果这是slave node初次连接到master node，那么会触发一次<code>full resynchronization</code>全量复制，此时master会启动一个后台线程，开始生成一份RDB快照文件；</p>
@@ -435,7 +435,7 @@
 <p>接着master会将内存中缓存的写命令发送到slave，slave也会同步这些数据；</p>
 <p>slave node如果跟master node有网络故障，断开了连接，会自动重连，连接之后master node仅会复制给slave部分缺少的数据。<br><img src="https://img-blog.csdnimg.cn/20200727083524293.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><strong>过程原理</strong></p>
 <ol>
-<li>当从库和主库建立MS关系后，会向主库发送SYNC命令；</li>
+<li>当从库和主库建立master-slave关系后，从库会向主库发送SYNC命令；</li>
 <li>主库接收到SYNC命令后会开始在后台保存快照（RDB持久化过程），并将期间接收到的写命令缓存起来；</li>
 <li>当快照完成后，主Redis会将快照文件和所有缓存的写命令发送给从Redis；</li>
 <li>从Redis接收到后，会载入快照文件并且执行收到的缓存的命令；</li>
@@ -449,19 +449,19 @@
 <p>因为每个主实例都挂了一个从实例，任何一个主实例宕机，都会自动故障迁移，Redis从实例会自动变成主实例继续提供读写服务。</p>
 <p>你往内存里写的是什么数据？每条数据的大小是多少？<br>商品数据，每条数据是10kb，100条数据是1mb，10万条数据就是1G，常驻内存的是200万条商品数据，占用内存是20G，仅仅不到总内存的50%，目前高峰期每秒就是3500左右的请求量。</p>
 <h2 id="说说Redis哈希槽的概念"><a href="#说说Redis哈希槽的概念" class="headerlink" title="说说Redis哈希槽的概念"></a>说说Redis哈希槽的概念</h2><p>Redis集群中没有使用一致性hash，而是引入了哈希槽的概念，Redis集群有16384个哈希槽，每个key通过CRC16校验后对16384取模来决定放置哪个槽，集群的每个节点负责一部分hash槽。</p>
-<h2 id="Redis集群会有写操作丢失吗？为什么？"><a href="#Redis集群会有写操作丢失吗？为什么？" class="headerlink" title="Redis集群会有写操作丢失吗？为什么？"></a>Redis集群会有写操作丢失吗？为什么？</h2><p>Redis并不能保证数据的强一致性，这意味着在实际中集群在特定的条件下可能会丢失写操作。</p>
+<h2 id="Redis集群会有写操作丢失吗？为什么？"><a href="#Redis集群会有写操作丢失吗？为什么？" class="headerlink" title="Redis集群会有写操作丢失吗？为什么？"></a>Redis集群会有写操作丢失吗？为什么？</h2><p><strong>Redis并不能保证数据的强一致性</strong>，这意味着在实际中集群在特定的条件下可能会丢失写操作。</p>
 <h2 id="Redis集群之间是如何复制的"><a href="#Redis集群之间是如何复制的" class="headerlink" title="Redis集群之间是如何复制的"></a>Redis集群之间是如何复制的</h2><p>异步复制</p>
 <h2 id="Redis集群最大节点个数是多少"><a href="#Redis集群最大节点个数是多少" class="headerlink" title="Redis集群最大节点个数是多少"></a>Redis集群最大节点个数是多少</h2><p>16384</p>
 <h2 id="Redis集群如何选择数据库？"><a href="#Redis集群如何选择数据库？" class="headerlink" title="Redis集群如何选择数据库？"></a>Redis集群如何选择数据库？</h2><p>Redis集群目前无法做数据库选择，默认在0数据库。</p>
-<h1 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h1><h2 id="Redis是单线程的，如何提高多核CPU的利用率"><a href="#Redis是单线程的，如何提高多核CPU的利用率" class="headerlink" title="Redis是单线程的，如何提高多核CPU的利用率"></a>Redis是单线程的，如何提高多核CPU的利用率</h2><p>可以在同一个服务器部署多个Redis的实例，并把他们当做不同的服务器来使用，在某些时候，无论如何一个服务器是不够的，所以如果想使用多个CPU，可以考虑一下分片（shard）。</p>
-<h2 id="为什么要做Redis分区"><a href="#为什么要做Redis分区" class="headerlink" title="为什么要做Redis分区"></a>为什么要做Redis分区</h2><p>分区可以让Redis管理更大的内存，Redis将可以使用所有机器的内存，如果没有分区，最多只能使用一台机器的内存，分区使Redis的计算能力通过简单地增加计算机得到成倍提升，Redis的网络带宽也会随着计算机和网卡的增加而成倍增长。</p>
+<h1 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h1><h2 id="Redis是单线程的，如何提高多核CPU的利用率"><a href="#Redis是单线程的，如何提高多核CPU的利用率" class="headerlink" title="Redis是单线程的，如何提高多核CPU的利用率"></a>Redis是单线程的，如何提高多核CPU的利用率</h2><p>可以在同一个服务器<strong>部署多个Redis的实例</strong>，并把他们当做不同的服务器来使用，在某些时候，无论如何一个服务器是不够的，所以如果想使用多个CPU，可以考虑一下<strong>分区</strong>（sharding）。</p>
+<h2 id="为什么要做Redis分区"><a href="#为什么要做Redis分区" class="headerlink" title="为什么要做Redis分区"></a>为什么要做Redis分区</h2><p><strong>分区可以让Redis管理更大的内存</strong>，Redis将可以使用所有机器的内存，如果没有分区，最多只能使用一台机器的内存，分区使Redis的计算能力通过简单地增加计算机得到成倍提升，Redis的网络带宽也会随着计算机和网卡的增加而成倍增长。</p>
 <h2 id="你知道有哪些Redis分区实现方案"><a href="#你知道有哪些Redis分区实现方案" class="headerlink" title="你知道有哪些Redis分区实现方案"></a>你知道有哪些Redis分区实现方案</h2><ul>
-<li>客户端分区：就是在客户端已经决定数据会被存储到哪个Redis节点或者从哪个Redis节点读取，大多数客户端已经实现了客户端分区；</li>
-<li>代理分区：意味着客户端将请求发送给代理，然后代理决定去哪个节点写数据或者读数据，代理根据分区规则决定请求哪些Redis实例，然后根据Redis的响应结果返回给客户端，Redis和Memcached的一种代理实现就是Twemproxy；</li>
-<li>查询路由（Query routing）：客户端随机请求任意一个Redis实例，然后由Redis将请求转发给正确的Redis节点，Redis Cluster实现了一种混合形式的查询路由，但并不是直接将请求从一个Redis节点转发到另一个Redis节点，而是在客户端的帮助下直接重定向到正确的Redis节点。</li>
+<li><strong>客户端分区</strong>：就是<strong>在客户端已经决定数据会被存储到哪个Redis节点或者从哪个Redis节点读取</strong>，大多数客户端已经实现了客户端分区；</li>
+<li><strong>代理分区</strong>：意味着客户端将请求发送给代理，然后代理决定去哪个节点写数据或者读数据，代理根据分区规则决定请求哪些Redis实例，然后根据Redis的响应结果返回给客户端，Redis和Memcached的一种代理实现就是Twemproxy；</li>
+<li><strong>查询路由</strong>（Query routing）：客户端随机请求任意一个Redis实例，然后由Redis将请求转发给正确的Redis节点，Redis Cluster实现了一种混合形式的查询路由，但并不是直接将请求从一个Redis节点转发到另一个Redis节点，而是在客户端的帮助下直接重定向到正确的Redis节点。</li>
 </ul>
 <h2 id="Redis分区有什么缺点"><a href="#Redis分区有什么缺点" class="headerlink" title="Redis分区有什么缺点"></a>Redis分区有什么缺点</h2><ul>
-<li>涉及多个key的操作通常不会被支持，例如你不能对两个集合求交集，因为他们可能被存储道不同的Redis实例；</li>
+<li>涉及多个key的操作通常不会被支持，例如你不能对两个集合求交集，因为他们可能被存储到不同的Redis实例；</li>
 <li>同时操作多个key，则不能使用Redis事务；</li>
 <li>分区使用的粒度是key，不能使用一个非常长的排序key存储一个数据集；</li>
 <li>当使用分区的时候，数据处理会非常复杂，例如为了备份你必须从不同的Redis实例和主机同时收集RDB/AOF文件；</li>
@@ -469,9 +469,14 @@
 </ul>
 <h1 id="分布式问题"><a href="#分布式问题" class="headerlink" title="分布式问题"></a>分布式问题</h1><h2 id="Redis实现分布式锁"><a href="#Redis实现分布式锁" class="headerlink" title="Redis实现分布式锁"></a>Redis实现分布式锁</h2><p>Redis为单进程单线程模式，采用队列模式将并发访问变成串行访问，且多客户端对Redis的连接并不存在竞争关系，Redis中可以使用<code>SETNX</code>【SET if NOT EXISTS】命令实现分布式锁。</p>
 <p>当且仅当key不存在，将key的值设为value，若给定的key已经存在，则SETNX不做任何动作。</p>
-<p>使用SETNX完成同步锁的流程及事项如下：<br>使用SETNX命令获取锁，若返回0（key已经存在，锁已存在）则获取失败，反之获取成功。</p>
-<p>为了防止获取锁后程序出现异常，导致其他线程/进程调用SETNX命令总是返回0而进入死锁状态，需要为该key设置一个合理的过期时间。</p>
-<p>释放锁，使用DEL命令将锁数据删除。</p>
+<p>使用SETNX完成同步锁的流程及事项如下：</p>
+<ul>
+<li>使用SETNX命令获取锁，若返回0（key已经存在，锁已存在）则获取失败，反之获取成功。</li>
+<li>为了防止获取锁后程序出现异常，导致其他线程/进程调用SETNX命令总是返回0而进入死锁状态，需要为该key设置一个合理的过期时间。</li>
+</ul>
+<ul>
+<li>释放锁，使用DEL命令将锁数据删除。</li>
+</ul>
 <h2 id="如何解决Redis的并发竞争Key问题"><a href="#如何解决Redis的并发竞争Key问题" class="headerlink" title="如何解决Redis的并发竞争Key问题"></a>如何解决Redis的并发竞争Key问题</h2><p>所谓Redis的并发竞争key的问题也就是多个系统同时对一个key进行操作，但是最后执行的顺序和我们期望的顺序不同，这样也就导致了结果的不同！</p>
 <p>推荐一种方案：分布式锁（Zookeeper和Redis都可以实现分布式锁）</p>
 <h2 id="分布式Redis是前期做还是后期规模上来了再做好？为什么？"><a href="#分布式Redis是前期做还是后期规模上来了再做好？为什么？" class="headerlink" title="分布式Redis是前期做还是后期规模上来了再做好？为什么？"></a>分布式Redis是前期做还是后期规模上来了再做好？为什么？</h2><p>既然Redis是如此的轻量，为防止以后的扩容，最好的办法就是一开始就启动较多实例，即便你只有一台服务器，你也可以一开始就让Redis以分布式的方式运行，使用分区，在同一台服务器上启动多个实例。</p>
@@ -501,7 +506,7 @@
 <ol>
 <li>接口层增加校验，如用户鉴权校验，id做基础校验，id&lt;=0的直接拦截；</li>
 <li>从缓存取不到的数据，在数据库中也没有取到，这时也可以将key-value对写为key-null，缓存有效时间可以设置短点，如30s，这样可以防止攻击用户反复用同一个id暴力攻击；</li>
-<li>采用布隆过滤器，将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。</li>
+<li>采用<strong>布隆过滤器</strong>，将所有可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据会被这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。</li>
 </ol>
 <h2 id="缓存预热"><a href="#缓存预热" class="headerlink" title="缓存预热"></a>缓存预热</h2><p>缓存预热就是系统上线后，将相关的缓存数据直接加载到缓存系统，这样就可以避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题，用户直接查询事先被预热的缓存数据。</p>
 <p><strong>解决方案</strong></p>
@@ -511,10 +516,10 @@
 <li>定时刷新缓存。</li>
 </ol>
 <h2 id="缓存降级"><a href="#缓存降级" class="headerlink" title="缓存降级"></a>缓存降级</h2><p>当访问量剧增，服务出现问题（如：响应时间慢或不响应）或非核心服务影响到核心流程的性能时，仍然需要保证服务还是可用的，即使是有损服务，系统可以根据一些关键数据进行自动降级，也可以配置开关实现人工降级。</p>
-<p>缓存降级的最终目的是保证核心服务可用，即使是有损的，而且有些服务是无法降级的（比如加入购物车、结算）。</p>
+<p><strong>缓存降级的最终目的是保证核心服务可用</strong>，即使是有损的，而且有些服务是无法降级的（比如加入购物车、结算）。</p>
 <p>在进行降级之前要对系统进行梳理，看看系统是不是可以弃卒保帅，从而梳理出哪些必须誓死保护，哪些可降级；</p>
 <p>服务降级的目的是为了防止Redis服务故障，导致数据库跟着一起发生雪崩问题，因此，对于不重要的缓存数据，可以采取服务降级策略，例如一个比较常见的做法就是<strong>Redis出现问题，不去数据库查询，而是直接返回默认值给用户。</strong></p>
-<h2 id="热点数据和冷数据"><a href="#热点数据和冷数据" class="headerlink" title="热点数据和冷数据"></a>热点数据和冷数据</h2><p>热点数据，缓存才有价值</p>
+<h2 id="热点数据和冷数据"><a href="#热点数据和冷数据" class="headerlink" title="热点数据和冷数据"></a>热点数据和冷数据</h2><p>热点数据，缓存才有价值。</p>
 <p>对于冷数据而言，大部分数据可能还没有再次访问到就已经被挤出内存，不仅占用内存，而且价值不大，频繁修改的数据，看情况考虑使用缓存。</p>
 <p>对于热点数据，比如我们的某IM产品，生日祝福模块等，缓存以后可能读取数十万次。</p>
 <h2 id="缓存热点key"><a href="#缓存热点key" class="headerlink" title="缓存热点key"></a>缓存热点key</h2><p>缓存中的一个key（比如一个促销商品），在某个时间点过期的时候，恰好在这个时间点对这个key有大量的并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮。</p>
@@ -541,7 +546,7 @@
 <h2 id="一个字符串类型的值能存储最大容量是多少"><a href="#一个字符串类型的值能存储最大容量是多少" class="headerlink" title="一个字符串类型的值能存储最大容量是多少"></a>一个字符串类型的值能存储最大容量是多少</h2><p>512M</p>
 <h2 id="Redis如何做大量数据插入？"><a href="#Redis如何做大量数据插入？" class="headerlink" title="Redis如何做大量数据插入？"></a>Redis如何做大量数据插入？</h2><p>Redis2.6开始redis-cli支持一种新的被称为之<code>pipe mode</code>的新模式用于执行大量数据插入工作。</p>
 <h2 id="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h2><p>使用<code>keys</code>指令可以扫出指定模式的key列表。<br>对方接着追问：如果这个Redis正在给线上的业务提供服务，那使用keys指令会有什么问题？<br>这个时候你要回答Redis的一个关键特性：Redis是单线程的，keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复，这个时候可以使用<code>scan</code>指令，scan指令可以无阻塞的提取出指定模式的key列表，但是会有一定的重复概率，需要在客户端做一次去重操作，整体花费的时间比直接用keys指令长。</p>
-<h2 id="使用Redis做过异步队列吗？是如何实现的"><a href="#使用Redis做过异步队列吗？是如何实现的" class="headerlink" title="使用Redis做过异步队列吗？是如何实现的"></a>使用Redis做过异步队列吗？是如何实现的</h2><p>使用list类型保存数据消息，rpush生产消息，lpop消费消息，当lpop没有消息时，可以sleep一段时间，然后再检查有没有消息，如果不想sleep的话，可以使用blpop，在没有消息的时候，会一直阻塞，直到消息的到来，Redis可以通过发布/订阅模式来实现一个生产者多个消费者。</p>
+<h2 id="使用Redis做过异步队列吗？是如何实现的"><a href="#使用Redis做过异步队列吗？是如何实现的" class="headerlink" title="使用Redis做过异步队列吗？是如何实现的"></a>使用Redis做过异步队列吗？是如何实现的</h2><p>使用<strong>list</strong>类型保存数据消息，rpush生产消息，lpop消费消息，当lpop没有消息时，可以sleep一段时间，然后再检查有没有消息，如果不想sleep的话，可以使用blpop，在没有消息的时候，会一直阻塞，直到消息的到来，<strong>Redis可以通过发布/订阅模式来实现一个生产者多个消费者</strong>。</p>
 <h2 id="Redis如何实现延时队列"><a href="#Redis如何实现延时队列" class="headerlink" title="Redis如何实现延时队列"></a>Redis如何实现延时队列</h2><p>使用Sorted Set，使用时间戳做score，消息内容作为key，调用zadd来生产消息，消费者使用zrangbyscore获取n秒之前的数据做轮询处理。</p>
 <h2 id="Redis回收进程如何工作"><a href="#Redis回收进程如何工作" class="headerlink" title="Redis回收进程如何工作"></a>Redis回收进程如何工作</h2><ol>
 <li>一个客户端运行了新的命令，添加了新的数据；</li>
