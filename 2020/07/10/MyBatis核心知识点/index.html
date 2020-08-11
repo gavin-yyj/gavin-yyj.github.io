@@ -286,7 +286,7 @@ list<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span> na
 <h2 id="9-通常一个Xml映射文件，都会写一个Dao接口与之对应，请问，这个Dao接口的工作原理是什么？Dao接口里的方法，参数不同时，方法能重载吗？"><a href="#9-通常一个Xml映射文件，都会写一个Dao接口与之对应，请问，这个Dao接口的工作原理是什么？Dao接口里的方法，参数不同时，方法能重载吗？" class="headerlink" title="9. 通常一个Xml映射文件，都会写一个Dao接口与之对应，请问，这个Dao接口的工作原理是什么？Dao接口里的方法，参数不同时，方法能重载吗？"></a>9. 通常一个Xml映射文件，都会写一个Dao接口与之对应，请问，这个Dao接口的工作原理是什么？Dao接口里的方法，参数不同时，方法能重载吗？</h2><p>Dao接口即Mapper接口。接口的全限名，就是映射文件中的namespace的值；接口的方法名，就是映射文件中Mapper的Statement的id值；接口方法内的参数，就是传递给sql的参数。</p>
 <p>Mapper接口是没有实现类的，当调用接口方法时，接口全限名+方法名拼接字符串作为key值，可唯一定位一个<strong>MapperStatement</strong>。在Mybatis中，每一个&lt;select&gt;、&lt;insert&gt;、&lt;update&gt;、&lt;delete&gt;标签，都会被解析为一个MapperStatement对象。</p>
 <p>Mapper接口里的方法，是不能重载的，因为是使用 <strong>全限名+方法名</strong> 的保存和寻找策略。Mapper 接口的工作原理是<strong>JDK动态代理</strong>，Mybatis运行时会使用JDK动态代理为Mapper接口生成代理对象proxy，代理对象会拦截接口方法，转而执行MapperStatement所代表的sql，然后将sql执行结果返回。</p>
-<h2 id="10-Mybatis是如何进行分页的？分页插件的原理是什么？"><a href="#10-Mybatis是如何进行分页的？分页插件的原理是什么？" class="headerlink" title="10. Mybatis是如何进行分页的？分页插件的原理是什么？"></a>10. Mybatis是如何进行分页的？分页插件的原理是什么？</h2><p> Mybatis使用RowBounds对象进行分页，它是针对ResultSet结果集执行的内存分页，而非物理分页。可以在sql内直接书写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页。</p>
+<h2 id="10-Mybatis是如何进行分页的？分页插件的原理是什么？"><a href="#10-Mybatis是如何进行分页的？分页插件的原理是什么？" class="headerlink" title="10. Mybatis是如何进行分页的？分页插件的原理是什么？"></a>10. Mybatis是如何进行分页的？分页插件的原理是什么？</h2><p> Mybatis使用<strong>RowBounds</strong>对象进行分页，它是针对ResultSet结果集执行的内存分页，而非物理分页。可以在sql内直接书写带有物理分页的参数来完成物理分页功能，也可以使用分页插件来完成物理分页。</p>
 <p>分页插件的基本原理是使用Mybatis提供的插件接口，实现自定义插件，在插件的拦截方法内拦截待执行的sql，然后重写sql，根据dialect方言，添加对应的物理分页语句和物理分页参数。</p>
 <h2 id="11-Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？"><a href="#11-Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？" class="headerlink" title="11. Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？"></a>11. Mybatis是如何将sql执行结果封装为目标对象并返回的？都有哪些映射形式？</h2><p>第一种是使用&lt;resultMap&gt;标签，逐一定义数据库列名和对象属性名之间的映射关系。</p>
 <p>第二种是使用sql列的别名功能，<strong>将列的别名书写为对象属性名</strong>。</p>
@@ -491,7 +491,7 @@ from some_table
                       <a href="/2020/07/10/Spring-Boot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Spring Boot核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -500,7 +500,7 @@ from some_table
                     
                       <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <span class="hidden-mobile">Spring核心知识点</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -533,7 +533,7 @@ from some_table
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -560,7 +560,7 @@ from some_table
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -569,7 +569,7 @@ from some_table
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

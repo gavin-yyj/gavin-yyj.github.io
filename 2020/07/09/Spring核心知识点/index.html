@@ -362,7 +362,22 @@
 <h3 id="13-广播事件，告诉上下文，容器已经创建好，随时可以调用"><a href="#13-广播事件，告诉上下文，容器已经创建好，随时可以调用" class="headerlink" title="13. 广播事件，告诉上下文，容器已经创建好，随时可以调用"></a>13. 广播事件，告诉上下文，容器已经创建好，随时可以调用</h3><div class="hljs"><pre><code class="hljs java">finishRefresh();</code></pre></div>
 
 <p>方法是最后一步，广播事件，ApplicationContext 初始化完成。</p>
-<h2 id="Ioc容器的加载过程简单概括："><a href="#Ioc容器的加载过程简单概括：" class="headerlink" title="Ioc容器的加载过程简单概括："></a>Ioc容器的加载过程简单概括：</h2><p>1.刷新预处理<br> 2.将配置信息解析，注册到BeanFactory<br> 3.设置bean的类加载器<br> 4.如果有第三方想再bean加载注册完成后，初始化前做点什么(例如修改属性的值，修改bean的scope为单例或者多例。)，提供了相应的模板方法，后面还调用了这个方法的实现，并且把这些个实现类注册到对应的容器中<br> 5.初始化当前的事件广播器<br> 6.初始化所有的bean。（懒加载不执行这一步）<br> 7.广播applicationcontext初始化完成。</p>
+<h2 id="Ioc容器的加载过程简单概括："><a href="#Ioc容器的加载过程简单概括：" class="headerlink" title="Ioc容器的加载过程简单概括："></a>Ioc容器的加载过程简单概括：</h2><ol>
+<li><p>刷新预处理</p>
+</li>
+<li><p>将配置信息解析，注册到BeanFactory</p>
+</li>
+<li><p>设置bean的类加载器</p>
+</li>
+<li><p>如果有第三方想再bean加载注册完成后，初始化前做点什么(例如修改属性的值，修改bean的scope为单例或者多例。)，提供了相应的模板方法，后面还调用了这个方法的实现，并且把这些个实现类注册到对应的容器中</p>
+</li>
+<li><p>初始化当前的事件广播器</p>
+</li>
+<li><p>初始化所有的bean。（懒加载不执行这一步）</p>
+</li>
+<li><p>广播applicationcontext初始化完成。</p>
+</li>
+</ol>
 <h2 id="BeanFactory和ApplicationContext的区别"><a href="#BeanFactory和ApplicationContext的区别" class="headerlink" title="BeanFactory和ApplicationContext的区别"></a>BeanFactory和ApplicationContext的区别</h2><p>BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。<br><strong>区别：</strong><br>依赖关系：</p>
 <ul>
 <li><p>BeanFactory：是Spring里面最底层的接口，包含了各种Bean的定义，读取bean配置文档，管理bean的加载、实例化，控制bean的生命周期，维护bean之间的依赖关系。</p>
@@ -384,7 +399,7 @@
 </ul>
 <p>创建方式：</p>
 <ul>
-<li>BeanFactory通常以编<strong>程</strong>的方式被创建</li>
+<li>BeanFactory通常以<strong>编程</strong>的方式被创建</li>
 <li>ApplicationContext还能以<strong>声明</strong>的方式创建，如使用ContextLoader。</li>
 </ul>
 <h2 id="ApplicationContext通常的实现是什么？"><a href="#ApplicationContext通常的实现是什么？" class="headerlink" title="ApplicationContext通常的实现是什么？"></a>ApplicationContext通常的实现是什么？</h2><ul>
@@ -751,7 +766,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -760,7 +775,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -793,7 +808,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -820,7 +835,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -829,7 +844,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

@@ -242,7 +242,7 @@
 <li>Enumeration：枚举</li>
 </ul>
 <h2 id="Java集合的快速失效机制“fail-fast”"><a href="#Java集合的快速失效机制“fail-fast”" class="headerlink" title="Java集合的快速失效机制“fail-fast”"></a>Java集合的快速失效机制“fail-fast”</h2><p>“fail-fast”是Java集合的一种错误检测机制，当<strong>多个线程对集合进行结构上的改变操作</strong>时，就有可能产生fail-fast机制。</p>
-<p>原因：迭代器在遍历时直接访问集合中的内容，并且在遍历过程中使用一个modCount变量，集合在被遍历期间如果内容发生变化，就会改变modCount的值。<br>每当迭代器使用hasNext()/next()遍历下一个元素之前，都会检测modCount变量是否为预期的值，如果是就返回遍历，否则抛出异常，终止遍历。</p>
+<p>原因：迭代器在遍历时直接访问集合中的内容，并且在遍历过程中使用一个<code>modCount</code>变量，集合在被遍历期间如果内容发生变化，就会改变modCount的值。<br>每当迭代器使用hasNext()/next()遍历下一个元素之前，都会检测modCount变量是否为预期的值，如果是就返回遍历，否则抛出异常，终止遍历。</p>
 <p>解决办法：<br>1、在遍历过程中，所有涉及到改变modCount值的地方都加上synchronized；<br>2、使用CopyOnWriteArrayList来代替ArrayList</p>
 <h1 id="Collection-1"><a href="#Collection-1" class="headerlink" title="Collection"></a>Collection</h1><h2 id="如何边遍历边移除Collection中的元素"><a href="#如何边遍历边移除Collection中的元素" class="headerlink" title="如何边遍历边移除Collection中的元素"></a>如何边遍历边移除Collection中的元素</h2><p>正确写法：</p>
 <div class="hljs"><pre><code class="hljs java">Iterator&lt;Integer&gt; it = list.iterator();
@@ -272,8 +272,8 @@
 <h2 id="List和Set的区别"><a href="#List和Set的区别" class="headerlink" title="List和Set的区别"></a>List和Set的区别</h2><p>List和Set都是继承自Collection接口</p>
 <p>List特点：有序（元素存入集合的顺序和取出的顺序一致），元素可以重复，可以插入多个null元素；支持for循环，可以通过下标来遍历，查找元素效率高，插入删除元素效率低。</p>
 <p>Set特点：无序，不可以存储重复元素，只允许存入一个null元素；只能通过迭代来获取数据，删除和插入效率高，检索元素效率低。</p>
-<h1 id="Set接口"><a href="#Set接口" class="headerlink" title="Set接口"></a>Set接口</h1><h2 id="HashSet实现原理"><a href="#HashSet实现原理" class="headerlink" title="HashSet实现原理"></a>HashSet实现原理</h2><p>HashSet是基于HashMap实现的，HashSet的值存放于HashMap的key上，HashMap的value统一为PRESEENT，相关HashSet的操作，基本上都是直接调用底层HashMap的相关方法来实现的。</p>
-<h2 id="HashSet如何检查重复？HashSet如何保证数组不可重复？"><a href="#HashSet如何检查重复？HashSet如何保证数组不可重复？" class="headerlink" title="HashSet如何检查重复？HashSet如何保证数组不可重复？"></a>HashSet如何检查重复？HashSet如何保证数组不可重复？</h2><p>HashSet在添加元素时，通过比较hash值以及结合equals方法来比较，HashSet添加进去的值就是作为HashMap的key，PRESENT作为value是一个始终相等的虚值。</p>
+<h1 id="Set接口"><a href="#Set接口" class="headerlink" title="Set接口"></a>Set接口</h1><h2 id="HashSet实现原理"><a href="#HashSet实现原理" class="headerlink" title="HashSet实现原理"></a>HashSet实现原理</h2><p>HashSet是基于HashMap实现的，HashSet的值存放于HashMap的<code>key</code>上，HashMap的value统一为<strong>PRESEENT</strong>，相关HashSet的操作，基本上都是直接调用底层HashMap的相关方法来实现的。</p>
+<h2 id="HashSet如何检查重复？HashSet如何保证数组不可重复？"><a href="#HashSet如何检查重复？HashSet如何保证数组不可重复？" class="headerlink" title="HashSet如何检查重复？HashSet如何保证数组不可重复？"></a>HashSet如何检查重复？HashSet如何保证数组不可重复？</h2><p>HashSet在添加元素时，通过比较hash值以及结合equals方法来比较，HashSet添加进去的值就是作为HashMap的key，<code>PRESENT</code>作为value是一个始终相等的虚值。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Object PRESENT = <span class="hljs-keyword">new</span> Object();
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">transient</span> HashMap&lt;E,Object&gt; map;
 
@@ -293,14 +293,14 @@
 <h1 id="Map-1"><a href="#Map-1" class="headerlink" title="Map"></a>Map</h1><h2 id="HashMap的实现原理"><a href="#HashMap的实现原理" class="headerlink" title="HashMap的实现原理"></a>HashMap的实现原理</h2><p>HashMap是基于哈希表的Map接口的非同步实现，允许使用null值和null键，此类不保证映射的顺序，HashMap实际上是一个“链表散列”的数据结构，即数组和链表的结合体。</p>
 <p>HashMap基于Hash算法实现的：</p>
 <ol>
-<li>当我们往HashMap中put元素时，利用key的HashCode重新hash计算出当前对象的元素在数组中的下标</li>
-<li>在存储时，如果出现hash值相同的key，此时有两种情况：如果key相同，则覆盖原始值，如果key不同，则将当前的key-value放入链表中</li>
-<li>获取时，直接找到hash值对应的下标，再进一步判断key是否相同，从而找到对应值</li>
-<li>JDK1.8以后，当链表中的节点数据超过8个以后，该链表会转为红黑树来提高查询效率，从原来的O(n)到O(logn)</li>
+<li>当我们往HashMap中put元素时，利用key的HashCode重新hash计算出当前对象的元素在数组中的下标;</li>
+<li>在存储时，如果出现hash值相同的key，此时有两种情况：如果key相同，则覆盖原始值，如果key不同，则将当前的key-value放入链表中;</li>
+<li>获取时，直接找到hash值对应的下标，再进一步判断key是否相同，从而找到对应值;</li>
+<li>JDK1.8以后，当链表中的节点数据超过8个以后，该链表会转为<strong>红黑树</strong>来提高查询效率，从原来的O(n)到O(logn)。</li>
 </ol>
 <h2 id="HashMap的扩容操作是怎么实现的？"><a href="#HashMap的扩容操作是怎么实现的？" class="headerlink" title="HashMap的扩容操作是怎么实现的？"></a>HashMap的扩容操作是怎么实现的？</h2><p>1、在JDK1.8中，resize()方法是在HashMap中的键值对大于阈值时或者初始化时，就调用resize方法进行扩容；<br>2、每次扩容时，都是扩为原来的2倍；<br>3、扩展后的Node对象的位置要么在原位置，要么移动到原始位置+增加的数组大小的位置上。</p>
-<h2 id="HashMap是如何有效解决Hash冲突的？"><a href="#HashMap是如何有效解决Hash冲突的？" class="headerlink" title="HashMap是如何有效解决Hash冲突的？"></a>HashMap是如何有效解决Hash冲突的？</h2><p>1、使用<strong>链地址法</strong>(拉链法)来链接拥有相同hash值的数据；<br>2、使用<strong>2次扰动函数</strong>（hash函数）来降低哈希冲突的概率，使得数据分布更平均；<br>3、引入红黑树进一步降低遍历的时间复杂度，使得遍历更快</p>
-<h2 id="HashMap的长度为什么是2的幂次方"><a href="#HashMap的长度为什么是2的幂次方" class="headerlink" title="HashMap的长度为什么是2的幂次方"></a>HashMap的长度为什么是2的幂次方</h2><p>为了能让HashMap存取高效，尽量减少碰撞，也就是尽量把数据分配均匀，另外在取余操作中如果除数是2的幂次方，则等价于与其除数减一的与（&amp;）操作（也就是说hash%length==hash&amp;(length-1)的前提是length是2的n次方），采用二进制位运算能够<strong>提高运算效率</strong>。</p>
+<h2 id="HashMap是如何有效解决Hash冲突的？"><a href="#HashMap是如何有效解决Hash冲突的？" class="headerlink" title="HashMap是如何有效解决Hash冲突的？"></a>HashMap是如何有效解决Hash冲突的？</h2><p>1、使用<strong>链地址法</strong>(拉链法)来连接拥有相同hash值的数据；<br>2、使用<strong>2次扰动函数</strong>（hash函数）来降低哈希冲突的概率，使得数据分布更平均；<br>3、引入红黑树进一步降低遍历的时间复杂度，使得遍历更快；</p>
+<h2 id="HashMap的长度为什么是2的幂次方"><a href="#HashMap的长度为什么是2的幂次方" class="headerlink" title="HashMap的长度为什么是2的幂次方"></a>HashMap的长度为什么是2的幂次方</h2><p>为了能让HashMap存取高效，尽量减少碰撞，也就是尽量把数据分配均匀，另外在取余操作中如果除数是2的幂次方，则等价于与其除数减一的与（&amp;）操作（也就是说<strong>hash%length==hash&amp;(length-1)</strong>的前提是length是2的n次方），采用二进制位运算能够<strong>提高运算效率</strong>。</p>
 <h2 id="HashMap和HashTable有什么区别"><a href="#HashMap和HashTable有什么区别" class="headerlink" title="HashMap和HashTable有什么区别"></a>HashMap和HashTable有什么区别</h2><ol>
 <li>线程安全：HashMap非线程安全，HashTable线程安全，不过不建议使用，一般用ConcurrentHashMap；</li>
 <li>效率：HashMap效率高于HashTable</li>
@@ -308,14 +308,14 @@
 <li>初始容量大小和每次扩容量大小：创建时如果不指定容量初始值，HashTable默认的初始值大小为11，之后每次扩容容量变为原来的2n+1，HashMap的初始容量为16，之后每次扩容为原来的2倍。</li>
 </ol>
 <h2 id="HashMap在JDK1-8做了什么优化"><a href="#HashMap在JDK1-8做了什么优化" class="headerlink" title="HashMap在JDK1.8做了什么优化"></a>HashMap在JDK1.8做了什么优化</h2><ul>
-<li>JDK1.8增加了红黑树来进行优化，当链表长度超过8时，链表就转为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能；</li>
-<li>在JDK1.7中，插入链表节点使用头插法，JDK1.8中变为了尾插法，这是因为头插法在并发下调用transfer()方法，可能会导致链表死循环，以及数据的丢失。</li>
-<li>hash()方法，将hash值高位（前16位）参与到取模的运算中，使得计算结果的不确定性增强，降低发生哈希碰撞的概率。</li>
+<li>JDK1.8增加了<strong>红黑树</strong>来进行优化，当链表长度超过8时，链表就转为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能；</li>
+<li>在JDK1.7中<strong>，插入链表节点使用头插法</strong>，JDK1.8中变为了尾插法，这是因为头插法在并发下调用transfer()方法，可能会导致链表死循环，以及数据的丢失。</li>
+<li>hash()方法，<strong>将hash值高位（前16位）参与到取模的运算中</strong>，使得计算结果的不确定性增强，降低发生哈希碰撞的概率。</li>
 </ul>
 <h2 id="ConcurrentHashMap在JDK1-8做了哪些优化？"><a href="#ConcurrentHashMap在JDK1-8做了哪些优化？" class="headerlink" title="ConcurrentHashMap在JDK1.8做了哪些优化？"></a>ConcurrentHashMap在JDK1.8做了哪些优化？</h2><p>ConcurrentHashMap在Java 8 里抛弃了Segment的概念，直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，Node是ConcurrentHashMap存储结构的基本单元，继承于HashMap中的Entry，用于存储数据，并发控制使用Synchronized和CAS来操作。</p>
 <h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable和comparator的区别"><a href="#comparable和comparator的区别" class="headerlink" title="comparable和comparator的区别"></a>comparable和comparator的区别</h2><ul>
-<li>comparable接口出自java.lang包，它有一个compareTo(Object obj)方法用来排序；</li>
-<li>comparator接口出自java.util包，它有一个compare(Object obj1,Object obj2)方法用来排序</li>
+<li>comparable接口出自java.lang包，它有一个<code>compareTo(Object obj)</code>方法用来排序；</li>
+<li>comparator接口出自java.util包，它有一个<code>compare(Object obj1,Object obj2)</code>方法用来排序</li>
 </ul>
 
             </article>
@@ -326,7 +326,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Java%E9%9D%A2%E8%AF%95/">Java面试</a>
+                      <a class="hover-with-bg" href="/categories/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
                     
                   </div>
                 
@@ -334,7 +334,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Java%E9%9D%A2%E8%AF%95/">Java面试</a>
+                      <a class="hover-with-bg" href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
                     
                   </div>
                 
@@ -350,7 +350,7 @@
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -359,7 +359,7 @@
                     
                       <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">
                         <span class="hidden-mobile">Java基础</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -392,7 +392,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -419,7 +419,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -428,7 +428,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

@@ -273,7 +273,7 @@
 
 <p>虽然双重校验锁既实现了延迟加载，又解决了线程并发问题，同时还解决了执行效率问题，但是仍存在问题。</p>
 <p>这里要提到Java中的指令重排优化，所谓指令重排优化是指在不改变原语义的情况下，通过调整指令的执行顺序让程序运行更快。由于指令重排序的存在，导致初始化Singleton和将对象地址赋给Instance字段的顺序是不确定的，在某个线程创建单例对象时，在构造方法被调用之前，就为该对象分配了内存空间并将对向的字段设置为默认值，此时就可以将分配的内存地址赋值给Instance字段了，然而该对象可能还没有初始化，若紧接着另外一个线程来调用getInstance，取到的就是状态不正确的对象，程序就会出错。</p>
-<p>解决办法：在Instance变量之前加<code>volatile</code>关键字</p>
+<p>解决办法：<strong>在Instance变量之前加<code>volatile</code>关键字</strong></p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span></span>&#123;
 	<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">volatile</span> Singleton Instance;
 	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span></span>&#123;&#125;
@@ -345,13 +345,19 @@
                   <div class="post-prev col-6">
                     
                     
+                      <a href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BAQS%E8%AF%A6%E8%A7%A3/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java并发之AQS详解</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
                   </div>
                   <div class="post-next col-6">
                     
                     
                       <a href="/2020/08/03/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E9%A1%B5%E5%BC%8F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/">
                         <span class="hidden-mobile">操作系统-页式存储管理</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -384,7 +390,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -411,7 +417,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -420,7 +426,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

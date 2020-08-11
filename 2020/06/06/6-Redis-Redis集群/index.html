@@ -219,7 +219,7 @@
 <h2 id="一、集群原理"><a href="#一、集群原理" class="headerlink" title="一、集群原理"></a>一、集群原理</h2><h3 id="1-1-集群架构"><a href="#1-1-集群架构" class="headerlink" title="1.1 集群架构"></a>1.1 集群架构</h3><p><img src="https://img-blog.csdnimg.cn/20200606125039833.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 <code>Redis集群（Redis-cluster）</code>。节点之间使用 <code>Ping——Pong</code> 机制进行互联，其内部用二进制协议优化传输速度和带宽。</p>
 <p>Redis客户端和节点<strong>直接连接</strong>即可，无需中间件，一台客户端连接一个节点即可，Client 访问时直接访问任意一个Redis节点即可。</p>
-<h3 id="1-2-负载均衡"><a href="#1-2-负载均衡" class="headerlink" title="1.2 负载均衡"></a>1.2 负载均衡</h3><p>当我们搭建了集群后，其是如何实现负载均衡的呢？</p>
+<h3 id="1-2-负载均衡"><a href="#1-2-负载均衡" class="headerlink" title="1.2 负载均衡"></a>1.2 负载均衡</h3><p>当我们搭建了集群后，是如何实现负载均衡的呢？</p>
 <p>Redis 集群中内置了 <strong>16384</strong> 个<code>哈希槽（slot）</code>，它会把所有的物理节点都映射到<strong>[0,16383]</strong>的slot上。</p>
 <p>当我们需要在Redis集群中放置一个 key-value 时，Redis 先对 key 使用 <code>crc16</code> 算法得出一个结果，然后将结果<strong>对16384取余</strong>，这样<strong>每一个 key 都会对应一个编号在0 ~16383的 哈希槽</strong>。</p>
 <p>Redis 会根据节点数量大致均等地将哈希槽映射到不同的节点。例如我们有三个节点，其每个节点哈希槽范围为：0 ~ 5000，5001 ~ 10000，10001~ 16383。</p>
@@ -437,7 +437,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
                       <a href="/2020/06/06/7-Redis-Redis%E6%93%8D%E7%BA%B5%E9%9B%86%E7%BE%A4/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">7. Redis--Redis操纵集群</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -446,7 +446,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
                     
                       <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">
                         <span class="hidden-mobile">5. Redis--Redis的持久化</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -479,7 +479,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -506,7 +506,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -515,7 +515,7 @@ wxs@ubuntu:/usr/local/redis-cluster$ ./redis-trib.rb create --replicas 1 192.168
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

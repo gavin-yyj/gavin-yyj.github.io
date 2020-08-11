@@ -179,6 +179,92 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BCountDownLatch/">Java并发之CountDownLatch</a>
+
+      <a href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BCountDownLatch/" class="index-excerpt">
+        
+        
+          
+        
+        <div>参考：https://www.cnblogs.com/fengzheng/p/9153720.html
+CountDownLatch的使用作用：当一个或多个线程需要另外一个或多个线程完成后，再开始执行，比如主线程需要等待一个子线程完成环境相关配置的加载工作，主线程才继续执行，就可以利用CountDownLatch来实现。例如下面这个例子，首先实例化一个CountDownLatch，参数可以理解为一</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-08-05
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">Java</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BAQS%E8%AF%A6%E8%A7%A3/">Java并发之AQS详解</a>
+
+      <a href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BAQS%E8%AF%A6%E8%A7%A3/" class="index-excerpt">
+        
+        
+          
+        
+        <div>Java并发包（JUC）中提供了很多并发工具，比如：ReentrantLock，Semaphore，CountDownLatch，FutureTask等，它们的实现都用到了一个共同的基类-AbstractQueuedSynchronizer，简称AQS。AQS是一个用来构建锁和同步其他组件的基础框架，使用AQS能简单且高效地构建出应用广泛的同步器。
+基本实现原理AQS使用一个int成员变量stat</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-08-05
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Java/">Java</a>
+            
+              <a href="/categories/Java/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">Java</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/08/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">设计模式之单例模式</a>
 
       <a href="/2020/08/04/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="index-excerpt">
@@ -528,95 +614,6 @@ TCP 是通过序列号、确认应答、重发控制、连接管理以及窗口�
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/07/27/Netty%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">Netty面试题汇总</a>
-
-      <a href="/2020/07/27/Netty%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="index-excerpt">
-        
-        
-          
-        
-        <div>1. Netty是什么？Netty是一个异步事件驱动的网络应用程序框架，用于快速开发可维护性的高性能协议服务器和客户端，Netty是基于NIO的，它封装了JDK的NIO，让我们使用起来更加方便灵活。
-2. Netty的特点是什么？
-高并发：Netty是一款基于NIO开发的网络通信框架，对比于BIO，它的并发性能得到了很大提高。
-传输快：Netty的传输依赖于零拷贝特性，尽量减少不必要的内存拷贝，实</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-27
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/07/27/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">Redis面试题汇总</a>
-
-      <a href="/2020/07/27/Redis%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/" class="index-excerpt">
-        
-        
-          
-        
-        <div>概述什么是RedisRedis是一个使用C语言编写的，开源的高性能非关系型的键值对数据库。
-Redis可以存储键和五种不同类型的值之间的映射，键的类型只能为字符串，值支持五种数据类型：String，List，Set，Hash，ZSet。
-与传统数据库不同的是Redis的数据是存储在内存中，所以读写速度非常快，因此Redis被广泛应用在缓存方向，每秒可以处理超过10万次读写操作，是已知性能最快的ke</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-27
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -653,7 +650,7 @@ Redis可以存储键和五种不同类型的值之间的映射，键的类型只
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -662,7 +659,7 @@ Redis可以存储键和五种不同类型的值之间的映射，键的类型只
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

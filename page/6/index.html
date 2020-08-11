@@ -179,6 +179,96 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/">6. Redis--Redis集群</a>
+
+      <a href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/" class="index-excerpt">
+        
+        
+          
+        
+        <div>之前我们所学习的都是 Redis 的单机版，我们知道 Redis 之所以读取速度快是因为它是存储在内存中的。内存的容量是有限的，单台 Redis 会碰到性能瓶颈，这就需要使用 Redis集群（Redis-cluster）。
+一、集群原理1.1 集群架构
+如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 Redis集群（Redis-cluster）。节点之间使用 Ping——</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">5. Redis--Redis的持久化</a>
+
+      <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/" class="index-excerpt">
+        
+        
+          
+        
+        <div>Redis 的高性能是由其将所有数据都存储在了内存中，需要使用时直接从内存调用即可。为了使 Redis 在重启之后仍然能保证数据不丢失，需要将数据从内存同步到数据库中，这一过程就是持久化。
+Redis 支持两种持久化方式，一种是 RDB方式，一种是 AOF方式。可以单独使用其中一种或将两种结合使用。
+
+RDB (默认) 在指定的时间间隔内将内存中的数据快照写入磁盘。
+AOF 以日志的形式记录服务器</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/">4. Redis--Redis的特性</a>
 
       <a href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/" class="index-excerpt">
@@ -627,112 +717,6 @@ Netty的编解码器类
     </div>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">9.Netty--单元测试</a>
-
-      <a href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-单元测试
-EmbeddedChannel概述
-使用EmbeddedChannel测试ChannelHandler
-
-
-单元测试的标准：不仅能够证明你的实现是正确的，而且还要能够很容易地隔离那些因修改代码而突然出现的问题。
-因为正在被测试的代码模块或者单元将在它正常的运行环境之外被执行，所以还需要一个框架或者脚手架以便在其中运行它（这里我们选择的是JUnit4）。
-Embedde</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/">8.Netty--引导</a>
-
-      <a href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本文主要内容：
-
-引导客户端和服务器
-从Channel内引导客户端
-添加ChannelHandler
-使用ChannelOption和属性
-
-
-Bootstrap类引导类的层次结构：
-
-服务器致力于使用一个父Channel来接收来自客户端的连接，并创建子Channel以用于它们之间的通信；而客户端一般只需要一个单独的、没有父Channel的Channel来用于所有的网络交互。
-首先聊聊为什么引导</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
 
 
   <nav aria-label="navigation">
@@ -769,7 +753,7 @@ Bootstrap类引导类的层次结构：
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -778,7 +762,7 @@ Bootstrap类引导类的层次结构：
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

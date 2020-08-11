@@ -227,11 +227,11 @@
 </ul>
 <h1 id="类之间的关系"><a href="#类之间的关系" class="headerlink" title="类之间的关系"></a>类之间的关系</h1><h2 id="泛化关系"><a href="#泛化关系" class="headerlink" title="泛化关系"></a>泛化关系</h2><p>继承关系为is-a的关系：两个对象之间如果可以用is-a(是一种)来表示，就是继承关系。<br>eg：自行车是车，猫是动物（车和动物在这里都是实体类）<br>泛化关系用一条带空心箭头的直线表示，下图为A继承自B；<br><img src="https://img-blog.csdnimg.cn/2020071616144259.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>最终代码中，泛化关系表现为继承非抽象类；</p>
 <h2 id="实现关系"><a href="#实现关系" class="headerlink" title="实现关系"></a>实现关系</h2><p>实现关系用一条带空心箭头的虚线表示：<br>eg：<br><img src="https://img-blog.csdnimg.cn/20200716161730211.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>实现关系表现为继承抽象类或者实现接口；</p>
-<h2 id="聚合关系"><a href="#聚合关系" class="headerlink" title="聚合关系"></a>聚合关系</h2><p>聚合关系用一条带空心菱形的直线表示：如下图表示A聚合到B上，或者说B由A组成；<br><img src="https://img-blog.csdnimg.cn/20200716161948489.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>聚合关系用于表示实体对象之间的关系，表示整体由部分构成的语义，例如一个部门由多名员工组成。<br>与组合关系不同的是，整体和部分不是强依赖的，即使整体不存在了，部门仍然存在；例如：部门撤销了，人员不会消失，他们依然存在。</p>
+<h2 id="聚合关系"><a href="#聚合关系" class="headerlink" title="聚合关系"></a>聚合关系</h2><p>聚合关系用一条带空心菱形的直线表示：如下图表示A聚合到B上，或者说B由A组成；<br><img src="https://img-blog.csdnimg.cn/20200716161948489.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>聚合关系用于表示实体对象之间的关系，表示整体由部分构成的语义，例如一个部门由多名员工组成。<br>与组合关系不同的是，<strong>整体和部分不是强依赖</strong>的，即使整体不存在了，部门仍然存在；例如：部门撤销了，人员不会消失，他们依然存在。</p>
 <h2 id="组合关系"><a href="#组合关系" class="headerlink" title="组合关系"></a>组合关系</h2><p>组合关系用一条带实心菱形箭头直线表示，如下图表示A组成B：<br><img src="https://img-blog.csdnimg.cn/20200716162301184.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>组合关系是一种强依赖的特殊聚合关系，如果整体不存在了，则部分也不存在；例如：公司不存在了，则部门也不存在。</p>
-<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><p>关联关系是用一条直线表示，它描述不同类的对象之间的结构关系，它是一种静态关系，通常与运行状态无关，一般由常识等因素决定的，用来定义对象之间静态的、天然的结构，所以关联关系是一种“强关联”的关系。<br>比如：乘车人和车票之间就是一种关联关系；<br>关联关系默认不强调方向，表示对象相互知道，如果特别强调方向，如下图，表示A知道B，但B不知道A。<br><img src="https://img-blog.csdnimg.cn/20200716162752286.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><p>依赖关系是用一套带箭头的虚线表示的，如下图表示A依赖于B；它描述一个对象在运行期间会用到另一个对象的关系；<br><img src="https://img-blog.csdnimg.cn/20200716163159390.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>与关联关系不同的是，它是一种临时性的关系，通常在运行期间产生，并且随着运行时的变化； 依赖关系也可能发生变化；</p>
-<p>显然，依赖也有方向，双向依赖是一种非常糟糕的结构，我们总是应该保持单向依赖，杜绝双向依赖的产生；</p>
+<h2 id="关联关系"><a href="#关联关系" class="headerlink" title="关联关系"></a>关联关系</h2><p>关联关系是用一条直线表示，它描述不同类的对象之间的结构关系，它是一种<strong>静态关系</strong>，通常与运行状态无关，一般由常识等因素决定的，用来定义对象之间静态的、天然的结构，所以关联关系是一种“强关联”的关系。<br>比如：乘车人和车票之间就是一种关联关系；<br>关联关系默认不强调方向，表示对象相互知道，如果特别强调方向，如下图，表示A知道B，但B不知道A。<br><img src="https://img-blog.csdnimg.cn/20200716162752286.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h2><p>依赖关系是用一套带箭头的虚线表示的，如下图表示A依赖于B；它描述<strong>一个对象在运行期间会用到另一个对象</strong>的关系；<br><img src="https://img-blog.csdnimg.cn/20200716163159390.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>与关联关系不同的是，它是一种<strong>临时性</strong>的关系，通常在运行期间产生，并且随着运行时的变化； 依赖关系也可能发生变化；</p>
+<p>显然，依赖也有方向，双向依赖是一种非常糟糕的结构，我们总是应该<strong>保持单向依赖</strong>，杜绝双向依赖的产生；</p>
 <p>注：在最终代码中，依赖关系体现为类构造方法及类方法的传入参数，箭头的指向为调用关系；依赖关系除了临时知道对方外，还是“使用”对方的方法和属性；</p>
 
             </article>
@@ -239,6 +239,20 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
                 
               </div>
               
@@ -252,7 +266,7 @@
                       <a href="/2020/07/16/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">网络编程</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -261,7 +275,7 @@
                     
                       <a href="/2020/07/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-Map/">
                         <span class="hidden-mobile">数据结构-Map</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -294,7 +308,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -321,7 +335,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -330,7 +344,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
