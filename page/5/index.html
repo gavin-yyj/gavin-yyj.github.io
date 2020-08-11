@@ -179,50 +179,6 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/">4.SpringSecurity整合OAuth2.0-Day03</a>
-
-      <a href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/" class="index-excerpt">
-        
-        
-          
-        
-        <div>上一篇文章中我们介绍了获取 token 的流程，这一篇重点分析一下，携带 token 访问受限资源时，内部的工作流程。
-@EnableResourceServer 与 @EnableAuthorizationServer之前我们介绍过了 OAuth2 的两个核心概念，资源服务器与身份认证服务器。我们对两个注解进行配置的同时，到底触发了内部的什么相关配置呢？
-上一篇文章重点介绍的其实是与身份认证相关</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-10
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/OAuth2/">OAuth2</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/OAuth2/">OAuth2</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/">3.SpringSecurity整合OAuth2.0-Day02</a>
 
       <a href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/" class="index-excerpt">
@@ -633,6 +589,50 @@ public void testJedis() &#123;
     </div>
   </div>
 
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/">6. Redis--Redis集群</a>
+
+      <a href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/" class="index-excerpt">
+        
+        
+          
+        
+        <div>之前我们所学习的都是 Redis 的单机版，我们知道 Redis 之所以读取速度快是因为它是存储在内存中的。内存的容量是有限的，单台 Redis 会碰到性能瓶颈，这就需要使用 Redis集群（Redis-cluster）。
+一、集群原理1.1 集群架构
+如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 Redis集群（Redis-cluster）。节点之间使用 Ping——</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
 
 
   <nav aria-label="navigation">
@@ -669,7 +669,7 @@ public void testJedis() &#123;
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -678,7 +678,7 @@ public void testJedis() &#123;
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
