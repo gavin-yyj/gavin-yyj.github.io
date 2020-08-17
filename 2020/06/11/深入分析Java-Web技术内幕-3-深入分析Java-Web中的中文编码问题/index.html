@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.2k 字
+      1.3k 字
     </span>
   
 
@@ -267,9 +267,9 @@ ByteBuffer byteBuffer = charset.encode(string);
 CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
 <h1 id="3-在Java中如何编解码"><a href="#3-在Java中如何编解码" class="headerlink" title="3 在Java中如何编解码"></a>3 在Java中如何编解码</h1><p>String → ByteBuffer：Charset.encode()<br>ByteBuffer → String：Charset.decode().toString()<br>CharBuffer→ String ：toString()<br>ByteBuffer → byte[]：array()<br>byte[] → ByteBuffer :ByteBuffer.wrap()<br>CharBuffer  → char[]：array()<br>char[] → CharBuffer：CharBuffer.wrap()</p>
 <h1 id="4-Java-Web中涉及的编解码"><a href="#4-Java-Web中涉及的编解码" class="headerlink" title="4 Java Web中涉及的编解码"></a>4 Java Web中涉及的编解码</h1><h2 id="URL编解码"><a href="#URL编解码" class="headerlink" title="URL编解码"></a>URL编解码</h2><p><img src="https://img-blog.csdnimg.cn/20200611205539345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br> 浏览器编码URL是将非ASCII字符按照某种编码格式编码成16进制数字后将每个16进制表示的字符前加上%。<img src="https://img-blog.csdnimg.cn/20200611210115739.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>URL的URI部分进行解码的字符集是在<code>&lt;Connector URIEncodeing=&quot;UTF-8&quot;&gt;</code>里设置的。<br>QueryString的解析过程：GET方式HTTP请求的querystring和POST方式HTTP请求的表单参数都是作为parameters保存的，都通过request.getParameter();<br>queryString的解码字符集是在哪定义的呢？<br>是在HTTP的header的contentType或者是默认的ISO-8859-1，如果要用HTTP的header中中定义的编码需要设置<code>&lt;Connector URIEncoding=&quot;UTF-8&quot;      useBodyEncodingForURI=&#39;true&#39;&gt;</code></p>
-<h2 id="HTTP-Hander的编解码"><a href="#HTTP-Hander的编解码" class="headerlink" title="HTTP Hander的编解码"></a>HTTP Hander的编解码</h2><p>客户端发起的HTTP请求除了URL外，还可能会在Header中传递其他参数（如Cookie）。对Header中的项进行解码默认使用ISO-8859-1，且不能设置Header其他的解码格式，若设置的Header中有非ASCII字符，解码中肯定会出现乱码。若一定要传递，则调用Tomcat中的URLEncoder编码，再添加到Header中。</p>
-<h2 id="POST表单的编解码"><a href="#POST表单的编解码" class="headerlink" title="POST表单的编解码"></a>POST表单的编解码</h2><p>POST表单的参数传递方式是通过HTTP的BODY传递到服务器的，当提交时先根据ContentType中的字符集进行解码，字符集编码可以由request.setCharacterEncoding(charset)来设置。<br>此外务必注意：对POST表单提交参数的解码是发生在getParameter时，所以在第一次调用request.getParameter方法之前就要先设置request.setCharacterEncoding(charset)方法。<br>关于上传的文件编码：也是使用ContentType定义的字符集编码，不过上传文件是以字节流的方式传输到服务器的本地临时目录，此过程尚不涉及字符编码，只有当文件内容添加到parameters时才进行编码。</p>
-<h2 id="HTTP-BODY的编解码"><a href="#HTTP-BODY的编解码" class="headerlink" title="HTTP BODY的编解码"></a>HTTP BODY的编解码</h2><p>编解码字符集通过response.setCharacterEncoding来设置，通过Header的Content-Type返回客户端。若Header中没有Content-Type，浏览器会根据<meta http-equiv="Content-Type" content="text/html; charset=utf-8">中的charset来解码，若依然没有该属性，浏览器则使用默认编码。</p>
+<h2 id="HTTP-Hander的编解码"><a href="#HTTP-Hander的编解码" class="headerlink" title="HTTP Hander的编解码"></a>HTTP Hander的编解码</h2><p>客户端发起的HTTP请求除了URL外，还可能会在Header中传递其他参数（如Cookie）。对Header中的项进行解码默认使用<code>ISO-8859-1</code>，且不能设置Header其他的解码格式，若设置的Header中有非ASCII字符，解码中肯定会出现乱码。若一定要传递，则调用Tomcat中的URLEncoder编码，再添加到Header中。</p>
+<h2 id="POST表单的编解码"><a href="#POST表单的编解码" class="headerlink" title="POST表单的编解码"></a>POST表单的编解码</h2><p>POST表单的参数传递方式是通过HTTP的BODY传递到服务器的，当提交时先根据ContentType中的字符集进行解码，字符集编码可以由<code>request.setCharacterEncoding(charset)</code>来设置。<br>此外务必注意：对POST表单提交参数的解码是发生在getParameter时，所以在第一次调用request.getParameter方法之前就要先设置request.setCharacterEncoding(charset)方法。<br>关于上传的文件编码：也是使用ContentType定义的字符集编码，不过上传文件是以字节流的方式传输到服务器的本地临时目录，此过程尚不涉及字符编码，只有当文件内容添加到parameters时才进行编码。</p>
+<h2 id="HTTP-BODY的编解码"><a href="#HTTP-BODY的编解码" class="headerlink" title="HTTP BODY的编解码"></a>HTTP BODY的编解码</h2><p>编解码字符集通过response.setCharacterEncoding来设置，通过Header的Content-Type返回客户端。若Header中没有Content-Type，浏览器会根据&lt;meta http-equiv=”Content-Type” content=”text/html; charset=utf-8”&gt;中的charset来解码，若依然没有该属性，浏览器则使用默认编码。</p>
 <h1 id="5-常见问题分析"><a href="#5-常见问题分析" class="headerlink" title="5 常见问题分析"></a>5 常见问题分析</h1><h2 id="中文变成了看不懂的字符"><a href="#中文变成了看不懂的字符" class="headerlink" title="中文变成了看不懂的字符"></a>中文变成了看不懂的字符</h2><p>解码和编码用的字符集不一样，就会出现乱码。</p>
 <h2 id="一个汉字变成一个问号"><a href="#一个汉字变成一个问号" class="headerlink" title="一个汉字变成一个问号"></a>一个汉字变成一个问号</h2><p>ISO-8859-1遇到不认识的用3F表示，是问号。</p>
 <h2 id="一个汉字变成两个问号"><a href="#一个汉字变成两个问号" class="headerlink" title="一个汉字变成两个问号"></a>一个汉字变成两个问号</h2><p>说明中文经过了多次编码</p>
@@ -306,7 +306,7 @@ CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
                       <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-4-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90ClassLoader%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">深入分析Java Web技术内幕-4.深入分析ClassLoader工作机制</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -315,7 +315,7 @@ CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
                     
                       <a href="/2020/06/11/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-2-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-I-O%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">
                         <span class="hidden-mobile">深入分析Java Web技术内幕-2.深入分析Java I/O的工作机制</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -348,7 +348,7 @@ CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -375,7 +375,7 @@ CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -384,7 +384,7 @@ CharBuffer charBuffer = charset.decode(byteBuffer);</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

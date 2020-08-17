@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.6k 字
+      3.2k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      30
+      36
        分钟
     </span>
   
@@ -329,6 +329,15 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
 </ul>
 <p>Filter类的核心还是FilterChain对象，这个对象保存了到最终Servlet对象等待所有Filter对象，这些对象都保存再ApplicationFilterChain对象的filters数组中，再FilterChain链上每执行一个Filter对象，数组的当前计数都会加1，直到计数等于数组的长度。当FilterChain上所有的Filter对象执行完成后，就会执行最终的servlet，所以在ApplicationFilterChain对象中会持有Servlet对象的引用。</p>
 <h1 id="7-Servlet中的url-pattern"><a href="#7-Servlet中的url-pattern" class="headerlink" title="7 Servlet中的url-pattern"></a>7 Servlet中的url-pattern</h1><p>在web.xml中<srevlet-mapping>和<filter-mapping>中都有<url-pattern>配置项，其作用是匹配一次请求是否会执行这个Servlet或者Filter。<br>Filter的url-pattern匹配是在创建ApplicationFilterChain对象时进行的，它会把所有定义的Filter的url-pattern与当前的URL匹配，如果匹配成功就将这个Filter保存到ApplicationFilterChain的filters数组中，然后在FilterChain中依次调用。</p>
+<h1 id="8-常见面试题"><a href="#8-常见面试题" class="headerlink" title="8 常见面试题"></a>8 常见面试题</h1><h2 id="1、Servlet的生命周期？"><a href="#1、Servlet的生命周期？" class="headerlink" title="1、Servlet的生命周期？"></a>1、Servlet的生命周期？</h2><p>Servlet是基于Java技术的Web组件，该组件由容器托管，主要功能在于交互式地浏览和修改数据，生成动态Web内容。</p>
+<p>Servlet的生命周期有四个阶段：加载并实例化、初始化、请求处理和销毁。主要涉及的方法有：init、service、doGet、doPost、destory等。</p>
+<p><img src="http://www.hollischuang.com/wp-content/uploads/2015/12/20150628211705937.png" srcset="/img/loading.gif" alt="img"></p>
+<h3 id="加载并实例化"><a href="#加载并实例化" class="headerlink" title="加载并实例化"></a>加载并实例化</h3><p>Servlet容器负责加载和实例化Servelt。当Servlet容器启动时，或者在容器检测到需要这个Servlet来响应第一个请求时，创建Servlet实例。当Servlet容器启动后，Servlet通过类加载器来加载Servlet类，加载完成后再new一个Servlet对象来完成实例化。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>在Servlet实例化之后，容器将调用init()方法，并传递实现ServletConfig接口的对象，在init()方法中，Servlet可以部署描述符中读取配置参数，或者执行任何其他一次性活动，在Servlet的整个生命周期类，init()方法只能被调用一次。</p>
+<h3 id="请求处理"><a href="#请求处理" class="headerlink" title="请求处理"></a>请求处理</h3><p>当Servlet初始化后，容器就可以准备处理客户端请求了，当容器收到对这一Servlet的请求，就调用Servlet的service()方法，并把请求和响应对象作为参数传递，当并行的请求到来时，多个service()方法能够同时运行在独立的线程中，service()方法检查HTTP请求参数类型（GET，POST，PUT，DELETE等），并在适当的时候调用doGet()，doPost()，doPut()，doDelete()等方法。</p>
+<h3 id="销毁"><a href="#销毁" class="headerlink" title="销毁"></a>销毁</h3><p>一旦Servlet容器检测到一个Servlet要被卸载，这可能是因为要回收资源或者因为它正在被关闭，容器会在所有Servlet的service()线程之后，调用Servlet的destroy()方法，然后，Servlet就可以进行无用存储单元收集清理，这样Servlet对象就被销毁了。</p>
+<h2 id="2、Servlet是否是单例的？为什么？"><a href="#2、Servlet是否是单例的？为什么？" class="headerlink" title="2、Servlet是否是单例的？为什么？"></a>2、Servlet是否是单例的？为什么？</h2><p>如果一个Servlet没有被部署在分布式的环境中，一般web.xml中声明的一个Servlet只对应一个实例，所以Servlet是单例的，如果初始化以后存在，那么再来一个请求也只是用这个单例来响应请求，如果有多个请求，则使用多线程的方式，通过时间切片来完成。</p>
+<p>而如果一个Servlet实现了SingleThreadModel接口(已被废弃)，就会被初始化多个实例。</p>
 
             </article>
             <hr>
@@ -362,7 +371,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
                       <a href="/2020/06/18/%E8%AE%A4%E8%AF%81%E3%80%81%E6%8E%88%E6%9D%83%E3%80%81%E9%89%B4%E6%9D%83%E5%92%8C%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">认证、授权、鉴权和权限控制的理解</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -371,7 +380,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
                     
                       <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-5-JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
                         <span class="hidden-mobile">深入分析Java Web技术内幕-5.JVM内存管理</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -404,7 +413,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -431,7 +440,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -440,7 +449,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

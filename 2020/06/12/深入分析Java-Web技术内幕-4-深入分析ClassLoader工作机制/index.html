@@ -266,10 +266,14 @@
        &#125;
    &#125;</code></pre></div>
 <h1 id="ClassLoader的等级加载机制"><a href="#ClassLoader的等级加载机制" class="headerlink" title="ClassLoader的等级加载机制"></a>ClassLoader的等级加载机制</h1><h2 id="BootstrapClassLoader"><a href="#BootstrapClassLoader" class="headerlink" title="BootstrapClassLoader"></a>BootstrapClassLoader</h2><p>主要加载JVM自身工作需要的类，完全由JVM自己控制，别人访问不了这个类，它仅仅是一个类的加载工具而已，既没有更高一级的父加载器，也没有子加载器。</p>
-<h2 id="ExtClassLoader"><a href="#ExtClassLoader" class="headerlink" title="ExtClassLoader"></a>ExtClassLoader</h2><p>ExtClassLoader称为扩展类加载器，主要负责加载Java的扩展类库,默认加载<code>JAVA_HOME/jre/lib/ext/</code>目录下的所有jar包或者由<code>java.ext.dirs</code>系统属性指定的jar包.放入这个目录下的jar包对AppClassLoader加载器都是可见的(因为ExtClassLoader是AppClassLoader的父加载器,并且Java类加载器采用了委托机制)。</p>
-<h2 id="AppClassLoader"><a href="#AppClassLoader" class="headerlink" title="AppClassLoader"></a>AppClassLoader</h2><p>AppClassLoader应用类加载器,又称为系统类加载器,负责在JVM启动时,加载来自在命令java中的<code>classpath</code>或者<code>java.class.path</code>系统属性或者<code>CLASSPATH</code>操作系统属性所指定的JAR类包和类路径。<br>我们在实现自己的类加载器的时候，不管是直接实现抽象类ClassLoad还是继承URLClassLoad类，或是其他子类，他的父加载器都是AppClassLoad，因为不管调用哪个父类构造器，创建的对象都必须最终调用<code>getSystemClassLoader()</code>作为父加载器，而<code>getSystemClassLoader()</code>方法返回的正是AppClassLoader。</p>
-<p>JVM加载class文件到内存的两种方式：<br><strong>隐式加载</strong>：不通过在代码里调用ClassLoader来加载需要的类，而是通过JVM来自动加载需要的类到内存的方式，例如：当我们在类中继承或者引用某个类时，JVM在解析当前这个类时发现引用的类不在内存中，那么就会自动将这些类加载到内存中。<br><strong>显示加载</strong>：在代码中通过调用ClassLoader类来加载一个类的方式，例如：调用<code>this.getClass.getClassLoader().loadClass()</code>或者<code>Class.forName()</code>，或者是调用我们自己实现的ClassLoader的findClass()方法等。</p>
-<h1 id="3-如何加载class文件"><a href="#3-如何加载class文件" class="headerlink" title="3 如何加载class文件"></a>3 如何加载class文件</h1><p>用ClassLoader加载一个class文件到JVM时需要经过的步骤如下：<br><img src="https://img-blog.csdnimg.cn/20200612110825762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>    第一个阶段是找到.class文件并把这个文件包含的字节码加载到内存中。<br>    第二个阶段又可以分为三个步骤，分别实字节码验证、Class类数据结构及相应的内存分配和最后的符号表的链接。<br>    第三个阶段是类中静态属性和初始化赋值，以及静态块的执行等。</p>
+<h2 id="ExtClassLoader"><a href="#ExtClassLoader" class="headerlink" title="ExtClassLoader"></a>ExtClassLoader</h2><p>ExtClassLoader称为<strong>扩展类加载器</strong>，主要负责加载Java的扩展类库,默认加载<code>JAVA_HOME/jre/lib/ext/</code>目录下的所有jar包或者由<code>java.ext.dirs</code>系统属性指定的jar包.放入这个目录下的jar包对AppClassLoader加载器都是可见的(因为ExtClassLoader是AppClassLoader的父加载器,并且Java类加载器采用了委托机制)。</p>
+<h2 id="AppClassLoader"><a href="#AppClassLoader" class="headerlink" title="AppClassLoader"></a>AppClassLoader</h2><p>AppClassLoader<strong>应用类加载器</strong>，又称为<strong>系统类加载器</strong>，负责在JVM启动时,加载来自在命令java中的<code>classpath</code>或者<code>java.class.path</code>系统属性或者<code>CLASSPATH</code>操作系统属性所指定的JAR类包和类路径。<br>我们在实现自己的类加载器的时候，不管是直接实现抽象类ClassLoad还是继承URLClassLoad类，或是其他子类，他的父加载器都是AppClassLoad，因为不管调用哪个父类构造器，创建的对象都必须最终调用<code>getSystemClassLoader()</code>作为父加载器，而<code>getSystemClassLoader()</code>方法返回的正是AppClassLoader。</p>
+<p>JVM加载class文件到内存的两种方式：</p>
+<ul>
+<li><strong>隐式加载</strong>：不通过在代码里调用ClassLoader来加载需要的类，而是通过JVM来自动加载需要的类到内存的方式，例如：当我们在类中继承或者引用某个类时，JVM在解析当前这个类时发现引用的类不在内存中，那么就会自动将这些类加载到内存中。</li>
+<li><strong>显示加载</strong>：在代码中通过调用ClassLoader类来加载一个类的方式，例如：调用<code>this.getClass.getClassLoader().loadClass()</code>或者<code>Class.forName()</code>，或者是调用我们自己实现的ClassLoader的findClass()方法等。</li>
+</ul>
+<h1 id="3-如何加载class文件"><a href="#3-如何加载class文件" class="headerlink" title="3 如何加载class文件"></a>3 如何加载class文件</h1><p>用ClassLoader加载一个class文件到JVM时需要经过的步骤如下：<br><img src="https://img-blog.csdnimg.cn/20200612110825762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>    第一个阶段是找到.class文件并把这个文件包含的字节码<strong>加载</strong>到内存中。<br>    第二个阶段又可以分为三个步骤，分别是字节码<strong>验证</strong>、Class类数据结构及相应的内存分配和最后的符号表的链接。<br>    第三个阶段是类中静态属性和初始化赋值，以及静态块的执行等。</p>
 <h2 id="加载字节码到内存"><a href="#加载字节码到内存" class="headerlink" title="加载字节码到内存"></a>加载字节码到内存</h2><p>查看URLClassLoader部分源码：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">URLClassLoader</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">SecureClassLoader</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Closeable</span> </span>&#123;
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> URLClassPath ucp;
@@ -317,7 +321,7 @@
         <span class="hljs-keyword">return</span> result;
     &#125;
 &#125;</code></pre></div>
-<p>在URLClassLoader中通过一个URLClassPath类帮助取得要加载的class文件字节流，而这个URLClassPath定义了到哪里去找这个class文件，如果找到了这个class文件，再读取它的byte字节流，通过调用defineClass()方法来创建类对象。</p>
+<p>在URLClassLoader中通过一个URLClassPath类帮助取得要加载的class文件字节流，而这个URLClassPath定义了到哪里去找这个class文件，如果找到了这个class文件，再读取它的byte字节流，通过调用<code>defineClass()</code>方法来创建类对象。</p>
 <p>在创建URLClassPath对象时会根据传过来的URL数组中的路径来判断是文件还是jar包，根据路径的不同分别创建FileLoader或者JarLoader，或者使用默认的加载器。当JVM调用findClass时由这几个加载器来将class文件的字节码加载到内存中。</p>
 <h2 id="验证与解析"><a href="#验证与解析" class="headerlink" title="验证与解析"></a>验证与解析</h2><ul>
 <li>字节码验证，类装入器对于类的字节码要做许多检测，以确保格式正确、行为正确。</li>
@@ -381,7 +385,7 @@
                       <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-5-JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">深入分析Java Web技术内幕-5.JVM内存管理</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -390,7 +394,7 @@
                     
                       <a href="/2020/06/11/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-3-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E4%B8%AD%E7%9A%84%E4%B8%AD%E6%96%87%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/">
                         <span class="hidden-mobile">深入分析Java Web技术内幕-3.深入分析Java Web中的中文编码问题</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -423,7 +427,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -450,7 +454,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -459,7 +463,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

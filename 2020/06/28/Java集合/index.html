@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.2k 字
+      2.9k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      24
+      33
        分钟
     </span>
   
@@ -313,9 +313,78 @@
 <li>hash()方法，<strong>将hash值高位（前16位）参与到取模的运算中</strong>，使得计算结果的不确定性增强，降低发生哈希碰撞的概率。</li>
 </ul>
 <h2 id="ConcurrentHashMap在JDK1-8做了哪些优化？"><a href="#ConcurrentHashMap在JDK1-8做了哪些优化？" class="headerlink" title="ConcurrentHashMap在JDK1.8做了哪些优化？"></a>ConcurrentHashMap在JDK1.8做了哪些优化？</h2><p>ConcurrentHashMap在Java 8 里抛弃了Segment的概念，直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，Node是ConcurrentHashMap存储结构的基本单元，继承于HashMap中的Entry，用于存储数据，并发控制使用Synchronized和CAS来操作。</p>
+<h2 id="HashMap-LinkedHashMap-TreeMap的区别？"><a href="#HashMap-LinkedHashMap-TreeMap的区别？" class="headerlink" title="HashMap,LinkedHashMap,TreeMap的区别？"></a>HashMap,LinkedHashMap,TreeMap的区别？</h2><p>区别：</p>
+<ul>
+<li>LinkedHashMap是继承于HashMap，是基于HashMap和双向链表来实现的。</li>
+<li>HashMap无序；LinkedHashMap有序，可分为插入顺序和访问顺序两种。如果是访问顺序，那put和get操作已存在的Entry时，都会把Entry移动到双向链表的表尾(其实是先删除再插入)。</li>
+<li>LinkedHashMap存取数据，还是跟HashMap一样使用的Entry[]的方式，双向链表只是为了保证顺序。</li>
+<li>LinkedHashMap是线程不安全的。</li>
+</ul>
+<p>LinkedHashMap应用场景：</p>
+<p>当我们希望有顺序地去存储key-value时，就需要使用LinkedHashMap。</p>
+<p>TreeMap的用法（主要是排序）</p>
+<p>TreeMap中默认的排序是升序，如果要改变其排序可以自己写一个Comparator，重写其compare()方法。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Compare</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        TreeMap&lt;String, Integer&gt; map = <span class="hljs-keyword">new</span> TreeMap&lt;String, Integer&gt;(<span class="hljs-keyword">new</span> xbComparator());
+        map.put(<span class="hljs-string">"192.168.1.11"</span>, <span class="hljs-number">1</span>);
+        map.put(<span class="hljs-string">"193.168.2.11"</span>, <span class="hljs-number">1</span>);
+        map.put(<span class="hljs-string">"192.128.1.11"</span>, <span class="hljs-number">1</span>);
+        map.put(<span class="hljs-string">"192.168.1.12"</span>, <span class="hljs-number">1</span>);
+        map.put(<span class="hljs-string">"192.168.1.31"</span>, <span class="hljs-number">1</span>);
+
+        Set&lt;String&gt; keys = map.keySet();
+        Iterator&lt;String&gt; iterator = keys.iterator();
+        <span class="hljs-keyword">while</span> (iterator.hasNext()) &#123;
+            String next = iterator.next();
+            System.out.println(<span class="hljs-string">" "</span> + next + <span class="hljs-string">":"</span> + map.get(next));
+        &#125;
+    &#125;
+&#125;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">xbComparator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(Object o1, Object o2)</span> </span>&#123;
+        String s1 = (String) o1;
+        String s2 = (String) o2;
+        <span class="hljs-keyword">return</span> s2.compareTo(s1);
+    &#125;
+&#125;</code></pre></div>
+
+
+
+
 <h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable和comparator的区别"><a href="#comparable和comparator的区别" class="headerlink" title="comparable和comparator的区别"></a>comparable和comparator的区别</h2><ul>
 <li>comparable接口出自java.lang包，它有一个<code>compareTo(Object obj)</code>方法用来排序；</li>
 <li>comparator接口出自java.util包，它有一个<code>compare(Object obj1,Object obj2)</code>方法用来排序</li>
+</ul>
+<p>Comparable是<strong>排序接口</strong>，若一个类实现了Comparable接口，就意味着“该类支持排序”，既然实现Comparable接口的类支持排序，假设现在存在“实现Comparable接口的类的对象的List列表（或数组）”，则 该List列表（或数组）可以通过<code>Collections.sort()</code>或<code>Arrays.sort()</code>进行排序。</p>
+<p>Comparable接口仅仅只包含一个函数，它的定义如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.lang;
+<span class="hljs-keyword">import</span> java.util.*;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compareTo</span><span class="hljs-params">(T o)</span></span>;
+&#125;</code></pre></div>
+
+<p>假设我们通过x.compareTo(y)来比较x和y的大小，若返回负数，意味着x比y小，返回0，说明相等，返回正数，说明x比y大。</p>
+<p>Comparator是<strong>比较器接口</strong>，我们若需要控制某个类的次序，而该类本身不支持排序（即没有实现Comparable接口），那么，我们可以建立一个该类的比较器来进行排序，这个比较器只需要实现Comparator接口即可。也就是说，我们可以通过实现Comparator类来新建一个比较器，然后通过该比较器对类进行排序。</p>
+<p>Comparator借口哦仅仅包含两个函数，它的定义如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;
+
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(T o1, T o2)</span></span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">equals</span><span class="hljs-params">(Object obj)</span></span>;
+&#125;</code></pre></div>
+
+<p>说明：</p>
+<ul>
+<li><p>如果一个类要实现Comparator接口，它一定要实现Compare(T o1,T o2)函数，但可以不实现equals(Object obj)函数。</p>
+</li>
+<li><p>int compare(T o1, T o2) 是“比较o1和o2的大小”。返回“负数”，意味着“o1比o2小”；返回“零”，意味着“o1等于o2”；返回“正数”，意味着“o1大于o2”。</p>
+</li>
 </ul>
 
             </article>
@@ -352,7 +421,7 @@
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -361,7 +430,7 @@
                     
                       <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">
                         <span class="hidden-mobile">Java基础</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -394,7 +463,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -421,7 +490,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -430,7 +499,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

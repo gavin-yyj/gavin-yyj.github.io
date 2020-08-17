@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>消息传输过程中的常见问题 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-17 11:15">
+      August 17, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      42
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>常见问题有如下几个：</p>
+<ul>
+<li>如何保证消息不丢失？</li>
+<li>如何处理重复消息？</li>
+<li>如何保证消息的有序性？</li>
+<li>如何处理消息堆积？</li>
+</ul>
+<p>在回答这几个问题前先简单介绍一下什么是消息队列。</p>
+<h1 id="什么是消息队列"><a href="#什么是消息队列" class="headerlink" title="什么是消息队列"></a>什么是消息队列</h1><p>消息队列就是一个使用队列来通信的组件，通常用于进程间或同一进程内的线程通信。</p>
+<h1 id="为什么需要消息队列"><a href="#为什么需要消息队列" class="headerlink" title="为什么需要消息队列"></a>为什么需要消息队列</h1><p>从本质上讲是因为互联网的快速发展，业务不断扩张，促使技术架构需要不断的演进，来实现服务之间的解耦，以控制资源合理使用以及缓冲流量洪峰等。</p>
+<p>消息队列的出现就是为解决这一系列问题，它常用来实现：异步处理，服务解耦以及流量控制。</p>
+<h2 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h2><p>背景：<br>随着公司的发展你可能会发现你项目的请求链路越来越长，例如刚开始的电商项目，可以就是粗暴的扣库存、下单。慢慢地又加上积分服务、短信服务等。这一路同步调用下来时间过长，严重影响客户的使用舒适度，这时候就是消息队列登场的好时机。</p>
+<p>调用链路长、响应就慢了，并且相对于扣库存和下单，积分和短信没必要这么的 “及时”。因此只需要在下单结束那个流程，扔个消息到消息队列中就可以直接返回响应了。而且积分服务和短信服务可以并行的消费这条消息。</p>
+<p>可以看出消息队列可以减少请求的等待，还能让服务异步并发处理，提升系统总体性能。<br><img src="https://img-blog.csdnimg.cn/20200817104618105.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="服务解耦"><a href="#服务解耦" class="headerlink" title="服务解耦"></a>服务解耦</h2><p>背景：<br>上面我们说到加了积分服务和短信服务，这时候可能又要来个营销服务，之后领导又说想做个大数据，又来个数据分析服务等等。<br>可以发现订单的下游系统在不断的扩充，为了迎合这些，下游系统订单服务需要经常地修改，任何一个下游系统接口的变更可能都会影响到订单服务。</p>
+<p>所以一般会选用消息队列来解决系统之间耦合的问题，订单服务把订单相关消息塞到消息队列中，下游系统谁要谁就订阅这个主题。这样订单服务就解放啦！<br><img src="https://img-blog.csdnimg.cn/20200817105036110.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h2><p>想必大家都听过「削峰填谷」，后端服务相对而言都是比较「弱」的，因为业务较重，处理时间较长。像一些例如秒杀活动爆发式流量打过来可能就顶不住了。因此需要引入一个中间件来做缓冲，消息队列再适合不过了。</p>
+<p>网关的请求先放入消息队列中，后端服务尽自己最大能力去消息队列中消费请求。超时的请求可以直接返回错误。</p>
+<p>当然还有一些服务特别是某些后台任务，不需要及时地响应，并且业务处理复杂且流程长，那么过来的请求先放入消息队列中，后端服务按照自己的节奏处理。这也是很 nice 的。</p>
+<p>上面两种情况分别对应着生产者生产过快和消费者消费过慢两种情况，消息队列都能在其中发挥很好的缓冲效果。<br><img src="https://img-blog.csdnimg.cn/20200817105140207.png#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>引入消息队列固然有以上的好处，但是多引入一个中间件系统的稳定性就下降一层，运维的难度抬高一层。因此要权衡利弊，系统是演进的。</p>
+<h1 id="消息队列基本概念"><a href="#消息队列基本概念" class="headerlink" title="消息队列基本概念"></a>消息队列基本概念</h1><p>消息队列有两种模型：队列模型和发布/订阅模型。</p>
+<h2 id="队列模型"><a href="#队列模型" class="headerlink" title="队列模型"></a>队列模型</h2><p>生产者往某个队列里面发送消息，一个队列可以存储多个生产者的消息，一个队列也可以有多个消费者， 但是消费者之间是竞争关系，即每条消息只能被一个消费者消费。<br><img src="https://img-blog.csdnimg.cn/20200817105252441.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="发布-订阅模型"><a href="#发布-订阅模型" class="headerlink" title="发布/订阅模型"></a>发布/订阅模型</h2><p>为了解决一条消息能被多个消费者消费的问题，发布/订阅模型就来了。该模型是将消息发往一个Topic即主题中，所有订阅了这个 Topic 的订阅者都能消费这条消息。</p>
+<p>其实可以这么理解，发布/订阅模型等于我们都加入了一个群聊中，我发一条消息，加入了这个群聊的人都能收到这条消息。那么队列模型就是一对一聊天，我发给你的消息，只能在你的聊天窗口弹出，是不可能弹出到别人的聊天窗口中的。</p>
+<p>讲到这有人说，那我一对一聊天对每个人都发同样的消息不就也实现了一条消息被多个人消费了嘛。</p>
+<p>是的，通过多队列全量存储相同的消息，即数据的冗余可以实现一条消息被多个消费者消费。RabbitMQ 就是采用队列模型，通过 Exchange 模块来将消息发送至多个队列，解决一条消息需要被多个消费者消费问题。</p>
+<p>这里还能看到假设群聊里除我之外只有一个人，那么此时的发布/订阅模型和队列模型其实就一样了。<br><img src="https://img-blog.csdnimg.cn/20200817105413824.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>队列模型每条消息只能被一个消费者消费，而发布/订阅模型就是为让一条消息可以被多个消费者消费而生的，当然队列模型也可以通过消息全量存储至多个队列来解决一条消息被多个消费者消费问题，但是会有数据的冗余。</p>
+<p>发布/订阅模型兼容队列模型，即只有一个消费者的情况下和队列模型基本一致。</p>
+<p>RabbitMQ 采用队列模型，RocketMQ和Kafka 采用发布/订阅模型。</p>
+<p>接下来的内容都基于发布/订阅模型。</p>
+<h1 id="常用术语"><a href="#常用术语" class="headerlink" title="常用术语"></a>常用术语</h1><p>一般我们称发送消息方为生产者 Producer，接受消费消息方为消费者Consumer，消息队列服务端为Broker。</p>
+<p>消息从Producer发往Broker，Broker将消息存储至本地，然后Consumer从Broker拉取消息，或者Broker推送消息至Consumer，最后消费。<br><img src="https://img-blog.csdnimg.cn/20200817105516518.png#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>为了提高并发度，往往发布/订阅模型还会引入<strong>队列</strong>或者<strong>分区</strong>的概念。即消息是发往一个主题下的某个队列或者某个分区中。RocketMQ中叫队列，Kafka叫分区，本质一样。</p>
+<p>例如某个主题下有 5 个队列，那么这个主题的并发度就提高为 5 ，同时可以有 5 个消费者并行消费该主题的消息。一般可以采用轮询或者 key hash 取余等策略来将同一个主题的消息分配到不同的队列中。</p>
+<p>与之对应的消费者一般都有<strong>组</strong>的概念 Consumer Group, 即消费者都是属于某个消费组的。一条消息会发往多个订阅了这个主题的消费组。</p>
+<p>假设现在有两个消费组分别是Group 1 和 Group 2，它们都订阅了Topic-a。此时有一条消息发往Topic-a，那么这两个消费组都能接收到这条消息。</p>
+<p>然后这条消息实际是写入Topic某个队列中，消费组中的某个消费者对应消费一个队列的消息。</p>
+<p>在物理上除了副本拷贝之外，一条消息在Broker中只会有一份，每个消费组会有自己的offset，即<strong>消费点位来标识消费到的位置</strong>。在消费点位之前的消息表明已经消费过了。当然这个offset是队列级别的。每个消费组都会维护订阅的Topic下的每个队列的offset。<br><img src="https://img-blog.csdnimg.cn/20200817110100989.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>基本上熟悉了消息队列常见的术语和一些概念之后，咱们再来看看消息队列常见的核心面试点。</p>
+<h1 id="如何保证消息不丢失"><a href="#如何保证消息不丢失" class="headerlink" title="如何保证消息不丢失"></a>如何保证消息不丢失</h1><p>就我们市面上常见的消息队列而言，只要配置得当，我们的消息就不会丢。</p>
+<p>先来看看这个图，<br><img src="https://img-blog.csdnimg.cn/20200817110233646.png#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>可以看到一共有三个阶段，分别是生产消息、存储消息和消费消息。我们从这三个阶段分别入手来看看如何确保消息不会丢失。</p>
+<h2 id="生产消息"><a href="#生产消息" class="headerlink" title="生产消息"></a>生产消息</h2><p>生产者发送消息至Broker，需要处理Broker的响应，不论是同步还是异步发送消息，同步和异步回调都需要做好try-catch，妥善的处理响应，如果Broker返回写入失败等错误消息，需要重试发送。当多次发送失败需要作报警，日志记录等。</p>
+<p>这样就能保证在生产消息阶段消息不会丢失。</p>
+<h2 id="存储消息"><a href="#存储消息" class="headerlink" title="存储消息"></a>存储消息</h2><p>存储消息阶段需要在消息刷盘之后再给生产者响应，假设消息写入缓存中就返回响应，那么机器突然断电这消息就没了，而生产者以为已经发送成功了。</p>
+<p>如果Broker是集群部署，有多副本机制，即消息不仅仅要写入当前Broker，还需要写入副本机中。那配置成至少写入两台机子后再给生产者响应。这样基本上就能保证存储的可靠了。一台挂了还有一台还在呢（假如怕两台都挂了..那就再多些）。</p>
+<p>那假如来个地震机房机子都挂了呢？emmmmmm…大公司基本上都有异地多活。</p>
+<p>那要是这几个地都地震了呢？emmmmmm…这时候还是先关心关心人吧。</p>
+<h2 id="消费消息"><a href="#消费消息" class="headerlink" title="消费消息"></a>消费消息</h2><p>这里经常会有同学犯错，有些同学当消费者拿到消息之后直接存入内存队列中就直接返回给Broker消费成功，这是不对的。</p>
+<p>你需要考虑拿到消息放在内存之后消费者就宕机了怎么办。所以我们应该在消费者真正执行完业务逻辑之后，再发送给Broker消费成功，这才是真正的消费了。</p>
+<p>所以只要我们在消息业务逻辑处理完成之后再给Broker响应，那么消费阶段消息就不会丢失。</p>
+<h2 id="小结一下"><a href="#小结一下" class="headerlink" title="小结一下"></a>小结一下</h2><p>可以看出，保证消息的可靠性需要三方配合。</p>
+<ul>
+<li><p>生产者需要处理好Broker的响应，出错情况下利用重试、报警等手段。</p>
+</li>
+<li><p>Broker需要控制响应的时机，单机情况下是消息刷盘后返回响应，集群多副本情况下，即发送至两个副本及以上的情况下再返回响应。</p>
+</li>
+<li><p>消费者需要在执行完真正的业务逻辑之后再返回响应给Broker。</p>
+</li>
+</ul>
+<p>但是要注意消息可靠性增强了，性能就下降了，等待消息刷盘、多副本同步后返回都会影响性能。因此还是看业务，例如日志的传输可能丢那么一两条关系不大，因此没必要等消息刷盘再响应。</p>
+<h1 id="如何处理重复消息？"><a href="#如何处理重复消息？" class="headerlink" title="如何处理重复消息？"></a>如何处理重复消息？</h1><p>我们先来看看能不能避免消息的重复。</p>
+<p>假设我们发送消息，就管发，不管Broker的响应，那么我们发往Broker是不会重复的。</p>
+<p>但是一般情况我们是不允许这样的，这样消息就完全不可靠了，我们的基本需求是消息至少得发到Broker上，那就得等Broker的响应，那么就可能存在Broker已经写入了，当时响应由于网络原因生产者没有收到，然后生产者又重发了一次，此时消息就重复了。</p>
+<p>再看消费者消费的时候，假设我们消费者拿到消息消费了，业务逻辑已经走完了，事务提交了，此时需要更新Consumer offset了，然后这个消费者挂了，另一个消费者顶上，此时Consumer offset还没更新，于是又拿到刚才那条消息，业务又被执行了一遍。于是消息又重复了。</p>
+<p>可以看到正常业务而言<strong>消息重复是不可避免的</strong>，因此我们只能从另一个角度来解决重复消息的问题。</p>
+<p>关键点就是<strong>幂等</strong>。既然我们不能防止重复消息的产生，那么我们只能在业务上处理重复消息所带来的影响。</p>
+<h2 id="幂等处理重复消息"><a href="#幂等处理重复消息" class="headerlink" title="幂等处理重复消息"></a>幂等处理重复消息</h2><p>幂等是数学上的概念，我们就理解为<strong>同样的参数多次调用同一个接口和调用一次产生的结果是一致的</strong>。</p>
+<p>例如这条 <code>SQLupdate t1 set money = 150 where id = 1 and money = 100;</code> 执行多少遍money都是150，这就叫幂等。</p>
+<p>因此需要改造业务处理逻辑，使得<strong>在重复消息的情况下也不会影响最终的结果</strong>。</p>
+<p>可以通过上面我那条 SQL 一样，做了个前置条件判断，即money = 100情况，并且直接修改，更通用的是做个<code>VersionID</code>，即版本号控制，对比消息中的版本号和数据库中的版本号。</p>
+<p>或者通过数据库的约束例如唯一键，例如insert into update on duplicate key…。</p>
+<p>或者记录关键的key，比如处理订单这种，记录订单ID，假如有重复的消息过来，先判断下这个ID是否已经被处理过了，如果没处理再进行下一步。当然也可以用全局唯一ID等等。</p>
+<p>基本上就这么几个套路，真正应用到实际中还是得看具体业务细节。</p>
+<h2 id="如何保证消息的有序性"><a href="#如何保证消息的有序性" class="headerlink" title="如何保证消息的有序性"></a>如何保证消息的有序性</h2><p>有序性分：全局有序和部分有序。</p>
+<h3 id="全局有序"><a href="#全局有序" class="headerlink" title="全局有序"></a>全局有序</h3><p>如果要保证消息的全局有序，首先只能由一个生产者往Topic发送消息，并且一个Topic内部只能有一个队列（分区）。消费者也必须是单线程消费这个队列。这样的消息就是全局有序的！</p>
+<p>不过一般情况下我们都不需要全局有序，即使是同步MySQL Binlog也只需要<strong>保证单表消息有序</strong>即可。<br><img src="https://img-blog.csdnimg.cn/20200817111005546.png#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="部分有序"><a href="#部分有序" class="headerlink" title="部分有序"></a>部分有序</h3><p>因此绝大部分的有序需求是部分有序，部分有序我们就可以将Topic内部划分成我们需要的队列数，把消息通过特定的策略发往固定的队列中，然后每个队列对应一个单线程处理的消费者。这样即完成了部分有序的需求，又可以通过队列数量的并发来提高消息处理效率。<br><img src="https://img-blog.csdnimg.cn/20200817111034391.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>图中我画了多个生产者，一个生产者也可以，只要同类消息发往指定的队列即可。</p>
+<h2 id="如何处理消息堆积"><a href="#如何处理消息堆积" class="headerlink" title="如何处理消息堆积"></a>如何处理消息堆积</h2><p>消息的堆积往往是因为<strong>生产者的生产速度与消费者的消费速度不匹配</strong>。有可能是因为消息消费失败反复重试造成的，也有可能就是消费者消费能力弱，渐渐地消息就积压了。</p>
+<p>因此我们需要<strong>先定位消费慢的原因</strong>，如果是bug则处理 bug ，如果是因为本身消费能力较弱，我们可以<strong>优化消费逻辑</strong>，比如之前是一条一条消息消费处理的，这次我们批量处理，比如数据库的插入，一条一条插和批量插效率是不一样的。</p>
+<p>假如逻辑我们已经都优化了，但还是慢，那就得考虑<strong>水平扩容</strong>了，<strong>增加Topic的队列数和消费者数量</strong>，注意队列数一定要增加，不然新增加的消费者是没东西消费的。一个Topic中，一个队列只会分配给一个消费者。</p>
+<p>当然你消费者内部是单线程还是多线程消费那看具体场景。不过要注意上面提高的消息丢失的问题，如果你是将接受到的消息写入内存队列之后，然后就返回响应给Broker，然后多线程向内存队列消费消息，假设此时消费者宕机了，内存队列里面还未消费的消息也就丢了。</p>
+<p>参考文章</p>
+<ol>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAwNDA2OTM1Ng==&mid=2453144588&idx=2&sn=2de1124158908e18d261bea23b9cb771&chksm=8cfd268fbb8aaf991ea0398eb0f4f2922771b2732a34836d690f42e385dec7cd11295eb5e645&mpshare=1&scene=24&srcid=0717GRrwmKXPqDyHDpqRoZI7&sharer_sharetime=1594958773393&sharer_shareid=bc73a96e10be1e6e41d00d6bd8d23680#rd" target="_blank" rel="noopener">面试题：如何保证消息不丢失？处理重复消息？消息有序性？消息堆积处理？</a></li>
+</ol>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/17/Cookie%E3%80%81Session%E3%80%81Token%E3%80%81JWT%E5%88%86%E6%9E%90/">
+                        <span class="hidden-mobile">Cookie、Session、Token、JWT分析</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "消息传输过程中的常见问题&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
