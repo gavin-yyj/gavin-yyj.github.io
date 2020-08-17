@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      5.9k 字
+      6.1k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      83
+      85
        分钟
     </span>
   
@@ -216,7 +216,7 @@
             
             <article class="markdown-body">
               <h1 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h1><p>Map是“原生”接口，没有继承任何接口。<br><img src="https://img-blog.csdnimg.cn/20200716101921637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>其内部有一个内部接口：Entry，用于操作Map集合中的key，因为Map集合没有继承Iterator接口，自己无法遍历集合中所有的元素，所以将所有的key封装到Set集合中进行遍历。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>其内部有一个内部接口：<code>Entry</code>，用于操作Map集合中的key，<strong>因为Map集合没有继承Iterator接口，自己无法遍历集合中所有的元素，所以需要将所有的key封装到Set集合中进行遍历。</strong></p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;
  
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Map</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; </span>&#123;
@@ -278,15 +278,15 @@
 &#125;</code></pre></div>
 
 <ul>
-<li>TreeSet：基于红黑树实现，实现了SortedMap接口；</li>
+<li>TreeMap：基于红黑树实现，实现了SortedMap接口；</li>
 <li>HashMap：基于哈希表实现，元素会通过哈希转换函数将元素的哈希地址转换成数组中存放的索引，如果有冲突，则使用散列链表的形式将所有相同哈希地址的元素串起来；可以将null作为一个表的key或value。</li>
 <li>HashTable：遗留类，线程安全，不允许将null作为key使用，推荐使用ConcurrentHashMap。</li>
 <li>LinkedHashMap：使用双向链表来维护元素的顺序，顺序为插入顺序或者最近最少使用（LRU）顺序。</li>
 </ul>
-<h1 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h1><p>为了便于理解，一下源码分析以JDK1.7为主。</p>
+<h1 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h1><p>为了便于理解，以下源码分析以JDK1.7为主。</p>
 <h2 id="1-存储结构"><a href="#1-存储结构" class="headerlink" title="1. 存储结构"></a>1. 存储结构</h2><p>内部包含了一个entry类型的数组table。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">transient</span> Entry[] table;</code></pre></div>
-<p>Entry存储着键值对，是一个链表，即数组中的每个位置都被当成一个桶，一个桶存放一个链表，HashMap使用拉链法来解决冲突，同一个链表中存放哈希值相同的Entry。<br><img src="https://img-blog.csdnimg.cn/20200716103919668.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>Entry存储着<strong>键值对</strong>，是一个链表，即数组中的每个位置都被当成一个桶，一个桶存放一个链表，HashMap使用<code>拉链法</code>来解决冲突，同一个链表中存放哈希值相同的Entry。<br><img src="https://img-blog.csdnimg.cn/20200716103919668.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>.<span class="hljs-title">Entry</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; </span>&#123;
     <span class="hljs-keyword">final</span> K key;
     V value;
@@ -341,7 +341,7 @@ map.put(<span class="hljs-string">"K3"</span>, <span class="hljs-string">"V3"</s
 <li>插入 &lt;K2,V2&gt; 键值对，先计算 K2 的 hashCode 为 118，通过取模计算得到所在桶下标为6；</li>
 <li>插入 &lt;K3,V3&gt; 键值对，先计算 K3 的 hashCode 为 118，通过取模计算得到所在桶下标为6，插在&lt;K2,V2&gt; 前面。</li>
 </ul>
-<p>注意：链表的插入是以头插法方式进行的，例如上面的&lt;K3,V3&gt;不是插在&lt;K2,V2&gt;后面，而是插在链表头部。</p>
+<p>注意：JDk1.8以前链表的插入是以<strong>头插法</strong>方式进行的，例如上面的&lt;K3,V3&gt;不是插在&lt;K2,V2&gt;后面，而是插在链表头部。</p>
 <p>查找需要分为两步进行：</p>
 <ul>
 <li>计算键值对所在的桶；</li>
@@ -372,7 +372,7 @@ map.put(<span class="hljs-string">"K3"</span>, <span class="hljs-string">"V3"</s
     addEntry(hash, key, value, i);
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
 &#125;</code></pre></div>
-<p>注意：HashMap允许插入键为null的键值对，但是因为无法调用null的hashCode()方法，也就无法确定该键值对的桶下标，只能通过强制指定一个桶下标来存放，HashMap使用第0个桶存放键为null的键值对。</p>
+<p>注意：HashMap允许插入键为null的键值对，但是因为无法调用null的hashCode()方法，也就无法确定该键值对的桶下标，只能通过强制指定一个桶下标来存放，<strong>HashMap使用第0个桶存放键为null的键值对</strong>。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> V <span class="hljs-title">putForNullKey</span><span class="hljs-params">(V value)</span> </span>&#123;
     <span class="hljs-keyword">for</span> (Entry&lt;K,V&gt; e = table[<span class="hljs-number">0</span>]; e != <span class="hljs-keyword">null</span>; e = e.next) &#123;
         <span class="hljs-keyword">if</span> (e.key == <span class="hljs-keyword">null</span>) &#123;
@@ -498,7 +498,7 @@ y%x : <span class="hljs-number">00000010</span></code></pre></div>
 <h2 id="6-扩容-重新计算桶下标"><a href="#6-扩容-重新计算桶下标" class="headerlink" title="6. 扩容-重新计算桶下标"></a>6. 扩容-重新计算桶下标</h2><p>在进行扩容时，需要把键值对重新放到对应的桶上，HashMap使用了一个特殊的机制，可以降低重新计算桶下标的操作。<br>假设原数组长度capacity为16，扩容之后new capacity为32：</p>
 <div class="hljs"><pre><code class="hljs java">capacity : <span class="hljs-number">00010000</span>
 <span class="hljs-keyword">new</span> capacity : <span class="hljs-number">00100000</span></code></pre></div>
-<p>对于一个key，它的哈希值如果在第5位上为0，那么取模得到的结果和之前的一样；如果为1，那么得到的结果为原来的结果+16。</p>
+<p>对于一个key，它的哈希值如果在第n位上为0，那么取模得到的结果和之前的一样；如果为1，那么得到的结果为原来的结果+2的n-1次方。</p>
 <h2 id="7-计算数组容量"><a href="#7-计算数组容量" class="headerlink" title="7. 计算数组容量"></a>7. 计算数组容量</h2><p>HashMap构造函数允许用户传入的容量不是2的n次方，因为它可以自动地将传入的容量转换为2的n次方。<br>先考虑如何求一个数的掩码，对于10010000，它的掩码为11111111，可以使用以下方法得到：</p>
 <div class="hljs"><pre><code class="hljs java">mask |= mask &gt;&gt; <span class="hljs-number">1</span> <span class="hljs-number">11011000</span>
 mask |= mask &gt;&gt; <span class="hljs-number">2</span> <span class="hljs-number">11111110</span>
@@ -531,7 +531,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
     <span class="hljs-keyword">volatile</span> V value;
     <span class="hljs-keyword">volatile</span> HashEntry&lt;K,V&gt; next;
 &#125;</code></pre></div>
-<p>ConcurrentHashMap 和 HashMap 实现上类似，最主要的差别是 ConcurrentHashMap 采用了分段锁（Segment），每个分段锁维护着几个桶（HashEntry），多个线程可以同时访问不同分段锁上的桶，从而使其并发度更高（并发度就是 Segment 的个数）。</p>
+<p>ConcurrentHashMap 和 HashMap 实现上类似，最主要的差别是 ConcurrentHashMap 采用了<strong>分段锁</strong>（Segment），每个分段锁维护着几个桶（HashEntry），多个线程可以同时访问不同分段锁上的桶，从而使其并发度更高（并发度就是 Segment 的个数）。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//Segment 继承自 ReentrantLock。</span>
 <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Segment</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">ReentrantLock</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Serializable</span> </span>&#123;
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">2249069246763182397L</span>;
@@ -603,10 +603,10 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
     &#125; 
     <span class="hljs-keyword">return</span> overflow ? Integer.MAX_VALUE : size;
 &#125;</code></pre></div>
-<h2 id="3-JDK-1-8-的改动"><a href="#3-JDK-1-8-的改动" class="headerlink" title="3. JDK 1.8 的改动"></a>3. JDK 1.8 的改动</h2><p>JDK 1.7 使用分段锁机制Segment + HashEntry + ReentrantLock来实现并发更新操作，核心类为 Segment，它继承自重入锁 ReentrantLock，并发度与Segment 数量相等。<br>JDK 1.8 使用了 Node + CAS + Synchronized来支持更高的并发度，在 CAS 操作失败时使用内置锁 synchronized。</p>
+<h2 id="3-JDK-1-8-的改动"><a href="#3-JDK-1-8-的改动" class="headerlink" title="3. JDK 1.8 的改动"></a>3. JDK 1.8 的改动</h2><p>JDK 1.7 使用分段锁机制<code>Segment + HashEntry + ReentrantLock</code>来实现并发更新操作，核心类为 Segment，它继承自重入锁 ReentrantLock，并发度与Segment 数量相等。<br>JDK 1.8 使用了<code>Node + CAS + Synchronized</code>来支持更高的并发度，在 CAS 操作失败时使用内置锁 synchronized。</p>
 <ul>
 <li>JDK1.8的实现降低锁的粒度，JDK1.7版本锁的粒度是基于Segment的，包含多个HashEntry，而JDK1.8锁的粒度就是HashEntry（首节点）</li>
-<li>JDK1.8版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用synchronized来进行同步，所以不需要分段锁的概念，也就不需要Segment这种数据结构了，由于粒度的降低，实现的复杂度也增加了</li>
+<li>JDK1.8版本的数据结构变得更加简单，使得操作也更加清晰流畅，因为已经使用synchronized来进行同步，所以不需要分段锁的概念，也就不需要Segment这种数据结构了，由于粒度的降低，实现的复杂度也增加了；</li>
 <li>JDK1.8使用红黑树来优化链表，基于长度很长的链表的遍历是一个很漫长的过程，而红黑树的遍历效率是很快的，代替一定阈值的链表，这样形成一个最佳拍档。</li>
 </ul>
 <h2 id="4-为什么-ConcurrentHashMap-的读操作不需要加锁？"><a href="#4-为什么-ConcurrentHashMap-的读操作不需要加锁？" class="headerlink" title="4. 为什么 ConcurrentHashMap 的读操作不需要加锁？"></a>4. 为什么 ConcurrentHashMap 的读操作不需要加锁？</h2><h4 id="get操作源码"><a href="#get操作源码" class="headerlink" title="get操作源码"></a>get操作源码</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//会发现源码中没有一处加了锁</span>
@@ -635,23 +635,24 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
 &#125;</code></pre></div>
 <p>get没有加锁的话，ConcurrentHashMap是如何保证读到的数据不是脏数据的呢？</p>
-<h4 id="volatile登场"><a href="#volatile登场" class="headerlink" title="volatile登场"></a>volatile登场</h4><p>对于可见性，Java提供了volatile关键字来保证可见性、有序性。但不保证原子性。<br>普通的共享变量不能保证可见性，因为普通共享变量被修改之后，什么时候被写入主存是不确定的，当其他线程去读取时，此时内存中可能还是原来的旧值，因此无法保证可见性。</p>
+<h4 id="volatile登场"><a href="#volatile登场" class="headerlink" title="volatile登场"></a>volatile登场</h4><p>对于可见性，<strong>Java提供了volatile关键字来保证可见性、有序性。</strong>但不保证原子性。<br>普通的共享变量不能保证可见性，因为普通共享变量被修改之后，什么时候被写入主存是不确定的，当其他线程去读取时，此时内存中可能还是原来的旧值，因此无法保证可见性。</p>
 <ul>
 <li>volatile关键字对于基本类型的修改可以在随后对多个线程的读保持一致，但是对于引用类型如数组，实体bean，仅仅保证引用的可见性，但并不保证引用内容的可见性。。</li>
 <li>禁止进行指令重排序。</li>
 </ul>
-<p>背景：为了提高处理速度，处理器不直接和内存进行通信，而是先将系统内存的数据 读到内部缓存（L1，L2或其他）后再进行操作，但操作完不知道何时会写到内存。</p>
+<p>背景：为了提高处理速度，处理器不直接和内存进行通信，而是先将系统内存的数据读到内部缓存（L1，L2或其他）后再进行操作，但操作完不知道何时会写到内存。</p>
 <ul>
 <li>如果对声明了volatile的变量进行写操作，JVM就会向处理器发送一条指令，将这个变量所在缓存行的数据写回到系统内存。但是，就算写回到内存，如果其他处理器缓存的值还是旧的，再执行计算操作就会有问题。</li>
-<li>在多处理器下，为了保证各个处理器的缓存是一致的，就会实现缓存一致性协议，当某个CPU在写数据时，如果发现操作的变量是共享变量，则会通知其他CPU告知该变量的缓存行是无效的，因此其他CPU在读取该变量时，发现其无效会重新从主存中加载数据。<br><img src="https://img-blog.csdnimg.cn/2020071614550957.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><strong>总结下来：</strong><br>第一：使用volatile关键字会强制将修改的值立即写入主存；<br>第二：使用volatile关键字的话，当线程2进行修改时，会导致线程1的工作内存中缓存变量的缓存行无效；<br>第三：由于线程1的工作内存中缓存行无效，所以线程1再次读取变量的值时会去主存读取。</li>
+<li>在多处理器下，为了保证各个处理器的缓存是一致的，就会实现<strong>缓存一致性协议</strong>，当某个CPU在写数据时，如果发现操作的变量是共享变量，则会通知其他CPU告知该变量的缓存行是无效的，因此其他CPU在读取该变量时，发现其无效会重新从主存中加载数据。<br><img src="https://img-blog.csdnimg.cn/2020071614550957.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></li>
 </ul>
+<p><strong>总结下来：</strong><br>第一：使用volatile关键字会强制将修改的值<strong>立即写入主存；</strong><br>第二：使用volatile关键字的话，当线程2进行修改时，会<strong>导致线程1的工作内存中缓存变量的缓存行无效</strong>；<br>第三：由于线程1的工作内存中缓存行无效，所以线程1再次读取变量的值时会去主存读取。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/**</span>
 <span class="hljs-comment">     * The array of bins. Lazily initialized upon first insertion.</span>
 <span class="hljs-comment">     * Size is always a power of two. Accessed directly by iterators.</span>
 <span class="hljs-comment">     */</span>
     <span class="hljs-keyword">transient</span> <span class="hljs-keyword">volatile</span> Node&lt;K,V&gt;[] table;</code></pre></div>
 <p>volatile int array[10]是指array的地址是volatile的而不是数组元素的值是volatile的.</p>
-<h4 id="用volatile修饰的Node"><a href="#用volatile修饰的Node" class="headerlink" title="用volatile修饰的Node"></a>用volatile修饰的Node</h4><p>get操作可以无锁是由于Node的元素val和指针next是用volatile修饰的，在多线程环境下线程A修改节点的val或者新增节点的时候是对线程B可见的。</p>
+<h4 id="用volatile修饰的Node"><a href="#用volatile修饰的Node" class="headerlink" title="用volatile修饰的Node"></a>用volatile修饰的Node</h4><p>get操作可以无锁是由于<strong>Node的元素<code>val</code>和指针<code>next</code>是用volatile修饰的</strong>，在多线程环境下线程A修改节点的val或者新增节点的时候是对线程B可见的。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>.<span class="hljs-title">Entry</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; </span>&#123;
     <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> hash;
     <span class="hljs-keyword">final</span> K key;
@@ -699,12 +700,20 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
     &#125;
 &#125;</code></pre></div>
-<p>既然volatile修饰数组对get操作没有效果那加在数组上的volatile的目的是什么呢？<br>其实就是为了<strong>使得Node数组在扩容的时候对其他线程具有可见性而加的volatile</strong></p>
-<p><strong>总结</strong><br>在1.8中ConcurrentHashMap的get操作全程不需要加锁，这也是它比其他并发集合比如hashtable、用Collections.synchronizedMap()包装的hashmap安全效率高的原因之一。<br>get操作全程不需要加锁是因为Node的成员val是用volatile修饰的，和数组用volatile修饰没有关系。<br>数组用volatile修饰主要是保证在数组扩容的时候保证可见性。</p>
+<p>既然volatile修饰数组对get操作没有效果，那加在数组上的volatile的目的是什么呢？<br>其实就是为了<strong>使得Node数组在扩容的时候对其他线程具有可见性而加的volatile</strong>。</p>
+<p><strong>总结</strong></p>
+<ul>
+<li><p>在1.8中ConcurrentHashMap的get操作全程不需要加锁，这也是它比其他并发集合比如hashtable、用<code>Collections.synchronizedMap()</code>包装的hashmap安全效率高的原因之一。</p>
+</li>
+<li><p><strong>get操作全程不需要加锁是因为Node的成员val是用volatile修饰的，和数组用volatile修饰没有关系。</strong></p>
+</li>
+<li><p><strong>数组用volatile修饰主要是保证在数组扩容的时候保证可见性。</strong></p>
+</li>
+</ul>
 <h1 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h1><h2 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h2><p>继承自HashMap，因此具有和HashMap一样的快速查找特性；</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LinkedHashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">HashMap</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title">Map</span>&lt;<span class="hljs-title">K</span>,<span class="hljs-title">V</span>&gt;</span></code></pre></div>
 
-<p>内部维护了一个双向链表，用来维护插入顺序或者 LRU 顺序。</p>
+<p><strong>内部维护了一个双向链表，用来维护插入顺序或者 LRU 顺序。</strong></p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">/**</span>
 <span class="hljs-comment">* The head (eldest) of the doubly linked list.</span>
 <span class="hljs-comment">*/</span>
@@ -748,7 +757,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
         ++modCount;
     &#125;
 &#125;</code></pre></div>
-<h2 id="afterNodeInsertion"><a href="#afterNodeInsertion" class="headerlink" title="afterNodeInsertion()"></a>afterNodeInsertion()</h2><p>在 put 等操作之后执行，当 removeEldestEntry() 方法返回 true 时会移除最晚的节点，也就是链表首部节点 first。<br>evict 只有在构建 Map 的时候才为 false，在这里为 true。</p>
+<h2 id="afterNodeInsertion"><a href="#afterNodeInsertion" class="headerlink" title="afterNodeInsertion()"></a>afterNodeInsertion()</h2><p>在 put 等操作之后执行，当 removeEldestEntry() 方法返回 true 时会移除最久未使用的节点，也就是链表首部节点 first。<br>evict 只有在构建 Map 的时候才为 false，在这里为 true。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">afterNodeInsertion</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> evict)</span> </span>&#123;
     <span class="hljs-comment">// possibly remove eldest</span>
     LinkedHashMap.Entry&lt;K,V&gt; first;
@@ -761,7 +770,12 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">removeEldestEntry</span><span class="hljs-params">(Map.Entry&lt;K,V&gt; eldest)</span> </span>&#123;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
 &#125;</code></pre></div>
-<h2 id="LRU-缓存"><a href="#LRU-缓存" class="headerlink" title="LRU 缓存"></a>LRU 缓存</h2><p>以下是使用 LinkedHashMap 实现的一个 LRU 缓存：<br>设定最大缓存空间 MAX_ENTRIES 为 3；<br>使用 LinkedHashMap 的构造函数将 accessOrder 设置为 true，开启 LRU 顺序；<br>覆盖 removeEldestEntry() 方法实现，在节点多于 MAX_ENTRIES 就会将最近最久未使用的数据移除。</p>
+<h2 id="LRU-缓存"><a href="#LRU-缓存" class="headerlink" title="LRU 缓存"></a>LRU 缓存</h2><p>以下是使用 LinkedHashMap 实现的一个 LRU 缓存：</p>
+<ul>
+<li>设定最大缓存空间 MAX_ENTRIES 为 3；</li>
+<li>使用 LinkedHashMap 的构造函数将<code>accessOrder</code>设置为 true，开启 LRU 顺序；</li>
+<li>覆盖 removeEldestEntry() 方法实现，在节点多于 MAX_ENTRIES 就会将最近最久未使用的数据移除。</li>
+</ul>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LRUCache</span>&lt;<span class="hljs-title">K</span>, <span class="hljs-title">V</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">LinkedHashMap</span>&lt;<span class="hljs-title">K</span>, <span class="hljs-title">V</span>&gt; </span>&#123;
     <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> MAX_ENTRIES = <span class="hljs-number">3</span>;
     <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">removeEldestEntry</span><span class="hljs-params">(Map.Entry eldest)</span> </span>&#123;
@@ -819,6 +833,18 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
         <span class="hljs-keyword">this</span>.eden.put(k, v);
     &#125;
 &#125;</code></pre></div>
+
+<h1 id="TreeMap"><a href="#TreeMap" class="headerlink" title="TreeMap"></a>TreeMap</h1><p>TreeMap集合是基于<strong>红黑树</strong>实现，实现SortedMap接口。该集合最重要的特点就是<strong>可排序</strong>，该映射根据其键的自然顺序进行排序，或者根据创建映射时提供的 Comparator 进行排序，具体取决于使用的构造方法。</p>
+<p>TreeMap继承了Map的性质，同时其树结构又可以进行元素排序，用处很大。</p>
+<h1 id="如何选择合适的Map？"><a href="#如何选择合适的Map？" class="headerlink" title="如何选择合适的Map？"></a>如何选择合适的Map？</h1><ul>
+<li><p>HashMap可实现快速存储和检索，但其缺点是包含的元素是无序的，这会导致它在存在大量迭代的情况下表现不佳。</p>
+</li>
+<li><p>LinkedHashMap保留了HashMap的优势，且其包含的元素是有序的，它在有大量迭代的情况下表现更好；</p>
+</li>
+<li><p>TreeMap能便捷地实现其内部元素的各种排序，但其一般性能比前两种Map要差。</p>
+</li>
+</ul>
+
             </article>
             <hr>
             <div>
@@ -853,7 +879,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
                       <a href="/2020/07/16/UML%E7%B1%BB%E5%9B%BE/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">UML类图</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -862,7 +888,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
                     
                       <a href="/2020/07/10/Spring-Boot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <span class="hidden-mobile">Spring Boot核心知识点</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -895,7 +921,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -922,7 +948,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -931,7 +957,7 @@ mask+<span class="hljs-number">1</span> <span class="hljs-number">100000000</spa
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2.9k 字
+      3.4k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      33
+      42
        分钟
     </span>
   
@@ -354,11 +354,7 @@
 
 
 
-<h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable和comparator的区别"><a href="#comparable和comparator的区别" class="headerlink" title="comparable和comparator的区别"></a>comparable和comparator的区别</h2><ul>
-<li>comparable接口出自java.lang包，它有一个<code>compareTo(Object obj)</code>方法用来排序；</li>
-<li>comparator接口出自java.util包，它有一个<code>compare(Object obj1,Object obj2)</code>方法用来排序</li>
-</ul>
-<p>Comparable是<strong>排序接口</strong>，若一个类实现了Comparable接口，就意味着“该类支持排序”，既然实现Comparable接口的类支持排序，假设现在存在“实现Comparable接口的类的对象的List列表（或数组）”，则 该List列表（或数组）可以通过<code>Collections.sort()</code>或<code>Arrays.sort()</code>进行排序。</p>
+<h1 id="辅助工具类"><a href="#辅助工具类" class="headerlink" title="辅助工具类"></a>辅助工具类</h1><h2 id="comparable"><a href="#comparable" class="headerlink" title="comparable"></a>comparable</h2><p>Comparable是<strong>排序接口</strong>，若一个类实现了Comparable接口，就意味着“该类支持排序”，也就是说实现了Comparable接口的类的对象的列表或数组可以通过<code>Collections.sort()</code>或<code>Arrays.sort()</code>进行排序。</p>
 <p>Comparable接口仅仅只包含一个函数，它的定义如下：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.lang;
 <span class="hljs-keyword">import</span> java.util.*;
@@ -368,8 +364,69 @@
 &#125;</code></pre></div>
 
 <p>假设我们通过x.compareTo(y)来比较x和y的大小，若返回负数，意味着x比y小，返回0，说明相等，返回正数，说明x比y大。</p>
-<p>Comparator是<strong>比较器接口</strong>，我们若需要控制某个类的次序，而该类本身不支持排序（即没有实现Comparable接口），那么，我们可以建立一个该类的比较器来进行排序，这个比较器只需要实现Comparator接口即可。也就是说，我们可以通过实现Comparator类来新建一个比较器，然后通过该比较器对类进行排序。</p>
-<p>Comparator借口哦仅仅包含两个函数，它的定义如下：</p>
+<p>现在我们假设一个Person类，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
+<span class="hljs-class"></span>&#123;
+    String name;
+    <span class="hljs-keyword">int</span> age;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">super</span>();
+        <span class="hljs-keyword">this</span>.name = name;
+        <span class="hljs-keyword">this</span>.age = age;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> name;
+    &#125;　　<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> age;
+    &#125;
+&#125;</code></pre></div>
+
+<p>现在有两个Person类的对象，我们如何来比较二者的大小呢？我们可以通过让Person实现Comparable接口：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparable</span>&lt;<span class="hljs-title">Person</span>&gt;</span>
+<span class="hljs-class"></span>&#123;
+    String name;
+    <span class="hljs-keyword">int</span> age;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">super</span>();
+        <span class="hljs-keyword">this</span>.name = name;
+        <span class="hljs-keyword">this</span>.age = age;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> name;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> age;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compareTo</span><span class="hljs-params">(Person p)</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.age-p.getAge();
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>
+<span class="hljs-function">    </span>&#123;
+        Person[] people=<span class="hljs-keyword">new</span> Person[]&#123;<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xujian"</span>, <span class="hljs-number">20</span>),<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xiewei"</span>, <span class="hljs-number">10</span>)&#125;;
+        System.out.println(<span class="hljs-string">"排序前"</span>);
+        <span class="hljs-keyword">for</span> (Person person : people)
+        &#123;
+            System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
+        &#125;
+        Arrays.sort(people);
+        System.out.println(<span class="hljs-string">"\n排序后"</span>);
+        <span class="hljs-keyword">for</span> (Person person : people)
+        &#123;
+            System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="Comparator"><a href="#Comparator" class="headerlink" title="Comparator"></a>Comparator</h2><p>Comparator是<strong>比较器接口</strong>，我们若需要控制某个类的次序，而<strong>该类本身不支持排序</strong>（即没有实现Comparable接口），那么，我们可以建立一个该类的比较器来进行排序，这个比较器只需要实现Comparator接口即可。也就是说，我们可以通过实现Comparator类来新建一个比较器，然后通过该比较器对类进行排序。</p>
+<p>Comparator接口仅仅包含两个函数，它的定义如下：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> java.util;
 
 <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;
@@ -384,6 +441,62 @@
 <li><p>如果一个类要实现Comparator接口，它一定要实现Compare(T o1,T o2)函数，但可以不实现equals(Object obj)函数。</p>
 </li>
 <li><p>int compare(T o1, T o2) 是“比较o1和o2的大小”。返回“负数”，意味着“o1比o2小”；返回“零”，意味着“o1等于o2”；返回“正数”，意味着“o1大于o2”。</p>
+</li>
+</ul>
+<p>现在假如上面的Person类没有实现Comparable接口，该如何比较大小呢？我们可以新建一个类，让其实现Comparator接口，从而构造一个“比较器”。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PersonCompartor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">Person</span>&gt;</span>
+<span class="hljs-class"></span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(Person o1, Person o2)</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> o1.getAge()-o2.getAge();
+    &#125;
+&#125;</code></pre></div>
+
+<p>现在我们就可以利用这个比较器来对其进行排序：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
+<span class="hljs-class"></span>&#123;
+    String name;
+    <span class="hljs-keyword">int</span> age;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">super</span>();
+        <span class="hljs-keyword">this</span>.name = name;
+        <span class="hljs-keyword">this</span>.age = age;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> name;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
+<span class="hljs-function">    </span>&#123;
+        <span class="hljs-keyword">return</span> age;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>
+<span class="hljs-function">    </span>&#123;
+        Person[] people=<span class="hljs-keyword">new</span> Person[]&#123;<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xujian"</span>, <span class="hljs-number">20</span>),<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xiewei"</span>, <span class="hljs-number">10</span>)&#125;;
+        System.out.println(<span class="hljs-string">"排序前"</span>);
+        <span class="hljs-keyword">for</span> (Person person : people)
+        &#123;
+            System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
+        &#125;
+        Arrays.sort(people,<span class="hljs-keyword">new</span> PersonCompartor());
+        System.out.println(<span class="hljs-string">"\n排序后"</span>);
+        <span class="hljs-keyword">for</span> (Person person : people)
+        &#123;
+            System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="Comparable和Comparator区别比较"><a href="#Comparable和Comparator区别比较" class="headerlink" title="Comparable和Comparator区别比较"></a>Comparable和Comparator区别比较</h3><ul>
+<li><p>Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。</p>
+</li>
+<li><p>而Comparator是比较器接口，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。</p>
+</li>
+<li><p>Comparable相当于“内部比较器”，而Comparator相当于“外部比较器”。</p>
+</li>
+<li><p>两种方法各有优劣， 用Comparable 简单， 只要实现Comparable 接口的对象直接就成为一个可以比较的对象，但是需要修改源代码。 用Comparator 的好处是不需要修改源代码， 而是另外实现一个比较器， 当某个自定义的对象需要作比较的时候，把比较器和对象一起传递过去就可以比大小了， 并且在Comparator 里面用户可以自己实现复杂的可以通用的逻辑，使其可以匹配一些比较简单的对象，那样就可以节省很多重复劳动了。</p>
 </li>
 </ul>
 
@@ -421,7 +534,7 @@
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -430,7 +543,7 @@
                     
                       <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">
                         <span class="hidden-mobile">Java基础</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -463,7 +576,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -490,7 +603,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -499,7 +612,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
