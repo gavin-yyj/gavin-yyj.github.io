@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring Security核心(三)-核心过滤器源码分析 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-09-02 09:38">
+      September 2, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      53
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>前面的部分，我们关注了 Spring Security 是如何完成认证工作的，但是另外一部分核心的内容：过滤器，一直没有提到，我们已经知道 Spring Security 使用了 springSecurityFillterChian 作为了安全过滤的入口，这一节主要分析一下这个过滤器链都包含了哪些关键的过滤器，并且各自的使命是什么。</p>
+<h2 id="4-过滤器详解"><a href="#4-过滤器详解" class="headerlink" title="4 过滤器详解"></a>4 过滤器详解</h2><h3 id="4-1-核心过滤器概述"><a href="#4-1-核心过滤器概述" class="headerlink" title="4.1 核心过滤器概述"></a>4.1 核心过滤器概述</h3><div class="hljs"><pre><code class="hljs angelscript">Creating filter chain: o.s.s.web.util.matcher.<span class="hljs-symbol">AnyRequestMatcher@</span><span class="hljs-number">1</span>, 
+[o.s.s.web.context.<span class="hljs-symbol">SecurityContextPersistenceFilter@</span><span class="hljs-number">8851</span>ce1, 
+o.s.s.web.header.<span class="hljs-symbol">HeaderWriterFilter@</span><span class="hljs-number">6</span>a472566, o.s.s.web.csrf.<span class="hljs-symbol">CsrfFilter@</span><span class="hljs-number">61</span>cd1c71, 
+o.s.s.web.authentication.logout.<span class="hljs-symbol">LogoutFilter@</span><span class="hljs-number">5e1</span>d03d7, 
+o.s.s.web.authentication.<span class="hljs-symbol">UsernamePasswordAuthenticationFilter@</span><span class="hljs-number">122</span>d6c22, 
+o.s.s.web.savedrequest.<span class="hljs-symbol">RequestCacheAwareFilter@</span><span class="hljs-number">5</span>ef6fd7f, 
+o.s.s.web.servletapi.<span class="hljs-symbol">SecurityContextHolderAwareRequestFilter@</span><span class="hljs-number">4</span>beaf6bd, 
+o.s.s.web.authentication.<span class="hljs-symbol">AnonymousAuthenticationFilter@</span><span class="hljs-number">6</span>edcad64, 
+o.s.s.web.session.<span class="hljs-symbol">SessionManagementFilter@</span><span class="hljs-number">5e65</span>afb6, 
+o.s.s.web.access.<span class="hljs-symbol">ExceptionTranslationFilter@</span><span class="hljs-number">5</span>b9396d3, 
+o.s.s.web.access.<span class="hljs-built_in">int</span>ercept.<span class="hljs-symbol">FilterSecurityInterceptor@</span><span class="hljs-number">3</span>c5dbdf8
+]</code></pre></div>
+
+<p>上述的 log 信息是我从 springboot 启动的日志中 CV 所得，spring security 的过滤器日志有一个特点：log 打印顺序与实际配置顺序符合，也就意味着 <code>SecurityContextPersistenceFilter</code> 是整个过滤器链的第一个过滤器，而 <code>FilterSecurityInterceptor</code> 则是末置的过滤器。另外通过观察过滤器的名称，和所在的包名，可以大致地分析出他们各自的作用，如 <code>UsernamePasswordAuthenticationFilter</code> 明显便是与使用用户名和密码登录相关的过滤器，而 <code>FilterSecurityInterceptor</code> 我们似乎看不出它的作用，但是其位于 <code>web.access</code> 包下，大致可以分析出他与访问限制相关。第四篇文章主要就是介绍这些常用的过滤器，对其中关键的过滤器进行一些源码分析。先大致介绍下每个过滤器的作用：</p>
+<ul>
+<li><strong>SecurityContextPersistenceFilter</strong> 两个主要职责：请求来临时，创建 <code>SecurityContext</code> 安全上下文信息，请求结束时清空 <code>SecurityContextHolder</code>。</li>
+<li>HeaderWriterFilter (文档中并未介绍，非核心过滤器) 用来给 http 响应添加一些 Header, 比如 X-Frame-Options, X-XSS-Protection*，X-Content-Type-Options.</li>
+<li>CsrfFilter 在 spring4 这个版本中被默认开启的一个过滤器，用于防止 csrf 攻击，了解前后端分离的人一定不会对这个攻击方式感到陌生，前后端使用 json 交互需要注意的一个问题。</li>
+<li>LogoutFilter 顾名思义，处理注销的过滤器</li>
+<li><strong>UsernamePasswordAuthenticationFilter</strong> 这个会重点分析，表单提交了 username 和 password，被封装成 token 进行一系列的认证，便是主要通过这个过滤器完成的，在表单认证的方法中，这是最最关键的过滤器。</li>
+<li>RequestCacheAwareFilter (文档中并未介绍，非核心过滤器) 内部维护了一个 RequestCache，用于缓存 request 请求</li>
+<li>SecurityContextHolderAwareRequestFilter 此过滤器对 ServletRequest 进行了一次包装，使得 request 具有更加丰富的 API</li>
+<li><strong>AnonymousAuthenticationFilter</strong> 匿名身份过滤器，这个过滤器个人认为很重要，需要将它与 UsernamePasswordAuthenticationFilter 放在一起比较理解，spring security 为了兼容未登录的访问，也走了一套认证流程，只不过是一个匿名的身份。</li>
+<li>SessionManagementFilter 和 session 相关的过滤器，内部维护了一个 SessionAuthenticationStrategy，两者组合使用，常用来防止 <code>session-fixation protection attack</code>，以及限制同一用户开启多个会话的数量</li>
+<li><strong>ExceptionTranslationFilter</strong> 直译成异常翻译过滤器，还是比较形象的，这个过滤器本身不处理异常，而是将认证过程中出现的异常交给内部维护的一些类去处理，具体是那些类下面详细介绍</li>
+<li><strong>FilterSecurityInterceptor</strong> 这个过滤器决定了访问特定路径应该具备的权限，访问的用户的角色，权限是什么？访问的路径需要什么样的角色和权限？这些判断和处理都是由该类进行的。</li>
+</ul>
+<p>其中加粗的过滤器可以被认为是 Spring Security 的核心过滤器，将在下面，一个过滤器对应一个小节来讲解。</p>
+<h3 id="4-2-SecurityContextPersistenceFilter"><a href="#4-2-SecurityContextPersistenceFilter" class="headerlink" title="4.2 SecurityContextPersistenceFilter"></a>4.2 SecurityContextPersistenceFilter</h3><p>试想一下，如果我们不使用 Spring Security，如果保存用户信息呢，大多数情况下会考虑使用 Session 对吧？在 Spring Security 中也是如此，用户在登录过一次之后，后续的访问便是通过 sessionId 来识别，从而认为用户已经被认证。具体在何处存放用户信息，便是第一篇文章中提到的 <strong>SecurityContextHolder</strong>；认证相关的信息是如何被存放到其中的，便是通过 SecurityContextPersistenceFilter。在 4.1 概述中也提到了，SecurityContextPersistenceFilter 的两个主要作用便是请求来临时，创建 <code>SecurityContext</code> 安全上下文信息和请求结束时清空 <code>SecurityContextHolder</code>。顺带提一下：微服务的一个设计理念需要实现服务通信的无状态，而 http 协议中的无状态意味着不允许存在 session，这可以通过 <code>setAllowSessionCreation(false)</code> 实现，这并不意味着 SecurityContextPersistenceFilter 变得无用，因为它还需要负责清除用户信息。在 Spring Security 中，虽然安全上下文信息被存储于 Session 中，但我们在实际使用中不应该直接操作 Session，而应当使用 SecurityContextHolder。</p>
+<h4 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h4><div class="hljs"><pre><code class="hljs java">org.springframework.security.web.context.SecurityContextPersistenceFilter
+    
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecurityContextPersistenceFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+
+   <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String FILTER_APPLIED = <span class="hljs-string">"__spring_security_scpf_applied"</span>;
+   <span class="hljs-comment">// 安全上下文存储的仓库</span>
+   <span class="hljs-keyword">private</span> SecurityContextRepository repo;
+  
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SecurityContextPersistenceFilter</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-comment">//HttpSessionSecurityContextRepository 是 SecurityContextRepository 接口的一个实现类</span>
+      <span class="hljs-comment">// 使用 HttpSession 来存储 SecurityContext</span>
+      <span class="hljs-keyword">this</span>(<span class="hljs-keyword">new</span> HttpSessionSecurityContextRepository());
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest req, ServletResponse res, FilterChain chain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+      HttpServletRequest request = (HttpServletRequest) req;
+      HttpServletResponse response = (HttpServletResponse) res;
+
+      <span class="hljs-keyword">if</span> (request.getAttribute(FILTER_APPLIED) != <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-comment">// ensure that filter is only applied once per request</span>
+         chain.doFilter(request, response);
+         <span class="hljs-keyword">return</span>;
+      &#125;
+      request.setAttribute(FILTER_APPLIED, Boolean.TRUE);
+      <span class="hljs-comment">// 包装 request，response</span>
+      HttpRequestResponseHolder holder = <span class="hljs-keyword">new</span> HttpRequestResponseHolder(request,
+            response);
+      <span class="hljs-comment">// 从 Session 中获取安全上下文信息</span>
+      SecurityContext contextBeforeChainExecution = repo.loadContext(holder);
+      <span class="hljs-keyword">try</span> &#123;
+         <span class="hljs-comment">// 请求开始时，设置安全上下文信息，这样就避免了用户直接从 Session 中获取安全上下文信息</span>
+         SecurityContextHolder.setContext(contextBeforeChainExecution);
+         chain.doFilter(holder.getRequest(), holder.getResponse());
+      &#125;
+      <span class="hljs-keyword">finally</span> &#123;
+         <span class="hljs-comment">// 请求结束后，清空安全上下文信息</span>
+         SecurityContext contextAfterChainExecution = SecurityContextHolder
+               .getContext();
+         SecurityContextHolder.clearContext();
+         repo.saveContext(contextAfterChainExecution, holder.getRequest(),
+               holder.getResponse());
+         request.removeAttribute(FILTER_APPLIED);
+         <span class="hljs-keyword">if</span> (debug) &#123;
+            logger.debug(<span class="hljs-string">"SecurityContextHolder now cleared, as request processing completed"</span>);
+         &#125;
+      &#125;
+   &#125;
+
+&#125;</code></pre></div>
+
+<p>过滤器一般负责核心的处理流程，而具体的业务实现，通常交给其中聚合的其他实体类，这在 Filter 的设计中很常见，同时也符合职责分离模式。例如存储安全上下文和读取安全上下文的工作完全委托给了 HttpSessionSecurityContextRepository 去处理，而这个类中也有几个方法可以稍微解读下，方便我们理解内部的工作流程.</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.web.context.HttpSessionSecurityContextRepository
+    
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpSessionSecurityContextRepository</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">SecurityContextRepository</span> </span>&#123;
+   <span class="hljs-comment">// 'SPRING_SECURITY_CONTEXT' 是安全上下文默认存储在 Session 中的键值</span>
+   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String SPRING_SECURITY_CONTEXT_KEY = <span class="hljs-string">"SPRING_SECURITY_CONTEXT"</span>;
+   ...
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Object contextObject = SecurityContextHolder.createEmptyContext();
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> allowSessionCreation = <span class="hljs-keyword">true</span>;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> disableUrlRewriting = <span class="hljs-keyword">false</span>;
+   <span class="hljs-keyword">private</span> String springSecurityContextKey = SPRING_SECURITY_CONTEXT_KEY;
+
+   <span class="hljs-keyword">private</span> AuthenticationTrustResolver trustResolver = <span class="hljs-keyword">new</span> AuthenticationTrustResolverImpl();
+
+   <span class="hljs-comment">// 从当前 request 中取出安全上下文，如果 session 为空，则会返回一个新的安全上下文</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> SecurityContext <span class="hljs-title">loadContext</span><span class="hljs-params">(HttpRequestResponseHolder requestResponseHolder)</span> </span>&#123;
+      HttpServletRequest request = requestResponseHolder.getRequest();
+      HttpServletResponse response = requestResponseHolder.getResponse();
+      HttpSession httpSession = request.getSession(<span class="hljs-keyword">false</span>);
+      SecurityContext context = readSecurityContextFromSession(httpSession);
+      <span class="hljs-keyword">if</span> (context == <span class="hljs-keyword">null</span>) &#123;
+         context = generateNewContext();
+      &#125;
+      ...
+      <span class="hljs-keyword">return</span> context;
+   &#125;
+
+   ...
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">containsContext</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+      HttpSession session = request.getSession(<span class="hljs-keyword">false</span>);
+      <span class="hljs-keyword">if</span> (session == <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+      &#125;
+      <span class="hljs-keyword">return</span> session.getAttribute(springSecurityContextKey) != <span class="hljs-keyword">null</span>;
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">private</span> SecurityContext <span class="hljs-title">readSecurityContextFromSession</span><span class="hljs-params">(HttpSession httpSession)</span> </span>&#123;
+      <span class="hljs-keyword">if</span> (httpSession == <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+      &#125;
+      ...
+      <span class="hljs-comment">// Session 存在的情况下，尝试获取其中的 SecurityContext</span>
+      Object contextFromSession = httpSession.getAttribute(springSecurityContextKey);
+      <span class="hljs-keyword">if</span> (contextFromSession == <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+      &#125;
+      ...
+      <span class="hljs-keyword">return</span> (SecurityContext) contextFromSession;
+   &#125;
+
+   <span class="hljs-comment">// 初次请求时创建一个新的 SecurityContext 实例</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> SecurityContext <span class="hljs-title">generateNewContext</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> SecurityContextHolder.createEmptyContext();
+   &#125;
+
+&#125;</code></pre></div>
+
+<p>SecurityContextPersistenceFilter 和 HttpSessionSecurityContextRepository 配合使用，构成了 Spring Security 整个调用链路的入口，为什么将它放在最开始的地方也是显而易见的，后续的过滤器中大概率会依赖 Session 信息和安全上下文信息。</p>
+<h3 id="4-3-UsernamePasswordAuthenticationFilter"><a href="#4-3-UsernamePasswordAuthenticationFilter" class="headerlink" title="4.3 UsernamePasswordAuthenticationFilter"></a>4.3 UsernamePasswordAuthenticationFilter</h3><p>表单认证是最常用的一个认证方式，一个最直观的业务场景便是允许用户在表单中输入用户名和密码进行登录，而这背后的 UsernamePasswordAuthenticationFilter，在整个 Spring Security 的认证体系中则扮演着至关重要的角色。</p>
+<p><img src="https://kirito.iocoder.cn/2011121410543010.jpg" srcset="/img/loading.gif" alt="https://kirito.iocoder.cn/2011121410543010.jpg"></p>
+<p>上述的时序图，可以看出 UsernamePasswordAuthenticationFilter 主要肩负起了调用身份认证器，校验身份的作用，至于认证的细节，在前面几章花了很大篇幅进行了介绍，到这里，其实 Spring Security 的基本流程就已经走通了。</p>
+<h4 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h4><div class="hljs"><pre><code class="hljs java">org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter#attemptAuthentication
+    
+<span class="hljs-function"><span class="hljs-keyword">public</span> Authentication <span class="hljs-title">attemptAuthentication</span><span class="hljs-params">(HttpServletRequest request,</span></span>
+<span class="hljs-function"><span class="hljs-params">      HttpServletResponse response)</span> <span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+   <span class="hljs-comment">// 获取表单中的用户名和密码</span>
+   String username = obtainUsername(request);
+   String password = obtainPassword(request);
+   ...
+   username = username.trim();
+   <span class="hljs-comment">// 组装成 username+password 形式的 token</span>
+   UsernamePasswordAuthenticationToken authRequest = <span class="hljs-keyword">new</span> UsernamePasswordAuthenticationToken(
+         username, password);
+   <span class="hljs-comment">// 对请求参数做提取，来设置details,至于details的值，则是通过authenticationDetailsSource来构建的</span>
+   setDetails(request, authRequest);
+   <span class="hljs-comment">// 交给内部的 AuthenticationManager 去认证，并返回认证信息</span>
+   <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.getAuthenticationManager().authenticate(authRequest);
+&#125;</code></pre></div>
+
+<p><code>UsernamePasswordAuthenticationFilter</code> 本身的代码只包含了上述这么一个方法，非常简略，而在其父类 <code>AbstractAuthenticationProcessingFilter</code> 中包含了大量的细节，值得我们分析：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractAuthenticationProcessingFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span></span>
+<span class="hljs-class">      <span class="hljs-keyword">implements</span> <span class="hljs-title">ApplicationEventPublisherAware</span>, <span class="hljs-title">MessageSourceAware</span> </span>&#123;
+	<span class="hljs-comment">// 包含了一个身份认证器</span>
+	<span class="hljs-keyword">private</span> AuthenticationManager authenticationManager;
+	<span class="hljs-comment">// 用于实现 remeberMe</span>
+	<span class="hljs-keyword">private</span> RememberMeServices rememberMeServices = <span class="hljs-keyword">new</span> NullRememberMeServices();
+	<span class="hljs-keyword">private</span> RequestMatcher requiresAuthenticationRequestMatcher;
+	<span class="hljs-comment">// 这两个 Handler 很关键，分别代表了认证成功和失败相应的处理器</span>
+	<span class="hljs-keyword">private</span> AuthenticationSuccessHandler successHandler = <span class="hljs-keyword">new</span> SavedRequestAwareAuthenticationSuccessHandler();
+	<span class="hljs-keyword">private</span> AuthenticationFailureHandler failureHandler = <span class="hljs-keyword">new</span> SimpleUrlAuthenticationFailureHandler();
+	
+	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest req, ServletResponse res, FilterChain chain)</span></span>
+<span class="hljs-function">			<span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;
+		...
+		Authentication authResult;
+		<span class="hljs-keyword">try</span> &#123;
+			<span class="hljs-comment">// 此处实际上就是调用 UsernamePasswordAuthenticationFilter 的 attemptAuthentication 方法</span>
+			authResult = attemptAuthentication(request, response);
+			<span class="hljs-keyword">if</span> (authResult == <span class="hljs-keyword">null</span>) &#123;
+				<span class="hljs-comment">// 子类未完成认证，立刻返回</span>
+				<span class="hljs-keyword">return</span>;
+			&#125;
+			sessionStrategy.onAuthentication(authResult, request, response);
+		&#125;
+		<span class="hljs-comment">// 在认证过程中可以直接抛出异常，在过滤器中，就像此处一样，进行捕获</span>
+		<span class="hljs-keyword">catch</span> (InternalAuthenticationServiceException failed) &#123;
+			<span class="hljs-comment">// 内部服务异常</span>
+			unsuccessfulAuthentication(request, response, failed);
+			<span class="hljs-keyword">return</span>;
+		&#125;
+		<span class="hljs-keyword">catch</span> (AuthenticationException failed) &#123;
+			<span class="hljs-comment">// 认证失败</span>
+			unsuccessfulAuthentication(request, response, failed);
+			<span class="hljs-keyword">return</span>;
+		&#125;
+		<span class="hljs-comment">// 认证成功</span>
+		<span class="hljs-keyword">if</span> (continueChainBeforeSuccessfulAuthentication) &#123;
+			chain.doFilter(request, response);
+		&#125;
+		<span class="hljs-comment">// 注意，认证成功后过滤器把 authResult 结果也传递给了成功处理器</span>
+		successfulAuthentication(request, response, chain, authResult);
+	&#125;
+	
+&#125;</code></pre></div>
+
+<p>整个流程理解起来也并不难，主要就是内部调用了 authenticationManager 完成认证，根据认证结果执行 successfulAuthentication 或者 unsuccessfulAuthentication，无论成功失败，一般的实现都是转发或者重定向等处理，不再细究 AuthenticationSuccessHandler 和 AuthenticationFailureHandler，有兴趣的朋友，可以去看看两者的实现类。</p>
+<h3 id="4-4-AnonymousAuthenticationFilter"><a href="#4-4-AnonymousAuthenticationFilter" class="headerlink" title="4.4 AnonymousAuthenticationFilter"></a>4.4 AnonymousAuthenticationFilter</h3><p>匿名认证过滤器，可能有人会想：匿名了还有身份？我自己对于 Anonymous 匿名身份的理解是 Spirng Security 为了整体逻辑的统一性，即使是未通过认证的用户，也给予了一个匿名身份。而 <code>AnonymousAuthenticationFilter</code> 该过滤器的位置也是非常的科学的，它位于常用的身份认证过滤器（如 <code>UsernamePasswordAuthenticationFilter</code>、<code>BasicAuthenticationFilter</code>、<code>RememberMeAuthenticationFilter</code>）之后，意味着只有在上述身份过滤器执行完毕后，SecurityContext 依旧没有用户信息，<code>AnonymousAuthenticationFilter</code> 该过滤器才会有意义 —- 基于用户一个匿名身份。</p>
+<h4 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h4><div class="hljs"><pre><code class="hljs java">org.springframework.security.web.authentication.AnonymousAuthenticationFilter
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AnonymousAuthenticationFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> <span class="hljs-keyword">implements</span></span>
+<span class="hljs-class">      <span class="hljs-title">InitializingBean</span> </span>&#123;
+
+   <span class="hljs-keyword">private</span> AuthenticationDetailsSource&lt;HttpServletRequest, ?&gt; authenticationDetailsSource = <span class="hljs-keyword">new</span> WebAuthenticationDetailsSource();
+   <span class="hljs-keyword">private</span> String key;
+   <span class="hljs-keyword">private</span> Object principal;
+   <span class="hljs-keyword">private</span> List&lt;GrantedAuthority&gt; authorities;
+
+
+   <span class="hljs-comment">// 自动创建一个 "anonymousUser" 的匿名用户, 其具有 ANONYMOUS 角色</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">AnonymousAuthenticationFilter</span><span class="hljs-params">(String key)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>(key, <span class="hljs-string">"anonymousUser"</span>, AuthorityUtils.createAuthorityList(<span class="hljs-string">"ROLE_ANONYMOUS"</span>));
+   &#125;
+
+   <span class="hljs-comment">/**</span>
+<span class="hljs-comment">    *</span>
+<span class="hljs-comment">    * <span class="hljs-doctag">@param</span> key key 用来识别该过滤器创建的身份</span>
+<span class="hljs-comment">    * <span class="hljs-doctag">@param</span> principal principal 代表匿名用户的身份</span>
+<span class="hljs-comment">    * <span class="hljs-doctag">@param</span> authorities authorities 代表匿名用户的权限集合</span>
+<span class="hljs-comment">    */</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">AnonymousAuthenticationFilter</span><span class="hljs-params">(String key, Object principal,</span></span>
+<span class="hljs-function"><span class="hljs-params">         List&lt;GrantedAuthority&gt; authorities)</span> </span>&#123;
+      Assert.hasLength(key, <span class="hljs-string">"key cannot be null or empty"</span>);
+      Assert.notNull(principal, <span class="hljs-string">"Anonymous authentication principal must be set"</span>);
+      Assert.notNull(authorities, <span class="hljs-string">"Anonymous authorities must be set"</span>);
+      <span class="hljs-keyword">this</span>.key = key;
+      <span class="hljs-keyword">this</span>.principal = principal;
+      <span class="hljs-keyword">this</span>.authorities = authorities;
+   &#125;
+
+   ...
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest req, ServletResponse res, FilterChain chain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+      <span class="hljs-comment">// 过滤器链都执行到匿名认证过滤器这儿了还没有身份信息，塞一个匿名身份进去</span>
+      <span class="hljs-keyword">if</span> (SecurityContextHolder.getContext().getAuthentication()== <span class="hljs-keyword">null</span>) &#123;
+         SecurityContextHolder.getContext().setAuthentication(
+               createAuthentication((HttpServletRequest) req));
+      &#125;
+      chain.doFilter(req, res);
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> Authentication <span class="hljs-title">createAuthentication</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+     <span class="hljs-comment">// 创建一个 AnonymousAuthenticationToken</span>
+      AnonymousAuthenticationToken auth = <span class="hljs-keyword">new</span> AnonymousAuthenticationToken(key,
+            principal, authorities);
+      auth.setDetails(authenticationDetailsSource.buildDetails(request));
+
+      <span class="hljs-keyword">return</span> auth;
+   &#125;
+   ...
+&#125;</code></pre></div>
+
+<p>其实对比 AnonymousAuthenticationFilter 和 UsernamePasswordAuthenticationFilter 就可以发现一些门道了，UsernamePasswordAuthenticationToken 对应 AnonymousAuthenticationToken，他们都是 Authentication 的实现类，而 Authentication 则是被 SecurityContextHolder(SecurityContext) 持有的，一切都被串联在了一起。</p>
+<h3 id="4-5-ExceptionTranslationFilter"><a href="#4-5-ExceptionTranslationFilter" class="headerlink" title="4.5 ExceptionTranslationFilter"></a>4.5 ExceptionTranslationFilter</h3><p>ExceptionTranslationFilter 异常转换过滤器位于整个 springSecurityFilterChain 的后方，用来转换整个链路中出现的异常，将其转化，顾名思义，转化意味本身并不处理。一般其只处理两大类异常：<strong>AccessDeniedException</strong> 访问异常和 <strong>AuthenticationException</strong> 认证异常。</p>
+<p>这个过滤器非常重要，因为它将 Java 中的异常和 HTTP 的响应连接在了一起，这样在处理异常时，我们不用考虑密码错误该跳到什么页面，账号锁定该如何，只需要关注自己的业务逻辑，抛出相应的异常便可。如果该过滤器检测到 AuthenticationException，则将会交给内部的 AuthenticationEntryPoint 去处理，如果检测到 AccessDeniedException，需要先判断当前用户是不是匿名用户，如果是匿名访问，则和前面一样运行 AuthenticationEntryPoint，否则会委托给 AccessDeniedHandler 去处理，而 AccessDeniedHandler 的默认实现，是 AccessDeniedHandlerImpl。所以 ExceptionTranslationFilter 内部的 AuthenticationEntryPoint 是至关重要的，顾名思义：认证的入口点。</p>
+<h4 id="源码分析-3"><a href="#源码分析-3" class="headerlink" title="源码分析"></a>源码分析</h4><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExceptionTranslationFilter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+  <span class="hljs-comment">// 处理异常转换的核心方法</span>
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleSpringSecurityException</span><span class="hljs-params">(HttpServletRequest request,</span></span>
+<span class="hljs-function"><span class="hljs-params">        HttpServletResponse response, FilterChain chain, RuntimeException exception)</span></span>
+<span class="hljs-function">        <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+     <span class="hljs-keyword">if</span> (exception <span class="hljs-keyword">instanceof</span> AuthenticationException) &#123;
+       	<span class="hljs-comment">// 重定向到登录端点</span>
+        sendStartAuthentication(request, response, chain,
+              (AuthenticationException) exception);
+     &#125;
+     <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (exception <span class="hljs-keyword">instanceof</span> AccessDeniedException) &#123;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        <span class="hljs-keyword">if</span> (authenticationTrustResolver.isAnonymous(authentication) || authenticationTrustResolver.isRememberMe(authentication)) &#123;
+		  <span class="hljs-comment">// 重定向到登录端点</span>
+           sendStartAuthentication(
+                 request,
+                 response,
+                 chain,
+                 <span class="hljs-keyword">new</span> InsufficientAuthenticationException(
+                       <span class="hljs-string">"Full authentication is required to access this resource"</span>));
+        &#125;
+        <span class="hljs-keyword">else</span> &#123;
+           <span class="hljs-comment">// 交给 accessDeniedHandler 处理</span>
+           accessDeniedHandler.handle(request, response,
+                 (AccessDeniedException) exception);
+        &#125;
+     &#125;
+  &#125;
+&#125;</code></pre></div>
+
+<p>剩下的便是要搞懂 AuthenticationEntryPoint 和 AccessDeniedHandler 就可以了。</p>
+<p><img src="https://kirito.iocoder.cn/QQ%E5%9B%BE%E7%89%8720170929231608.png" srcset="/img/loading.gif" alt="AuthenticationEntryPoint"></p>
+<p>选择了几个常用的登录端点，以其中第一个为例来介绍，看名字就能猜到是认证失败之后，让用户跳转到登录页面。还记得我们一开始怎么配置表单登录页面的吗？</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-meta">@EnableWebSecurity</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSecurityConfig</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WebSecurityConfigurerAdapter</span> </span>&#123;
+
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        http
+            .authorizeRequests()
+                .antMatchers(<span class="hljs-string">"/"</span>, <span class="hljs-string">"/home"</span>).permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()<span class="hljs-comment">//FormLoginConfigurer</span>
+                .loginPage(<span class="hljs-string">"/login"</span>)
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+    &#125;
+&#125;</code></pre></div>
+
+<p>我们顺着 formLogin 返回的 FormLoginConfigurer 往下找，看看能发现什么，最终在 FormLoginConfigurer 的父类 AbstractAuthenticationFilterConfigurer 中有了不小的收获：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractAuthenticationFilterConfigurer</span> <span class="hljs-keyword">extends</span> ...</span>&#123;
+   ...
+   <span class="hljs-comment">//formLogin 不出所料配置了 AuthenticationEntryPoint</span>
+   <span class="hljs-keyword">private</span> LoginUrlAuthenticationEntryPoint authenticationEntryPoint;
+   <span class="hljs-comment">// 认证失败的处理器</span>
+   <span class="hljs-keyword">private</span> AuthenticationFailureHandler failureHandler;
+   ...
+&#125;</code></pre></div>
+
+<p>具体如何配置的就不看了，我们得出了结论，formLogin() 配置了之后最起码做了两件事，其一，为 UsernamePasswordAuthenticationFilter 设置了相关的配置，其二配置了 AuthenticationEntryPoint。</p>
+<p>登录端点还有 Http401AuthenticationEntryPoint，Http403ForbiddenEntryPoint 这些都是很简单的实现，有时候我们访问受限页面，又没有配置登录，就看到了一个空荡荡的默认错误页面，上面显示着 401,403，就是这两个入口起了作用。</p>
+<p>还剩下一个 AccessDeniedHandler 访问决策器未被讲解，简单提一下：AccessDeniedHandlerImpl 这个默认实现类会根据 errorPage 和状态码来判断，最终决定跳转的页面</p>
+<div class="hljs"><pre><code class="hljs java">org.springframework.security.web.access.AccessDeniedHandlerImpl#handle
+    
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handle</span><span class="hljs-params">(HttpServletRequest request, HttpServletResponse response,</span></span>
+<span class="hljs-function"><span class="hljs-params">      AccessDeniedException accessDeniedException)</span> <span class="hljs-keyword">throws</span> IOException,</span>
+<span class="hljs-function">      ServletException </span>&#123;
+   <span class="hljs-keyword">if</span> (!response.isCommitted()) &#123;
+      <span class="hljs-keyword">if</span> (errorPage != <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-comment">// Put exception into request scope (perhaps of use to a view)</span>
+         request.setAttribute(WebAttributes.ACCESS_DENIED_403,
+               accessDeniedException);
+         <span class="hljs-comment">// Set the 403 status code.</span>
+         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+         <span class="hljs-comment">// forward to error page.</span>
+         RequestDispatcher dispatcher = request.getRequestDispatcher(errorPage);
+         dispatcher.forward(request, response);
+      &#125;
+      <span class="hljs-keyword">else</span> &#123;
+         response.sendError(HttpServletResponse.SC_FORBIDDEN,
+               accessDeniedException.getMessage());
+      &#125;
+   &#125;
+&#125;</code></pre></div>
+
+<h3 id="4-6-FilterSecurityInterceptor"><a href="#4-6-FilterSecurityInterceptor" class="headerlink" title="4.6 FilterSecurityInterceptor"></a>4.6 FilterSecurityInterceptor</h3><p>想想整个认证安全控制流程还缺了什么？我们已经有了认证，有了请求的封装，有了 Session 的关联… 还缺一个：由什么控制哪些资源是受限的，这些受限的资源需要什么权限，需要什么角色… 这一切和访问控制相关的操作，都是由 FilterSecurityInterceptor 完成的。</p>
+<p>FilterSecurityInterceptor 的工作流程用笔者的理解可以理解如下：FilterSecurityInterceptor 从 SecurityContextHolder 中获取 Authentication 对象，然后比对用户拥有的权限和资源所需的权限。前者可以通过 Authentication 对象直接获得，而后者则需要引入我们之前一直未提到过的两个类：<strong>SecurityMetadataSource</strong>，<strong>AccessDecisionManager</strong>。理解清楚决策管理器的整个创建流程和 SecurityMetadataSource 的作用需要花很大一笔功夫，这里，暂时只介绍其大概的作用。</p>
+<p>在 JavaConfig 的配置中，我们通常如下配置路径的访问控制：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">configure</span><span class="hljs-params">(HttpSecurity http)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+	http
+		.authorizeRequests()
+			.antMatchers(<span class="hljs-string">"/resources/**"</span>, <span class="hljs-string">"/signup"</span>, <span class="hljs-string">"/about"</span>).permitAll()
+             .antMatchers(<span class="hljs-string">"/admin/**"</span>).hasRole(<span class="hljs-string">"ADMIN"</span>)
+             .antMatchers(<span class="hljs-string">"/db/**"</span>).access(<span class="hljs-string">"hasRole('ADMIN') and hasRole('DBA')"</span>)
+             .anyRequest().authenticated()
+			.withObjectPostProcessor(<span class="hljs-keyword">new</span> ObjectPostProcessor&lt;FilterSecurityInterceptor&gt;() &#123;
+				<span class="hljs-keyword">public</span> &lt;O extends FilterSecurityInterceptor&gt; <span class="hljs-function">O <span class="hljs-title">postProcess</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">						O fsi)</span> </span>&#123;
+					fsi.setPublishAuthorizationSuccess(<span class="hljs-keyword">true</span>);
+					<span class="hljs-keyword">return</span> fsi;
+				&#125;
+			&#125;);
+&#125;</code></pre></div>
+
+<p>在 ObjectPostProcessor 的泛型中看到了 FilterSecurityInterceptor，以笔者的经验，目前并没有太多机会需要修改 FilterSecurityInterceptor 的配置。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本篇文章在介绍过滤器时，顺便进行了一些源码的分析，目的是方便理解整个 Spring Security 的工作流。伴随着整个过滤器链的介绍，安全框架的轮廓应该已经浮出水面了，下面的章节，主要打算通过自定义一些需求，再次分析其他组件的源码，学习应该如何改造 Spring Security，为我们所用。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E4%B8%89-%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E8%A7%A3%E8%AF%BB/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring Security核心(二)-核心配置解读</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E4%B8%80-%E6%A6%82%E8%BF%B0/">
+                        <span class="hidden-mobile">Spring Security核心(一)-概述</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring Security核心(三)-核心过滤器源码分析&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

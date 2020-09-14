@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      1.8k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      19
+      18
        分钟
     </span>
   
@@ -215,14 +215,14 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><blockquote>
-<p>咳咳，这一节内容应该早就放上博客的，一直忘记了，在写上一篇<a href="https://www.jitwxs.cn/dc21b1d2.html" target="_blank" rel="noopener">《详解布隆过滤器》</a>时，谈到缓存问题，一看博客中竟然没有写过相关的，实在是不该，特此补上。</p>
-</blockquote>
-<p>Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括<strong>缓存穿透、缓存雪崩、缓存击穿、缓存预热</strong>等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基本就是废话了，谨慎阅读哦。</p>
+              <h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括<strong>缓存穿透、缓存雪崩、缓存击穿、缓存预热</strong>等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基本就是废话了，谨慎阅读哦。</p>
 <h2 id="二、缓存穿透"><a href="#二、缓存穿透" class="headerlink" title="二、缓存穿透"></a>二、缓存穿透</h2><p><strong>问题描述：</strong></p>
 <p><code>缓存穿透</code>是指<strong>查询一个一定不存在的数据</strong>，这样就导致用户查询的时候，在缓存中找不到，每次都要去数据库再查询一遍，然后返回空（相当于进行了两次无用的查询）。这样请求就绕过缓存直接查数据库，这也是经常提的缓存命中率问题。</p>
 <p><strong>解决方案：</strong></p>
-<p>有很多种方法可以有效地解决缓存穿透问题，最常见的则是采用<code>布隆过滤器</code>，将所有可能存在的数据哈希到一个足够大的 bitmap 中，一个一定不存在的数据会被 这个 bitmap 拦截掉，从而避免了对底层存储系统的查询压力。</p>
+<p>有很多种方法可以有效地解决缓存穿透问题，最常见的则是采用<code>布隆过滤器</code>，将所有可能存在的数据哈希到一个足够大的 bitmap 中，一个一定不存在的数据会被这个 bitmap 拦截掉，从而避免了对底层存储系统的查询压力。</p>
+<blockquote>
+<p>布隆过滤器：一种比较巧妙的概率型数据结构，特点是高效的插入和查询，可以用来告诉你“某样东西一定不存在或者可能存在”。</p>
+</blockquote>
 <p>另外也有一个更为简单粗暴的方法，如果一个查询返回的数据为空（不管是数据不存在，还是系统故障），我们仍然把这个空结果进行缓存，但它的过期时间会很短，最长不超过五分钟。通过这个直接设置的默认值存放到缓存，这样第二次到缓冲中获取就有值了，而不会继续访问数据库。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200606160601704.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h2 id="三、缓存雪崩"><a href="#三、缓存雪崩" class="headerlink" title="三、缓存雪崩"></a>三、缓存雪崩</h2><p><strong>问题描述：</strong></p>
@@ -238,7 +238,7 @@
 <p>对于一些设置了过期时间的 key，如果这些 key 可能会在某些时间点被超高并发地访问，是一种非常“热点”的数据。这个时候，需要考虑一个问题：缓存被“击穿”的问题，这个<strong>和缓存雪崩的区别在于这里针对某一 key 缓存，而缓存雪崩则是很多 key</strong>。</p>
 <p>缓存在某个时间点过期的时候，恰好在这个时间点对这个 key 有大量的并发请求过来，这些请求发现缓存过期一般都会从后端DB加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端 DB 压垮。</p>
 <p><strong>解决方案：</strong></p>
-<p>业界比较常用的做法，是使用<strong>互斥锁(mutex)</strong>。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去 load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如 Redis 的 <code>SETNX</code> 或者 Memcached 的 ADD）去 set 一个 mutex key，当操作返回成功时，再进行 load db 的操作并回设缓存；否则，就重试这个 get 缓存的方法。</p>
+<p>业界比较常用的做法，是使用<strong>互斥锁(mutex)</strong>。简单地来说，就是在缓存失效的时候（判断拿出来的值为空），不是立即去 load db，而是先使用缓存工具的某些带成功操作返回值的操作（比如 Redis 的 <code>SETNX</code> 或者 Memcached 的 ADD）去 set 一个 mutex key，当操作返回成功时，再进行 load db 的操作并回设缓存；否则就重试这个 get 缓存的方法。</p>
 <h2 id="五、缓存预热"><a href="#五、缓存预热" class="headerlink" title="五、缓存预热"></a>五、缓存预热</h2><p><strong>问题描述：</strong></p>
 <p>缓存预热就是系统上线后，将相关的缓存数据直接加载到缓存系统。这样就可以避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题！用户直接查询事先被预热的缓存数据！</p>
 <p><strong>解决方案：</strong></p>
@@ -250,7 +250,7 @@
 <h2 id="六、缓存更新"><a href="#六、缓存更新" class="headerlink" title="六、缓存更新"></a>六、缓存更新</h2><p>除了缓存服务器自带的缓存失效策略之外（Redis默认的有6中策略可供选择），我们还可以根据具体的业务需求进行自定义的缓存淘汰，常见的策略有三种：</p>
 <p>（1）<strong>定时过期</strong>：每个设置过期时间的key都需要创建一个定时器，到过期时间就会立即清除，该策略可以立即清除过期的数据，对内存很友好，但是会占用大量的CPU资源去处理过期的数据，从而影响缓存的响应时间和吞吐量。</p>
 <p>（2）<strong>惰性过期</strong>：当有用户请求过来时，再判断这个请求所用到的缓存是否过期，过期的话就去底层系统得到新数据并更新缓存。</p>
-<p>（3）<strong>定期过期</strong>：每隔一定的时间，会扫描一定数量的数据库的expires字典中一定数量的key，并清除其中已过期的key，该策略是前两者的一个折中方案，通过调整定时扫描的时间间隔和每次扫描的限定耗时，可以在不同情况下使得CPU和内存资源达到最优 的平衡效果。</p>
+<p>（3）<strong>定期过期</strong>：每隔一定的时间，会扫描一定数量的数据库的expires字典中一定数量的key，并清除其中已过期的key，该策略是前两者的一个折中方案，通过调整定时扫描的时间间隔和每次扫描的限定耗时，可以在不同情况下使得CPU和内存资源达到最优的平衡效果。</p>
 <h2 id="七、缓存降级"><a href="#七、缓存降级" class="headerlink" title="七、缓存降级"></a>七、缓存降级</h2><p>当访问量剧增、服务出现问题（如响应时间慢或不响应）或非核心服务影响到核心流程的性能时，仍然需要保证服务还是可用的，即使是有损服务。系统可以根据一些关键数据进行自动降级，也可以配置开关实现人工降级。</p>
 <p><strong>降级的最终目的是保证核心服务可用</strong>，即使是有损的。而且有些服务是无法降级的（如加入购物车、结算）。 </p>
 <p>在进行降级之前要对系统进行梳理，看看系统是不是可以丢卒保帅；从而梳理出哪些必须誓死保护，哪些可降级；比如可以参考日志级别设置预案：</p>
@@ -293,7 +293,7 @@
                       <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">10. Redis--如何优化缓存架构</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -302,7 +302,7 @@
                     
                       <a href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/">
                         <span class="hidden-mobile">8. Redis--Redis的实际应用</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -335,7 +335,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -362,7 +362,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -371,7 +371,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

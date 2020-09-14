@@ -312,17 +312,17 @@
 <li>在JDK1.7中<strong>，插入链表节点使用头插法</strong>，JDK1.8中变为了尾插法，这是因为头插法在并发下调用transfer()方法，可能会导致链表死循环，以及数据的丢失。</li>
 <li>hash()方法，<strong>将hash值高位（前16位）参与到取模的运算中</strong>，使得计算结果的不确定性增强，降低发生哈希碰撞的概率。</li>
 </ul>
-<h2 id="ConcurrentHashMap在JDK1-8做了哪些优化？"><a href="#ConcurrentHashMap在JDK1-8做了哪些优化？" class="headerlink" title="ConcurrentHashMap在JDK1.8做了哪些优化？"></a>ConcurrentHashMap在JDK1.8做了哪些优化？</h2><p>ConcurrentHashMap在Java 8 里抛弃了Segment的概念，直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，Node是ConcurrentHashMap存储结构的基本单元，继承于HashMap中的Entry，用于存储数据，并发控制使用Synchronized和CAS来操作。</p>
+<h2 id="ConcurrentHashMap在JDK1-8做了哪些优化？"><a href="#ConcurrentHashMap在JDK1-8做了哪些优化？" class="headerlink" title="ConcurrentHashMap在JDK1.8做了哪些优化？"></a>ConcurrentHashMap在JDK1.8做了哪些优化？</h2><p>ConcurrentHashMap在Java 8 里抛弃了Segment的概念，直接用<strong>Node数组+链表+红黑树</strong>的数据结构来实现，Node是ConcurrentHashMap存储结构的基本单元，继承于HashMap中的Entry，用于存储数据，<strong>并发控制使用Synchronized和CAS来操作。</strong></p>
 <h2 id="HashMap-LinkedHashMap-TreeMap的区别？"><a href="#HashMap-LinkedHashMap-TreeMap的区别？" class="headerlink" title="HashMap,LinkedHashMap,TreeMap的区别？"></a>HashMap,LinkedHashMap,TreeMap的区别？</h2><p>区别：</p>
 <ul>
-<li>LinkedHashMap是继承于HashMap，是基于HashMap和双向链表来实现的。</li>
+<li>LinkedHashMap是继承于HashMap，是基于HashMap和<strong>双向链表</strong>来实现的。</li>
 <li>HashMap无序；LinkedHashMap有序，可分为插入顺序和访问顺序两种。如果是访问顺序，那put和get操作已存在的Entry时，都会把Entry移动到双向链表的表尾(其实是先删除再插入)。</li>
 <li>LinkedHashMap存取数据，还是跟HashMap一样使用的Entry[]的方式，双向链表只是为了保证顺序。</li>
 <li>LinkedHashMap是线程不安全的。</li>
 </ul>
 <p>LinkedHashMap应用场景：</p>
 <p>当我们希望有顺序地去存储key-value时，就需要使用LinkedHashMap。</p>
-<p>TreeMap的用法（主要是排序）</p>
+<p>TreeMap的用法（主要是<strong>排序</strong>）</p>
 <p>TreeMap中默认的排序是升序，如果要改变其排序可以自己写一个Comparator，重写其compare()方法。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Compare</span> </span>&#123;
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
@@ -369,17 +369,15 @@
 <span class="hljs-class"></span>&#123;
     String name;
     <span class="hljs-keyword">int</span> age;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>&#123;
         <span class="hljs-keyword">super</span>();
         <span class="hljs-keyword">this</span>.name = name;
         <span class="hljs-keyword">this</span>.age = age;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>&#123;
         <span class="hljs-keyword">return</span> name;
-    &#125;　　<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>&#123;
         <span class="hljs-keyword">return</span> age;
     &#125;
 &#125;</code></pre></div>
@@ -389,38 +387,33 @@
 <span class="hljs-class"></span>&#123;
     String name;
     <span class="hljs-keyword">int</span> age;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span> </span>&#123;
         <span class="hljs-keyword">super</span>();
         <span class="hljs-keyword">this</span>.name = name;
         <span class="hljs-keyword">this</span>.age = age;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;
         <span class="hljs-keyword">return</span> name;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;
         <span class="hljs-keyword">return</span> age;
     &#125;
     <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compareTo</span><span class="hljs-params">(Person p)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compareTo</span><span class="hljs-params">(Person p)</span> </span>&#123;
         <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.age-p.getAge();
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>
-<span class="hljs-function">    </span>&#123;
-        Person[] people=<span class="hljs-keyword">new</span> Person[]&#123;<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xujian"</span>, <span class="hljs-number">20</span>),<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xiewei"</span>, <span class="hljs-number">10</span>)&#125;;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        Person[] people=<span class="hljs-keyword">new</span> Person[]&#123;
+            <span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xujian"</span>, <span class="hljs-number">20</span>),<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xiewei"</span>, <span class="hljs-number">10</span>)
+        &#125;;
         System.out.println(<span class="hljs-string">"排序前"</span>);
-        <span class="hljs-keyword">for</span> (Person person : people)
-        &#123;
+        <span class="hljs-keyword">for</span> (Person person : people) &#123;
             System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
         &#125;
         Arrays.sort(people);
         System.out.println(<span class="hljs-string">"\n排序后"</span>);
-        <span class="hljs-keyword">for</span> (Person person : people)
-        &#123;
-            System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
+        <span class="hljs-keyword">for</span> (Person person : people) &#123;
+            System.out.print(person.getName()+<span class="hljs-string">":"</span> + person.getAge());
         &#125;
     &#125;
 &#125;</code></pre></div>
@@ -444,46 +437,37 @@
 </li>
 </ul>
 <p>现在假如上面的Person类没有实现Comparable接口，该如何比较大小呢？我们可以新建一个类，让其实现Comparator接口，从而构造一个“比较器”。</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PersonCompartor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">Person</span>&gt;</span>
-<span class="hljs-class"></span>&#123;
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">PersonCompartor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Comparator</span>&lt;<span class="hljs-title">Person</span>&gt;</span>&#123;
     <span class="hljs-meta">@Override</span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(Person o1, Person o2)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">compare</span><span class="hljs-params">(Person o1, Person o2)</span> </span>&#123;
         <span class="hljs-keyword">return</span> o1.getAge()-o2.getAge();
     &#125;
 &#125;</code></pre></div>
 
 <p>现在我们就可以利用这个比较器来对其进行排序：</p>
-<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>
-<span class="hljs-class"></span>&#123;
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span></span>&#123;
     String name;
     <span class="hljs-keyword">int</span> age;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Person</span><span class="hljs-params">(String name, <span class="hljs-keyword">int</span> age)</span> </span>&#123;
         <span class="hljs-keyword">super</span>();
         <span class="hljs-keyword">this</span>.name = name;
         <span class="hljs-keyword">this</span>.age = age;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;
         <span class="hljs-keyword">return</span> name;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getAge</span><span class="hljs-params">()</span> </span>&#123;
         <span class="hljs-keyword">return</span> age;
     &#125;
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>
-<span class="hljs-function">    </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
         Person[] people=<span class="hljs-keyword">new</span> Person[]&#123;<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xujian"</span>, <span class="hljs-number">20</span>),<span class="hljs-keyword">new</span> Person(<span class="hljs-string">"xiewei"</span>, <span class="hljs-number">10</span>)&#125;;
         System.out.println(<span class="hljs-string">"排序前"</span>);
-        <span class="hljs-keyword">for</span> (Person person : people)
-        &#123;
+        <span class="hljs-keyword">for</span> (Person person : people) &#123;
             System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
         &#125;
         Arrays.sort(people,<span class="hljs-keyword">new</span> PersonCompartor());
         System.out.println(<span class="hljs-string">"\n排序后"</span>);
-        <span class="hljs-keyword">for</span> (Person person : people)
-        &#123;
+        <span class="hljs-keyword">for</span> (Person person : people) &#123;
             System.out.print(person.getName()+<span class="hljs-string">":"</span>+person.getAge());
         &#125;
     &#125;
@@ -534,7 +518,7 @@
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -543,7 +527,7 @@
                     
                       <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">
                         <span class="hidden-mobile">Java基础</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -576,7 +560,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -603,7 +587,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -612,7 +596,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

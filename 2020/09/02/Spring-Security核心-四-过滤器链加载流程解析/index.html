@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring Security核心(四)-过滤器链加载流程解析 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-09-02 09:39">
+      September 2, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      42
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>SpringSecurityFilterChain 作为 SpringSecurity 的核心过滤器链在整个认证授权过程中起着举足轻重的地位，每个请求到来，都会经过该过滤器链，前文 <a href="https://www.cnkirito.moe/spring-security-4/" target="_blank" rel="noopener">《Spring Security( 四)– 核心过滤器源码分析》</a> 中我们分析了 SpringSecurityFilterChain 的构成，但还有很多疑问可能没有解开：</p>
+<ol>
+<li>这个 SpringSecurityFilterChain 是怎么注册到 web 环境中的？</li>
+<li>有读者发出这样的疑问：”SpringSecurityFilterChain 的实现类到底是什么，我知道它是一个 Filter，但是在很多配置类中看到了 BeanName=SpringSecurityFilterChain 相关的类，比如 DelegatingFilterProxy，FilterChainProxy，SecurityFilterChain，他们的的名称实在太相似了，到底哪个才是真正的实现，SpringSecurity 又为什么要这么设计？“</li>
+<li>我们貌似一直在配置 WebSecurity ，但没有对 SpringSecurityFilterChain 进行什么配置，WebSecurity 相关配置是怎么和 SpringSecurityFilterChain 结合在一起的？</li>
+</ol>
+<p>以上是个人 YY 的一些 SpringSecurityFilterChain 相关的问题，因为我当初研究了一段时间 SpringSecurity 源码，依旧没有理清这么多错综复杂的类。那么本文就主要围绕 SpringSecurityFilterChain 展开我们的探索。</p>
+<h3 id="6-1-SpringSecurityFilterChain-是怎么注册的？"><a href="#6-1-SpringSecurityFilterChain-是怎么注册的？" class="headerlink" title="6.1 SpringSecurityFilterChain 是怎么注册的？"></a>6.1 SpringSecurityFilterChain 是怎么注册的？</h3><p>这个问题并不容易解释，因为 SpringSecurity 仅仅在 web 环境下（SpringSecurity 还支持非 web 环境）就有非常多的支持形式：</p>
+<p><strong>Java 配置方式</strong></p>
+<ol>
+<li>作为独立的 SpringSecurity 依赖提供给朴素的 java web 项目使用，并且项目不使用 Spring！没错，仅仅使用 servlet，jsp 的情况下也是可以集成 SpringSecurity 的。</li>
+<li>提供给包含 SpringMVC 项目使用。</li>
+<li>提供给具备 Servlet3.0+ 的 web 项目使用。</li>
+<li>SpringBoot 内嵌容器环境下使用 SpringSecurity，并且包含了一定程度的自动配置。</li>
+</ol>
+<p><strong>XML 配置方式</strong></p>
+<ol>
+<li>使用 XML 中的命名空间配置 SpringSecurity。</li>
+</ol>
+<p>注意，以上条件可能存在交集，比如我的项目是一个使用 servlet3.0 的 web 项目同时使用了 SpringMVC；也有可能使用了 SpringBoot 同时配合 SpringMVC；还有可能使用了 SpringBoot，却打成了 war 包，部署在外置的支持 Servlet3.0+ 规范的应用容器中… 各种组合方式会导致配置 SpringSecurityFilterChain 的注册方式产生差异，所以，这个问题说复杂还真有点，需要根据你的环境来分析。我主要分析几种较为常见的注册方式。</p>
+<p>SpringSecurityFilterChain 抽象概念里最重要的三个类：<strong>DelegatingFilterProxy</strong>，<strong>FilterChainProxy</strong> 和 <strong>SecurityFilterChain</strong>，对这三个类的源码分析和设计将会贯彻本文。不同环境下 DelegatingFilterProxy 的注册方式区别较大，但 FilterChainProxy 和 SecurityFilterChain 的差异不大，所以重点就是分析 DelegatingFilterProxy 的注册方式。它们三者的分析会放到下一节中。</p>
+<h4 id="6-1-1-servlet3-0-环境下-SpringSecurity-的-java-config-方式"><a href="#6-1-1-servlet3-0-环境下-SpringSecurity-的-java-config-方式" class="headerlink" title="6.1.1 servlet3.0+ 环境下 SpringSecurity 的 java config 方式"></a>6.1.1 servlet3.0+ 环境下 SpringSecurity 的 java config 方式</h4><p>这是一个比较常见的场景，你可能还没有使用 SpringBoot 内嵌的容器，将项目打成 war 包部署在外置的应用容器中，比如最常见的 tomcat，一般很少 web 项目低于 servlet3.0 版本的，并且该场景摒弃了 XML 配置。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.springframework.security.web.context.*;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SecurityWebApplicationInitializer</span></span>
+<span class="hljs-class">	<span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractSecurityWebApplicationInitializer</span> </span>&#123;
+
+&#125;</code></pre></div>
+
+<p>主要自定义一个 SecurityWebApplicationInitializer 并且让其继承自 AbstractSecurityWebApplicationInitializer 即可。如此简单的一个继承背后又经历了 Spring 怎样的封装呢？自然要去 AbstractSecurityWebApplicationInitializer 中去一探究竟。经过删减后的源码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AbstractSecurityWebApplicationInitializer</span></span>
+<span class="hljs-class">      <span class="hljs-keyword">implements</span> <span class="hljs-title">WebApplicationInitializer</span> </span>&#123;<span class="hljs-comment">//&lt;1&gt;</span>
+
+   <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_FILTER_NAME = <span class="hljs-string">"springSecurityFilterChain"</span>;
+
+   <span class="hljs-comment">// &lt;1&gt; 父类 WebApplicationInitializer 的加载入口</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onStartup</span><span class="hljs-params">(ServletContext servletContext)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+      beforeSpringSecurityFilterChain(servletContext);
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.configurationClasses != <span class="hljs-keyword">null</span>) &#123;
+         AnnotationConfigWebApplicationContext rootAppContext = <span class="hljs-keyword">new</span> AnnotationConfigWebApplicationContext();
+         rootAppContext.register(<span class="hljs-keyword">this</span>.configurationClasses);
+         servletContext.addListener(<span class="hljs-keyword">new</span> ContextLoaderListener(rootAppContext));
+      &#125;
+      <span class="hljs-keyword">if</span> (enableHttpSessionEventPublisher()) &#123;
+         servletContext.addListener(
+               <span class="hljs-string">"org.springframework.security.web.session.HttpSessionEventPublisher"</span>);
+      &#125;
+      servletContext.setSessionTrackingModes(getSessionTrackingModes());
+      insertSpringSecurityFilterChain(servletContext);<span class="hljs-comment">//&lt;2&gt;</span>
+      afterSpringSecurityFilterChain(servletContext);
+   &#125;
+   
+    <span class="hljs-comment">// &lt;2&gt; 在这儿初始化了关键的 DelegatingFilterProxy</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insertSpringSecurityFilterChain</span><span class="hljs-params">(ServletContext servletContext)</span> </span>&#123;
+		String filterName = DEFAULT_FILTER_NAME;
+        <span class="hljs-comment">// &lt;2&gt; 该方法中最关键的一个步骤，DelegatingFilterProxy 在此被创建</span>
+		DelegatingFilterProxy springSecurityFilterChain = <span class="hljs-keyword">new</span> DelegatingFilterProxy(
+				filterName);
+		String contextAttribute = getWebApplicationContextAttribute();
+		<span class="hljs-keyword">if</span> (contextAttribute != <span class="hljs-keyword">null</span>) &#123;
+			springSecurityFilterChain.setContextAttribute(contextAttribute);
+		&#125;
+		registerFilter(servletContext, <span class="hljs-keyword">true</span>, filterName, springSecurityFilterChain);
+	&#125;
+    
+    <span class="hljs-comment">// &lt;3&gt; 使用 servlet3.0 的新特性，动态注册 springSecurityFilterChain(实际上注册的是 springSecurityFilterChain 代理类)</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">registerFilter</span><span class="hljs-params">(ServletContext servletContext,</span></span>
+<span class="hljs-function"><span class="hljs-params">			<span class="hljs-keyword">boolean</span> insertBeforeOtherFilters, String filterName, Filter filter)</span> </span>&#123;
+		Dynamic registration = servletContext.addFilter(filterName, filter);
+		registration.setAsyncSupported(isAsyncSecuritySupported());
+		EnumSet&lt;DispatcherType&gt; dispatcherTypes = getSecurityDispatcherTypes();
+		registration.addMappingForUrlPatterns(dispatcherTypes, !insertBeforeOtherFilters,
+				<span class="hljs-string">"/*"</span>);
+	&#125;
+
+&#125;</code></pre></div>
+
+<p>&lt;1&gt;&lt;3&gt; 放在一起讲，因为他们都和 servlet3.0 新特性以及 spring 对 servlet3.0 的支持相关，这也是为什么在场景描述中我特地强调了需要 servlet3.0 环境。如果你对 servlet3.0 的新特性不了解，这儿准备了一篇详细的介绍为你阐述 <a href="https://www.cnkirito.moe/servlet-explore/" target="_blank" rel="noopener">《Spring 揭秘 – 寻找遗失的 web.xml》</a> 。得益于 Spring 的封装，在 servlet3.0 环境下，web 容器启动时会自行去寻找类路径下所有实现了 WebApplicationInitializer 接口的 Initializer 实例，并调用他们的 onStartup 方法。所以，我们只需要继承 AbstractSecurityWebApplicationInitializer ，便可以自动触发 web 容器的加载，进而配置和 SpringSecurityFilterChain 第一个密切相关的类，第 &lt;2&gt; 步中的 DelegatingFilterProxy。</p>
+<p>&lt;2&gt; DelegatingFilterProxy 在此被实例化出来。在第 &lt;3&gt; 步中，它作为一个 Filter 正式注册到了 web 容器中。</p>
+<h4 id="6-1-2-XML-配置"><a href="#6-1-2-XML-配置" class="headerlink" title="6.1.2 XML 配置"></a>6.1.2 XML 配置</h4><p>这个真的是简单易懂，因为它是被指名道姓配置成一个 Filter 的。</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">filter</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>springSecurityFilterChain<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">filter-class</span>&gt;</span>org.springframework.web.filter.DelegatingFilterProxy<span class="hljs-tag">&lt;/<span class="hljs-name">filter-class</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">filter</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">filter-mapping</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">filter-name</span>&gt;</span>springSecurityFilterChain<span class="hljs-tag">&lt;/<span class="hljs-name">filter-name</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">url-pattern</span>&gt;</span>/*<span class="hljs-tag">&lt;/<span class="hljs-name">url-pattern</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">filter-mapping</span>&gt;</span></code></pre></div>
+
+<p><code>web.xml</code> 的存在注定了其无所谓当前环境是不是 servlet3.0+，虽然我个人不太喜欢 xml 的配置方式，但不得不说，这样真的很简单粗暴。</p>
+<h4 id="6-1-3-SpringBoot-内嵌应用容器并且使用自动配置"><a href="#6-1-3-SpringBoot-内嵌应用容器并且使用自动配置" class="headerlink" title="6.1.3 SpringBoot 内嵌应用容器并且使用自动配置"></a>6.1.3 SpringBoot 内嵌应用容器并且使用自动配置</h4><p><a href="https://www.cnkirito.moe/servlet-explore/" target="_blank" rel="noopener">《Spring 揭秘 – 寻找遗失的 web.xml》</a> 中我曾经得出一个结论，内嵌容器是完全不会使用 SPI 机制加载 servlet3.0 新特性的那些 Initializer 的，springboot 又推崇 java configuration，所以上述两种方案完全被抛弃了。那么 SpringBoot 如何注册 DelegatingFilterProxy 呢？</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span>
+<span class="hljs-meta">@ConditionalOnWebApplication</span>
+<span class="hljs-meta">@EnableConfigurationProperties</span>
+<span class="hljs-meta">@ConditionalOnClass</span>(&#123; AbstractSecurityWebApplicationInitializer<span class="hljs-class">.<span class="hljs-keyword">class</span>,</span>
+<span class="hljs-class">      <span class="hljs-title">SessionCreationPolicy</span>.<span class="hljs-title">class</span> &#125;)</span>
+<span class="hljs-class">@<span class="hljs-title">AutoConfigureAfter</span>(<span class="hljs-title">SecurityAutoConfiguration</span>.<span class="hljs-title">class</span>)</span>
+<span class="hljs-class"><span class="hljs-title">public</span> <span class="hljs-title">class</span> <span class="hljs-title">SecurityFilterAutoConfiguration</span> </span>&#123;
+
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String DEFAULT_FILTER_NAME = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME;<span class="hljs-comment">//springSecurityFilterChain</span>
+
+    <span class="hljs-comment">// &lt;1&gt;</span>
+   <span class="hljs-meta">@Bean</span>
+   <span class="hljs-meta">@ConditionalOnBean</span>(name = DEFAULT_FILTER_NAME)
+   <span class="hljs-function"><span class="hljs-keyword">public</span> DelegatingFilterProxyRegistrationBean <span class="hljs-title">securityFilterChainRegistration</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">         SecurityProperties securityProperties)</span> </span>&#123;
+      DelegatingFilterProxyRegistrationBean registration = <span class="hljs-keyword">new</span> DelegatingFilterProxyRegistrationBean(
+            DEFAULT_FILTER_NAME);
+      registration.setOrder(securityProperties.getFilterOrder());
+      registration.setDispatcherTypes(getDispatcherTypes(securityProperties));
+      <span class="hljs-keyword">return</span> registration;
+   &#125;
+
+   <span class="hljs-meta">@Bean</span>
+   <span class="hljs-meta">@ConditionalOnMissingBean</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> SecurityProperties <span class="hljs-title">securityProperties</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SecurityProperties();
+   &#125;
+&#125;</code></pre></div>
+
+<p>&lt;1&gt; DelegatingFilterProxyRegistrationBean 的分析在之前那篇文章中也有详细的介绍，其作用便是在 SpringBoot 环境下通过 TomcatStarter 等内嵌容器启动类来注册一个 DelegatingFilterProxy。这下，和前面两种配置方式都对应上了。</p>
+<h3 id="SpringSecurityFilterChain-三个核心类的源码分析"><a href="#SpringSecurityFilterChain-三个核心类的源码分析" class="headerlink" title="SpringSecurityFilterChain 三个核心类的源码分析"></a>SpringSecurityFilterChain 三个核心类的源码分析</h3><p>理解 SpringSecurityFilterChain 的工作流程必须搞懂三个类：</p>
+<p><code>org.springframework.web.filter.DelegatingFilterProxy</code>，</p>
+<p><code>org.springframework.security.web.FilterChainProxy</code> ，</p>
+<p> <code>org.springframework.security.web.SecurityFilterChain</code></p>
+<h4 id="DelegatingFilterProxy"><a href="#DelegatingFilterProxy" class="headerlink" title="DelegatingFilterProxy"></a>DelegatingFilterProxy</h4><p>上面一节主要就是介绍 DelegatingFilterProxy 在不同环境下的注册方式，可以很明显的发现，DelegatingFilterProxy 是 SpringSecurity 的“门面”，注意它的包结构：org.springframework.web.filter，它本身是 Spring Web 包中的类，并不是 SpringSecurity 中的类。因为 Spring 考虑到了多种使用场景，自然希望将侵入性降到最低，所以使用了这个委托代理类来代理真正的 SpringSecurityFilterChain。DelegatingFilterProxy 实现了 javax.servlet.Filter 接口，使得它可以作为一个 java web 的标准过滤器，其职责也很简单，只负责调用真正的 SpringSecurityFilterChain。</p>
+<p>删减掉非重要代码后的 DelegatingFilterProxy：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DelegatingFilterProxy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+
+   <span class="hljs-keyword">private</span> WebApplicationContext webApplicationContext;
+   <span class="hljs-comment">// springSecurityFilterChain</span>
+   <span class="hljs-keyword">private</span> String targetBeanName;
+   <span class="hljs-comment">// &lt;1&gt; 关键点</span>
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">volatile</span> Filter delegate;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Object delegateMonitor = <span class="hljs-keyword">new</span> Object();
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DelegatingFilterProxy</span><span class="hljs-params">(String targetBeanName, WebApplicationContext wac)</span> </span>&#123;
+      Assert.hasText(targetBeanName, <span class="hljs-string">"Target Filter bean name must not be null or empty"</span>);
+      <span class="hljs-keyword">this</span>.setTargetBeanName(targetBeanName);
+      <span class="hljs-keyword">this</span>.webApplicationContext = wac;
+      <span class="hljs-keyword">if</span> (wac != <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">this</span>.setEnvironment(wac.getEnvironment());
+      &#125;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initFilterBean</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+      <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.delegateMonitor) &#123;
+         <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.delegate == <span class="hljs-keyword">null</span>) &#123;
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.targetBeanName == <span class="hljs-keyword">null</span>) &#123;
+               <span class="hljs-keyword">this</span>.targetBeanName = getFilterName();
+            &#125;
+            <span class="hljs-comment">// Fetch Spring root application context and initialize the delegate early,</span>
+            <span class="hljs-comment">// if possible. If the root application context will be started after this</span>
+            <span class="hljs-comment">// filter proxy, we'll have to resort to lazy initialization.</span>
+            WebApplicationContext wac = findWebApplicationContext();
+            <span class="hljs-keyword">if</span> (wac != <span class="hljs-keyword">null</span>) &#123;
+               <span class="hljs-keyword">this</span>.delegate = initDelegate(wac);
+            &#125;
+         &#125;
+      &#125;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response, FilterChain filterChain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+
+      <span class="hljs-comment">// 过滤器代理支持懒加载</span>
+      Filter delegateToUse = <span class="hljs-keyword">this</span>.delegate;
+      <span class="hljs-keyword">if</span> (delegateToUse == <span class="hljs-keyword">null</span>) &#123;
+         <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.delegateMonitor) &#123;
+            delegateToUse = <span class="hljs-keyword">this</span>.delegate;
+            <span class="hljs-keyword">if</span> (delegateToUse == <span class="hljs-keyword">null</span>) &#123;
+               WebApplicationContext wac = findWebApplicationContext();
+               delegateToUse = initDelegate(wac);
+            &#125;
+            <span class="hljs-keyword">this</span>.delegate = delegateToUse;
+         &#125;
+      &#125;
+
+      <span class="hljs-comment">// 让代理过滤器执行实际的过滤行为</span>
+      invokeDelegate(delegateToUse, request, response, filterChain);
+   &#125;
+
+   <span class="hljs-comment">// 初始化过滤器代理</span>
+   <span class="hljs-comment">// &lt;2&gt;</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> Filter <span class="hljs-title">initDelegate</span><span class="hljs-params">(WebApplicationContext wac)</span> <span class="hljs-keyword">throws</span> ServletException </span>&#123;
+      Filter delegate = wac.getBean(getTargetBeanName(), Filter<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+      <span class="hljs-keyword">if</span> (isTargetFilterLifecycle()) &#123;
+         delegate.init(getFilterConfig());
+      &#125;
+      <span class="hljs-keyword">return</span> delegate;
+   &#125;
+
+
+   <span class="hljs-comment">// 调用代理过滤器	</span>
+   <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">invokeDelegate</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">         Filter delegate, ServletRequest request, ServletResponse response, FilterChain filterChain)</span></span>
+<span class="hljs-function">         <span class="hljs-keyword">throws</span> ServletException, IOException </span>&#123;
+      delegate.doFilter(request, response, filterChain);
+   &#125;
+
+&#125;</code></pre></div>
+
+<p>&lt;1&gt; 可以发现整个 DelegatingFilterProxy 的逻辑就是为了调用 <code>private volatile Filter delegate;</code> 那么问题来了，这个 delegate 的真正实现是什么呢？</p>
+<p>&lt;2&gt; 可以看到，DelegatingFilterProxy 尝试去容器中获取名为 targetBeanName 的类，而 targetBeanName 的默认值便是 Filter 的名称，也就是 springSecurityFilterChain！也就是说，DelegatingFilterProxy 只是名称和 targetBeanName 叫 springSecurityFilterChain，真正容器中的 Bean(name=”springSecurityFilterChain”) 其实另有其人（这里 springboot 稍微有点区别，不过不影响理解，我们不纠结这个细节了）。通过 debug，我们发现了真正的 springSecurityFilterChain — FilterChainProxy。</p>
+<p><img src="https://kirito.iocoder.cn/C811CC2A-9434-49C8-9240-15BD0EE5A21E.png" srcset="/img/loading.gif" alt="delegate"></p>
+<h4 id="FilterChainProxy-和-SecurityFilterChain"><a href="#FilterChainProxy-和-SecurityFilterChain" class="headerlink" title="FilterChainProxy 和 SecurityFilterChain"></a>FilterChainProxy 和 SecurityFilterChain</h4><p><code>org.springframework.security.web.FilterChainProxy</code> 已经是 SpringSecurity 提供的类了，原来它才是真正的 springSecurityFilterChain，我们来看看它的源码（有删减，不影响理解）。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FilterChainProxy</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">GenericFilterBean</span> </span>&#123;
+   <span class="hljs-comment">// &lt;1&gt; 包含了多个 SecurityFilterChain</span>
+   <span class="hljs-keyword">private</span> List&lt;SecurityFilterChain&gt; filterChains;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FilterChainProxy</span><span class="hljs-params">(SecurityFilterChain chain)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>(Arrays.asList(chain));
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">FilterChainProxy</span><span class="hljs-params">(List&lt;SecurityFilterChain&gt; filterChains)</span> </span>&#123;
+      <span class="hljs-keyword">this</span>.filterChains = filterChains;
+   &#125;
+
+   <span class="hljs-meta">@Override</span>
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterPropertiesSet</span><span class="hljs-params">()</span> </span>&#123;
+      filterChainValidator.validate(<span class="hljs-keyword">this</span>);
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilter</span><span class="hljs-params">(ServletRequest request, ServletResponse response,</span></span>
+<span class="hljs-function"><span class="hljs-params">         FilterChain chain)</span> <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+         doFilterInternal(request, response, chain);
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">doFilterInternal</span><span class="hljs-params">(ServletRequest request, ServletResponse response,</span></span>
+<span class="hljs-function"><span class="hljs-params">         FilterChain chain)</span> <span class="hljs-keyword">throws</span> IOException, ServletException </span>&#123;
+
+      FirewalledRequest fwRequest = firewall
+            .getFirewalledRequest((HttpServletRequest) request);
+      HttpServletResponse fwResponse = firewall
+            .getFirewalledResponse((HttpServletResponse) response);
+	  <span class="hljs-comment">// &lt;1&gt;	</span>
+      List&lt;Filter&gt; filters = getFilters(fwRequest);
+
+      <span class="hljs-keyword">if</span> (filters == <span class="hljs-keyword">null</span> || filters.size() == <span class="hljs-number">0</span>) &#123;
+         fwRequest.reset();
+         chain.doFilter(fwRequest, fwResponse);
+         <span class="hljs-keyword">return</span>;
+      &#125;
+
+      VirtualFilterChain vfc = <span class="hljs-keyword">new</span> VirtualFilterChain(fwRequest, chain, filters);
+      vfc.doFilter(fwRequest, fwResponse);
+   &#125;
+
+   <span class="hljs-comment">/**</span>
+<span class="hljs-comment">    * &lt;1&gt; 可能会有多个过滤器链，返回第一个和请求 URL 匹配的过滤器链</span>
+<span class="hljs-comment">    */</span>
+   <span class="hljs-function"><span class="hljs-keyword">private</span> List&lt;Filter&gt; <span class="hljs-title">getFilters</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+      <span class="hljs-keyword">for</span> (SecurityFilterChain chain : filterChains) &#123;
+         <span class="hljs-keyword">if</span> (chain.matches(request)) &#123;
+            <span class="hljs-keyword">return</span> chain.getFilters();
+         &#125;
+      &#125;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+   &#125;
+
+&#125;</code></pre></div>
+
+<p>看 FilterChainProxy 的名字就可以发现，它依旧不是真正实施过滤的类，它内部维护了一个 SecurityFilterChain，这个过滤器链才是请求真正对应的过滤器链，并且同一个 Spring 环境下，可能同时存在多个安全过滤器链，如 private List filterChains 所示，需要经过 chain.matches(request) 判断到底哪个过滤器链匹配成功，每个 request 最多只会经过一个 SecurityFilterChain。为何要这么设计？因为 Web 环境下可能有多种安全保护策略，每种策略都需要有自己的一条链路，比如我曾经设计过 Oauth2 服务，在极端条件下，可能同一个服务本身既是资源服务器，又是认证服务器，还需要做 Web 安全！</p>
+<p><img src="https://kirito.iocoder.cn/F0EAD340-B206-4FB0-A660-4CEB28AB8609.png" srcset="/img/loading.gif" alt="多个 SecurityFilterChain"></p>
+<p>如上图，4 个 SecurityFilterChain 存在于 FilterChainProxy 中，值得再次强调：实际每次请求，最多只有一个安全过滤器链被返回。</p>
+<p>SecurityFilterChain 才是真正意义上的 SpringSecurityFilterChain：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DefaultSecurityFilterChain</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">SecurityFilterChain</span> </span>&#123;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> RequestMatcher requestMatcher;
+   <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> List&lt;Filter&gt; filters;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Filter&gt; <span class="hljs-title">getFilters</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">return</span> filters;
+   &#125;
+
+   <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">matches</span><span class="hljs-params">(HttpServletRequest request)</span> </span>&#123;
+      <span class="hljs-keyword">return</span> requestMatcher.matches(request);
+   &#125;
+&#125;</code></pre></div>
+
+<p>其中的 List filters 就是我们在 <a href="https://www.cnkirito.moe/spring-security-4/" target="_blank" rel="noopener">《Spring Security( 四)– 核心过滤器源码分析》</a> 中分析的诸多核心过滤器，包含了 UsernamePasswordAuthenticationFilter，SecurityContextPersistenceFilter，FilterSecurityInterceptor 等之前就介绍过的 Filter。</p>
+<h3 id="SecurityFilterChain-的注册过程"><a href="#SecurityFilterChain-的注册过程" class="headerlink" title="SecurityFilterChain 的注册过程"></a>SecurityFilterChain 的注册过程</h3><p>还记得 DelegatingFilterProxy 从 Spring 容器中寻找了一个 targetBeanName=springSecurityFilterChain 的 Bean 吗？我们通过 debug 直接定位到了其实现是 SecurityFilterChain，但它又是什么时候被放进去的呢？</p>
+<p>这就得说到老朋友 WebSecurity 了，还记得一般我们都会选择使用 @EnableWebSecurity 和 WebSecurityConfigurerAdapter 来进行 web 安全配置吗，来到 WebSecurity 的源码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WebSecurity</span> <span class="hljs-keyword">extends</span></span>
+<span class="hljs-class">      <span class="hljs-title">AbstractConfiguredSecurityBuilder</span>&lt;<span class="hljs-title">Filter</span>, <span class="hljs-title">WebSecurity</span>&gt; <span class="hljs-keyword">implements</span></span>
+<span class="hljs-class">      <span class="hljs-title">SecurityBuilder</span>&lt;<span class="hljs-title">Filter</span>&gt;, <span class="hljs-title">ApplicationContextAware</span> </span>&#123;
+    
+    <span class="hljs-meta">@Override</span>
+	<span class="hljs-function"><span class="hljs-keyword">protected</span> Filter <span class="hljs-title">performBuild</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+		<span class="hljs-keyword">int</span> chainSize = ignoredRequests.size()+ securityFilterChainBuilders.size();
+		List&lt;SecurityFilterChain&gt; securityFilterChains = <span class="hljs-keyword">new</span> ArrayList&lt;SecurityFilterChain&gt;(
+				chainSize);
+		<span class="hljs-keyword">for</span> (RequestMatcher ignoredRequest : ignoredRequests) &#123;
+			securityFilterChains.add(<span class="hljs-keyword">new</span> DefaultSecurityFilterChain(ignoredRequest));
+		&#125;
+		<span class="hljs-keyword">for</span> (SecurityBuilder&lt;? extends SecurityFilterChain&gt; securityFilterChainBuilder : securityFilterChainBuilders) &#123;
+			securityFilterChains.add(securityFilterChainBuilder.build());
+		&#125;
+        <span class="hljs-comment">// &lt;1&gt; FilterChainProxy 由 WebSecurity 构建</span>
+		FilterChainProxy filterChainProxy = <span class="hljs-keyword">new</span> FilterChainProxy(securityFilterChains);
+		<span class="hljs-keyword">if</span> (httpFirewall != <span class="hljs-keyword">null</span>) &#123;
+			filterChainProxy.setFirewall(httpFirewall);
+		&#125;
+		filterChainProxy.afterPropertiesSet();
+
+		Filter result = filterChainProxy;
+		postBuildAction.run();
+		<span class="hljs-keyword">return</span> result;
+	&#125;
+&#125;</code></pre></div>
+
+<p>&lt;1&gt; 最终定位到 WebSecurity 的 performBuild 方法，我们之前配置了一堆参数的 WebSecurity 最终帮助我们构建了 FilterChainProxy。</p>
+<p><img src="https://kirito.iocoder.cn/8E09B17E-EC83-4824-9ED9-AF2814AC6B3A.png" srcset="/img/loading.gif" alt="WebSecurityConfiguration"></p>
+<p>并且，最终在 <code>org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration</code> 中被注册为默认名称为 SpringSecurityFilterChain。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个名称 SpringSecurityFilterChain，借助于 Spring 的 IOC 容器，完成了 DelegatingFilterProxy 到 FilterChainProxy 的连接，并借助于 FilterChainProxy 内部维护的 List 中的某一个 SecurityFilterChain 来完成最终的过滤。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/04/Dubbo%E7%9F%A5%E8%AF%86%E7%82%B9/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Dubbo知识点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E4%B8%89-%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E8%A7%A3%E8%AF%BB/">
+                        <span class="hidden-mobile">Spring Security核心(二)-核心配置解读</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring Security核心(四)-过滤器链加载流程解析&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

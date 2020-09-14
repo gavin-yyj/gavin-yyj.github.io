@@ -246,7 +246,7 @@
 <li>使用<strong>底层模型</strong>不同，它们之间底层实现方式以及与客户端之间通信的应用协议不一样，Redis直接构建了VM机制，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。</li>
 </ul>
 <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="Redis有哪些数据类型"><a href="#Redis有哪些数据类型" class="headerlink" title="Redis有哪些数据类型"></a>Redis有哪些数据类型</h2><p><img src="https://img-blog.csdnimg.cn/2020072609412168.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="Redis的应用场景"><a href="#Redis的应用场景" class="headerlink" title="Redis的应用场景"></a>Redis的应用场景</h2><h2 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h2><p><strong>计数器</strong><br>可以对String进行自增自减运算，从而实现计数器功能，Redis这种内存型数据库的读写性能非常高，很适合存储频繁读写的计数量。<br><strong>缓存</strong><br>将热点数据放到内存中，设置内存的最大使用量以及淘汰策略来保证缓存的命中率。<br><strong>会话缓存</strong><br>可以使用Redis来统一存储多台应用服务器的会话信息，当应用服务器不再存储用户的会话信息，也就不再具有状态，一个用户可以请求任意一个应用服务器，从而更容易实现高可用性以及可伸缩性。<br><strong>查找表</strong><br>例如DNS记录就很适合使用Redis进行存储，查找表和缓存类似，也是利用了Redis快速的查找特性，但是查找表的内容不能失效，而缓存的内容可以失效，因为缓存不作为可靠的数据来源。<br><strong>消息队列（发布/订阅功能）</strong><br>List是一个双向链表，可以通过<code>lpush</code>和<code>rpop</code>写入和读取消息，不过最好使用Kafka，RabbitMQ等消息中间件。<br><strong>分布式锁实现</strong><br>在分布式场景下，无法使用单机环境下的锁来对多个节点上的进程进行同步，可以使用Redis自带的SETNX命令实现分布式锁，除此之外，还可以使用官方提供的<code>RedLock</code>分布式锁实现。<br><strong>其他</strong><br>Set可以实现交集，并集操作，从而实现共同好友等功能，ZSet可以实现有序性操作，从而实现排行榜等功能。</p>
+<h2 id="Redis的应用场景"><a href="#Redis的应用场景" class="headerlink" title="Redis的应用场景"></a>Redis的应用场景</h2><h2 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h2><p><strong>计数器</strong><br>可以对String进行自增自减运算，从而实现计数器功能，Redis这种内存型数据库的读写性能非常高，很适合存储频繁读写的计数量。<br><strong>缓存</strong><br>将热点数据放到内存中，设置内存的最大使用量以及淘汰策略来保证缓存的命中率。<br><strong>会话缓存</strong><br>可以使用Redis来统一存储多台应用服务器的会话信息，当应用服务器不再存储用户的会话信息，也就不再具有状态，一个用户可以请求任意一个应用服务器，从而更容易实现高可用性以及可伸缩性。<br><strong>查找表</strong><br>例如DNS记录就很适合使用Redis进行存储，查找表和缓存类似，也是利用了Redis快速的查找特性，但是查找表的内容不能失效，而缓存的内容可以失效，因为缓存不作为可靠的数据来源。<br><strong>消息队列（发布/订阅功能）</strong><br>List是一个双向链表，可以通过<code>lpush</code>和<code>rpop</code>写入和读取消息，不过最好使用Kafka，RabbitMQ等消息中间件。<br><strong>分布式锁实现</strong><br>在分布式场景下，无法使用单机环境下的锁来对多个节点上的进程进行同步，可以使用Redis自带的<code>SETNX</code>命令实现分布式锁，除此之外，还可以使用官方提供的<code>RedLock</code>分布式锁实现。<br><strong>其他</strong><br>Set可以实现交集，并集操作，从而实现共同好友等功能，ZSet可以实现有序性操作，从而实现排行榜等功能。</p>
 <h2 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h2><p>Redis相比其他缓存，有一个非常大的优势，就是支持多种数据类型。</p>
 <ul>
 <li>String–适合最简单的k-v存储，类似于Memcached的存储结构，短信验证码，配置信息等，就用这种类型来存储；</li>
@@ -257,14 +257,14 @@
 </ul>
 <h1 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h1><h2 id="什么是Redis持久化"><a href="#什么是Redis持久化" class="headerlink" title="什么是Redis持久化"></a>什么是Redis持久化</h2><p>持久化就是把内存的数据写到磁盘中去，防止服务宕机导致内存数据丢失。</p>
 <h2 id="Redis持久化机制是什么？各自的优缺点？"><a href="#Redis持久化机制是什么？各自的优缺点？" class="headerlink" title="Redis持久化机制是什么？各自的优缺点？"></a>Redis持久化机制是什么？各自的优缺点？</h2><p>Redis提供了两种持久化机制RDB（默认）和AOF机制。</p>
-<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>RDB：默认的持久化方式，按照一定的时间将内存的数据以<code>快照</code>的形式保存到磁盘中，对应产生的数据文件为<code>dump.rdb</code>，有两个Redis命令可以用于生成RDB文件，一个是<code>SAVE</code>，另一个是<code>BGSAVE</code>，（SAVE会阻塞Redis服务器进程，直到RDB文件创建完毕，BGSAVE命令会派生出一个子进程，然后由子进程负责创建RDB文件，服务器进程继续处理请求命令）。<br><img src="https://img-blog.csdnimg.cn/20200726100538969.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>优点：</p>
+<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>RDB：默认的持久化方式，按照一定的时间将内存的数据以<code>快照</code>的形式保存到磁盘中，对应产生的数据文件为<code>dump.rdb</code>，有两个Redis命令可以用于生成RDB文件，一个是<code>SAVE</code>，另一个是<code>BGSAVE</code>，（SAVE会阻塞Redis服务器进程，直到RDB文件创建完毕，BGSAVE命令会派生出一个子进程，然后由子进程负责创建RDB文件，服务器进程继续处理请求命令）。<br><img src="https://img-blog.csdnimg.cn/20200726100538969.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><strong>优点：</strong></p>
 <ul>
 <li>只有一个文件dump.rdb，方便备份；</li>
 <li>容灾性好，一个文件可以保存到安全的磁盘；</li>
 <li>性能最大化，fork子进程来完成写操作，让主进程继续处理命令，所以是IO最大化，使用单独子进程来进行持久化，主进程不会进行任何IO操作，保证了Redis的高性能；</li>
 <li>相对于数据集大时，比AOF的启动效率更高；</li>
 </ul>
-<p>缺点：</p>
+<p><strong>缺点：</strong></p>
 <ul>
 <li>数据安全性低，RDB是间隔一段时间进行持久化，如果持久化之间Redis发生故障，会发生数据丢失，所以这种方式更适合数据要求不高的情况；</li>
 </ul>
@@ -373,8 +373,8 @@
 <li>哨兵+Redis主从的部署架构，是不保证数据零丢失的，只能保证Redis集群的高可用性；</li>
 <li>对于哨兵+Redis主从这种复杂的部署架构，尽量在测试环境和生产环境都进行充足的测试和演练。</li>
 </ul>
-<h2 id="官方Redis-Cluster方案（服务端路由查询）"><a href="#官方Redis-Cluster方案（服务端路由查询）" class="headerlink" title="官方Redis Cluster方案（服务端路由查询）"></a>官方Redis Cluster方案（服务端路由查询）</h2><p><img src="https://img-blog.csdnimg.cn/20200726180328364.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>Redis集群模式的工作原理能说一下吗？在集群模式下，Redis的key是如何寻址的？分布式寻址都有哪些算法？了解一致性Hash算法吗？</p>
-<p><strong>简介</strong><br>Redis Cluster是一种服务端Sharding（分片）技术，3.0版本开始正式提供，Redis Cluster并没有使用一致性hash，而是采用slot（槽）的概念，一共分为16384个槽，将请求发送到任意节点，接收到请求的节点会将查询请求发送到正确的节点上执行。</p>
+<h2 id="官方Redis-Cluster方案（服务端路由查询）"><a href="#官方Redis-Cluster方案（服务端路由查询）" class="headerlink" title="官方Redis Cluster方案（服务端路由查询）"></a>官方Redis Cluster方案（服务端路由查询）</h2><p><img src="https://img-blog.csdnimg.cn/20200726180328364.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="Redis集群模式的工作原理能说一下吗？在集群模式下，Redis的key是如何寻址的？分布式寻址都有哪些算法？了解一致性Hash算法吗？"><a href="#Redis集群模式的工作原理能说一下吗？在集群模式下，Redis的key是如何寻址的？分布式寻址都有哪些算法？了解一致性Hash算法吗？" class="headerlink" title="Redis集群模式的工作原理能说一下吗？在集群模式下，Redis的key是如何寻址的？分布式寻址都有哪些算法？了解一致性Hash算法吗？"></a>Redis集群模式的工作原理能说一下吗？在集群模式下，Redis的key是如何寻址的？分布式寻址都有哪些算法？了解一致性Hash算法吗？</h3><p><strong>简介</strong><br>Redis Cluster是一种服务端Sharding（分片）技术，3.0版本开始正式提供，Redis Cluster并没有使用一致性hash，而是采用slot（槽）的概念，一共分为16384个槽，将请求发送到任意节点，接收到请求的节点会将查询请求发送到正确的节点上执行。</p>
 <p><strong>方案说明</strong></p>
 <ol>
 <li>通过哈希的方式，将数据分片，每个节点均分存储一定哈希槽区间的数据，默认分配了16384个槽位；</li>
@@ -385,7 +385,7 @@
 <li>扩容时需要把旧节点的数据迁移一部分到新节点。</li>
 </ol>
 <p>在Redis cluster架构下，每个Redis要开放两个端口号，比如一个是6379，另一个就是加1w的端口号，如：16379,16379端口号就是用来进行节点间通信的，也就是cluster bus的东西，cluster bus的通信，用来进行故障检测、配置更新、故障转移授权，cluster bus用了另外一种二进制的协议，<code>gossip</code>协议，用于节点间进行高效的数据交换，占用更少的网络带宽和处理时间。</p>
-<p><strong>节点间的内部通信机制</strong><br>基本通信原理<br>集群元数据的维护有两种方式：集中式、gossip协议，Redis cluster节点间采用gossip协议进行通信。</p>
+<p><strong>节点间的内部通信机制</strong><br>集群元数据的维护有两种方式：集中式、gossip协议，Redis cluster节点间采用gossip协议进行通信。</p>
 <p><strong>分布式寻址算法</strong></p>
 <ul>
 <li>hash算法（大量缓存重建）</li>
@@ -411,7 +411,7 @@
 <p><strong>缺点</strong></p>
 <ul>
 <li>由于Sharding处理放到客户端，规模进一步扩大时给运维带来挑战；</li>
-<li>客户端Sharding不支持动态增删节点，服务端Redis实例群拓扑结构有变化时，每个客户端都需要更新调整，连接不能共享，当应用规模增大时，资源浪费制约优化。</li>
+<li>客户端Shardin<strong>g不支持动态增删节点</strong>，服务端Redis实例群拓扑结构有变化时，每个客户端都需要更新调整，连接不能共享，当应用规模增大时，资源浪费制约优化。</li>
 </ul>
 <h2 id="基于代理服务器分片"><a href="#基于代理服务器分片" class="headerlink" title="基于代理服务器分片"></a>基于代理服务器分片</h2><p><img src="https://img-blog.csdnimg.cn/20200726183552539.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><strong>简介</strong><br>客户端发送请求到一个代理组件，代理解析客户端的数据，并将请求转发到正确的节点，最后将结果回复给客户端。</p>
 <p><strong>特征</strong></p>
@@ -450,7 +450,7 @@
 <p>5台机器对外提供读写，一共有50G内存。</p>
 <p>因为每个主实例都挂了一个从实例，任何一个主实例宕机，都会自动故障迁移，Redis从实例会自动变成主实例继续提供读写服务。</p>
 <p>你往内存里写的是什么数据？每条数据的大小是多少？<br>商品数据，每条数据是10kb，100条数据是1mb，10万条数据就是1G，常驻内存的是200万条商品数据，占用内存是20G，仅仅不到总内存的50%，目前高峰期每秒就是3500左右的请求量。</p>
-<h2 id="说说Redis哈希槽的概念"><a href="#说说Redis哈希槽的概念" class="headerlink" title="说说Redis哈希槽的概念"></a>说说Redis哈希槽的概念</h2><p>Redis集群中没有使用一致性hash，而是引入了哈希槽的概念，Redis集群有16384个哈希槽，每个key通过CRC16校验后对16384取模来决定放置哪个槽，集群的每个节点负责一部分hash槽。</p>
+<h2 id="说说Redis哈希槽的概念"><a href="#说说Redis哈希槽的概念" class="headerlink" title="说说Redis哈希槽的概念"></a>说说Redis哈希槽的概念</h2><p>Redis集群中没有使用一致性hash，而是引入了哈希槽的概念，Redis集群有16384个哈希槽，<strong>每个key通过CRC16校验后对16384取模来决定放置哪个槽，集群的每个节点负责一部分hash槽。</strong></p>
 <h2 id="Redis集群会有写操作丢失吗？为什么？"><a href="#Redis集群会有写操作丢失吗？为什么？" class="headerlink" title="Redis集群会有写操作丢失吗？为什么？"></a>Redis集群会有写操作丢失吗？为什么？</h2><p><strong>Redis并不能保证数据的强一致性</strong>，这意味着在实际中集群在特定的条件下可能会丢失写操作。</p>
 <h2 id="Redis集群之间是如何复制的"><a href="#Redis集群之间是如何复制的" class="headerlink" title="Redis集群之间是如何复制的"></a>Redis集群之间是如何复制的</h2><p>异步复制</p>
 <h2 id="Redis集群最大节点个数是多少"><a href="#Redis集群最大节点个数是多少" class="headerlink" title="Redis集群最大节点个数是多少"></a>Redis集群最大节点个数是多少</h2><p>16384</p>
@@ -547,7 +547,7 @@
 <h2 id="Redis官方为什么不提供Windows版本"><a href="#Redis官方为什么不提供Windows版本" class="headerlink" title="Redis官方为什么不提供Windows版本"></a>Redis官方为什么不提供Windows版本</h2><p>因为目前Linux版本已经相当稳定，而且用户量很大，无须开发windows版本，反而会带来兼容性问题。</p>
 <h2 id="一个字符串类型的值能存储最大容量是多少"><a href="#一个字符串类型的值能存储最大容量是多少" class="headerlink" title="一个字符串类型的值能存储最大容量是多少"></a>一个字符串类型的值能存储最大容量是多少</h2><p>512M</p>
 <h2 id="Redis如何做大量数据插入？"><a href="#Redis如何做大量数据插入？" class="headerlink" title="Redis如何做大量数据插入？"></a>Redis如何做大量数据插入？</h2><p>Redis2.6开始redis-cli支持一种新的被称为之<code>pipe mode</code>的新模式用于执行大量数据插入工作。</p>
-<h2 id="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h2><p>使用<code>keys</code>指令可以扫出指定模式的key列表。<br>对方接着追问：如果这个Redis正在给线上的业务提供服务，那使用keys指令会有什么问题？<br>这个时候你要回答Redis的一个关键特性：Redis是单线程的，keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复，这个时候可以使用<code>scan</code>指令，scan指令可以无阻塞的提取出指定模式的key列表，但是会有一定的重复概率，需要在客户端做一次去重操作，整体花费的时间比直接用keys指令长。</p>
+<h2 id="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"><a href="#假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？" class="headerlink" title="假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？"></a>假如Redis里面有1亿个key，其中有10w个key是以某个固定的已知的前缀开头的，如何将它们全部找出来？</h2><p>使用<code>keys</code>指令可以扫出指定模式的key列表。<br>对方接着追问：如果这个Redis正在给线上的业务提供服务，那使用keys指令会有什么问题？<br>这个时候你要回答Redis的一个关键特性：<strong>Redis是单线程的，keys指令会导致线程阻塞一段时间，线上服务会停顿，直到指令执行完毕，服务才能恢复</strong>，这个时候可以使用<code>scan</code>指令，<strong>scan指令可以无阻塞的提取出指定模式的key列表，但是会有一定的重复概率，需要在客户端做一次去重操作</strong>，整体花费的时间比直接用keys指令长。</p>
 <h2 id="使用Redis做过异步队列吗？是如何实现的"><a href="#使用Redis做过异步队列吗？是如何实现的" class="headerlink" title="使用Redis做过异步队列吗？是如何实现的"></a>使用Redis做过异步队列吗？是如何实现的</h2><p>使用<strong>list</strong>类型保存数据消息，rpush生产消息，lpop消费消息，当lpop没有消息时，可以sleep一段时间，然后再检查有没有消息，如果不想sleep的话，可以使用blpop，在没有消息的时候，会一直阻塞，直到消息的到来，<strong>Redis可以通过发布/订阅模式来实现一个生产者多个消费者</strong>。</p>
 <h2 id="Redis如何实现延时队列"><a href="#Redis如何实现延时队列" class="headerlink" title="Redis如何实现延时队列"></a>Redis如何实现延时队列</h2><p>使用Sorted Set，使用时间戳做score，消息内容作为key，调用zadd来生产消息，消费者使用zrangbyscore获取n秒之前的数据做轮询处理。</p>
 <h2 id="Redis回收进程如何工作"><a href="#Redis回收进程如何工作" class="headerlink" title="Redis回收进程如何工作"></a>Redis回收进程如何工作</h2><ol>
@@ -593,7 +593,7 @@
                       <a href="/2020/07/27/Netty%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Netty面试题汇总</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -602,7 +602,7 @@
                     
                       <a href="/2020/07/19/Spring-Cloud-%E5%BC%80%E7%AF%87/">
                         <span class="hidden-mobile">Spring Cloud 开篇</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -635,7 +635,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -662,7 +662,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -671,7 +671,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

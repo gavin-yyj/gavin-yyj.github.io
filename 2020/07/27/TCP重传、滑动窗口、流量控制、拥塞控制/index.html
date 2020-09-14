@@ -247,7 +247,7 @@
 <li>发送端收到了三个ack = 2的确认，知道了seq2还没有收到，就会在定时器过期之前，重传丢失的seq2；</li>
 <li>最后，接收端收到了seq2，此时因为seq3，seq4，seq5都收到了，于是ack返回6。</li>
 </ul>
-<p>快<strong>速重传的工作方式是当收到三个相同的ack报文时，会在定时器过期之前，重传丢失的报文段。</strong></p>
+<p><strong>快速重传的工作方式是当收到三个相同的ack报文时，会在定时器过期之前，重传丢失的报文段。</strong></p>
 <p>快速重传机制只解决了超时时间的问题，但是<strong>重传的时候不知道该重传哪些TCP报文</strong>，于是就有了SACK方法。</p>
 <h2 id="SACK方法"><a href="#SACK方法" class="headerlink" title="SACK方法"></a>SACK方法</h2><p>SACK（Selective Acknowledgement，<strong>选择性确认</strong>），这种方式需要<strong>在TCP头部【选项】字段里加一个SACK的东西，它可以将缓存的地图发送给发送方，这样发送方就可以知道哪些数据收到了，哪些数据没有收到，知道了这些信息，就可以只重传丢失的数据。</strong></p>
 <p>如下图，发送方收到了三次同样的ack确认报文，于是就会触发快速重发机制，通过SACK信息发现只有200~299这段数据丢失，则重发时就只选择这个TCP段进行重发。<br><img src="https://img-blog.csdnimg.cn/20200727154904354.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>如果要支持SACK，必须双方都要支持。</p>
@@ -473,7 +473,7 @@
                       <a href="/2020/07/29/LRU%E7%AE%97%E6%B3%95/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">LRU算法</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -482,7 +482,7 @@
                     
                       <a href="/2020/07/27/Spring-Cloud%E9%9D%A2%E8%AF%95%E9%A2%98%E6%B1%87%E6%80%BB/">
                         <span class="hidden-mobile">Spring Cloud面试题汇总</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -515,7 +515,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -542,7 +542,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -551,7 +551,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

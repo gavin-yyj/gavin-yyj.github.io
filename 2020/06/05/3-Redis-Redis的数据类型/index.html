@@ -317,16 +317,16 @@
 <ul>
 <li>len：buf中已经占用的长度；</li>
 <li>free：buf中未使用的缓冲区长度；</li>
-<li>buf[]实际保存字符串数据的地方；</li>
+<li>buf[]：实际保存字符串数据的地方；</li>
 </ul>
-<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><h3 id="１、常数复杂度获取字符串长度"><a href="#１、常数复杂度获取字符串长度" class="headerlink" title="１、常数复杂度获取字符串长度"></a>１、常数复杂度获取字符串长度</h3><p>​    通过<code>strlen key</code>命令获取key的字符串长度，其时间复杂度变为O(1)</p>
-<h3 id="2、杜绝缓冲区溢出"><a href="#2、杜绝缓冲区溢出" class="headerlink" title="2、杜绝缓冲区溢出"></a>2、杜绝缓冲区溢出</h3><p>​    对于 SDS 数据类型，在进行字符修改的时候，会首先根据记录的 len 属性检查内存空间是否满足需求，如果不满足，会进行相应的空间扩展，然后再进行修改操作，所以不会出现缓冲区溢出。</p>
+<h2 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h2><h3 id="１、常数复杂度获取字符串长度"><a href="#１、常数复杂度获取字符串长度" class="headerlink" title="１、常数复杂度获取字符串长度"></a>１、常数复杂度获取字符串长度</h3><p>​    通过<code>strlen key</code>命令获取key的字符串长度，其时间复杂度变为O(1)。</p>
+<h3 id="2、杜绝缓冲区溢出"><a href="#2、杜绝缓冲区溢出" class="headerlink" title="2、杜绝缓冲区溢出"></a>2、杜绝缓冲区溢出</h3><p>对于 SDS 数据类型，在进行字符修改的时候，会首先根据记录的 len 属性检查内存空间是否满足需求，如果不满足，会进行相应的空间扩展，然后再进行修改操作，所以不会出现缓冲区溢出。</p>
 <h3 id="3、减少修改字符串的内存重新分配次数"><a href="#3、减少修改字符串的内存重新分配次数" class="headerlink" title="3、减少修改字符串的内存重新分配次数"></a>3、减少修改字符串的内存重新分配次数</h3><p>通过未使用空间，SDS实现了<code>空间预分配</code>和<code>惰性空间释放</code>两种优化策略。</p>
 <p><strong>空间预分配：</strong></p>
-<p>当len小于IMB（1024<em>1024）时*</em>增加<strong>字符串分配空间大小为原来的2倍+1字节，当len大于等于1M时每次分配额外多分配</strong>1M**的空间。好处是SDS将连续增长Ｎ次字符串所需的内存重分配次数从必然Ｎ次降低为最多Ｎ次。</p>
+<p>当len小于IMB（1024<em>1024）时*</em>增加<strong>字符串分配空间大小为原来的</strong>2倍+1<strong>字节，当len大于等于1M时每次分配额外多分配</strong>1M**的空间。好处是SDS将连续增长Ｎ次字符串所需的内存重分配次数从必然Ｎ次降低为最多Ｎ次。</p>
 <p><strong>惰性空间释放：</strong></p>
 <p>用于优化SDS字符串<strong>缩短</strong>操作，当SDS的API需要缩短SDS保存的字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用<code>free</code>属性来将这些字节的数量记录起来，并等待将来使用。</p>
-<p>通过惰性空间释放策略，SDS避免了缩短字符串时所需的内存重分配操作，并未将来有可能的增长操作提供了优化。</p>
+<p>通过惰性空间释放策略，SDS避免了缩短字符串时所需的内存重分配操作，并为将来有可能的增长操作提供了优化。</p>
 <h3 id="4、二进制安全"><a href="#4、二进制安全" class="headerlink" title="4、二进制安全"></a>4、二进制安全</h3><p>​    因为C字符串以空字符作为字符串结束的标识，而对于一些二进制文件（如图片等），内容可能包括空字符串，因此C字符串无法正确存取；而所有 SDS 的API 都是以处理二进制的方式来处理 buf 里面的元素，并且 SDS 不是以空字符串来判断是否结束，而是以 len 属性表示的长度来判断字符串是否结束。</p>
 <h3 id="5、兼容部分C-字符串函数"><a href="#5、兼容部分C-字符串函数" class="headerlink" title="5、兼容部分C 字符串函数"></a>5、兼容部分C 字符串函数</h3><p>​    因为buf[]中依然采用了C语言的以<code>\0</code>结尾，因此可以直接使用C语言的部分标准C字符串库函数。</p>
 <h2 id="二、Hash（散列）类型"><a href="#二、Hash（散列）类型" class="headerlink" title="二、Hash（散列）类型"></a>二、Hash（散列）类型</h2><p>Redis的字典使用哈希表作为底层实现。</p>
@@ -668,9 +668,9 @@ OK
 <p>链表被广泛用于实现Redis的各种功能，比如 ：列表键，发布于订阅，慢查询，监视器等；Redis的链表实现是双向链表，可以用于保存各种不同类型的值，可以直接获得头尾节点，常数时间复杂度获得链表长度。</p>
 <h3 id="3-5-特点"><a href="#3-5-特点" class="headerlink" title="3.5 特点"></a>3.5 特点</h3><ul>
 <li>双端：具有前置节点和后置节点的引用，获取这两个节点时间复杂度都是O(1)；</li>
-<li>无环：表头节点的prev指针和表尾节点的next指针都指向NULL，对链表的访问都是以NULL结束；</li>
-<li>带链表长度计数器：通过len属性获取链表长度的时间复杂度为O(1)；</li>
-<li>多态：可以保存各种不同类型的值</li>
+<li><strong>无环</strong>：表头节点的prev指针和表尾节点的next指针都指向NULL，对链表的访问都是以NULL结束；</li>
+<li><strong>带链表长度计数器</strong>：通过len属性获取链表长度的时间复杂度为O(1)；</li>
+<li>多态：可以保存各种不同类型的值。</li>
 </ul>
 <h2 id="四、Set-类型"><a href="#四、Set-类型" class="headerlink" title="四、Set 类型"></a>四、Set 类型</h2><p>Redis 的 Set 类型和 Java 中的 Set 类型一样，它具有两个重要的特点：<code>无序性</code>和<code>唯一性</code>，具体不再赘述。</p>
 <h3 id="4-1-基本操作"><a href="#4-1-基本操作" class="headerlink" title="4.1 基本操作"></a>4.1 基本操作</h3><table>
@@ -1075,13 +1075,13 @@ OK
 </li>
 <li><p>通过链表设置不同类型的特定函数，Redis链表可以保存各种不同类型的值，除了用作列表键，还在发布与订阅，慢查询，监视器等方面发挥作用；</p>
 </li>
-<li><p>Redis的字典底层使用哈希表实现，每个字典通常有两个哈希表，一个平时使用，另一个用于rehash操作，使用链地址法解决哈希冲突；</p>
+<li><p>Redis的字典底层使用哈希表实现，每个字典通常有两个哈希表，一个平时使用，另一个用于rehash操作，使用<strong>链地址法</strong>解决哈希冲突；</p>
 </li>
 <li><p>跳跃表通常是有序集合的底层实现之一，表中的节点按照分值大小进行排序；</p>
 </li>
 <li><p>整数集合是集合键的底层实现之一，底层由数组构成，升级特性能尽可能减少内存；</p>
 </li>
-<li><p>压缩链表是Redis为节省内存而开发的顺序型数据结构，通常作为列表键和哈希键的底层实现之一。</p>
+<li><p><strong>压缩链表</strong>是Redis为节省内存而开发的顺序型数据结构，通常作为列表键和哈希键的底层实现之一。</p>
 </li>
 </ul>
 
@@ -1119,7 +1119,7 @@ OK
                       <a href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">4. Redis--Redis的特性</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -1128,7 +1128,7 @@ OK
                     
                       <a href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/">
                         <span class="hidden-mobile">2. Redis--Jedis的使用</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -1161,7 +1161,7 @@ OK
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -1188,7 +1188,7 @@ OK
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -1197,7 +1197,7 @@ OK
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

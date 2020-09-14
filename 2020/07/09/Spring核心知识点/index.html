@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      8.3k 字
+      8.4k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      94
+      95
        分钟
     </span>
   
@@ -363,21 +363,18 @@
 
 <p>方法是最后一步，广播事件，ApplicationContext 初始化完成。</p>
 <h2 id="Ioc容器的加载过程简单概括："><a href="#Ioc容器的加载过程简单概括：" class="headerlink" title="Ioc容器的加载过程简单概括："></a>Ioc容器的加载过程简单概括：</h2><ol>
-<li><p>刷新预处理</p>
-</li>
-<li><p>将配置信息解析，注册到BeanFactory</p>
-</li>
-<li><p>设置bean的类加载器</p>
-</li>
-<li><p>如果有第三方想再bean加载注册完成后，初始化前做点什么(例如修改属性的值，修改bean的scope为单例或者多例。)，提供了相应的模板方法，后面还调用了这个方法的实现，并且把这些个实现类注册到对应的容器中</p>
-</li>
-<li><p>初始化当前的事件广播器</p>
-</li>
-<li><p>初始化所有的bean。（懒加载不执行这一步）</p>
-</li>
-<li><p>广播applicationcontext初始化完成。</p>
-</li>
+<li>刷新预处理</li>
+<li>将配置信息解析，注册到BeanFactory</li>
+<li>设置bean的类加载器</li>
+<li>如果有第三方想再bean加载注册完成后，初始化前做点什么(例如修改属性的值，修改bean的scope为单例或者多例。)，提供了相应的模板方法，后面还调用了这个方法的实现，并且把这些个实现类注册到对应的容器中</li>
+<li>初始化当前的事件广播器</li>
+<li>初始化所有的bean。（懒加载不执行这一步）</li>
+<li>广播applicationcontext初始化完成。</li>
 </ol>
+<h2 id="BeanFactory和FactoryBean"><a href="#BeanFactory和FactoryBean" class="headerlink" title="BeanFactory和FactoryBean"></a>BeanFactory和FactoryBean</h2><ul>
+<li>BeanFactory：以Factory结尾，是spring中比较原始的Factory，如XMLBeanFactory就是一种典型的BeanFactory，表示它是一个工厂类，又称IoC容器或对象工厂，所有的Bean都是由BeanFactory（IoC容器）来进行管理；</li>
+<li>FactoryBean：以Bean结尾，表示它是一个Bean，不同于普通Bean的是：FactoryBean能生产或修饰对象生成的工厂Bean，它的实现与设计模式中的工厂模式和修饰器模式类似。</li>
+</ul>
 <h2 id="BeanFactory和ApplicationContext的区别"><a href="#BeanFactory和ApplicationContext的区别" class="headerlink" title="BeanFactory和ApplicationContext的区别"></a>BeanFactory和ApplicationContext的区别</h2><p>BeanFactory和ApplicationContext是Spring的两大核心接口，都可以当做Spring的容器。<br><strong>区别：</strong><br>依赖关系：</p>
 <ul>
 <li><p>BeanFactory：是Spring里面最底层的接口，包含了各种Bean的定义，读取bean配置文档，管理bean的加载、实例化，控制bean的生命周期，维护bean之间的依赖关系。</p>
@@ -541,7 +538,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <li>READ-UNCOMMITTED(读取未提交)： 最低的隔离级别，可以读到未提交的内容；</li>
 <li>READ-COMMITTED(读取已提交)： 通过“快照读”的机制，保证只能读到已经提交的内容；</li>
 <li>REPEATABLE-READ(可重复读)： 对同一字段的多次读取结果都是一致的，因为事务开启后，不允许进行“修改，删除”操作；</li>
-<li>SERIALIZABLE(可串行化)：<br>最高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，但是效率太差，性能开销也大，几乎不使用。</li>
+<li>SERIALIZABLE(可串行化)：最高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，但是效率太差，性能开销也大，几乎不使用。</li>
 </ul>
 <h2 id="事务的传播属性"><a href="#事务的传播属性" class="headerlink" title="事务的传播属性"></a>事务的传播属性</h2><p>　<strong>PROPAGATION_REQUIRED</strong> – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。<br>　<strong>PROPAGATION_SUPPORTS</strong> – 支持当前事务，如果当前没有事务，就以非事务方式执行。<br>　<strong>PROPAGATION_MANDATORY</strong> – 支持当前事务，如果当前没有事务，就抛出异常。<br>　<strong>PROPAGATION_REQUIRES_NEW</strong> – 新建事务，如果当前存在事务，把当前事务挂起。<br>　<strong>PROPAGATION_NOT_SUPPORTED</strong> – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。<br>　<strong>PROPAGATION_NEVER</strong> – 以非事务方式执行，如果当前存在事务，则抛出异常。<br>　<strong>PROPAGATION_NESTED</strong>–如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED</p>
 <h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><h2 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h2><p>AOP(Aspect-Oriented Programming)，一般称为面向切面编程，作为面向对象的一种补充，用于<strong>将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“<strong>切面</strong>”（Aspect），以减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。可用于<strong>权限认证</strong>、日志、事务处理等。AOP底层原理就是动态代理的实现。</p>
@@ -553,7 +550,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <li><strong>目标（target）</strong>：被通知的对象，也就是真正的业务逻辑，被通知的对象可以在毫不知情的情况下，被织入切面，而自己专注于业务本身的逻辑；</li>
 <li><strong>织入（weaving）</strong>：把切面应用到目标对象来创建新的代理对象的过程；</li>
 </ul>
-<h2 id="Spring-AOP和AspectJ-AOP有什么区别"><a href="#Spring-AOP和AspectJ-AOP有什么区别" class="headerlink" title="Spring AOP和AspectJ AOP有什么区别"></a>Spring AOP和AspectJ AOP有什么区别</h2><p>AOP实现的关键在于代理模式，AOP代理主要分为静态代理和动态代理，静态代理的代表是AspectJ，动态代理则有Spring AOP和CGLIB。<br>区别：</p>
+<h2 id="Spring-AOP和AspectJ-AOP有什么区别"><a href="#Spring-AOP和AspectJ-AOP有什么区别" class="headerlink" title="Spring AOP和AspectJ AOP有什么区别"></a>Spring AOP和AspectJ AOP有什么区别</h2><p><strong>AOP实现的关键在于代理模式</strong>，AOP代理主要分为静态代理和动态代理，静态代理的代表是AspectJ，动态代理则有Spring AOP和CGLIB。<br>区别：</p>
 <ul>
 <li>AspectJ是静态代理的增强，AOP框架会在<strong>编译阶段</strong>生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</li>
 <li>Spring AOP使用的动态代理，AOP框架不会去修改字节码，而是每次<strong>运行时</strong>在内存中临时为方法生成一个AOP对象，这个AOP对象包含了目标对象的全部方法，并且在特定的切点做了增强处理，并回调原对象的方法。</li>
@@ -603,8 +600,8 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     &#125;
 &#125;</code></pre></div>
 
-<p>静态代理缺点：不灵活，重复代码多。静态代理的代表是AspectJ，AspectJ是静态代理的增强，AOP框架会在<strong>编译阶段</strong>生成AOP代理类，因此也称为编译时增强，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</p>
-<h3 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h3><p>JDK动态代理只提供<strong>接口</strong>的代理，不支持类的代理，核心<code>InvocationHandler</code>接口和<code>Proxy</code>类，InvocationHandler 通过invoke()方法反射来调用目标类中的代码，动态地将横切逻辑和业务编织在一起；接着，<strong>Proxy利用 InvocationHandler动态创建一个符合某一接口的实例, 生成目标类的代理对象。</strong></p>
+<p>静态代理缺点：不灵活，<strong>重复代码多</strong>。静态代理的代表是AspectJ，AspectJ是静态代理的增强，AOP框架会在<strong>编译阶段</strong>生成AOP代理类，因此也称为<strong>编译时增强</strong>，它会在编译阶段将Aspect（切面）织入到Java字节码中，运行的时候就是增强后的AOP对象。</p>
+<h3 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h3><p>JDK动态代理只提供<strong>接口</strong>的代理，不支持类的代理，核心<code>InvocationHandler</code>接口和<code>Proxy</code>类，InvocationHandler 通过<code>invoke()</code>方法<strong>反射</strong>来调用目标类中的代码，动态地将横切逻辑和业务编织在一起；接着，<strong>Proxy利用 InvocationHandler动态创建一个符合某一接口的实例, 生成目标类的代理对象。</strong></p>
 <ul>
 <li><p>类：java.lang.reflect.Proxy（通过该类动态生成代理类）</p>
 </li>
@@ -713,7 +710,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     &#125;
 &#125;</code></pre></div>
 
-<h4 id="原理解析-1"><a href="#原理解析-1" class="headerlink" title="原理解析"></a>原理解析</h4><p>Cglib是一个优秀的动态代理框架，它的底层使用ASM在内存中动态的生成被代理类的子类，使用CGLIB即使代理类没有实现任何接口也可以实现动态代理功能。CGLIB具有简单易用，它的运行速度要远远快于JDK的Proxy动态代理：<br>CGLIB的核心类：</p>
+<h4 id="原理解析-1"><a href="#原理解析-1" class="headerlink" title="原理解析"></a>原理解析</h4><p>Cglib是一个优秀的动态代理框架，它的底层使用ASM在内存中动态的生成被代理类的子类，使用CGLIB即使代理类没有实现任何接口也可以实现动态代理功能。CGLIB具有简单易用，它的<strong>运行速度要远远快于JDK的Proxy动态代理</strong>：<br>CGLIB的核心类：</p>
 <ul>
 <li>net.sf.cglib.proxy.Enhancer – 主要的增强类</li>
 <li>net.sf.cglib.proxy.MethodInterceptor – 主要的方法拦截类，它是Callback接口的子接口，需要用户实现</li>
@@ -766,7 +763,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -775,7 +772,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -808,7 +805,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -835,7 +832,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -844,7 +841,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

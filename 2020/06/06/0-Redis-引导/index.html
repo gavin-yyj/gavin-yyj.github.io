@@ -215,16 +215,16 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="一、Redis简介"><a href="#一、Redis简介" class="headerlink" title="一、Redis简介"></a>一、Redis简介</h1><p>Redis是一个开源的<strong>内存中</strong>的数据结构存储系统，它可以用作：<strong>数据库</strong>、<strong>缓存</strong>和<strong>消息中间件</strong>。</p>
+              <h1 id="一、Redis简介"><a href="#一、Redis简介" class="headerlink" title="一、Redis简介"></a>一、Redis简介</h1><p>Redis是一个开源的，基于<strong>内存</strong>的数据结构存储系统，它可以用作：<strong>数据库</strong>、<strong>缓存</strong>和<strong>消息中间件</strong>。</p>
 <p>它支持多种类型的数据结构，如字符串（String），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：<strong>String</strong>、<strong>List</strong>、<strong>Set</strong>、<strong>Hash</strong>、<strong>ZSet</strong>这5种。</p>
 <p>Redis 内置了<strong>复制</strong>（Replication），<strong>LUA脚本</strong>（Lua scripting）， <strong>LRU驱动事件</strong>（LRU eviction），<strong>事务</strong>（Transactions） 和不同级别的磁盘<strong>持久化</strong>（Persistence），并通过 Redis<strong>哨兵</strong>（Sentinel）和<strong>自动分区</strong>（Cluster）提供高可用性（High Availability）。</p>
-<p>Redis也提供了持久化的选项，这些选项可以让用户将自己的数据保存到磁盘上面进行存储。根据实际情况，可以每隔一定时间将数据集导出到磁盘（快照），或者追加到命令日志中（AOF只追加文件），他会在执行写命令时，将被执行的写命令复制到硬盘里面。您也可以关闭持久化功能，将Redis作为一个高效的网络的缓存数据功能使用。</p>
-<p>Redis不使用表，他的数据库不会预定义或者强制去要求用户对Redis存储的不同数据进行关联。</p>
+<p>Redis也提供了<strong>持久化</strong>的选项，这些选项可以让用户将自己的数据保存到磁盘。根据实际情况，可以每隔一定时间将数据集以快照的形式导出到磁盘（RDB），或者追加到命令日志中（AOF只追加文件），它会在执行写命令时，将被执行的写命令复制到硬盘里面。您也可以关闭持久化功能，将Redis作为一个高效的网络的缓存数据功能使用。</p>
+<p>Redis不使用表，它的数据库不会预定义或者强制去要求用户对Redis存储的不同数据进行关联。</p>
 <p>数据库的工作模式按存储方式可分为：硬盘数据库和内存数据库。Redis 将数据储存在内存里面，读写数据的时候都不会受到硬盘 I/O 速度的限制，所以速度极快。</p>
 <h1 id="二、Redis和其他缓存数据库的区别"><a href="#二、Redis和其他缓存数据库的区别" class="headerlink" title="二、Redis和其他缓存数据库的区别"></a>二、Redis和其他缓存数据库的区别</h1><h2 id="1-1-Redis-与其他-key-value-缓存产品相比有以下三个特点："><a href="#1-1-Redis-与其他-key-value-缓存产品相比有以下三个特点：" class="headerlink" title="1.1 Redis 与其他 key - value 缓存产品相比有以下三个特点："></a>1.1 Redis 与其他 key - value 缓存产品相比有以下三个特点：</h2><p>（1）Redis支持数据的持久化，可以将内存中的数据保存在磁盘中，重启的时候可以再次加载进行使用。</p>
 <p>（2）Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储。</p>
 <p>（3）Redis支持数据的备份，即master-slave模式的数据备份。</p>
-<h2 id="1-2-Redis和Memcached的区别"><a href="#1-2-Redis和Memcached的区别" class="headerlink" title="1.2 Redis和Memcached的区别"></a>1.2 Redis和Memcached的区别</h2><p>Redis常被拿来和高性能键值缓存服务器Memcached进行对比：这两者都可以用来存储键值对，彼此的性能也相差无几，但是Redis相对支持更多的数据类型，除了支持键值对之外，还支持list，set，zset，hash等数据结构的存储，而Memcached只能存储普通的字符串键。</p>
+<h2 id="1-2-Redis和Memcached的区别"><a href="#1-2-Redis和Memcached的区别" class="headerlink" title="1.2 Redis和Memcached的区别"></a>1.2 Redis和Memcached的区别</h2><p>Redis常被拿来和高性能键值缓存服务器Memcached进行对比：这两者都可以用来存储键值对，彼此的性能也相差无几，但是Redis相对支持更多的数据类型，除了支持键值对之外，还支持list，set，zset，hash等数据结构的存储，而<strong>Memcached只能存储普通的字符串键。</strong></p>
 <p>Memcached用户只能通过<strong>APPEND</strong>的方式将数据添加到已有的字符串的末尾，并将这个字符串当做列表来使用。但是在删除这些元素的时候，Memcached采用的是通过黑名单的方式来隐藏列表里的元素，从而避免了对元素的读取、更新、删除等操作。相反的Redis的List和Set允许用户直接添加和删除元素。</p>
 <h2 id="1-3-Redis和其他数据库的区别"><a href="#1-3-Redis和其他数据库的区别" class="headerlink" title="1.3 Redis和其他数据库的区别"></a>1.3 Redis和其他数据库的区别</h2><p><img src="https://img-blog.csdnimg.cn/20200606171008448.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="三、Redis为什么这么快"><a href="#三、Redis为什么这么快" class="headerlink" title="三、Redis为什么这么快"></a>三、Redis为什么这么快</h1><p>1、<strong>完全基于内存</strong>，绝大部分请求是纯粹的内存操作，非常快速。数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1)；</p>
@@ -233,10 +233,9 @@
 <p>4、使用<strong>多路I/O复用模型</strong>，非阻塞IO；</p>
 <p>5、使用底层模型不同，它们之间底层实现方式以及与客户端之间通信的应用协议不一样，Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求；</p>
 <p>以上几点都比较好理解，下边我们针对多路 I/O 复用模型进行简单的探讨：</p>
-<p>（1）多路 I/O 复用模型</p>
 <p>多路I/O复用模型是利用 select、poll、epoll 可以同时监测多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是只轮询那些真正发出了事件的流），并且只依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p>
 <p><strong>这里“多路”指的是多个网络连接，“复用”指的是复用同一个线程。</strong>采用<strong>多路 I/O 复用技术可以让单个线程高效的处理多个连接请求</strong>（尽量减少网络 IO 的时间消耗），且 Redis 在内存中操作数据的速度非常快，也就是说内存内的操作不会成为影响Redis性能的瓶颈，主要由以上几点造就了 Redis 具有很高的吞吐量。</p>
-<h1 id="四、为什么Redis是单线程的"><a href="#四、为什么Redis是单线程的" class="headerlink" title="四、为什么Redis是单线程的"></a>四、为什么Redis是单线程的</h1><p>我们首先要明白，上边的种种分析，都是为了营造一个Redis很快的氛围！官方FAQ表示，因为Redis是基于内存的操作，CPU不是Redis的瓶颈，Redis的瓶颈最有可能是机器内存的大小或者网络带宽。既然单线程容易实现，而且CPU不会成为瓶颈，那就顺理成章地采用单线程的方案了（毕竟采用多线程会有很多麻烦！）。</p>
+<h1 id="四、为什么Redis是单线程的"><a href="#四、为什么Redis是单线程的" class="headerlink" title="四、为什么Redis是单线程的"></a>四、为什么Redis是单线程的</h1><p>我们首先要明白，上边的种种分析，都是为了营造一个Redis很快的氛围！官方FAQ表示，因为Redis是基于内存的操作，CPU不是Redis的瓶颈，<strong>Redis的瓶颈最有可能是机器内存的大小或者网络带宽</strong>。既然单线程容易实现，而且CPU不会成为瓶颈，那就顺理成章地采用单线程的方案了（毕竟采用多线程会有很多麻烦！）。</p>
 <p>但是，我们使用单线程的方式是无法发挥多核CPU 性能，不过我们可以通过在单机开多个Redis 实例来完善！</p>
 <p><strong>警告</strong>：这里我们一直在强调的单线程，只是<strong>在处理我们的网络请求的时候只有一个线程来处理</strong>，一个正式的Redis Server运行的时候肯定是不止一个线程的，这里需要大家明确的注意一下！</p>
 <h1 id="五、扩展"><a href="#五、扩展" class="headerlink" title="五、扩展"></a>五、扩展</h1><p>以下也是你应该知道的几种模型：</p>
@@ -281,7 +280,7 @@
                       <a href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">11. Redis--一致性Hash算法</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -290,7 +289,7 @@
                     
                       <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/">
                         <span class="hidden-mobile">10. Redis--如何优化缓存架构</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -323,7 +322,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -350,7 +349,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -359,7 +358,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

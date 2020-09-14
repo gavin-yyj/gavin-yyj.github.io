@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      12.1k 字
+      12.4k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      143
+      147
        分钟
     </span>
   
@@ -215,10 +215,14 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="1-引导"><a href="#1-引导" class="headerlink" title="1. 引导"></a>1. 引导</h1><h3 id="跨站请求伪造（CSRF）"><a href="#跨站请求伪造（CSRF）" class="headerlink" title="跨站请求伪造（CSRF）"></a>跨站请求伪造（CSRF）</h3><p><strong>什么是跨站请求伪造？</strong></p>
-<p>简单来说，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站，并运行一些操作（如发邮件，发消息，转账等），由于浏览器曾经认证过该网站，所以被访问的网站会认为是真正的用户操作而去运行，这利用了web中用户身份验证的一个漏洞：<strong>简单的身份验证只能保证请求来自某个用户的浏览器，而不能保证请求本身是用户资源发出的。</strong></p>
-<p><strong>产生的原因：</strong><br>CSRF攻击的可能原因是受害者网站的HTTP请求与攻击者网站的请求完全相同。这意味着没有办法拒绝来自邪恶网站的请求并允许来自银行网站的请求。</p>
-<p><strong>如何防御？</strong><br>为了防御CSRF攻击，我们需要确保恶意站点无法提供请求中的某些内容，因此我们可以区分这两个请求。<br>Spring提供了两种机制来防御CSRF攻击：</p>
+              <h1 id="1-引导"><a href="#1-引导" class="headerlink" title="1. 引导"></a>1. 引导</h1><h2 id="跨站脚本攻击（XSS）"><a href="#跨站脚本攻击（XSS）" class="headerlink" title="跨站脚本攻击（XSS）"></a>跨站脚本攻击（XSS）</h2><p>XSS攻击是指攻击者在网站上注入恶意的客户端代码，通过恶意脚本对客户端网页进行篡改，从而在用户浏览网页时，对用户浏览器进行控制或者获取用户隐私数据的一种攻击方式。</p>
+<h3 id="如何防护？"><a href="#如何防护？" class="headerlink" title="如何防护？"></a>如何防护？</h3><p>现在主流的浏览器内置了防范XSS的措施，对于开发者来说，有如下方式来防止XSS攻击。</p>
+<h4 id="HTTPOnly防止截取Cookie"><a href="#HTTPOnly防止截取Cookie" class="headerlink" title="HTTPOnly防止截取Cookie"></a>HTTPOnly防止截取Cookie</h4><p>作为一个标准，浏览器将禁止页面的JavaScript访问带有HTTPOnly属性的Cookie，严格来说，HttpOnly并非阻止XSS攻击，而是能阻止XSS攻击后的Cookie劫持攻击。</p>
+<h4 id="输入检查"><a href="#输入检查" class="headerlink" title="输入检查"></a>输入检查</h4><p>对于用户的任何输入要进行检查、过滤和转义，建立可信任的字符和HTML标签白名单，对于不在白名单之列的字符或者标签进行过滤或编码。</p>
+<h4 id="输出检查"><a href="#输出检查" class="headerlink" title="输出检查"></a>输出检查</h4><p>一般来说，除富文本的输出外，在变量输出到HTML页面时，可以使用编码或转义的方式来防御XSS攻击。例如利用sanitize-html对输出内容进行有规则的过滤之后再输出到页面中。</p>
+<h2 id="跨站请求伪造（CSRF）"><a href="#跨站请求伪造（CSRF）" class="headerlink" title="跨站请求伪造（CSRF）"></a>跨站请求伪造（CSRF）</h2><h3 id="什么是跨站请求伪造？"><a href="#什么是跨站请求伪造？" class="headerlink" title="什么是跨站请求伪造？"></a><strong>什么是跨站请求伪造？</strong></h3><p>简单来说，就是攻击者通过一些技术手段欺骗用户的浏览器去访问一个自己曾经认证过的网站，并运行一些操作（如发邮件，发消息，转账等），由于浏览器曾经认证过该网站，所以被访问的网站会认为是真正的用户操作而去运行，这利用了web中用户身份验证的一个漏洞：<strong>简单的身份验证只能保证请求来自某个用户的浏览器，而不能保证请求本身是用户资源发出的。</strong></p>
+<h3 id="产生的原因："><a href="#产生的原因：" class="headerlink" title="产生的原因："></a><strong>产生的原因：</strong></h3><p>CSRF攻击的可能原因是受害者网站的HTTP请求与攻击者网站的请求完全相同。这意味着没有办法拒绝来自邪恶网站的请求并允许来自银行网站的请求。</p>
+<h3 id="如何防御？"><a href="#如何防御？" class="headerlink" title="如何防御？"></a><strong>如何防御？</strong></h3><p>为了防御CSRF攻击，我们需要确保恶意站点无法提供请求中的某些内容，因此我们可以区分这两个请求。<br>Spring提供了两种机制来防御CSRF攻击：</p>
 <ul>
 <li>同步器令牌模式</li>
 <li>在会话Cookie上指定SameSite属性</li>
@@ -951,7 +955,7 @@ key:               A private key to prevent modification of the remember-me toke
                       <a href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Tomcat系统架构浅谈</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -960,7 +964,7 @@ key:               A private key to prevent modification of the remember-me toke
                     
                       <a href="/2020/06/23/shiro%E7%B3%BB%E5%88%97-2-%E6%A0%B8%E5%BF%83/">
                         <span class="hidden-mobile">shiro系列-2.核心</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -993,7 +997,7 @@ key:               A private key to prevent modification of the remember-me toke
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -1020,7 +1024,7 @@ key:               A private key to prevent modification of the remember-me toke
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -1029,7 +1033,7 @@ key:               A private key to prevent modification of the remember-me toke
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

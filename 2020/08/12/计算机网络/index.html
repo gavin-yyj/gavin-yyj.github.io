@@ -246,7 +246,7 @@
 <p>TCP/IP 协议只有四层，相当于五层协议中数据链路层和物理层合并为<strong>网络接口层</strong>。<br>TCP/IP 体系结构不严格遵循 OSI 分层概念，应用层可能会直接使用 IP 层或者网络接口层。</p>
 <p>数据在各层之间的传递过程 ：<br>在向下的过程中，需要添加下层协议所需要的首部或者尾部，而在向上的过程中不断拆开首部和尾部。<br>路由器只有下面三层协议，因为路由器位于网络层，不需要为进程或者应用程序提供服务，因此也就不需要传输层和应用层。</p>
 <h1 id="2-简单说下每一层对应的网络协议有哪些？"><a href="#2-简单说下每一层对应的网络协议有哪些？" class="headerlink" title="2. 简单说下每一层对应的网络协议有哪些？"></a>2. 简单说下每一层对应的网络协议有哪些？</h1><p><img src="https://img-blog.csdnimg.cn/20200812093619514.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="3-ARP-协议的工作原理？"><a href="#3-ARP-协议的工作原理？" class="headerlink" title="3. ARP 协议的工作原理？"></a>3. ARP 协议的工作原理？</h2><p>ARP协议是“<code>Address Resolution Protocol</code>”（<strong>地址解析协议</strong>）的缩写。在局域网中，网络中实际传输的是“<strong>帧</strong>”，帧里面是有目标主机的MAC地址的。在以太网中，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。但这个目标MAC地址是如何获得的呢？它就是通过地址解析协议获得的。所谓“<strong>地址解析”就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程</strong>。ARP协议的基本功能就是通过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。</p>
+<h2 id="3-ARP-协议的工作原理？"><a href="#3-ARP-协议的工作原理？" class="headerlink" title="3. ARP 协议的工作原理？"></a>3. ARP 协议的工作原理？</h2><p>ARP协议是“<code>Address Resolution Protocol</code>”（<strong>地址解析协议</strong>）的缩写。在局域网中，网络中实际传输的是“<strong>帧</strong>”，帧里面是有目标主机的MAC地址的。在以太网中，一个主机要和另一个主机进行直接通信，必须要知道目标主机的MAC地址。但这个目标MAC地址是如何获得的呢？它就是通过地址解析协议获得的。所谓“<strong>地址解析”就是主机在发送帧前将目标IP地址转换成目标MAC地址的过程</strong>。ARP协议的基本功能就是<strong>通过目标设备的IP地址，查询目标设备的MAC地址，以保证通信的顺利进行。</strong></p>
 <p><strong>原理</strong>：我们以主机A（192.168.1.5）向主机B（192.168.1.1）发送数据为例。当发送数据时，主机A会在自己的<code>ARP缓存表</code>中寻找是否有目标IP地址。如果找到了，也就知道了目标MAC地址，直接把目标MAC地址写入帧里面发送就可以了；如果在ARP缓存表中没有找到相对应的IP地址，主机A就会在网络上发送一个<code>广播</code>，目标MAC地址是“FF.FF.FF.FF.FF.FF”，这表示向同一网段内的所有主机发出这样的询问：“192.168.1.1的MAC地址是什么？”网络上其他主机并不响应ARP询问，只有主机B接收到这个帧时，才向主机A做出这样的回应：“192.168.1.1的MAC地址是00-aa-00-62-c6-09”。这样，主机A就知道了主机B的MAC地址，它就可以向主机B发送信息了。同时它还更新了自己的ARP缓存表，下次再向主机B发送信息时，直接从ARP缓存表里查找就可以了。ARP缓存表采用了<code>老化机制</code>，在一段时间内如果表中的某一行没有使用，就会被删除，这样可以大大减少ARP缓存表的长度，加快查询速度。</p>
 <h2 id="4-谈下你对-IP-地址分类的理解？"><a href="#4-谈下你对-IP-地址分类的理解？" class="headerlink" title="4. 谈下你对 IP 地址分类的理解？"></a>4. 谈下你对 IP 地址分类的理解？</h2><p>IP 地址是指互联网协议地址，是 IP 协议提供的一种统一的地址格式，它为互联网上的每一个网络和每一台主机分配一个逻辑地址，以此来屏蔽物理地址的差异。IP 地址编址方案将 IP 地址空间划分为 A、B、C、D、E 五类，其中 A、B、C 是基本类，D、E 类作为<strong>多播</strong>和<strong>保留</strong>使用，为特殊地址。<br>每个 IP 地址包括两个标识码（ID），即<strong>网络 ID</strong> 和<strong>主机 ID</strong>。<strong>同一个物理网络上的所有主机都使用同一个网络 ID</strong>，网络上的一个主机（包括网络上工作站，服务器和路由器等）有一个主机 ID 与其对应。A<del>E 类地址的特点如下：<br>A 类地址：以 0 开头，第一个字节范围：0</del>127；<br>B 类地址：以 10 开头，第一个字节范围：128<del>191；<br>C 类地址：以 110 开头，第一个字节范围：192</del>223；<br>D 类地址：以 1110 开头，第一个字节范围为 224~239；<br>E 类地址：以 1111 开头，保留地址<br><img src="https://img-blog.csdnimg.cn/20200812101634522.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h2 id="5-TCP-和-UDP-的区别？"><a href="#5-TCP-和-UDP-的区别？" class="headerlink" title="5. TCP 和 UDP 的区别？"></a>5. TCP 和 UDP 的区别？</h2><table>
@@ -416,7 +416,7 @@
 <li><strong>DNS 解析</strong>：浏览器查询 DNS，获取域名对应的 IP 地址：具体过程包括浏览器搜索自身的 DNS 缓存、搜索操作系统的 DNS 缓存、读取本地的 Hosts 文件和向本地 DNS 服务器进行查询等。对于向本地 DNS 服务器进行查询，如果要查询的域名包含在本地配置区域资源中，则返回解析结果给客户机，完成域名解析(此解析具有权威性)；如果要查询的域名不由本地 DNS 服务器区域解析，但该服务器已缓存了此网址映射关系，则调用这个 IP 地址映射，完成域名解析（此解析不具有权威性）。如果本地域名服务器并未缓存该网址映射关系，那么将根据其设置发起递归查询或者迭代查询；</li>
 <li><strong>TCP 连接</strong>：浏览器获得域名对应的 IP 地址以后，浏览器向服务器请求建立链接，发起三次握手；</li>
 <li><strong>发送 HTTP 请求</strong>：TCP 连接建立起来后，浏览器向服务器发送 HTTP 请求；</li>
-<li>服务器处理请求并返回 HTTP 报文：服务器接收到这个请求，并根据路径参数映射到特定的请求处理器进行处理，并将处理结果及相应的视图返回给浏览器；</li>
+<li><strong>服务器处理请求并返回 HTTP 报文</strong>：服务器接收到这个请求，并根据路径参数映射到特定的请求处理器进行处理，并将处理结果及相应的视图返回给浏览器；</li>
 <li><strong>浏览器解析渲染页面</strong>：浏览器解析并渲染视图，若遇到对 js 文件、css 文件及图片等静态资源的引用，则重复上述步骤并向服务器请求这些资源；浏览器根据其请求到的资源、数据渲染页面，最终向用户呈现一个完整的页面。</li>
 <li>连接结束。</li>
 </ol>
@@ -447,9 +447,8 @@
 <li>服务器从中选出一套<strong>加密算法</strong>和 <strong>hash 算法</strong>以及自己的<strong>身份信息</strong>（地址等）以<strong>证书</strong>的形式发送给浏览器，证书中包含服务器信息，加密公钥，证书的颁发机构；</li>
 <li>客户端收到网站的证书之后要做下面的事情： <div class="hljs"><pre><code>3.1 验证证书的合法性；
 3.2 如果验证通过证书，浏览器会生成一串随机数，并用证书中的公钥进行加密；
-3.3 用约定好的 hash 算法计算握手消息，然后用生成的密钥进行加密，然后一起发送给服务器。</code></pre></div></li>
-<li>服务器接收到客户端传送来的信息，要做下面的事情： <div class="hljs"><pre><code>4.1 用私钥解析出密码，用密码解析握手消息，验证 hash 值是否和浏览器发来的一致；
-4.2 使用密钥加密消息；</code></pre></div></li>
+3.3 用约定好的 hash 算法计算握手消息，然后用生成的密钥进行加密，一起发送给服务器。</code></pre></div></li>
+<li>服务器接收到客户端传送来的信息，要做下面的事情： <div class="hljs"><pre><code>4.1 用私钥解析出密码，用密码解析握手消息，验证 hash 值是否和浏览器发来的一致；</code></pre></div> 4.2 使用密钥加密消息；</li>
 <li>如果计算与 hash 值一致，握手成功。</li>
 </ol>
 <h2 id="30-HTTP-和-HTTPS-的区别？"><a href="#30-HTTP-和-HTTPS-的区别？" class="headerlink" title="30. HTTP 和 HTTPS 的区别？"></a>30. HTTP 和 HTTPS 的区别？</h2><ol>
@@ -472,13 +471,13 @@
 <li>散列算法，又称哈希函数，是一种<strong>单向</strong>加密算法。在信息安全技术中，经常需要验证消息的完整性，散列(Hash)函数提供了这一服务，它对不同长度的输入消息，产生固定长度的输出。这个固定长度的输出称为原输入消息的”散列”或”消息摘要”(Message digest)。散列算法不算加密算法，因为<strong>其结果是不可逆的</strong>，既然是不可逆的，那么当然不是用来加密的，而是签名。</li>
 </ul>
 <p>对称性加密算法有：AES、DES、3DES<br>非对称性算法有：RSA、DSA、ECC<br>散列算法（签名算法）有：MD5、SHA1、HMAC<br>其他常用算法：base64、https</p>
-<h2 id="35-Session-和-Cookie-的区别？"><a href="#35-Session-和-Cookie-的区别？" class="headerlink" title="35. Session 和 Cookie 的区别？"></a>35. Session 和 Cookie 的区别？</h2><h3 id="Cookie定义"><a href="#Cookie定义" class="headerlink" title="Cookie定义"></a>Cookie定义</h3><p>Cookie是服务器在本地机器上存储的小段文本并随每一个请求发送至同一服务器。Cookies保存在客户端，主要内容包括：名字，值，过期时间，路径等等。  </p>
+<h2 id="35-Session-和-Cookie-的区别？"><a href="#35-Session-和-Cookie-的区别？" class="headerlink" title="35. Session 和 Cookie 的区别？"></a>35. Session 和 Cookie 的区别？</h2><h3 id="Cookie定义"><a href="#Cookie定义" class="headerlink" title="Cookie定义"></a>Cookie定义</h3><p>Cookie是服务器在本地机器上存储的小段文本并随每一个请求发送至同一服务器。Cookie保存在客户端，主要内容包括：名字，值，过期时间，路径等等。  </p>
 <h3 id="Session定义"><a href="#Session定义" class="headerlink" title="Session定义"></a>Session定义</h3><p>Session是在服务器端保存用户数据。浏览器第一次发送请求时，服务器自动生成了Session ID来唯一标识这个并将其通过响应发送到浏览器。浏览器第二次发送请求会将前一次服务器响应中的Session ID放在请求中一并发送到服务器上，服务器从请求中提取出Session ID，并和保存的所有Session ID进行对比，找到这个用户的信息。一般这个Session ID会有个时间限制，默认30分钟超时后毁掉这次Session ID。</p>
 <h3 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h3><p>1、cookie数据存放在第三方应用的浏览器上，session数据放在服务器上。<br>2、cookie不是很安全，别人可以分析存放在本地的cookie，进行cookie欺骗，考虑到安全应当使用session。<br>3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能，考虑到减轻服务器性能方面，应当使用cookie。<br>4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。<br>5、所以个人建议：将登录信息等重要信息存放为session，其他信息如果需要保留，可以放在cookie。</p>
 <h2 id="36-什么是-CAS-单点登录？"><a href="#36-什么是-CAS-单点登录？" class="headerlink" title="36. 什么是 CAS 单点登录？"></a>36. 什么是 CAS 单点登录？</h2><p>单点登录SSO（Single Sign On）说得简单点就是在一个多系统共存的环境下，用户在一处登录后，就不用在其他系统中登录，也就是用户的一次登录能得到其他所有系统的信任。<br>实现单点登录说到底就是要解决如何产生和存储那个信任，再就是其他系统如何验证这个信任的有效性，因此要点也就以下两个：</p>
 <ul>
 <li>存储信任</li>
-<li>验证信任<h2 id="37-Socket-在-OSI七层模型中的哪一层？"><a href="#37-Socket-在-OSI七层模型中的哪一层？" class="headerlink" title="37. Socket 在 OSI七层模型中的哪一层？"></a>37. Socket 在 OSI七层模型中的哪一层？</h2>socket的实现部分, 就是系统协议栈部分， 应该包含了 网络层 (ip), 传输层(tcp/udp)等等。<br>用socket写程序的人， 就要看用socket那部分了。如果你直接用ip层, rawsocket, 假如你自己写个tcp协议，那你应该做的就是传输层。如果你是用tcp/udp等协议，做网络应用，那应该是应用层。</li>
+<li>验证信任<h2 id="37-Socket-在-OSI七层模型中的哪一层？"><a href="#37-Socket-在-OSI七层模型中的哪一层？" class="headerlink" title="37. Socket 在 OSI七层模型中的哪一层？"></a>37. Socket 在 OSI七层模型中的哪一层？</h2>socket的实现部分, 就是系统协议栈部分， 应该包含了 网络层 (ip), 传输层(tcp/udp)等等。<br>用socket写程序的人， 就要看用socket哪部分了。如果你直接用ip层, rawsocket, 假如你自己写个tcp协议，那你应该做的就是传输层。如果你是用tcp/udp等协议，做网络应用，那应该是应用层。</li>
 </ul>
 
             </article>
@@ -513,7 +512,7 @@
                       <a href="/2020/08/15/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">操作系统</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -522,7 +521,7 @@
                     
                       <a href="/2020/08/05/Java%E5%B9%B6%E5%8F%91%E4%B9%8BCountDownLatch/">
                         <span class="hidden-mobile">Java并发之CountDownLatch</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -555,7 +554,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -582,7 +581,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -591,7 +590,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

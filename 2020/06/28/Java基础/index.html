@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.6k 字
+      8k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      81
+      86
        分钟
     </span>
   
@@ -216,9 +216,11 @@
             
             <article class="markdown-body">
               <h1 id="Java概述"><a href="#Java概述" class="headerlink" title="Java概述"></a>Java概述</h1><h2 id="1-JVM、JRE和JDK的关系"><a href="#1-JVM、JRE和JDK的关系" class="headerlink" title="1. JVM、JRE和JDK的关系"></a>1. JVM、JRE和JDK的关系</h2><p><strong>JVM</strong><br><code>Java Virtual Machine</code>，是Java虚拟机，Java程序需要运行在虚拟机上，不同的平台有自己的虚拟机，因此Java语言可以实现跨平台。<br><strong>JRE</strong><br><code>Java Runtime Environment</code>，包括Java虚拟机和Java程序所需的核心类库等。核心类库主要是<code>java.lang</code>包：包含了运行Java程序必不可少的系统类，如基本数据类型、基本数学函数、字符串处理、线程、异常处理类等，系统缺省加载这个包；<br>如果想要运行一个开发好的Java程序，计算机中只需要安装JRE即可。<br><strong>JDK</strong><br><code>Java Development Kit</code>，是提供给Java开发人员使用的，其中包含了Java的开发工具，也包括了JRE。所以安装了JDK，就无需再单独安装JRE了。其中的开发工具：编译工具(javac.exe)，打包工具(jar.exe)等<br><img src="https://img-blog.csdnimg.cn/20200626145717665.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h2 id="2-Java与C-的区别与联系"><a href="#2-Java与C-的区别与联系" class="headerlink" title="2. Java与C#的区别与联系"></a>2. Java与C#的区别与联系</h2><p>相同点：</p>
-<p>都是面向对象编程的语言，都能够实现面向对象的思想（封装，继承，多态）；都具有垃圾自动回收机制；Java站在C++的肩膀上，而C#站在了Java的肩膀上。</p>
-<p>不同点：<br>语法特性：  Java抛弃了指针，使用了包（package）的概念，导入包使用import语句；C#没有完全抛弃指针（在unsafe状态下还可以操作指针），对于类的管理采用了名称空间（namespace）的概念，并且还使用了out、ref等关键字，便于从一个方法返回多个结果。<br>功能方面：C#有一些由编译器提供的特性，如：委托、属性、真正的泛型等，在Java中实现起来有点麻烦，同样Java中也有C#不具备的功能，如匿名内部类，动态代理等，另外Java实现了真正的跨平台性，而C#的跨平台性是建立在跨windows平台的基础上的。</p>
+<h2 id="2-Java与C-的区别与联系"><a href="#2-Java与C-的区别与联系" class="headerlink" title="2. Java与C#的区别与联系"></a>2. Java与C#的区别与联系</h2><h3 id="相同点："><a href="#相同点：" class="headerlink" title="相同点："></a>相同点：</h3><p>都是面向对象编程的语言，都能够实现面向对象的思想（封装，继承，多态）；都具有垃圾自动回收机制；Java站在C++的肩膀上，而C#站在了Java的肩膀上。</p>
+<h3 id="不同点："><a href="#不同点：" class="headerlink" title="不同点："></a>不同点：</h3><ul>
+<li>语法特性：  Java抛弃了指针，使用了包（package）的概念，导入包使用import语句；C#没有完全抛弃指针（在unsafe状态下还可以操作指针），对于类的管理采用了名称空间（namespace）的概念，并且还使用了out、ref等关键字，便于从一个方法返回多个结果。</li>
+<li>功能方面：C#有一些由编译器提供的特性，如：委托、属性、真正的泛型等，在Java中实现起来有点麻烦，同样Java中也有C#不具备的功能，如匿名内部类，动态代理等，另外Java实现了真正的跨平台性，而C#的跨平台性是建立在跨windows平台的基础上的。</li>
+</ul>
 <h2 id="3-Java与C-C-的异同"><a href="#3-Java与C-C-的异同" class="headerlink" title="3. Java与C/C++的异同"></a>3. Java与C/C++的异同</h2><ol>
 <li>Java是<strong>解释型语言</strong>，C/C++为<strong>编译型</strong>语言，源代码经过<strong>编译</strong>和<strong>链接</strong>后生成可执行的二进制代码，Java执行速度比C/C++慢，但Java能够跨平台执行；</li>
 <li>Java为纯面向对象语言，不存在全局变量或全局函数；</li>
@@ -254,7 +256,7 @@
 <p><strong>2、修饰方法</strong></p>
 <p> final修饰的方法表示此方法已经是“<strong>最后的、最终的</strong>”含义，亦即<strong>此方法不能被重写</strong>（可以重载多个final修饰的方法）。如果父类中final修饰的方法同时访问控制权限为private，将会导致子类中不能直接继承到此方法，此时可以在子类中定义相同的方法名和参数，不会产生重写与final的矛盾，而是在子类中重新定义了新的方法。（注：类的private方法会隐式地被指定为final方法。）</p>
 <p><strong>3、修饰变量</strong></p>
-<p>final<strong>成员变量表示常量，只能被赋值一次，赋值后值不再改变。</strong></p>
+<p><strong>final成员变量表示常量，只能被赋值一次，赋值后值不再改变。</strong></p>
 <p>　　当final修饰一个<strong>基本数据类型</strong>时，表示该基本数据类型的值一旦在<strong>初始化后便不能发生变化</strong>；如果final修饰一个<strong>引用类型</strong>时，则在对其初始化之后便<strong>不能再让其指向其他对象</strong>了，但该<strong>引用所指向的对象的内容是可以发生变化的</strong>。本质上是一回事，因为引用的值是一个地址，final要求值，即地址的值不发生变化。</p>
 <p>　　<strong>final修饰一个成员变量（属性），必须要显式初始化。</strong>这里有两种初始化方式<strong>，一种是在变量声明的时候初始化；第二种方法是在声明变量的时候不赋初值，</strong>但是要在这个变量所在的类的构造函数中对这个变量赋初值。</p>
 <p>如果不在定义的时候或者构造函数中对final变量进行赋值的话，则生成的对象中final变量的值是未知的（编译器会直接报错），因此必须初始化。</p>
@@ -326,7 +328,7 @@
 </ul>
 <h2 id="11、局部内部类和匿名内部类访问局部变量的时候，为什么变量必须要加final"><a href="#11、局部内部类和匿名内部类访问局部变量的时候，为什么变量必须要加final" class="headerlink" title="11、局部内部类和匿名内部类访问局部变量的时候，为什么变量必须要加final"></a>11、局部内部类和匿名内部类访问局部变量的时候，为什么变量必须要加final</h2><p>用final修饰实际上是为了<strong>保护数据的一致性</strong>，因为如果局部变量发生变化后，匿名内部类或局部内部类是不知道的（因为它只是拷贝了局部变量的值，并不是直接使用的局部变量），如果过了一段时间后局部变量的值指向另外一个对象，或是值发生了改变，那么程序运行的结果和预期的会不一致。<br><img src="https://img-blog.csdnimg.cn/20200627000517571.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>JDK1.8中虽然局部变量不需要用final修饰符修饰，但是我们在试图改变这个局部变量的时候会提示编译出错。</p>
 <h2 id="12、重载的方法能否根据返回类型进行区分"><a href="#12、重载的方法能否根据返回类型进行区分" class="headerlink" title="12、重载的方法能否根据返回类型进行区分"></a>12、重载的方法能否根据返回类型进行区分</h2><p>重载发生在同一个类中，方法名相同但参数列表不同（参数类型不同、个数不同、顺序不同），与方法返回值和访问修饰符无关。</p>
-<h2 id="13、hashcode和equals"><a href="#13、hashcode和equals" class="headerlink" title="13、hashcode和equals"></a>13、hashcode和equals</h2><p>这个问题应该是有个前提，就是你需要用到 HashMap、HashSet 等 Java 集合，用不到哈希表的话，其实仅仅重写 equals() 方法也可以。而工作中的场景是常常用到 Java 集合，所以 Java 官方建议重写 equals() 就一定要重写 hashCode() 方法。<br>对于对象集合的判重，如果一个集合含有 10000 个对象实例，仅仅使用 equals() 方法的话，那么对于一个对象判重就需要比较 10000 次，随着集合规模的增大，时间开销是很大的。但是同时使用哈希表的话，就能快速定位到对象的大概存储位置，并且在定位到大概存储位置后，后续比较过程中，如果两个对象的 hashCode 不相同，也不再需要调用 equals() 方法，从而大大减少了 equals() 比较次数。 </p>
+<h2 id="13、hashcode和equals"><a href="#13、hashcode和equals" class="headerlink" title="13、hashcode和equals"></a>13、hashcode和equals</h2><p>这个问题应该是有个前提，就是你需要用到 HashMap、HashSet 等 Java 集合，用不到哈希表的话，其实仅仅重写 equals() 方法也可以。而工作中的场景是常常用到 Java 集合，所以 Java 官方建议重写 equals() 就一定要重写 hashCode() 方法。<br>对于对象集合的判重，如果一个集合含有 10000 个对象实例，仅仅使用 equals() 方法的话，那么对于一个对象判重就需要比较 10000 次，随着集合规模的增大，时间开销是很大的。但是同时使用哈希表的话，就能快速定位到对象的大概存储位置，并且在定位到大概存储位置后，后续比较过程中，如果两个对象的 hashCode 不相同，也不再需要调用 equals() 方法，从而<strong>大大减少了 equals() 比较次数</strong>。 </p>
 <p>hashCode()与equals()的相关规定：<br>1、如果两个对象相等，则 hashCode 一定也是相同的；<br>2、两个对象相等，对两个对象分别调用 equals 方法都返回 true；<br>3、两个对象有相同的 hashCode 值，它们也不一定是相等的；<br>4、因此，equals 方法被覆盖过，则 hashCode 方法也必须被覆盖；<br>5、hashCode() 的默认行为是对堆上的对象产生独特值。如果没有重写 hashCode()，则该 class 的两个对象无论如何都不会相等（即使这两个对象指向相同的数据）。</p>
 <h2 id="14、当一个对象被当作参数传递到一个方法后，此方法可改变整个对象的属性，并返回变化后的结果，那么这里到底是值传递还是引用传递"><a href="#14、当一个对象被当作参数传递到一个方法后，此方法可改变整个对象的属性，并返回变化后的结果，那么这里到底是值传递还是引用传递" class="headerlink" title="14、当一个对象被当作参数传递到一个方法后，此方法可改变整个对象的属性，并返回变化后的结果，那么这里到底是值传递还是引用传递"></a>14、当一个对象被当作参数传递到一个方法后，此方法可改变整个对象的属性，并返回变化后的结果，那么这里到底是值传递还是引用传递</h2><p>是值传递。Java语言的方法调用只支持参数的值传递。当一个对象实例作为一个参数被传递到方法中时，参数的值就是对该对象的引用。对象的属性可以在被调用过程中被改变，但对对象引用的改变是不会影响到调用者的，也就是说这个引用还是会指向之前的对象，而不会指向其他对象。<strong>之所以能修改引用数据是因为它们同时指向了一个对象。</strong></p>
 <h2 id="15、值传递和引用传递的区别"><a href="#15、值传递和引用传递的区别" class="headerlink" title="15、值传递和引用传递的区别"></a>15、值传递和引用传递的区别</h2><p>所谓的按值调用表示方法接收的是调用者提供的值，而按引用调用则表示方法接收的是<strong>调用者提供的变量地址</strong>，一个方法可以修改传递引用所对应的变量值，而不能修改传递值调用所对应的变量值。</p>
@@ -370,9 +372,9 @@ System.out.println(count);</code></pre></div>
 <li>Web服务器中利用反射调用了Sevlet的服务方法。</li>
 <li>IDEA等开发工具利用反射动态剖析对象的类型与结构，动态提示对象的属性和方法。</li>
 </ul>
-<h2 id="Java获取反射的三种方法"><a href="#Java获取反射的三种方法" class="headerlink" title="Java获取反射的三种方法"></a>Java获取反射的三种方法</h2><p>1.通过new对象实现反射机制 </p>
-<p>2.通过路径实现反射机制 </p>
-<p>3.通过类名实现反射机制</p>
+<h2 id="Java获取反射的三种方法"><a href="#Java获取反射的三种方法" class="headerlink" title="Java获取反射的三种方法"></a>Java获取反射的三种方法</h2><p>1.通过<strong>new</strong>对象实现反射</p>
+<p>2.通过<strong>路径</strong>实现反射机制 </p>
+<p>3.通过<strong>类名</strong>实现反射机制</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Get</span> </span>&#123;
     <span class="hljs-comment">//获取反射机制三种方式</span>
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> ClassNotFoundException </span>&#123;
@@ -396,6 +398,29 @@ System.out.println(count);</code></pre></div>
     <span class="hljs-keyword">public</span> <span class="hljs-keyword">float</span> score;
 &#125;</code></pre></div>
 
+<h3 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h3><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Retention</span>(RetentionPolicy.RUNTIME)
+<span class="hljs-meta">@Target</span>(value = &#123;ElementType.TYPE&#125;)
+<span class="hljs-meta">@Documented</span>
+<span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> SecondAnnotation &#123;
+	<span class="hljs-function">String <span class="hljs-title">value</span><span class="hljs-params">()</span></span>;
+&#125;</code></pre></div>
+
+<ul>
+<li>@Target注解，是专门用来限定某个自定义注解能够被应用在哪些Java元素上面的。</li>
+<li>@Retention注解，用来修饰自定义注解的生命力。<br>注解的生命周期有三个阶段：1、Java源文件阶段；2、编译到class文件阶段；3、运行期阶段。</li>
+<li>@Documented注解，是被用来指定自定义注解是否能随着被定义的java文件生成到JavaDoc文档当中。</li>
+<li>@Inherited注解，是指定某个自定义注解如果写在了父类的声明部分，那么子类的声明部分也能自动拥有该注解。@Inherited注解只对那些@Target被定义为ElementType.TYPE的自定义注解起作用。</li>
+</ul>
+<p><strong>自定义注解类编写的一些规则：</strong></p>
+<ol>
+<li><code>Annotation</code>型定义为<code>@interface</code> 所有的<code>Annotation</code>会自动继承<code>java.lang.Annotation</code>这一接口，并且不能再去继承别的类或是接口；</li>
+<li>参数成员只能用<code>public</code>或默认<code>(default)</code>这两个访问权修饰；</li>
+<li>参数成员只能用基本类型<code>byte,short,char,int,long,float,double,boolean</code>八种基本数据类型和<code>String、Enum、Class、annotations</code>等数据类型，以及这一些类型的数组；</li>
+<li>如果只有一个成员，成员名称最好用<code>value</code>，因为默认就是它；</li>
+<li>一般定义参数成员后，都会给一个默认值，注意<code>String</code>一般不用<code>null</code>做默认值，可以用字符串或空串（”“）；</li>
+<li>要获取类方法和字段的注解信息，必须通过<code>Java</code>的反射技术来获取 <code>Annotation</code>对象,因为你除此之外没有别的获取注解对象的方法；</li>
+<li>注解也可以没有定义成员，不过这样注解就没啥用了</li>
+</ol>
 <h1 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h1><h2 id="什么是序列化和反序列化？"><a href="#什么是序列化和反序列化？" class="headerlink" title="什么是序列化和反序列化？"></a>什么是序列化和反序列化？</h2><ul>
 <li>Java序列化是指把Java对象转换为字节序列的过程，而Java反序列化是把字节序列恢复为Java对象的过程；</li>
 <li>序列化：最主要的用处是在传递和保存对象的时候，保证对象的完整性和可传递性，序列化是把对象转换成有序字节流，以便在网络中传输或者保存在本地文件中，序列化后的字节流保存了Java对象的状态以及相关的描述信息，<strong>序列化机制的核心作用就是对象状态的保存和重建。</strong></li>
@@ -471,7 +496,7 @@ System.out.println(count);</code></pre></div>
                       <a href="/2020/06/28/Java%E9%9B%86%E5%90%88/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java集合</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -480,7 +505,7 @@ System.out.println(count);</code></pre></div>
                     
                       <a href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/">
                         <span class="hidden-mobile">Tomcat系统架构浅谈</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -513,7 +538,7 @@ System.out.println(count);</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -540,7 +565,7 @@ System.out.println(count);</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -549,7 +574,7 @@ System.out.println(count);</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

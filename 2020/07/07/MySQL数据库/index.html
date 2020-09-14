@@ -268,25 +268,25 @@
 <li>MyISAM：以读写插入为主的应用程序，如：博客系统、新闻门户网站；</li>
 <li>InnoDB：更新（删除）操作频率高的场合，或者要保证数据的完整性，并发量高，要求支持事务和外键，比如OA（自动化办公系统）。</li>
 </ul>
-<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="什么是索引"><a href="#什么是索引" class="headerlink" title="什么是索引"></a>什么是索引</h2><p>索引是一种特殊的文件（相当于目录，不过占用物理空间），包含着对数据表中所有记录的引用指针，是数据库管理系统中一个排序的数据结构，以协调快速查询、更新数据库表中数据。索引的实现通常是B树或变种的B+树。</p>
+<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><h2 id="什么是索引"><a href="#什么是索引" class="headerlink" title="什么是索引"></a>什么是索引</h2><p>索引是一种特殊的文件（相当于目录，不过占用物理空间），包含着对数据表中所有记录的引用指针，是数据库管理系统中一个排序的数据结构，以协调快速查询、更新数据库表中数据。<strong>索引的实现通常是B树或变种的B+树</strong>。</p>
 <h2 id="索引的使用场景（重点）"><a href="#索引的使用场景（重点）" class="headerlink" title="索引的使用场景（重点）"></a>索引的使用场景（重点）</h2><p><strong>where</strong></p>
 <div class="hljs"><pre><code class="hljs sql"><span class="hljs-comment">-- 增加一个没有建立索引的字段</span>
 <span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> innodb1 <span class="hljs-keyword">add</span> sex <span class="hljs-built_in">char</span>(<span class="hljs-number">1</span>);
 <span class="hljs-comment">-- 按sex检索时可选的索引为null</span>
 <span class="hljs-keyword">EXPLAIN</span> <span class="hljs-keyword">SELECT</span> * <span class="hljs-keyword">from</span> innodb1 <span class="hljs-keyword">where</span> sex=<span class="hljs-string">'男'</span>;</code></pre></div>
 <p><strong>order by</strong><br>对没有建立索引的字段使用order by排序时，会将查询到的所有数据使用外部排序，这个操作是很影响性能的，因为需要将查询涉及到所有数据从磁盘中读到内存。<br>如果该字段有建立索引，由于索引本身是有序的，因此直接按照索引的顺序和映射关系逐条取出数据即可。而且如果分页的，那么只用取出索引表某个范围内的索引对应的数据，而不用取出所有数据进行排序再返回某个范围内的数据。</p>
-<p><strong>join</strong><br>对join语句匹配关于（on）涉及的字段简历索引能够提高效率。</p>
-<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><p><strong>主键索引：</strong>数据列不允许重复，不允许为NULL，一个表只能有一个主键；</p>
+<p><strong>join</strong><br>对join语句匹配关于（on）涉及的字段建立索引能够提高效率。</p>
+<h2 id="索引类型"><a href="#索引类型" class="headerlink" title="索引类型"></a>索引类型</h2><p><strong>普通索引：</strong>基本的索引类型，没有唯一性的限制，允许为NULL</p>
+<ul>
+<li><code>ALTER TABLE table_name ADD INDEX index_name (column);</code>创建普通索引</li>
+<li><code>ALTER TABLE table_name ADD INDEX index_name(column1, column2, column3);</code>创建组合索引</li>
+</ul>
 <p><strong>唯一索引：</strong>数据列不允许重复，允许为NULL，一个表允许多个列创建唯一索引；</p>
 <ul>
 <li><code>ALTER TABLE table_name ADD UNIQUE (column);</code>创建唯一索引</li>
 <li><code>ALTER TABLE table_name ADD UNIQUE (column1,column2);</code>创建唯一组合索引</li>
 </ul>
-<p><strong>普通索引：</strong>基本的索引类型，没有唯一性的限制，允许为NULL</p>
-<ul>
-<li><code>ALTER TABLE table_name ADD INDEX index_name (column);</code>创建普通索引</li>
-<li><code>ALTER TABLE table_name ADD INDEX index_name(column1, column2, column3);</code>创建组合索引</li>
-</ul>
+<p><strong>主键索引：</strong>数据列不允许重复，不允许为NULL，一个表只能有一个主键；</p>
 <p><strong>全文索引：</strong>（InnoDB不支持）</p>
 <ul>
 <li><code>ALTER TABLE table_name ADD FULLTEXT (column);</code></li>
@@ -329,7 +329,7 @@
 <p>第三种方式：使用<code>CREATE INDEX</code>命令创建</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function">CREATE INDEX index_name ON <span class="hljs-title">table_name</span> <span class="hljs-params">(column_list)</span></span>;</code></pre></div>
 <p>CREATE INDEX可对表增加普通索引或UNIQUE索引。（但是，不能创建PRIMARY KEY索引）</p>
-<p>删除索引：<br>根据索引名删除普通索引、唯一索引、全文索引：<code>alter table 表名 drop KEY 索引名</code></p>
+<h2 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h2><p>根据索引名删除普通索引、唯一索引、全文索引：<code>alter table 表名 drop KEY 索引名</code></p>
 <div class="hljs"><pre><code class="hljs sql"><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> user_index <span class="hljs-keyword">drop</span> <span class="hljs-keyword">KEY</span> <span class="hljs-keyword">name</span>;
 <span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> user_index <span class="hljs-keyword">drop</span> <span class="hljs-keyword">KEY</span> id_card;
 <span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> user_index <span class="hljs-keyword">drop</span> <span class="hljs-keyword">KEY</span> information;</code></pre></div>
@@ -339,20 +339,20 @@
 <span class="hljs-keyword">MODIFY</span> <span class="hljs-keyword">id</span> <span class="hljs-built_in">int</span>,
 <span class="hljs-keyword">drop</span> PRIMARY <span class="hljs-keyword">KEY</span></code></pre></div>
 
-<h2 id="Hash索引和B-树索引有什么区别："><a href="#Hash索引和B-树索引有什么区别：" class="headerlink" title="Hash索引和B+树索引有什么区别："></a>Hash索引和B+树索引有什么区别：</h2><p>hash索引底层就是hash表，进行查找时，调用一次hash函数就能获得相应的键值，之后进行回表查询获得实际数据。<br>B+树底层实现是<strong>多路平衡查找树</strong>，对于每次查询都是从根节点出发，查找到叶子结点方可以获得所查键值，然后根据查询判断是否需要回表查询数据。<br><strong>区别：</strong></p>
+<h2 id="Hash索引和B-树索引的区别"><a href="#Hash索引和B-树索引的区别" class="headerlink" title="Hash索引和B+树索引的区别"></a>Hash索引和B+树索引的区别</h2><p>hash索引底层就是hash表，进行查找时，调用一次hash函数就能获得相应的键值，之后进行回表查询获得实际数据。<br>B+树底层实现是<strong>多路平衡查找树</strong>，对于每次查询都是从根节点出发，查找到叶子结点方可以获得所查键值，然后根据查询判断是否需要回表查询数据。<br><strong>区别：</strong></p>
 <ul>
 <li>hash索引进行等值查询更快，但是<strong>无法进行范围查询</strong>（hash函数的不可预测性）</li>
 <li>hash索引不支持使用索引进行排序</li>
 <li>hash索引不支持模糊查询以及多列索引的最左前缀匹配</li>
 <li>hash索引任何时候都避免不了<strong>回表查询</strong></li>
-<li>hash索引虽然在等值查询上较快，但是<strong>不稳定</strong>，性能不可预测，当某个键值存在大量重复的时候，发生hash碰撞，此时效率可能极差。<h2 id="数据库为什么使用B-树而不是B树"><a href="#数据库为什么使用B-树而不是B树" class="headerlink" title="数据库为什么使用B+树而不是B树"></a>数据库为什么使用B+树而不是B树</h2></li>
-<li>B树只适合随机检索，而B+树同时支持随机检索和<strong>顺序检索</strong>；</li>
-<li>B+树空间利用率更高，可减少I/O次数，磁盘读写代价更低；</li>
-<li>B+树的查询效率更加稳定；</li>
-<li>B+树的叶子结点使用指针顺序连接在一起，只要遍历叶子结点就可以实现整棵树的遍历；</li>
+<li>hash索引虽然在<strong>等值查询上较快</strong>，但是<strong>不稳定</strong>，<strong>性能不可预测</strong>，当某个键值存在大量重复的时候，发生<strong>hash碰撞</strong>，此时效率可能极差。<h2 id="数据库为什么使用B-树而不是B树"><a href="#数据库为什么使用B-树而不是B树" class="headerlink" title="数据库为什么使用B+树而不是B树"></a>数据库为什么使用B+树而不是B树</h2></li>
+<li><strong>B树只适合随机检索</strong>，而B+树同时支持随机检索和<strong>顺序检索</strong>；</li>
+<li>B+树<strong>空间利用率更高</strong>，可减少I/O次数，磁盘读写代价更低；</li>
+<li>B+树的<strong>查询效率更加稳定</strong>；</li>
+<li>B+树的叶子结点使用指针顺序连接在一起，只要<strong>遍历叶子结点就可以实现整棵树的遍历</strong>；</li>
 <li>增删文件时，效率更高。<h2 id="数据库为什么不使用红黑树实现索引？"><a href="#数据库为什么不使用红黑树实现索引？" class="headerlink" title="数据库为什么不使用红黑树实现索引？"></a>数据库为什么不使用红黑树实现索引？</h2>红黑树等平衡树也可以用来实现索引，但是文件系统及数据库系统普遍采用 B+ Tree 作为索引结构，主要有以下两个原因：<br>（一）更少的查找次数<br>平衡树查找操作的时间复杂度和<strong>树高 h</strong> 相关，O(h)=O(logdN)，其中 d 为每个节点的<strong>出度</strong>。<br>红黑树的出度为 2，而 B+ Tree 的出度一般都非常大，所以红黑树的树高 h 很明显比 B+ Tree 大非常多，查找的次数也就更多。<br>（二）利用磁盘预读特性<br>为了减少磁盘 I/O 操作，磁盘往往不是严格按需读取，而是每次都会预读。预读过程中，磁盘进行顺序读取，顺序读取不需要进行磁盘寻道，并且只需要很短的旋转时间，速度会非常快。<br>操作系统一般将内存和磁盘分割成固定大小的块，每一块称为一页，内存与磁盘以<strong>页</strong>为单位交换数据。数据库系统将索引的一个节点的大小设置为页的大小，使得一次 I/O 就能完全载入一个节点。并且可以利用预读特性，相邻的节点也能够被预先载入。<h2 id="什么是聚簇索引？"><a href="#什么是聚簇索引？" class="headerlink" title="什么是聚簇索引？"></a>什么是聚簇索引？</h2></li>
 <li>聚簇索引：将数据存储与索引放到一起，找到索引也就找到了数据；</li>
-<li>非聚簇索引：将数据存储与索引分开</li>
+<li>非聚簇索引：将数据存储与索引分开。</li>
 </ul>
 <h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><h2 id="什么是数据库事务"><a href="#什么是数据库事务" class="headerlink" title="什么是数据库事务"></a>什么是数据库事务</h2><p>事务是一个不可分割的数据库操作序列，也是数据库并发控制的基本单位，其执行结果必须使数据库从一种一致性状态变到另一种一致性状态，事务是逻辑上的一组操作，要么都执行，要么都不执行。</p>
 <h2 id="事务的四大特性"><a href="#事务的四大特性" class="headerlink" title="事务的四大特性"></a>事务的四大特性</h2><ul>
@@ -660,7 +660,7 @@ mysql&gt; select * from v01;
                       <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Spring核心知识点</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -669,7 +669,7 @@ mysql&gt; select * from v01;
                     
                       <a href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/">
                         <span class="hidden-mobile">JVM浅析</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -702,7 +702,7 @@ mysql&gt; select * from v01;
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -729,7 +729,7 @@ mysql&gt; select * from v01;
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -738,7 +738,7 @@ mysql&gt; select * from v01;
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

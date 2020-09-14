@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      14.2k 字
+      15.9k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      155
+      174
        分钟
     </span>
   
@@ -216,10 +216,10 @@
             
             <article class="markdown-body">
               <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="形成死锁的四个必要条件是什么"><a href="#形成死锁的四个必要条件是什么" class="headerlink" title="形成死锁的四个必要条件是什么"></a>形成死锁的四个必要条件是什么</h2><ol>
-<li><strong>互斥</strong>条件：线程对于所分配到的资源具有排他性，即一个资源只能被一个线程占用，直到该线程释放；</li>
-<li><strong>请求与保持</strong>条件：一个线程因请求被占用资源而发生阻塞时，对以获得的资源保持不放；</li>
-<li><strong>不剥夺</strong>条件：线程已获得的资源在未使用完之前不能被其他线程强行剥夺，只有自己使用完毕后才释放资源；</li>
-<li><strong>循环等待</strong>条件：当发生死锁时，所等待的线程必定会形成一个环路，造成永久阻塞。</li>
+<li><strong>互斥</strong>：线程对于所分配到的资源具有排他性，即一个资源只能被一个线程占用，直到该线程释放；</li>
+<li><strong>请求与保持</strong>：一个线程因请求被占用资源而发生阻塞时，对已获得的资源保持不放；</li>
+<li><strong>不剥夺</strong>：线程已获得的资源在未使用完之前不能被其他线程强行剥夺，只有自己使用完毕后才释放资源；</li>
+<li><strong>循环等待</strong>：当发生死锁时，所等待的线程必定会形成一个环路，造成永久阻塞。</li>
 </ol>
 <h2 id="创建线程的4种方式"><a href="#创建线程的4种方式" class="headerlink" title="创建线程的4种方式"></a>创建线程的4种方式</h2><ol>
 <li>继承Thread类</li>
@@ -315,25 +315,57 @@
 </li>
 </ol>
 <h2 id="sleep-和-wait-有什么区别？"><a href="#sleep-和-wait-有什么区别？" class="headerlink" title="sleep() 和 wait() 有什么区别？"></a>sleep() 和 wait() 有什么区别？</h2><ul>
-<li>类的不同：sleep() 是 Thread线程类的静态方法，wait() 是 Object类的方法。</li>
-<li>是否释放锁：sleep() 不释放锁；wait() 释放锁。</li>
-<li>用途不同：wait 通常被用于<strong>线程间交互/通信</strong>，sleep 通常被用于暂停执行。</li>
-<li>用法不同：wait() 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 notify() 或者 notifyAll() 方法，当然也可以使用wait(long timeout)超时后线程会自动苏醒。sleep() 方法执行完成后，线程会自动苏醒。</li>
+<li><strong>类的不同</strong>：sleep() 是 <code>Thread</code>线程类的静态方法，wait() 是<code>Object</code>类的方法。</li>
+<li><strong>是否释放锁</strong>：sleep() 不释放锁；wait() 释放锁。</li>
+<li><strong>用途不同</strong>：wait 通常被用于<strong>线程间交互/通信</strong>，sleep 通常被用于<strong>暂停执行</strong>。</li>
+<li><strong>用法不同</strong>：wait() 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 notify() 或者 notifyAll() 方法，当然也可以使用wait(long timeout)超时后线程会自动苏醒。sleep() 方法执行完成后，线程会自动苏醒。</li>
 </ul>
 <h2 id="为什么要将wait-方法放在while循环中"><a href="#为什么要将wait-方法放在while循环中" class="headerlink" title="为什么要将wait()方法放在while循环中"></a>为什么要将wait()方法放在while循环中</h2><p>因为处于等待状态的线程可能会收到错误警报和<strong>伪唤醒</strong>，如果不在循环中检查等待条件，程序就会在没有满足结束条件的情况下退出。</p>
 <h2 id="Thread类的yield方法有什么作用？"><a href="#Thread类的yield方法有什么作用？" class="headerlink" title="Thread类的yield方法有什么作用？"></a>Thread类的yield方法有什么作用？</h2><p>使当前线程从运行状态转为就绪状态，以便给相同优先级或更高优先级的线程运行的机会。</p>
 <h2 id="sleep-和yield-方法为什么是静态的？"><a href="#sleep-和yield-方法为什么是静态的？" class="headerlink" title="sleep()和yield()方法为什么是静态的？"></a>sleep()和yield()方法为什么是静态的？</h2><p>Thread类的sleep()和yield()方法都为静态方法，说明<strong>只有正在执行的线程才能执行</strong>，在其他处于等待状态的线程上调用这些方法是没有意义的，如果设置为非静态的，那么程序员就可能错误的认为可以在其他非运行线程上调用这些方法。</p>
 <h2 id="sleep、yield、join、wait的比较"><a href="#sleep、yield、join、wait的比较" class="headerlink" title="sleep、yield、join、wait的比较"></a>sleep、yield、join、wait的比较</h2><ol>
-<li>Thread.sleep(long millis)，一定是当前线程调用此方法，当前线程进入阻塞，但不释放对象锁，<strong>millis后线程自动苏醒进入可运行状态</strong>。作用：给其它线程执行机会的最佳方式。</li>
-<li>Thread.yield()，一定是当前线程调用此方法，当前线程放弃获取的cpu时间片，由运行状态变会可运行状态，让OS再次选择线程。作用：让相同优先级的线程轮流执行，但并不保证一定会轮流执行。实际中无法保证yield()达到让步目的，因为让步的线程还有可能被线程调度程序再次选中。Thread.yield()不会导致阻塞。</li>
-<li>t.join()/t.join(long millis)，<strong>让调用该方法的线程在执行完run()方法后，再执行join方法后面的代码</strong>。具体而言，可以通过线程t的join()方法来等待线程t的结束，或者使用线程t的join(millis)方法来等待线程t的结束，但最多只等待2ms。</li>
-<li>obj.wait()，当前线程调用对象的wait()方法，当前线程释放对象锁，进入等待队列。依靠notify()/notifyAll()唤醒或者wait(long timeout)timeout时间到自动唤醒。</li>
-<li>obj.notify()唤醒在此对象监视器上等待的单个线程，选择是任意性的。notifyAll()唤醒在此对象监视器上等待的所有线程。</li>
+<li><p>Thread.sleep(long millis)，一定是当前线程调用此方法，当前线程进入阻塞，但不释放对象锁，<strong>millis后线程自动苏醒进入可运行状态</strong>。</p>
+<p>作用：给其它线程执行机会的最佳方式。</p>
+</li>
+<li><p>Thread.yield()，一定是当前线程调用此方法，当前线程放弃获取的cpu时间片，由运行状态变会可运行状态，让OS再次选择线程。作用：让相同优先级的线程轮流执行，但并不保证一定会轮流执行。实际中无法保证yield()达到让步目的，因为让步的线程还有可能被线程调度程序再次选中。Thread.yield()不会导致阻塞。</p>
+</li>
+<li><p>t.join()/t.join(long millis)，<strong>让调用该方法的线程在执行完run()方法后，再执行join方法后面的代码</strong>。具体而言，可以通过线程t的join()方法来等待线程t的结束，或者使用线程t的join(millis)方法来等待线程t的结束，但最多只等待2ms。</p>
+</li>
+<li><p>obj.wait()，当前线程调用对象的wait()方法，当前线程释放对象锁，进入等待队列。依靠notify()/notifyAll()唤醒或者wait(long timeout)，timeout时间到自动唤醒。</p>
+</li>
+<li><p>obj.notify()唤醒在此对象监视器上等待的单个线程，选择是任意性的。notifyAll()唤醒在此对象监视器上等待的所有线程。</p>
+</li>
 </ol>
 <h2 id="wait-notify-notifyAll"><a href="#wait-notify-notifyAll" class="headerlink" title="wait(),notify(),notifyAll()"></a>wait(),notify(),notifyAll()</h2><ul>
 <li>如果一个线程调用了对象的wait()方法，那么线程便会进入该对象的等待池中，等待池中的线程不会去竞争该对象的锁；</li>
 <li>notifyAll()会唤醒所有的线程，notify()只会唤醒一个线程；</li>
 <li>notifyAll()调用后，会将全部线程由等待池移到锁池，然后参与锁的竞争，竞争成功则继续执行，如果不成功则留在锁池等待锁被释放后再次参与竞争，notify()只会唤醒一个线程，具体唤醒哪个线程由虚拟机控制。</li>
+</ul>
+<h2 id="wait和notify底层实现原理"><a href="#wait和notify底层实现原理" class="headerlink" title="wait和notify底层实现原理"></a>wait和notify底层实现原理</h2><h3 id="wait方法实现"><a href="#wait方法实现" class="headerlink" title="wait方法实现"></a>wait方法实现</h3><p><code>lock.wait()</code>方法最终通过ObjectMonitor的<code>void wait(jlong millis, bool interruptable, TRAPS);</code>实现：</p>
+<blockquote>
+<p>ObjectMonitor对象中有两个队列：<em>WaitSet 和 _EntryList，用来保存ObjectWaiter对象列表；</em></p>
+<p><strong>_WaitSet ** ：处于wait状态的线程，会被加入到wait set；<br>**_EntryList</strong>：处于等待锁block状态的线程，会被加入到entry set；</p>
+</blockquote>
+<p>1、将当前线程封装成<code>ObjectWaiter</code>对象<code>node</code>；</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2184951-d16fa7f94db04e84.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/946/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<blockquote>
+<p> ObjectWaiter对象是双向链表结构，保存了_thread（当前线程）以及当前的状态TState等数据， 每个等待锁的线程都会被封装成ObjectWaiter对象。</p>
+</blockquote>
+<p>2、通过<code>ObjectMonitor::AddWaiter</code>方法将node添加到<code>_WaitSet</code>列表中；</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2184951-fa3bc34beba6a1a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/577/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p>3、通过<code>ObjectMonitor::exit</code>方法释放当前的ObjectMonitor对象，这样其它竞争线程就可以获取该ObjectMonitor对象。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2184951-7393ef92ea5759e5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/653/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p>4、最终底层的park方法会挂起线程；</p>
+<h3 id="notify方法实现"><a href="#notify方法实现" class="headerlink" title="notify方法实现"></a>notify方法实现</h3><p><code>lock.notify()</code>方法最终通过ObjectMonitor的<code>void notify(TRAPS)</code>实现：<br>1、如果当前_WaitSet为空，即没有正在等待的线程，则直接返回；<br>2、通过<code>ObjectMonitor::DequeueWaiter</code>方法，获取_WaitSet列表中的第一个ObjectWaiter节点，实现也很简单。<br><strong>这里需要注意的是，在jdk的notify方法注释是随机唤醒一个线程，其实是第一个ObjectWaiter节点</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2184951-1d95fe3cd98f6614.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/676/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p>3、根据不同的策略，将取出来的ObjectWaiter节点，加入到_EntryList或则通过<code>Atomic::cmpxchg_ptr</code>指令进行自旋操作cxq有兴趣的同学可以看objectMonitor::notify方法；</p>
+<h3 id="notifyAll方法实现"><a href="#notifyAll方法实现" class="headerlink" title="notifyAll方法实现"></a>notifyAll方法实现</h3><p><code>lock.notifyAll()</code>方法最终通过ObjectMonitor的<code>void notifyAll(TRAPS)</code>实现：<br>通过for循环取出_WaitSet的ObjectWaiter节点，并根据不同策略，加入到EntryList或则进行自旋操作。</p>
+<p>从JVM的方法实现中，可以发现：notify和notifyAll并不会释放所占有的ObjectMonitor对象，其实真正释放ObjectMonitor对象的时间点是在执行monitorexit指令，一旦释放ObjectMonitor对象了，entry set中ObjectWaiter节点所保存的线程就可以开始竞争ObjectMonitor对象进行加锁操作了。</p>
+<h2 id="线程中断"><a href="#线程中断" class="headerlink" title="线程中断"></a>线程中断</h2><p>线程中断并不会使线程立即退出，而是给线程发送一个通知，告知目标线程，有人希望你退出了。至于目标线程接到通知后如何处理，则完全由目标线程自行决定。</p>
+<ul>
+<li>Thread.interrupt()方法是一个实例方法，它通知目标线程中断，也就是设置中断标志位，表明当前线程已经被中断了；</li>
+<li>Thread.isInterrupted()方法也是实例方法，它通过检查中断标志位来判断当前线程是否被中断；</li>
+<li>Thread.interrupted()方法是静态方法，它也用来判断当前线程是否被中断，但是同时也会清除当前线程的中断标志位状态。</li>
 </ul>
 <h2 id="线程同步和互斥"><a href="#线程同步和互斥" class="headerlink" title="线程同步和互斥"></a>线程同步和互斥</h2><ul>
 <li>当一个线程对共享的数据进行操作时，应使之成为一个“原子操作”，即在没有完成相关操作之前，不允许其他线程打断它，否则就会破坏数据的完整性，这就是线程的同步；</li>
@@ -352,7 +384,7 @@
 <li>要写入的值B；</li>
 </ul>
 <p>当且仅当V的值等于A时，CAS通过原子方式将新值B来更新V的值，否则不会执行任何操作。</p>
-<p>ABA问题：CAS需要在操作值的时候检查内存值是否发生变化，没有变化才会更新内存值，但是如果内存值原来是A,后来变成了B，然后又变成了A，那么CAS进行检查时会发现值没有变，实际上是有变化的。</p>
+<p>ABA问题：CAS需要在操作值的时候检查内存值是否发生变化，没有变化才会更新内存值，但是如果内存值原来是A，后来变成了B，然后又变成了A，那么CAS进行检查时会发现值没有变，实际上是有变化的。</p>
 <p>解决办法：J.U.C 包提供了一个带有标记的原子引用类 <strong>AtomicStampedReference</strong> 来解决这个问题，它可以通过控制变量值的版本来保证 CAS 的正确性。</p>
 </blockquote>
 <h3 id="2-自旋锁VS适应性自旋锁"><a href="#2-自旋锁VS适应性自旋锁" class="headerlink" title="2. 自旋锁VS适应性自旋锁"></a>2. 自旋锁VS适应性自旋锁</h3><p>阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理时间，在很多场景中，同步资源的锁定时间很短，为了这一小段时间去切换线程，线程挂起和恢复现场的花费有可能比用户代码执行的时间还要长，如果物理机器有多个处理器，能够让两个或以上的线程同时并行执行，我们就可以让后面那个请求锁的线程不放弃CPU的执行时间，看看持有锁的线程是否很快就会释放锁。这个等待的过程就是让当前线程自旋，如果在自旋完成后前面锁定同步资源的线程已经释放了锁，那么当前线程就可以不必阻塞而是直接获取同步资源，从而避免切换线程的开销。</p>
@@ -373,26 +405,37 @@
 <p>无锁的特点就是修改操作在循环内进行，线程会不断的尝试修改共享资源，如果没有冲突就修改成功，否则就会继续循环尝试。</p>
 <h4 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h4><p>在大多数情况下，锁总是由同一线程多次获得，不存在多线程竞争，所以出现了偏向锁，偏向锁是指一段同步代码一直被一个线程所访问，那么该线程在进入和退出同步块时不再通过CAS操作来加锁和解锁，而是直接获取锁，降低获取锁的代价。</p>
 <h4 id="轻量级锁"><a href="#轻量级锁" class="headerlink" title="轻量级锁"></a>轻量级锁</h4><p>轻量级锁能够提升程序性能的依据是“<strong>对绝大部分的锁，在整个同步周期内都不存在竞争</strong>”，注意这是经验数据。需要了解的是，轻量级锁所适应的场景是线程交替执行同步块的场合，如果存在同一时间访问同一锁的场合，就会导致轻量级锁膨胀为重量级锁。</p>
-<p>轻量级锁失败后，虚拟机为了避免线程真实地在操作系统层面挂起，还会进行一项称为自旋锁的优化手段。</p>
+<p>轻量级锁失败后，虚拟机为了避免线程真实地在操作系统层面挂起，还会进行一项称为<strong>自旋锁</strong>的优化手段。</p>
 <h4 id="重量级锁"><a href="#重量级锁" class="headerlink" title="重量级锁"></a>重量级锁</h4><p>升级为重量级锁时，锁标志的状态值变为“10”，此时Mark Word中存储的是指向重量级锁的指针，此时等待锁的线程都会进入阻塞状态。</p>
-<p>综上：偏向锁通过对比Mark Word解决加锁问题，避免执行CAS操作，而轻量级锁是通过CAS操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能；重量级锁是将除了拥有锁的线程以外的线程都阻塞。</p>
+<p><strong>综上：偏向锁通过对比Mark Word解决加锁问题，避免执行CAS操作，而轻量级锁是通过CAS操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能；重量级锁是将除了拥有锁的线程以外的线程都阻塞。</strong></p>
 <h3 id="4-公平锁VS非公平锁"><a href="#4-公平锁VS非公平锁" class="headerlink" title="4. 公平锁VS非公平锁"></a>4. 公平锁VS非公平锁</h3><p>公平锁是指多个线程按照申请锁的顺序来获取锁，线程直接进入队列中排队，队列中的第一个线程才能获得锁，公平锁的优点是等待锁的线程不会饿死，缺点是整体吞吐效率相对非公平锁要低，等待队列中除第一个线程以外的所有线程都会阻塞，CPU唤醒阻塞线程的开销比非公平锁大。</p>
 <p>非公平锁是在还没进入队列之前可以与队列中的线程竞争尝试获取锁，获取不到才会进入等待队列的队尾等待，但如果此时锁刚好可用，那么这个线程可以无需阻塞直接获取到锁，所有非公平锁有可能出现后申请锁的线程先获取锁的场景，<strong>非公平锁的优点是可以减少唤起线程的开销，整体的吞吐效率高</strong>，因为线程有几率不阻塞直接获得锁，CPU不必唤醒所有线程，缺点是处于等待队列中的线程有可能会饿死，或者等很久才会获得锁。</p>
 <p>公平锁的lock方法在进行CAS判断时多了一个<strong>hasQueuedPredecessors()</strong>方法，它会在AQS队列中没有线程的情况下才会申请锁，而不像非公平锁一样，非公平锁不管AQS里是否有排队的线程就直接申请锁。</p>
 <h3 id="5-独享锁VS共享锁"><a href="#5-独享锁VS共享锁" class="headerlink" title="5. 独享锁VS共享锁"></a>5. 独享锁VS共享锁</h3><p>独享锁也叫排它锁，是指该锁一次只能被一个线程所持有，如果线程T对数据A加上排它锁后，则其他线程不能再对A加任何类型的锁，获得排它锁的线程既能读数据又能修改数据，JDK中的synchronized和JUC中Lock的实现类就是独享锁；</p>
 <p>共享锁是指该锁可被多个线程所持有，如果线程T对数据A加上共享锁后，则其他线程只能对A再加共享锁，不能加排它锁，获得共享锁的线程只能读数据，不能修改数据。</p>
+<h2 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h2><ul>
+<li>协程（Coroutines）是一种比线程更加轻量级的存在，正如一个进程可以拥有多个线程一样，一个线程可以拥有多个协程。</li>
+</ul>
+<ul>
+<li>协程既不是进程也不是线程，协程仅仅是一个特殊的函数。</li>
+<li>一个线程内的多个协程虽然可以切换，但是<strong>多个协程是串行执行</strong>的，只能在一个线程内运行，没法利用CPU多核能力。</li>
+<li>协程和进程一样，切换是存在上下文切换问题的，协程的切换内容是硬件上下文，切换内存保存在用户自己的变量中，协程的切换过程只有用户态，因此切换效率高。</li>
+</ul>
+<h2 id="一个进程内的线程数量的限制是什么？"><a href="#一个进程内的线程数量的限制是什么？" class="headerlink" title="一个进程内的线程数量的限制是什么？"></a>一个进程内的线程数量的限制是什么？</h2><p>创建一个线程会占用多少内存，<strong>取决于分配给线程的调用栈大小</strong>，可以用<code>ulimit -s</code>命令来查看大小，Linux默认情况下启动一个子线程需要分配10MB的线程栈空间，为了降低进程内存占用，就必须将默认值修改，在Windows下该默认值一般为1MB，通过修改编译选项可以修改。</p>
+<p>进程最多可以创建的线程数是根据分配给调用栈的大小，以及操作系统（32位和64位不同）共同决定的。</p>
 <h1 id="并发理论"><a href="#并发理论" class="headerlink" title="并发理论"></a>并发理论</h1><h2 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><h3 id="线程间如何实现通信以及如何同步？"><a href="#线程间如何实现通信以及如何同步？" class="headerlink" title="线程间如何实现通信以及如何同步？"></a>线程间如何实现通信以及如何同步？</h3><ul>
 <li>线程之间的通信机制有两种：<strong>共享内存</strong>和<strong>消息传递</strong>；</li>
 <li>在共享内存的并发模型中，线程之间通过写-读内存中的公共状态来隐式进行通信，而在消息传递的模型中，线程之间必须通过明确的发送消息来显式进行通信；</li>
-<li>Java采用的是共享内存的方式来实现通信，通过synchronized和lock关键字加锁的方式来实现同步。</li>
+<li>Java采用的是<strong>共享内存</strong>的方式来实现通信，通过synchronized和lock关键字加锁的方式来实现同步。</li>
 </ul>
 <h3 id="谈谈你对Java内存模型的理解"><a href="#谈谈你对Java内存模型的理解" class="headerlink" title="谈谈你对Java内存模型的理解"></a>谈谈你对Java内存模型的理解</h3><p>处理器和内存处理速度不是同数量级，所以需要在中间建立中间层，也就是高速缓存，这会引出缓存一致性问题。在多处理器系统中，每个处理器都有自己的高速缓存，而它们又共享同一主内存（Main Memory），有可能操作同一位置引起各自缓存不一致，这时候需要约定协议在保证一致性。<br> Java 内存模型(Java  Memory  Model，JMM)：屏蔽掉了各种硬件和操作系统的内存访问差异，以实现让 Java 程序在各种平台下都能达到一致性的内存访问效果。</p>
 <p><img src="https://img-blog.csdnimg.cn/2020070120310313.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-<h3 id="Java内存区域和Java内存模型区别"><a href="#Java内存区域和Java内存模型区别" class="headerlink" title="Java内存区域和Java内存模型区别"></a>Java内存区域和Java内存模型区别</h3><p><strong>Java内存区域：</strong><img src="https://img-blog.csdnimg.cn/20200629144605499.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="Java内存区域和Java内存模型区别"><a href="#Java内存区域和Java内存模型区别" class="headerlink" title="Java内存区域和Java内存模型区别"></a>Java内存区域和Java内存模型区别</h3><p><strong>Java内存区域：</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20200629144605499.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
-<li>方法区：<br>主要用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据，方法区里面有一个运行时常量池，用于存放编译器生成的各种字面量和符号引用。</li>
+<li>方法区<br>主要用于存储已被虚拟机加载的<strong>类信息</strong>、<strong>常量</strong>、<strong>静态变量</strong>、即时编译器编译后的代码等数据，方法区里面有一个运行时常量池，用于存放编译器生成的各种<strong>字面量</strong>和<strong>符号引用</strong>。</li>
 <li>JVM堆<br>主要用于存放对象实例，是垃圾收集器管理的主要区域。</li>
-<li>程序计数器<br>代表了当前线程锁执行的字节码行号指示器。</li>
+<li>程序计数器<br>代表了当前线程所执行的字节码行号指示器。</li>
 <li>虚拟机栈<br>代表了Java方法执行的内存模型，每个方法执行时都会创建一个栈帧来存储方法的变量表、操作数栈、动态链接方法、返回值、返回地址等信息，每个方法从调用到结束对应了一个栈帧在虚拟机栈中的入栈和出栈过程。</li>
 <li>本地方法栈<br>和本地方法有关。</li>
 </ul>
@@ -413,7 +456,7 @@
 <li>线程启动规则：线程的start()方法先于它的每个动作</li>
 <li>线程终止规则：线程的所有操作先于线程的结束</li>
 <li>线程中断规则：对线程interrupt()方法的调用先于被中断线程的代码检测到中断事件的发生</li>
-<li>传递性</li>
+<li>传递性：A先于B，B先于C，那么A必然先于C。</li>
 </ul>
 <h1 id="并发关键字"><a href="#并发关键字" class="headerlink" title="并发关键字"></a>并发关键字</h1><h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><h3 id="synchronized关键字的三种使用方式"><a href="#synchronized关键字的三种使用方式" class="headerlink" title="synchronized关键字的三种使用方式"></a>synchronized关键字的三种使用方式</h3><ul>
 <li>修饰实例方法</li>
@@ -488,11 +531,11 @@
     &#125;
 &#125;</code></pre></div>
 
-<h3 id="锁优化"><a href="#锁优化" class="headerlink" title="锁优化"></a>锁优化</h3><p><strong>锁消除</strong><br>对检测出不可能存在竞争的共享数据的锁进行消除，主要是通过<strong>逃逸分析</strong>来判断，如果堆上的共享数据不可能逃逸出去被其他线程访问到，那么就可以把它们当做私有数据来对待，从而消除锁。</p>
+<h3 id="锁优化"><a href="#锁优化" class="headerlink" title="锁优化"></a>锁优化</h3><p><strong>锁消除</strong><br>通过<strong>逃逸分析</strong>来对检测出不可能存在竞争的共享数据的锁进行消除，如果堆上的共享数据不可能逃逸出去被其他线程访问到，那么就可以把它们当做私有数据来对待，从而消除锁。</p>
 <p><strong>偏向锁</strong><br>偏向锁是JDK6之后加入的新锁，它是一种针对加锁操作的优化手段，经过研究发现，在大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，因此为了减少同一线程获取锁(会涉及到一些CAS操作，耗时)的代价而引入偏向锁。</p>
 <p>偏向锁的核心思想是：如果一个线程获得了锁，那么锁就进入偏向模式，此时<strong>Mark Word</strong> 的结构也变为偏向锁结构，<strong>当这个线程再次请求锁时，无需再做任何同步操作，即获取锁的过程，这样就省去了大量有关锁申请的操作，从而也就提高程序的性能。</strong></p>
 <p>所以，对于没有锁竞争的场合，偏向锁有很好的优化效果，毕竟极有可能连续多次是同一个线程申请相同的锁。但是对于锁竞争比较激烈的场合，偏向锁就失效了，因为这种场合极有可能每次申请锁的线程都是不相同的，因此这种场合下不应该使用偏向锁，否则会得不偿失，需要注意的是，偏向锁失败后，并不会立即膨胀为重量级锁，而是先升级为轻量级锁。</p>
-<p><strong>轻量级锁</strong><br>轻量级锁能够提升程序性能的依据是“<strong>对绝大部分的锁，在整个同步周期内都不存在竞争</strong>”，注意这是经验数据。需要了解的是，轻量级锁所适应的场景是线程交替执行同步块的场合，如果存在同一时间访问同一锁的场合，就会导致轻量级锁膨胀为重量级锁。</p>
+<p><strong>轻量级锁</strong><br>轻量级锁能够提升程序性能的依据是“<strong>对绝大部分的锁，在整个同步周期内都不存在竞争</strong>”，注意这是经验数据。需要了解的是，轻量级锁所适应的场景是<strong>线程交替执行同步块</strong>的场合，如果存在同一时间访问同一锁的场合，就会导致轻量级锁膨胀为重量级锁。</p>
 <p><strong>自旋锁</strong><br>轻量级锁失败后，虚拟机为了避免线程真实地在操作系统层面挂起，还会进行一项称为自旋锁的优化手段。</p>
 <p>这是因为<strong>很多synchronized里面的代码只是一些很简单的代码，执行时间非常快，此时如果所有等待的线程都进入阻塞队列，那么会产生用户态和内核态切换的问题，造成的开销非常大</strong>，因此可以在synchronized 的边界做忙循环（自旋），如果循环多次还没有获得锁再阻塞，由于忙循环也要占用CPU时间，所以自旋锁只适用于共享数据的锁定状态很短的场景。</p>
 <p><strong>锁粗化</strong><br>如果一系列的连续操作都对同一个对象反复加锁和解锁，频繁的加锁操作就会导致性能损耗。如果一串零碎的操作都是对同一个对象加锁，可以将加锁的范围扩展，提高性能。</p>
@@ -558,7 +601,7 @@
 <h2 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h2><p>Java提供了volatile关键字来保证<strong>内存可见性</strong>和<strong>禁止指令重排</strong>，volatile提供happens-before的保证，确保一个线程的修改能对其他线程是可见的，当一个共享变量被volatile修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。</p>
 <p><strong>volatile不能保证原子性，所以一般与CAS结合使用</strong>；</p>
 <h3 id="volatile原理，为什么能保证共享变量可见性"><a href="#volatile原理，为什么能保证共享变量可见性" class="headerlink" title="volatile原理，为什么能保证共享变量可见性"></a>volatile原理，为什么能保证共享变量可见性</h3><p>为了提高处理器的执行速度，在处理器和内存之间增加了多级缓存来提升，因为多级缓存就有可能导致缓存数据不一致问题。</p>
-<p>对于volatile变量，当对volatile变量进行写操作的时候，JVM会向处理器发送一条lock前缀的指令，将这个缓存中的变量回写到系统主存中，根据缓存一致性协议：每个处理器通过嗅探在总线上传播的数据来检查自己的缓存是否过期，当处理器发现自己缓存行对应的内存地址被修改，就会将当前处理器的缓存行设置为无效状态，当处理器要对这个数据进行修改操作的时候，就会强制重新从系统内存里把数据读到处理器缓存中。</p>
+<p>对于volatile变量，当对volatile变量进行写操作的时候，JVM会向处理器发送一条lock前缀的指令，将这个缓存中的变量回写到系统主存中，根据缓存一致性协议：<strong>每个处理器通过嗅探在总线上传播的数据来检查自己的缓存是否过期，当处理器发现自己缓存行对应的内存地址被修改，就会将当前处理器的缓存行设置为无效状态，当处理器要对这个数据进行修改操作的时候，就会强制重新从系统内存里把数据读到处理器缓存中。</strong></p>
 <h3 id="volatile如何禁止指令重排"><a href="#volatile如何禁止指令重排" class="headerlink" title="volatile如何禁止指令重排"></a>volatile如何禁止指令重排</h3><p>为了实现volatile的内存语义，编译器在生成字节码时，会在指令序列中插入<strong>内存屏障</strong>来禁止特定类型的处理器重排序，有下面四种策略：</p>
 <ul>
 <li><p>在每个volatile写操作的前面插入一个StoreStore屏障</p>
@@ -642,13 +685,15 @@
 <li>Share(共享)：多个线程可同时执行，如Semaphore/CountDownLatch等。</li>
 </ul>
 <h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p>ReadWriteLock是一个读写锁接口，读写锁是用来提升并发程序性能的锁分离技术，ReentrantReadWriteLock是ReadWriteLock接口的一个具体实现，实现了读写的分离，读锁是共享的，写锁是独占的，读与读之间不会互斥，读与写，写与读，写与写之间才会互斥，提升了读写的性能。</p>
-<h1 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h1><h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><p><strong>HashMap为什么不安全：</strong><br>HashMap在并发执行put操作时会发生死循环，是因为多线程会导致HashMap的<strong>Entry链表形成环型数据结构</strong>，一旦形成环型数据结构，Entry的next节点永远不为空，就会产生死循环获取Entry。</p>
-<p>ConcurrentHashMap是Java中的一个线程安全且高效的HashMap实现，JDK1.6版本关键要素：</p>
-<ul>
-<li>segment继承了ReentrantLock充当锁的角色，为每个segment提供了线程安全的保障；</li>
-<li>segment维护了哈希散列表的若干个桶，每个桶由HashEntry构成的链表。</li>
-</ul>
-<p>JDK1.8后，ConcurrentHashMap抛弃了原有的Segment锁，采用<strong>Node+CAS+synchronized</strong>来保证并发安全性。</p>
+<h1 id="并发容器"><a href="#并发容器" class="headerlink" title="并发容器"></a>并发容器</h1><h2 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h2><h3 id="为什么要使用ConcurrentHashMap？"><a href="#为什么要使用ConcurrentHashMap？" class="headerlink" title="为什么要使用ConcurrentHashMap？"></a>为什么要使用ConcurrentHashMap？</h3><p>因为多线程会导致HashMap的<strong>Entry链表形成环型数据结构</strong>，一旦形成环型数据结构，Entry的next节点永远不为空，就会产生死循环获取Entry。</p>
+<p>而使用HashTable因为是对整张表加锁，效率非常低下。</p>
+<h3 id="JDK1-7"><a href="#JDK1-7" class="headerlink" title="JDK1.7"></a>JDK1.7</h3><p>ConcurrentHashMap 是一个 <strong>Segment 数组</strong>，Segment是ConcurrentHashMap的静态内部类，它通过<strong>继承 ReentrantLock 来进行加锁（分段锁）</strong>，所以每次需要加锁的操作锁住的是一个 segment，这样只要保证每个 Segment 是线程安全的，也就实现了全局的线程安全。</p>
+<p>ConcurrentHashMap 默认有 16 个 Segment，所以最多可以同时支持 16 个线程并发写，这个值可以在初始化的时候设置为其他值，但是一旦初始化以后，它是不可以扩容的。</p>
+<p>每个 Segment 很像之前介绍的 HashMap，不过它要保证线程安全，所以处理起来要麻烦些。</p>
+<p>Segment内部持有一个<strong>HashEntry数组</strong>（哈希表），并且保证所有对该数组的增删改查方法都是线程安全的。我们通过<code>segmentForHash</code>方法获取分段锁的位置，再根据<code>entryForHash</code>方法获取元素的位置。如果当前元素位置有值，则采用<strong>头插法</strong>的方式将数据插入链表头部。</p>
+<h4 id="扩容操作："><a href="#扩容操作：" class="headerlink" title="扩容操作："></a>扩容操作：</h4><p><strong>判断是否需要扩容：</strong>在插入元素前会先判断Segment里的HashEntry数组是否超过阈值（threshold），如果超过阈值，则对数组进行扩容。值得一提的是，Segment的扩容判断比HashMap更恰当，因为HashMap是在插入元素后判断是否已经到达容量的，如果达到了就进行扩容，但是很有可能扩容之后没有新元素再插入，这时HashMap就进行了一次无效的扩容。</p>
+<p><strong>如何扩容：</strong>在扩容的时候，首先会创建一个容量是原来容量两倍的数组，然后将原来数组里的元素进行再散列后插入到新的数组里。为了高效，ConcurrentHashMap不会对整个容器进行扩容，而只对某个segment扩容。</p>
+<h3 id="JDK1-8"><a href="#JDK1-8" class="headerlink" title="JDK1.8"></a>JDK1.8</h3><p>引入了红黑树，同时抛弃了原有的Segment锁，采用<code>Node+CAS+synchronized</code>来保证并发安全性，这样使得锁的粒度更小，并发程度更高。</p>
 <h2 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h2><p><strong>设计思想：</strong></p>
 <ul>
 <li>读写分离，读和写分开</li>
@@ -667,9 +712,9 @@
 <li>get()：返回此线程局部变量的当前线程副本中的值；</li>
 <li>initialValue()：返回此线程局部变量的当前线程的“初始值”；</li>
 <li>remove()：移除此线程局部变量的当前线程的值；</li>
-<li>set(T value)：将此线程局部变量的当前线程副本中的值设置为指定值，<strong>采用的是开放地址法</strong></li>
+<li>set(T value)：将此线程局部变量的当前线程副本中的值设置为指定值，<strong>采用的是开放地址法</strong>。</li>
 </ul>
-<p>ThreadLocal内部还有一个静态内部类<code>ThreadLocalMap</code>，它提供了一种用键值对方式存储每一个线程的变量副本的方法，key为当前ThreadLocal对象，value则是对应线程的变量副本，ThreadLocal定义的四个方法都是对ThreadLocalMap来进行操作，ThreadLocal实例本身并不存储值，它只是提供了一个在当前线程中找到副本值的key。</p>
+<p>ThreadLocal内部还有一个静态内部类<code>ThreadLocalMap</code>，它提供了一种用<strong>键值对</strong>方式存储每一个线程的变量副本的方法，key为当前ThreadLocal对象，value则是对应线程的变量副本，ThreadLocal定义的四个方法都是对ThreadLocalMap来进行操作，ThreadLocal实例本身并不存储值，它只是提供了一个在当前线程中找到副本值的key。</p>
 <p><img src="https://img-blog.csdnimg.cn/20200630103553512.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br><strong>ThreadLocal的内存泄漏问题</strong><br>每个Thread都有一个ThreadLocal.ThreadLocalMap的map，该map的key为ThreadLocal实例，它为一个弱引用，我们知道弱引用有利于GC回收。当ThreadLocal的key == null时，GC就会回收这部分空间，但是value却不一定能够被回收，因为它还与Current Thread存在一个强引用关系，如下图所示：<br><img src="https://img-blog.csdnimg.cn/20200630105440645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>由于存在这个强引用关系，会导致value无法回收。如果这个线程对象不会销毁，那么这个强引用关系则会一直存在，就会出现内存泄漏情况。<br><strong>解决方法：</strong><br>在ThreadLocalMap中的setEntry()、getEntry()，如果遇到key == null的情况，会对value设置为null。当然我们也可以在使用完ThreadLocal方法后调用remove()方法进行处理。</p>
 <h2 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h2><p>阻塞队列是一个支持两个附加操作的队列，在队列为空时，获取元素的线程会等待队列变为非空，当队列满时，存储元素的线程会等待队列可用。</p>
 <p>阻塞队列使用最经典的场景就是 socket 客户端数据的读取和解析，读取数据的线程不断将数据放入队列，然后解析线程不断从队列取数据解析。</p>
@@ -680,10 +725,30 @@
 &#125;</code></pre></div>
 <p>Executors是一个工具类，提供了一些<strong>静态工厂方法</strong>用于生成一些常用的线程池，如：</p>
 <ul>
-<li><strong>newSingleThreadExecutor</strong>：创建一个单线程的线程池，这个线程池只有一个线程在工作，保证所有任务的执行顺序按照任务的提交顺序执行；</li>
-<li><strong>newFixedThreadPool</strong>：创建固定大小的线程池，线程池的大小一旦到达固定值，就会保持不变，适合在服务器上使用（性能好）。</li>
-<li><strong>newCachedThreadPool</strong>：创建一个可缓存的线程池，线程池的线程数量可以随着任务数自行加减，线程池的大小由JVM决定；</li>
-<li><strong>newScheduledThreadPool</strong>：创建一个大小无限的线程池，此线程池支持<strong>定时以及周期性执行任务</strong>的需求。</li>
+<li><p><strong>newSingleThreadExecutor</strong>：创建一个单线程的线程池，这个线程池只有一个线程在工作，保证所有任务的执行顺序按照任务的提交顺序执行；</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ExecutorService <span class="hljs-title">newSingleThreadExecutor</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FinalizableDelegatedExecutorService
+            (<span class="hljs-keyword">new</span> ThreadPoolExecutor(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>,
+                                    <span class="hljs-number">0L</span>, TimeUnit.MILLISECONDS,
+                                    <span class="hljs-keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;()));
+    &#125;</code></pre></div>
+</li>
+<li><p><strong>newFixedThreadPool</strong>：创建固定大小的线程池，线程池的大小一旦到达固定值，就会保持不变，适合在服务器上使用（性能好）。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ExecutorService <span class="hljs-title">newFixedThreadPool</span><span class="hljs-params">(<span class="hljs-keyword">int</span> nThreads)</span> </span>&#123;
+       <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ThreadPoolExecutor(nThreads, nThreads,
+                                     <span class="hljs-number">0L</span>, TimeUnit.MILLISECONDS,
+                                     <span class="hljs-keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());
+   &#125;</code></pre></div>
+</li>
+<li><p><strong>newCachedThreadPool</strong>：创建一个可缓存的线程池，线程池的线程数量可以随着任务数自行加减，线程池的大小由JVM决定，这里使用的是异步队列SynchronousQueue，而且是非公平的；</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ExecutorService <span class="hljs-title">newCachedThreadPool</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ThreadPoolExecutor(<span class="hljs-number">0</span>, Integer.MAX_VALUE,
+                                      <span class="hljs-number">60L</span>, TimeUnit.SECONDS,
+                                      <span class="hljs-keyword">new</span> SynchronousQueue&lt;Runnable&gt;());
+    &#125;</code></pre></div>
+</li>
+<li><p><strong>newScheduledThreadPool</strong>：创建一个大小无限的线程池，此线程池支持<strong>定时以及周期性执行任务</strong>的需求。</p>
+</li>
 </ul>
 <h2 id="线程池的优点"><a href="#线程池的优点" class="headerlink" title="线程池的优点"></a>线程池的优点</h2><ul>
 <li>降低资源消耗：减少线程创建，销毁带来的开销；</li>
@@ -723,23 +788,23 @@
 </ul>
 <p>而T<strong>hreaPoolExecutor创建线程池方式只有一种，就是走它的构造函数，参数自己指定，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险。</strong></p>
 <h2 id="ThreadPoolExecutor构造函数的参数分析"><a href="#ThreadPoolExecutor构造函数的参数分析" class="headerlink" title="ThreadPoolExecutor构造函数的参数分析"></a>ThreadPoolExecutor构造函数的参数分析</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ThreadPoolExecutor</span><span class="hljs-params">(<span class="hljs-keyword">int</span> corePoolSize,</span></span>
-<span class="hljs-function"><span class="hljs-params">                           <span class="hljs-keyword">int</span> maximumPoolSize,</span></span>
-<span class="hljs-function"><span class="hljs-params">                           <span class="hljs-keyword">long</span> keepAliveTime,</span></span>
-<span class="hljs-function"><span class="hljs-params">                           TimeUnit unit,</span></span>
-<span class="hljs-function"><span class="hljs-params">                           BlockingQueue&lt;Runnable&gt; workQueue,</span></span>
-<span class="hljs-function"><span class="hljs-params">                           RejectedExecutionHandler handler)</span> </span>&#123;
-     <span class="hljs-keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-          Executors.defaultThreadFactory(), handler);
- &#125;</code></pre></div>
+<span class="hljs-function"><span class="hljs-params">                          <span class="hljs-keyword">int</span> maximumPoolSize,</span></span>
+<span class="hljs-function"><span class="hljs-params">                          <span class="hljs-keyword">long</span> keepAliveTime,</span></span>
+<span class="hljs-function"><span class="hljs-params">                          TimeUnit unit,</span></span>
+<span class="hljs-function"><span class="hljs-params">                          BlockingQueue&lt;Runnable&gt; workQueue,</span></span>
+<span class="hljs-function"><span class="hljs-params">                          RejectedExecutionHandler handler)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
+         Executors.defaultThreadFactory(), handler);
+&#125;</code></pre></div>
 <p><strong>核心参数</strong></p>
 <ul>
 <li><strong>corePoolSize</strong> ：核心线程数，线程数定义了最小可以同时运行的线程数量。</li>
 <li><strong>maximumPoolSize</strong> ：线程池中允许存在的工作线程的最大数量；</li>
 <li><strong>workQueue</strong>：当新任务来的时候会先判断当前运行的线程数量是否达到核心线程数，如果达到的话，任务就会被存放在队列中。<ul>
-<li>ArrayBlockingQueue：是一个基于数组结构的有界阻塞队列，此队列按FIFO（先进先出）原则对元素进行排序。</li>
-<li>LinkedBlockingQueue：一个基于链表结构的阻塞队列，此队列按FIFO排序元素，吞吐量通常要高于ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。</li>
+<li>ArrayBlockingQueue：是一个基于数组结构的<strong>有界阻塞</strong>队列，此队列按FIFO（先进先出）原则对元素进行排序。</li>
+<li>LinkedBlockingQueue：一个基于链表结构的<strong>无界阻塞</strong>队列，此队列按FIFO排序元素，吞吐量通常要高于ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。</li>
 <li>SynchronousQueue：一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于LinkedBlockingQueue，静态工厂方法Executors.newCachedThreadPool使用了这个队列。</li>
-<li>PriorityBlockingQueue：一个具有优先级的无限阻塞队列。</li>
+<li>PriorityBlockingQueue：一个具有优先级的无届阻塞队列。</li>
 </ul>
 </li>
 </ul>
@@ -757,7 +822,8 @@
 <li><code>ThreadPoolExecutor.DiscardPolicy</code>：不处理新任务，直接丢弃掉。</li>
 <li><code>ThreadPoolExecutor.DiscardOldestPolicy</code>： 此策略将丢弃最早的未处理的任务请求。</li>
 </ul>
-<h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FutureTaskDemo</span> </span>&#123;
+<h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><p>一个可取消的异步计算，FutureTask提供了对Future的基本实现，可以调用方法去开始或取消一个计算，可以查询计算是否完成并且获取计算结果。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FutureTaskDemo</span> </span>&#123;
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> InterruptedException, TimeoutException, ExecutionException </span>&#123;
         <span class="hljs-keyword">long</span> startTime = System.currentTimeMillis();
 
@@ -802,7 +868,9 @@
         System.exit(<span class="hljs-number">0</span>);
     &#125;
 &#125;</code></pre></div>
-<p>在实际开发过程中，<strong>将那些耗时较长，且可以并行的操作都封装成一个FutureTask</strong>，该类提供了Future的基本实现，提供了启动和取消计算、查询计算是否完成以及检索计算结果的方法，只有在计算完成后才可检索结果；如果计算尚未完成，get方法将阻塞。<br>FutureTask的实现是基于 AbstractQueuedSynchronizer，FutureTask 声明了一个内部私有的继承于 AQS 的子类 Sync，对 FutureTask 所有公有方法的调用都会委托给这个内部子类。</p>
+<p>在实际开发过程中，<strong>将那些耗时较长，且可以并行的操作都封装成一个FutureTask</strong>，该类提供了Future的基本实现，提供了启动和取消计算、查询计算是否完成以及检索计算结果的方法。<br>FutureTask的实现是基于 AbstractQueuedSynchronizer，FutureTask 声明了一个内部私有的继承于 AQS 的子类 Sync，对 FutureTask 所有公有方法的调用都会委托给这个内部子类。</p>
+<p>当FutureTask处于未启动或者已启动的状态时，调用FutureTask对象的get方法将会导致调用线程阻塞，当FutureTask处于已完成的状态时，调用FutureTask的get 方法会立即返回调用结果或者抛出异常。</p>
+<p>当FutureTask处于未启动状态时，调用FutureTask对象的cancel方法将导致线程永远不会被执行，当FutureTask处于已启动状态时，调用FutureTask对象cancel（true）方法将以中断执行此任务的线程的方式来试图停止此任务，调用cancel（false）方法将不会对正在进行的任务产生任何影响；当FutureTask处于已完成状态时，调用FutureTask对象的cancel方法将会返回false。</p>
 <h1 id="原子操作类atomicXXX的原理"><a href="#原子操作类atomicXXX的原理" class="headerlink" title="原子操作类atomicXXX的原理"></a>原子操作类atomicXXX的原理</h1><p>AtomicInteger类主要利用<code>CAS</code>+<code>volatile</code>和native方法来保证原子操作，避免了使用synchronized带来的高开销，执行效率大大提高。<br>部分源码：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">// setup to use Unsafe.compareAndSwapInt for updates（更新操作时提供“比较并替换”的作用）</span>
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Unsafe unsafe = Unsafe.getUnsafe();
@@ -903,7 +971,7 @@
                       <a href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">JVM浅析</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -912,7 +980,7 @@
                     
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -945,7 +1013,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -972,7 +1040,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -981,7 +1049,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

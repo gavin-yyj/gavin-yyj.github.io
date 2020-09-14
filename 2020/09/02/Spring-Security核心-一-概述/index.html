@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring Security核心(一)-概述 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-09-02 09:37">
+      September 2, 2020 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-核心组件"><a href="#1-核心组件" class="headerlink" title="1 核心组件"></a>1 核心组件</h1><p>这一节主要介绍一些在 Spring Security 中常见且核心的 Java 类，它们之间的依赖，构建起了整个框架。想要理解整个架构，最起码得对这些类眼熟。</p>
+<h3 id="1-1-SecurityContextHolder"><a href="#1-1-SecurityContextHolder" class="headerlink" title="1.1 SecurityContextHolder"></a>1.1 SecurityContextHolder</h3><p><code>SecurityContextHolder</code> 用于存储安全上下文（security context）的信息。当前操作的用户是谁，该用户是否已经被认证，他拥有哪些角色权限… 这些都被保存在 SecurityContextHolder 中。<code>SecurityContextHolder</code> 默认使用 <code>ThreadLocal</code> 策略来存储认证信息。看到 <code>ThreadLocal</code> 也就意味着，这是一种与线程绑定的策略。Spring Security 在用户登录时自动绑定认证信息到当前线程，在用户退出时，自动清除当前线程的认证信息。但这一切的前提，是你在 web 场景下使用 Spring Security，而如果是 Swing 界面，Spring 也提供了支持，<code>SecurityContextHolder</code> 的策略则需要被替换，鉴于我的初衷是基于 web 来介绍 Spring Security，所以这里以及后续，非 web 的相关的内容都一笔带过。</p>
+<h4 id="获取当前用户的信息"><a href="#获取当前用户的信息" class="headerlink" title="获取当前用户的信息"></a>获取当前用户的信息</h4><p>因为身份信息是与线程绑定的，所以可以在程序的任何地方使用静态方法获取用户信息。一个典型的获取当前登录用户的姓名的例子如下所示：</p>
+<div class="hljs"><pre><code class="hljs java">Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+<span class="hljs-keyword">if</span> (principal <span class="hljs-keyword">instanceof</span> UserDetails) &#123;
+	String username = ((UserDetails)principal).getUsername();
+&#125; <span class="hljs-keyword">else</span> &#123;
+	String username = principal.toString();
+&#125;</code></pre></div>
+
+<p>getAuthentication()返回了认证信息，再次 getPrincipal() 返回了身份信息，UserDetails 便是 Spring 对身份信息封装的一个接口。Authentication 和 UserDetails 的介绍在下面的小节具体讲解，本节重要的内容是介绍 SecurityContextHolder 这个容器。</p>
+<h3 id="1-2-Authentication"><a href="#1-2-Authentication" class="headerlink" title="1.2 Authentication"></a>1.2 Authentication</h3><p>先看看这个接口的源码长什么样：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.security.core;<span class="hljs-comment">// &lt;1&gt;</span>
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Authentication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Principal</span>, <span class="hljs-title">Serializable</span> </span>&#123; <span class="hljs-comment">// &lt;1&gt;</span>
+    Collection&lt;? extends GrantedAuthority&gt; getAuthorities(); <span class="hljs-comment">// &lt;2&gt;</span>
+
+    <span class="hljs-function">Object <span class="hljs-title">getCredentials</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// &lt;2&gt;</span>
+
+    <span class="hljs-function">Object <span class="hljs-title">getDetails</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// &lt;2&gt;</span>
+
+    <span class="hljs-function">Object <span class="hljs-title">getPrincipal</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// &lt;2&gt;</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAuthenticated</span><span class="hljs-params">()</span></span>;<span class="hljs-comment">// &lt;2&gt;</span>
+
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">setAuthenticated</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> var1)</span> <span class="hljs-keyword">throws</span> IllegalArgumentException</span>;
+&#125;</code></pre></div>
+
+<p>&lt;1&gt; Authentication 是 spring security 包中的接口，直接继承自 Principal 类，而 Principal 是位于 <code>java.security</code> 包中的。可以见得，Authentication 在 spring security 中是最高级别的身份 / 认证的抽象。</p>
+<p>&lt;2&gt; 由这个顶级接口，我们可以得到用户拥有的权限信息列表，密码，用户细节信息，用户身份信息，认证信息。</p>
+<p>还记得 1.1 节中，authentication.getPrincipal() 返回了一个 Object，我们将 Principal 强转成了 Spring Security 中最常用的 UserDetails，这在 Spring Security 中非常常见，接口返回 Object，使用 instanceof 判断类型，强转成对应的具体实现类。接口详细解读如下：</p>
+<ul>
+<li>getAuthorities()，权限信息列表，默认是 GrantedAuthority 接口的一些实现类，通常是代表权限信息的一系列字符串。</li>
+<li>getCredentials()，密码信息，用户输入的密码字符串，在认证过后通常会被移除，用于保障安全。</li>
+<li>getDetails()，细节信息，web 应用中的实现接口通常为 WebAuthenticationDetails，它记录了访问者的 ip 地址和 sessionId 的值。</li>
+<li>getPrincipal()，敲黑板！！！最重要的身份信息，大部分情况下返回的是 UserDetails 接口的实现类，也是框架中的常用接口之一。UserDetails 接口将会在下面的小节重点介绍。</li>
+</ul>
+<h4 id="Spring-Security-是如何完成身份认证的？"><a href="#Spring-Security-是如何完成身份认证的？" class="headerlink" title="Spring Security 是如何完成身份认证的？"></a>Spring Security 是如何完成身份认证的？</h4><p>1 用户名和密码被过滤器获取到，封装成 <code>Authentication</code>, 通常情况下是 <code>UsernamePasswordAuthenticationToken</code> 这个实现类。</p>
+<p>2 <code>AuthenticationManager</code> 身份管理器负责验证这个 <code>Authentication</code></p>
+<p>3 认证成功后，<code>AuthenticationManager</code> 身份管理器返回一个被填充满了信息的（包括上面提到的权限信息，身份信息，细节信息，但密码通常会被移除）<code>Authentication</code> 实例。</p>
+<p>4 <code>SecurityContextHolder</code> 安全上下文容器将第 3 步填充了信息的 <code>Authentication</code>，通过 SecurityContextHolder.getContext().setAuthentication(…) 方法，设置到其中。</p>
+<p>这是一个抽象的认证流程，而整个过程中，如果不纠结于细节，其实只剩下一个 <code>AuthenticationManager</code> 是我们没有接触过的了，这个身份管理器我们在后面的小节介绍。将上述的流程转换成代码，便是如下的流程：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AuthenticationExample</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> AuthenticationManager am = <span class="hljs-keyword">new</span> SampleAuthenticationManager();
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        BufferedReader in = <span class="hljs-keyword">new</span> BufferedReader(<span class="hljs-keyword">new</span> InputStreamReader(System.in));
+
+        <span class="hljs-keyword">while</span>(<span class="hljs-keyword">true</span>) &#123;
+            System.out.println(<span class="hljs-string">"Please enter your username:"</span>);
+            String name = in.readLine();
+            System.out.println(<span class="hljs-string">"Please enter your password:"</span>);
+            String password = in.readLine();
+            <span class="hljs-keyword">try</span> &#123;
+                <span class="hljs-comment">//将用户的用户名和密码封装成Authentication</span>
+                Authentication request = <span class="hljs-keyword">new</span> UsernamePasswordAuthenticationToken(name, password);
+                <span class="hljs-comment">//交给AuthenticationManager去验证，如果验证成功就返回一个被填充了信息的Authentication实例(此时用户密码已擦除)</span>
+                Authentication result = am.authenticate(request);
+                <span class="hljs-comment">//SecurityContextHolder将填充了信息的authentication设置到其中</span>
+                SecurityContextHolder.getContext().setAuthentication(result);
+                <span class="hljs-keyword">break</span>;
+            &#125; <span class="hljs-keyword">catch</span>(AuthenticationException e) &#123;
+                System.out.println(<span class="hljs-string">"Authentication failed:"</span> + e.getMessage());
+            &#125;
+        &#125;
+        System.out.println(<span class="hljs-string">"Successfully authenticated. Security context contains:"</span> +
+                SecurityContextHolder.getContext().getAuthentication());
+    &#125;
+&#125;
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SampleAuthenticationManager</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">AuthenticationManager</span> </span>&#123;
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> List&lt;GrantedAuthority&gt; AUTHORITIES = <span class="hljs-keyword">new</span> ArrayList&lt;GrantedAuthority&gt;();
+
+<span class="hljs-keyword">static</span> &#123;
+	AUTHORITIES.add(<span class="hljs-keyword">new</span> SimpleGrantedAuthority(<span class="hljs-string">"ROLE_USER"</span>));
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> Authentication <span class="hljs-title">authenticate</span><span class="hljs-params">(Authentication auth)</span> <span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+	<span class="hljs-keyword">if</span> (auth.getName().equals(auth.getCredentials())) &#123;
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> UsernamePasswordAuthenticationToken(auth.getName(),
+		auth.getCredentials(), AUTHORITIES);
+	&#125;
+	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadCredentialsException(<span class="hljs-string">"Bad Credentials"</span>);
+&#125;
+&#125;</code></pre></div>
+
+<p>注意：上述这段代码只是为了让大家了解 Spring Security 的工作流程而写的，不是什么源码。在实际使用中，整个流程会变得更加的复杂，但是基本思想，和上述代码如出一辙。</p>
+<h3 id="1-3-AuthenticationManager"><a href="#1-3-AuthenticationManager" class="headerlink" title="1.3 AuthenticationManager"></a>1.3 AuthenticationManager</h3><p>初次接触 Spring Security 的朋友相信会被 <code>AuthenticationManager</code>，<code>ProviderManager</code> ，<code>AuthenticationProvider</code> … 这么多相似的 Spring 认证类搞得晕头转向，但只要稍微梳理一下就可以理解清楚它们的联系和设计者的用意。AuthenticationManager（接口）是认证相关的核心接口，也是发起认证的出发点，因为在实际需求中，我们可能会允许用户使用用户名 + 密码登录，同时允许用户使用邮箱 + 密码，手机号码 + 密码登录，甚至，可能允许用户使用指纹登录（还有这样的操作？没想到吧），所以说 AuthenticationManager 一般不直接认证，AuthenticationManager 接口的常用实现类 <code>ProviderManager</code> 内部会维护一个 <code>List&lt;AuthenticationProvider&gt;</code> 列表，存放多种认证方式，实际上这是委托者模式的应用（Delegate）。也就是说，核心的认证入口始终只有一个：AuthenticationManager，不同的认证方式：用户名 + 密码（UsernamePasswordAuthenticationToken），邮箱 + 密码，手机号码 + 密码登录则对应了三个 AuthenticationProvider。这样一来四不四就好理解多了？熟悉 shiro 的朋友可以把 AuthenticationProvider 理解成 Realm。在默认策略下，只需要通过一个 AuthenticationProvider 的认证，即可被认为是登录成功。</p>
+<p>只保留了关键认证部分的 ProviderManager 源码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProviderManager</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">AuthenticationManager</span>, <span class="hljs-title">MessageSourceAware</span>,</span>
+<span class="hljs-class">		<span class="hljs-title">InitializingBean</span> </span>&#123;
+
+    <span class="hljs-comment">// 维护一个 AuthenticationProvider 列表</span>
+    <span class="hljs-keyword">private</span> List&lt;AuthenticationProvider&gt; providers = Collections.emptyList();
+          
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Authentication <span class="hljs-title">authenticate</span><span class="hljs-params">(Authentication authentication)</span></span>
+<span class="hljs-function">          <span class="hljs-keyword">throws</span> AuthenticationException </span>&#123;
+       Class&lt;? extends Authentication&gt; toTest = authentication.getClass();
+       AuthenticationException lastException = <span class="hljs-keyword">null</span>;
+       Authentication result = <span class="hljs-keyword">null</span>;
+
+       <span class="hljs-comment">// 依次认证</span>
+       <span class="hljs-keyword">for</span> (AuthenticationProvider provider : getProviders()) &#123;
+          <span class="hljs-keyword">if</span> (!provider.supports(toTest)) &#123;
+             <span class="hljs-keyword">continue</span>;
+          &#125;
+          <span class="hljs-keyword">try</span> &#123;
+             result = provider.authenticate(authentication);
+
+             <span class="hljs-keyword">if</span> (result != <span class="hljs-keyword">null</span>) &#123;
+                copyDetails(authentication, result);
+                <span class="hljs-keyword">break</span>;
+             &#125;
+          &#125;
+          ...
+          <span class="hljs-keyword">catch</span> (AuthenticationException e) &#123;
+             lastException = e;
+          &#125;
+       &#125;
+       <span class="hljs-comment">// 如果有 Authentication 信息，则直接返回</span>
+       <span class="hljs-keyword">if</span> (result != <span class="hljs-keyword">null</span>) &#123;
+			<span class="hljs-keyword">if</span> (eraseCredentialsAfterAuthentication
+					&amp;&amp; (result <span class="hljs-keyword">instanceof</span> CredentialsContainer)) &#123;
+              	 <span class="hljs-comment">// 移除密码</span>
+				((CredentialsContainer) result).eraseCredentials();
+			&#125;
+             <span class="hljs-comment">// 发布登录成功事件</span>
+			eventPublisher.publishAuthenticationSuccess(result);
+			<span class="hljs-keyword">return</span> result;
+	   &#125;
+	   ...
+       <span class="hljs-comment">// 执行到此，说明没有认证成功，包装异常信息</span>
+       <span class="hljs-keyword">if</span> (lastException == <span class="hljs-keyword">null</span>) &#123;
+          lastException = <span class="hljs-keyword">new</span> ProviderNotFoundException(messages.getMessage(
+                <span class="hljs-string">"ProviderManager.providerNotFound"</span>,
+                <span class="hljs-keyword">new</span> Object[] &#123; toTest.getName() &#125;,
+                <span class="hljs-string">"No AuthenticationProvider found for &#123;0&#125;"</span>));
+       &#125;
+       prepareException(lastException, authentication);
+       <span class="hljs-keyword">throw</span> lastException;
+    &#125;
+&#125;</code></pre></div>
+
+<p><code>ProviderManager</code> 中的 List，会依照次序去认证，认证成功则立即返回，若认证失败则返回 null，下一个 AuthenticationProvider 会继续尝试认证，如果所有认证器都无法认证成功，则 <code>ProviderManager</code> 会抛出一个 ProviderNotFoundException 异常。</p>
+<p>到这里，如果不纠结于 AuthenticationProvider 的实现细节以及安全相关的过滤器，认证相关的核心类其实都已经介绍完毕了：身份信息的存放容器 SecurityContextHolder，身份信息的抽象 Authentication，身份认证器 AuthenticationManager 及其认证流程。姑且在这里做一个分隔线。下面来介绍下 AuthenticationProvider 接口的具体实现。</p>
+<h3 id="1-4-DaoAuthenticationProvider"><a href="#1-4-DaoAuthenticationProvider" class="headerlink" title="1.4 DaoAuthenticationProvider"></a>1.4 DaoAuthenticationProvider</h3><p>AuthenticationProvider 最最最常用的一个实现便是 DaoAuthenticationProvider。顾名思义，Dao 正是数据访问层的缩写，也暗示了这个身份认证器的实现思路。由于本文是一个 Overview，姑且只给出其 UML 类图：</p>
+<p><img src="https://kirito.iocoder.cn/QQ%E5%9B%BE%E7%89%8720170919204228.png" srcset="/img/loading.gif" alt="DaoAuthenticationProvider UML"></p>
+<p>​                                                                                DaoAuthenticationProvider UML</p>
+<p>按照我们最直观的思路，怎么去认证一个用户呢？用户前台提交了用户名和密码，而数据库中保存了用户名和密码，认证便是负责比对同一个用户名，提交的密码和保存的密码是否相同便是了。在 Spring Security 中。提交的用户名和密码，被封装成了 UsernamePasswordAuthenticationToken，而根据用户名加载用户的任务则是交给了 UserDetailsService，在 DaoAuthenticationProvider 中，对应的方法便是 retrieveUser，虽然有两个参数，但是 retrieveUser 只有第一个参数起主要作用，返回一个 UserDetails。还需要完成 UsernamePasswordAuthenticationToken 和 UserDetails 密码的比对，这便是交给 additionalAuthenticationChecks 方法完成的，如果这个 void 方法没有抛异常，则认为比对成功。比对密码的过程，用到了 PasswordEncoder 和 SaltSource，密码加密和盐的概念相信不用我赘述了，它们为保障安全而设计，都是比较基础的概念。</p>
+<p>如果你已经被这些概念搞得晕头转向了，不妨这么理解 DaoAuthenticationProvider：它获取用户提交的用户名和密码，比对其正确性，如果正确，返回一个数据库中的用户信息（假设用户信息被保存在数据库中）。</p>
+<h3 id="1-5-UserDetails-与-UserDetailsService"><a href="#1-5-UserDetails-与-UserDetailsService" class="headerlink" title="1.5 UserDetails 与 UserDetailsService"></a>1.5 UserDetails 与 UserDetailsService</h3><p>上面不断提到了 UserDetails 这个接口，它代表了最详细的用户信息，这个接口涵盖了一些必要的用户信息字段，具体的实现类对它进行了扩展。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">UserDetails</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Serializable</span> </span>&#123;
+
+   Collection&lt;? extends GrantedAuthority&gt; getAuthorities();
+
+   <span class="hljs-function">String <span class="hljs-title">getPassword</span><span class="hljs-params">()</span></span>;
+
+   <span class="hljs-function">String <span class="hljs-title">getUsername</span><span class="hljs-params">()</span></span>;
+
+   <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccountNonExpired</span><span class="hljs-params">()</span></span>;
+
+   <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isAccountNonLocked</span><span class="hljs-params">()</span></span>;
+
+   <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isCredentialsNonExpired</span><span class="hljs-params">()</span></span>;
+
+   <span class="hljs-function"><span class="hljs-keyword">boolean</span> <span class="hljs-title">isEnabled</span><span class="hljs-params">()</span></span>;
+&#125;</code></pre></div>
+
+<p>它和 Authentication 接口很类似，比如它们都拥有 username，authorities，区分他们也是本文的重点内容之一。Authentication 的 getCredentials()与 UserDetails 中的 getPassword() 需要被区分对待，前者是用户提交的密码凭证，后者是用户正确的密码，认证器其实就是对这两者的比对。Authentication 中的 getAuthorities()实际是由 UserDetails 的 getAuthorities() 传递而形成的。还记得 Authentication 接口中的 getUserDetails() 方法吗？其中的 UserDetails 用户详细信息便是经过了 AuthenticationProvider 之后被填充的。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">UserDetailsService</span> </span>&#123;
+   <span class="hljs-function">UserDetails <span class="hljs-title">loadUserByUsername</span><span class="hljs-params">(String username)</span> <span class="hljs-keyword">throws</span> UsernameNotFoundException</span>;
+&#125;</code></pre></div>
+
+<p>UserDetailsService 和 AuthenticationProvider 两者的职责常常被人们搞混，关于他们的问题在文档的 FAQ 和 issues 中屡见不鲜。记住一点即可，敲黑板！！！UserDetailsService 只负责从特定的地方（通常是数据库）加载用户信息，仅此而已，记住这一点，可以避免走很多弯路。UserDetailsService 常见的实现类有 JdbcDaoImpl，InMemoryUserDetailsManager，前者从数据库加载用户，后者从内存中加载用户，也可以自己实现 UserDetailsService，通常这更加灵活。</p>
+<h3 id="1-6-架构概览图"><a href="#1-6-架构概览图" class="headerlink" title="1.6 架构概览图"></a>1.6 架构概览图</h3><p>为了更加形象的理解上述我介绍的这些核心类，附上一张按照我的理解，所画出 Spring Security 的一张非典型的 UML 图</p>
+<p><img src="https://kirito.iocoder.cn/spring%20security%20architecture.png" srcset="/img/loading.gif" alt="架构概览图"></p>
+<center>架构概览图</center>>
+
+<p>如果对 Spring Security 的这些概念感到理解不能，不用担心，因为这是 Architecture First 导致的必然结果，先过个眼熟。后续的文章会秉持 Code First 的理念，陆续详细地讲解这些实现类的使用场景，源码分析，以及最基本的：如何配置 Spring Security，在后面的文章中可以不时翻看这篇文章，找到具体的类在整个架构中所处的位置，这也是本篇文章的定位。另外，一些 Spring Security 的过滤器还未囊括在架构概览中，如将表单信息包装成 UsernamePasswordAuthenticationToken 的过滤器，考虑到这些虽然也是架构的一部分，但是真正重写他们的可能性较小，所以打算放到后面的章节讲解。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Spring-Security/">Spring Security</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E4%BA%8C-%E6%A0%B8%E5%BF%83%E8%BF%87%E6%BB%A4%E5%99%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Spring Security核心(三)-核心过滤器源码分析</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/08/18/Linux%E5%85%A5%E9%97%A8/">
+                        <span class="hidden-mobile">Linux入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring Security核心(一)-概述&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7k 字
+      7.5k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      73
+      79
        分钟
     </span>
   
@@ -219,7 +219,7 @@
 <div class="hljs"><pre><code>1. 类加载器（ClassLoader）
 2. 运行时数据区（Runtime Data Area）
 3. 执行引擎（Execution Engine）
-4. 本地库接口（Native Interface）</code></pre></div><p>各组件的作用：首先通过<strong>编译器</strong>把 Java 代码转换成字节码，<strong>类加载器</strong>（ClassLoader）再把字节码加载到内存中，将其放在<strong>运行时数据区</strong>（Runtime data area）的方法区内，而字节码文件只是 JVM 的一套指令集规范，并不能直接交给底层操作系统去执行，因此需要特定的命令解析器<strong>执行引擎</strong>（Execution Engine），将字节码翻译成底层系统指令，再交由 CPU 去执行，而这个过程中需要调用其他语言的<strong>本地库接口</strong>（Native Interface）来实现整个程序的功能。</p>
+4. 本地库接口（Native Interface）</code></pre></div><p>各组件的作用：首先通过<strong>编译器</strong>把 Java 代码转换成字节码，<strong>类加载器</strong>（ClassLoader）再把字节码加载到内存中，将其放在<strong>运行时数据区</strong>（Runtime data area）的<strong>方法区</strong>内，而字节码文件只是 JVM 的一套指令集规范，并不能直接交给底层操作系统去执行，因此需要特定的命令解析器<strong>执行引擎</strong>（Execution Engine），将字节码翻译成底层系统指令，再交由 CPU 去执行，而这个过程中需要调用其他语言的<strong>本地库接口</strong>（Native Interface）来实现整个程序的功能。</p>
 <h2 id="Java程序运行机制步骤"><a href="#Java程序运行机制步骤" class="headerlink" title="Java程序运行机制步骤"></a>Java程序运行机制步骤</h2><p><img src="https://img-blog.csdnimg.cn/20200630222445455.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
 <li>首先利用IDE集成开发工具编写Java源代码，源文件的后缀名为.java</li>
@@ -263,6 +263,8 @@
 <li>监听器：释放对象的时候没有删除监听器；</li>
 <li>各种连接：比如数据库连接（dataSourse.getConnection()），网络连接(socket) 和 IO 连接，除非其显式的调用了其 close() 方法将其连接关闭，否则是不会自动被 GC 回收的；</li>
 </ul>
+<h2 id="什么情况下会发生堆内存溢出，栈内存溢出？"><a href="#什么情况下会发生堆内存溢出，栈内存溢出？" class="headerlink" title="什么情况下会发生堆内存溢出，栈内存溢出？"></a>什么情况下会发生堆内存溢出，栈内存溢出？</h2><p>栈溢出：栈是线程私有的，它的生命周期与线程相同，每个方法在执行的时候都会创建一个栈帧，用来存储局部变量表，操作数栈，动态链接，方法出口等信息，栈溢出就是方法执行创建的栈帧超过了栈的深度。</p>
+<p>堆中主要存储的是对象，如果不断的new对象则会导致堆中的空间溢出。</p>
 <h1 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h1><h2 id="Java中都有哪些引用类型"><a href="#Java中都有哪些引用类型" class="headerlink" title="Java中都有哪些引用类型"></a>Java中都有哪些引用类型</h2><ul>
 <li>强引用：发生GC的时候不会回收</li>
 <li>软引用：在发生内存溢出之前会被回收</li>
@@ -277,7 +279,7 @@
 <li>老年代内存比年轻代内存大很多，当老年代内存满时会触发Major GC（Full GC）。</li>
 </ul>
 <h2 id="详细介绍一下CMS垃圾回收器"><a href="#详细介绍一下CMS垃圾回收器" class="headerlink" title="详细介绍一下CMS垃圾回收器"></a>详细介绍一下CMS垃圾回收器</h2><p>CMS 是英文 Concurrent Mark-Sweep 的简称，并发收集，是<strong>以牺牲吞吐量为代价来获得最短回收停顿时间的垃圾回收器</strong>。对于要求服务器响应速度的应用上，这种垃圾回收器非常适合。</p>
-<p>CMS 使用的是<strong>标记-清除</strong>的算法实现的，所以在GC的时候回产生大量的内存碎片，当剩余内存不能满足程序运行要求时，系统将会出现 Concurrent Mode Failure，临时 CMS 会采用 <strong>Serial Old</strong> 回收器进行垃圾清除，此时的性能将会被降低。（<strong>为什么选择Serial Old 作为CMS的后备方案而不选择多线程并行的Parallel Old，原因在于Serial Old可以和年轻代的三种搭配使用，而Parallel Old只能和Parallel Scavenge搭配使用。</strong>）</p>
+<p>CMS 使用的是<strong>标记-清除</strong>的算法实现的，所以在GC的时候会产生大量的内存碎片，当剩余内存不能满足程序运行要求时，系统将会出现 Concurrent Mode Failure，临时 CMS 会采用 <strong>Serial Old</strong> 回收器进行垃圾清除，此时的性能将会被降低。（<strong>为什么选择Serial Old 作为CMS的后备方案而不选择多线程并行的Parallel Old，原因在于Serial Old可以和年轻代的三种搭配使用，而Parallel Old只能和Parallel Scavenge搭配使用。</strong>）</p>
 <p>CMS回收的过程：</p>
 <ul>
 <li><p>初始标记：（<code>stop-the-world</code>）标记GCRoots可以直接关联的对象；</p>
@@ -289,6 +291,7 @@
 <li><p>并发清除：执行清除操作，和用户线程并发执行；</p>
 </li>
 </ul>
+<p>注意：初始标记和重新标记的时候需要暂停其他应用程序。</p>
 <h1 id="JVM自动内存管理机制"><a href="#JVM自动内存管理机制" class="headerlink" title="JVM自动内存管理机制"></a>JVM自动内存管理机制</h1><p>JVM自动内存管理机制，主要包括内存回收和内存分配。</p>
 <h2 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h2><p>对于内存回收机制主要围绕“哪些内存需要回收？”，“什么时候回收？”，“如何回收？”三个问题来展开。</p>
 <h3 id="1-哪些内存需要回收？"><a href="#1-哪些内存需要回收？" class="headerlink" title="1. 哪些内存需要回收？"></a>1. 哪些内存需要回收？</h3><p>不可能再被任何途径使用的对象需要被回收。</p>
@@ -337,7 +340,7 @@
 <h2 id="类的生命周期（前5个步骤是类加载过程）"><a href="#类的生命周期（前5个步骤是类加载过程）" class="headerlink" title="类的生命周期（前5个步骤是类加载过程）"></a>类的生命周期（前5个步骤是类加载过程）</h2><p><img src="https://img-blog.csdnimg.cn/20200701191958528.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h3 id="加载："><a href="#加载：" class="headerlink" title="加载："></a>加载：</h3><p>完成以下三件事：</p>
 <ul>
-<li>通过类的完全限定名称获取定义该类的二进制字节流；</li>
+<li>通过类的全限定名获取定义该类的二进制字节流；</li>
 <li><strong>将该字节流表示的静态存储结构转换为方法区的运行时存储结构；</strong></li>
 <li>在内存中生成一个代表该类的Class对象，作为方法区中该类各种数据的访问入口；</li>
 </ul>
@@ -390,8 +393,13 @@
 <li><strong>用户自定义类加载器</strong>，通过继承 java.lang.ClassLoader类的方式实现。</li>
 </ol>
 <h2 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h2><p>对于任意一个类，都需要由加载它的类加载器和这个类本身一同确定在JVM中的唯一性，每个类加载器都有一个独立的类名称空间，类加载器就是根据指定的全限定名称将class文件加载到JVM内存，然后再转化为java.lang.Class对象。<br><img src="https://upload-images.jianshu.io/upload_images/5982616-aad63782162c9ae5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/942/format/webp" srcset="/img/loading.gif" alt="img"><br><strong>双亲委派模型</strong>：如果一个类加载器收到了类加载的请求，它首先不会自己去加载这个类，而是把这个请求委派给父类加载器去完成(<strong>注意：这里的父子关系一般是通过组合关系来实现的，而不是继承实现的)</strong>，每一层的类加载器都是如此，这样所有的加载请求都会被传送到顶层的启动类加载器中，只有当父加载无法完成加载请求（它的搜索范围中没找到所需的类）时，子加载器才会尝试去加载类。</p>
-<p>双亲我委派模型的好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，例如类java.lang.Object，它存放在rt.jar之中，无论哪一个类加载器要加载这个类，最终都是委派给处于模型最顶端的启动类加载器进行加载，因此Object类在程序的各种类加载器环境中都是同一个类，相反，如果没有使用双亲委派模型，由各个类加载器自行去加载的话，如果用户编写了一个称为java.lang.Object的类，并放在程序的ClassPath中，那系统中将会有多个不同的Object类，应用程序也将会变得一片混乱。</p>
+<p>双亲委派模型的好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，例如类java.lang.Object，它存放在rt.jar之中，<strong>无论哪一个类加载器要加载这个类，最终都是委派给处于模型最顶端的启动类加载器进行加载</strong>，因此Object类在程序的各种类加载器环境中都是同一个类，相反，如果没有使用双亲委派模型，由各个类加载器自行去加载的话，如果用户编写了一个称为java.lang.Object的类，并放在程序的ClassPath中，那系统中将会有多个不同的Object类，应用程序也将会变得一片混乱。</p>
 <p>如果用户编写了一个与rt.jar类库中已有类重名的Java类，将会发现可以正常编译，但是永远无法被加载运行。即使自定义了自己的类加载器，强行用defineClass()方法去加载一个以“java.lang”开头的类也不会成功，会收到一个由虚拟机抛出的异常。</p>
+<h3 id="双亲委派模型被破坏的情况"><a href="#双亲委派模型被破坏的情况" class="headerlink" title="双亲委派模型被破坏的情况"></a>双亲委派模型被破坏的情况</h3><ul>
+<li>解决历史遗留问题：双亲委派模型是在JDK1.2之后才被引入的，而类加载器和抽象类<code>java.lang.ClassLoader</code>则是JDK1.0时候就已经存在，面对已经存在的用户自定义类加载器的实现代码，Java设计者引入双亲委派模型时不得不做出一些妥协。为了向前兼容，JDK1.2之后的java.lang.ClassLoader添加了一个新的proceted方法findClass()，在此之前，用户去继承java.lang.ClassLoader的唯一目的就是重写loadClass()方法，因为虚拟在进行类加载的时候会调用加载器的私有方法loadClassInternal()，而这个方法的唯一逻辑就是去调用自己的loadClass()。JDK1.2之后已不再提倡用户再去覆盖loadClass()方法，应当<strong>把自己的类加载逻辑写到findClass()方法中</strong>，在loadClass()方法的逻辑里，如果父类加载器加载失败，则会调用自己的findClass()方法来完成加载，这样就可以保证新写出来的类加载器是符合双亲委派模型的。</li>
+<li>自身缺陷：父类加载器请求子类加载器去完成类加载动作，这种行为实际上就是打通了双亲委派模型的层次结构来逆向使用类加载器。</li>
+<li>用户对程序的动态性追求：例如OSGi的出现。在OSGi环境下，类加载器不再是双亲委派模型中的树状结构，而是进一步发展为网状结构。</li>
+</ul>
 <h1 id="JVM调优"><a href="#JVM调优" class="headerlink" title="JVM调优"></a>JVM调优</h1><h2 id="说一下-JVM-调优的工具？"><a href="#说一下-JVM-调优的工具？" class="headerlink" title="说一下 JVM 调优的工具？"></a>说一下 JVM 调优的工具？</h2><p>JDK 自带了很多监控工具，都位于 JDK 的 bin 目录下，其中最常用的是 <code>jconsole</code> 和<code>jvisualvm</code>这两款视图监控工具。</p>
 <ul>
 <li>jconsole：用于对 JVM 中的内存、线程和类等进行监控；</li>
@@ -441,7 +449,7 @@
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
@@ -450,7 +458,7 @@
                     
                       <a href="/2020/06/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">
                         <span class="hidden-mobile">Java并发编程</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -483,7 +491,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -510,7 +518,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -519,7 +527,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
