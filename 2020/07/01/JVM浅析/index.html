@@ -263,7 +263,10 @@
 <li>监听器：释放对象的时候没有删除监听器；</li>
 <li>各种连接：比如数据库连接（dataSourse.getConnection()），网络连接(socket) 和 IO 连接，除非其显式的调用了其 close() 方法将其连接关闭，否则是不会自动被 GC 回收的；</li>
 </ul>
-<h2 id="什么情况下会发生堆内存溢出，栈内存溢出？"><a href="#什么情况下会发生堆内存溢出，栈内存溢出？" class="headerlink" title="什么情况下会发生堆内存溢出，栈内存溢出？"></a>什么情况下会发生堆内存溢出，栈内存溢出？</h2><p>栈溢出：栈是线程私有的，它的生命周期与线程相同，每个方法在执行的时候都会创建一个栈帧，用来存储局部变量表，操作数栈，动态链接，方法出口等信息，栈溢出就是方法执行创建的栈帧超过了栈的深度。</p>
+<h2 id="什么情况下会发生堆内存溢出，栈内存溢出？"><a href="#什么情况下会发生堆内存溢出，栈内存溢出？" class="headerlink" title="什么情况下会发生堆内存溢出，栈内存溢出？"></a>什么情况下会发生堆内存溢出，栈内存溢出？</h2><ul>
+<li>栈溢出：栈是线程私有的，它的生命周期与线程相同，每个方法在执行的时候都会创建一个栈帧，用来存储局部变量表，操作数栈，动态链接，方法出口等信息，栈溢出就是方法执行创建的栈帧超过了栈的深度。</li>
+<li>堆溢出：不断的创建对象所致。</li>
+</ul>
 <p>堆中主要存储的是对象，如果不断的new对象则会导致堆中的空间溢出。</p>
 <h1 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h1><h2 id="Java中都有哪些引用类型"><a href="#Java中都有哪些引用类型" class="headerlink" title="Java中都有哪些引用类型"></a>Java中都有哪些引用类型</h2><ul>
 <li>强引用：发生GC的时候不会回收</li>
@@ -449,7 +452,7 @@
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -458,7 +461,7 @@
                     
                       <a href="/2020/06/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">
                         <span class="hidden-mobile">Java并发编程</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -491,7 +494,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -518,7 +521,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -527,7 +530,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

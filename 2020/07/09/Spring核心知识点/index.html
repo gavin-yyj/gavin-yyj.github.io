@@ -234,7 +234,7 @@
 </ul>
 <h2 id="Spring由哪些模块组成"><a href="#Spring由哪些模块组成" class="headerlink" title="Spring由哪些模块组成"></a>Spring由哪些模块组成</h2><p><img src="https://img-blog.csdnimg.cn/20200709145013402.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
-<li>Core：提供了框架的基本组成部分，包括控制反转和依赖注入功能；</li>
+<li>Core：提供了框架的基本组成部分，包括<strong>控制反转</strong>和<strong>依赖注入</strong>功能；</li>
 <li>Beans：提供了BeanFactory，是工厂模式的一个经典实现，Spring将管理对象称为Bean；</li>
 <li>Context：Spring上下文，向Spring框架提供上下文信息，其他程序也可以通过Context访问Spring的Bean资源。</li>
 <li>JDBC：提供了一个JDBC的抽象层，消除了烦琐的JDBC编码和数据库厂商特有的错误代码解析， 用于简化JDBC</li>
@@ -252,7 +252,7 @@
 <h1 id="Spring控制反转（IoC）"><a href="#Spring控制反转（IoC）" class="headerlink" title="Spring控制反转（IoC）"></a>Spring控制反转（IoC）</h1><h2 id="什么是Spring-IoC容器"><a href="#什么是Spring-IoC容器" class="headerlink" title="什么是Spring IoC容器"></a>什么是Spring IoC容器</h2><p>控制反转是将传统上由程序代码直接操控的对象的调用权交给容器，通过容器来实现对象组件的装配和管理，所谓的“控制反转”概念就是对组件对象控制权的转移，从程序代码本身转移到了外部容器，实现了<strong>解耦</strong>。</p>
 <p>Spring IoC负责创建对象，并管理这些对象的整个生命周期。</p>
 <h2 id="Spring-IoC的实现机制"><a href="#Spring-IoC的实现机制" class="headerlink" title="Spring IoC的实现机制"></a>Spring IoC的实现机制</h2><p>工厂模式+反射机制</p>
-<h2 id="IOC容器的加载流程-refresh方法"><a href="#IOC容器的加载流程-refresh方法" class="headerlink" title="IOC容器的加载流程(refresh方法)"></a>IOC容器的加载流程(refresh方法)</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<h2 id="IoC容器的加载流程-refresh方法"><a href="#IoC容器的加载流程-refresh方法" class="headerlink" title="IoC容器的加载流程(refresh方法)"></a>IoC容器的加载流程(refresh方法)</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">refresh</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> BeansException, IllegalStateException </span>&#123;
     Object var1 = <span class="hljs-keyword">this</span>.startupShutdownMonitor;
     <span class="hljs-comment">// 来个锁，不然 refresh() 还没结束，你又来个启动或销毁容器的操作，那不就乱套了嘛</span>
@@ -358,11 +358,16 @@
 <h3 id="12-初始化Bean"><a href="#12-初始化Bean" class="headerlink" title="12. 初始化Bean"></a>12. 初始化Bean</h3><div class="hljs"><pre><code class="hljs java">finishBeanFactoryInitialization(beanFactory);</code></pre></div>
 
 <p>初始化所有的 singleton beans（单例bean），懒加载（non-lazy-init）的除外（spring默认不是懒加载，如果设定了懒加载，则bean的初始化由getbean方法触发）。</p>
-<p>从调用过程可以总结出以下几点：<br> 1.调用BeanFactory.getBean() 会触发Bean的实例化。<br> 2.DefaultSingletonBeanRegistry 中缓存了单例Bean<br> 3.Bean的创建与初始化是由AbstractAutowireCapableBeanFactory 完成的。</p>
+<p>从调用过程可以总结出以下几点：</p>
+<ol>
+<li>调用BeanFactory.getBean() 会触发Bean的实例化。</li>
+<li>2.DefaultSingletonBeanRegistry 中缓存了单例Bean</li>
+<li>3.Bean的创建与初始化是由AbstractAutowireCapableBeanFactory 完成的。</li>
+</ol>
 <h3 id="13-广播事件，告诉上下文，容器已经创建好，随时可以调用"><a href="#13-广播事件，告诉上下文，容器已经创建好，随时可以调用" class="headerlink" title="13. 广播事件，告诉上下文，容器已经创建好，随时可以调用"></a>13. 广播事件，告诉上下文，容器已经创建好，随时可以调用</h3><div class="hljs"><pre><code class="hljs java">finishRefresh();</code></pre></div>
 
 <p>方法是最后一步，广播事件，ApplicationContext 初始化完成。</p>
-<h2 id="Ioc容器的加载过程简单概括："><a href="#Ioc容器的加载过程简单概括：" class="headerlink" title="Ioc容器的加载过程简单概括："></a>Ioc容器的加载过程简单概括：</h2><ol>
+<h2 id="IoC容器的加载过程简单概括："><a href="#IoC容器的加载过程简单概括：" class="headerlink" title="IoC容器的加载过程简单概括："></a>IoC容器的加载过程简单概括：</h2><ol>
 <li>刷新预处理</li>
 <li>将配置信息解析，注册到BeanFactory</li>
 <li>设置bean的类加载器</li>
@@ -483,7 +488,8 @@
 <h2 id="Bean生命周期方法"><a href="#Bean生命周期方法" class="headerlink" title="Bean生命周期方法"></a>Bean生命周期方法</h2><p>bean 标签有两个重要的属性（init-method和destroy-method）。用它们你可以自己定制初始化和注销方法。相应的注解是@PostConstruct和@PreDestroy。</p>
 <h2 id="Bean注入属性有几种方式？"><a href="#Bean注入属性有几种方式？" class="headerlink" title="Bean注入属性有几种方式？"></a>Bean注入属性有几种方式？</h2><p>接口注入、构造器注入、set注入。</p>
 <h2 id="Component-和-Bean-有什么区别？"><a href="#Component-和-Bean-有什么区别？" class="headerlink" title="@Component 和 @Bean 有什么区别？"></a>@Component 和 @Bean 有什么区别？</h2><p>它们的作用对象不同：@Component 作用于类，而 @Bean 注解作用于方法。</p>
-<p>@Component 通常是通过类路径扫描来自动侦测和装配对象到 Spring 容器中，比如 @ComponentScan 注解就是定义扫描路径中的类装配到 Spring 的 Bean 容器中；@Bean 注解是告诉 Spring 这是某个类的实例，当我需要用它时把它给我，@Bean 注解比 @Component 注解自定义性更强，很多地方我们只能通过 @Bean 注解来注册 Bean，比如当我们引用第三方库中的类需要装配到 Spring容器时，则只能通过 @Bean 来实现。</p>
+<p>@Component 通常是通过类路径扫描来自动侦测和装配对象到 Spring 容器中，比如 @ComponentScan 注解就是定义扫描路径中的类装配到 Spring 的 Bean 容器中；</p>
+<p>@Bean 注解是告诉 Spring 这是某个类的实例，当我需要用它时把它给我，@Bean 注解比 @Component 注解自定义性更强，很多地方我们只能通过 @Bean 注解来注册 Bean，比如当我们引用第三方库中的类需要装配到 Spring容器时，则只能通过 @Bean 来实现。</p>
 <h2 id="使用-Autowired注解自动装配的过程是怎样的？"><a href="#使用-Autowired注解自动装配的过程是怎样的？" class="headerlink" title="使用@Autowired注解自动装配的过程是怎样的？"></a>使用@Autowired注解自动装配的过程是怎样的？</h2><p>使用@Autowired注解来自动装配指定的bean。在使用@Autowired注解之前需要在Spring配置文件进行配置，&lt;context:annotation-config /&gt;。</p>
 <p>在启动spring IoC时，容器自动装载了一个AutowiredAnnotationBeanPostProcessor后置处理器，当容器扫描到@Autowied、@Resource或@Inject时，就会在IoC容器自动查找需要的bean，并装配给该对象的属性。在使用@Autowired时，首先在容器中查询对应类型的bean：</p>
 <ul>
@@ -574,7 +580,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 	<span class="hljs-keyword">private</span> RealSubject realSubject;
 	
 	<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Proxy</span><span class="hljs-params">(RealSubject realSubject)</span></span>&#123;
-	<span class="hljs-keyword">this</span>.realSubject = realSubject;
+		<span class="hljs-keyword">this</span>.realSubject = realSubject;
 	&#125;
 
 	<span class="hljs-meta">@Override</span>
@@ -616,7 +622,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 
     <span class="hljs-comment">//用构造器注入目标方法，给我们要代理的真实对象赋初值</span>
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">JdkProxySubject</span><span class="hljs-params">(RealSubject realSubject)</span></span>&#123;
-    	<span class="hljs-keyword">this</span>.realSubJect=realSubject;
+    	<span class="hljs-keyword">this</span>.realSubject=realSubject;
     &#125;
     <span class="hljs-comment">//实现接口的方法</span>
     <span class="hljs-meta">@Override</span>
@@ -680,7 +686,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CglibMethodInterceptor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">MethodInterceptor</span></span>&#123;<span class="hljs-comment">//主要的方法拦截类，它是Callback接口的子接口，需要用户实现</span>
     <span class="hljs-meta">@Override</span>
     <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">intercept</span><span class="hljs-params">(Object obj,Method method,Object[] args,MethodProxy proxy )</span><span class="hljs-keyword">throws</span> Throwable</span>&#123;
-        System.out.println(<span class="hljs-string">"before cgplib"</span>);
+        System.out.println(<span class="hljs-string">"before cglib"</span>);
         Object result = <span class="hljs-keyword">null</span>;
         <span class="hljs-keyword">try</span>&#123;
             <span class="hljs-comment">//利用反射创建代理对象 </span>
@@ -699,13 +705,13 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <div class="hljs"><pre><code class="hljs java"> <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Client</span></span>&#123;
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span></span>&#123;
         <span class="hljs-comment">// 主要的增强类</span>
-        Enhancer enhancer=<span class="hljs-keyword">new</span> Enhancer();
+        Enhancer enhancer = <span class="hljs-keyword">new</span> Enhancer();
         <span class="hljs-comment">//  目标类 , 设置父类，被增强的类</span>
         enhancer.setSuperclass(RealSubject<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
         <span class="hljs-comment">// 回调对象</span>
         enhancer.setCallback(<span class="hljs-keyword">new</span> CglibMethodInterceptor());
         <span class="hljs-comment">//生成代理类对象，用cglibProxy来增强RealSubject</span>
-        Subject subject=enhancer.create();
+        Subject subject = enhancer.create();
         subject.test();
     &#125;
 &#125;</code></pre></div>
@@ -763,7 +769,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -772,7 +778,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -805,7 +811,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -832,7 +838,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -841,7 +847,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

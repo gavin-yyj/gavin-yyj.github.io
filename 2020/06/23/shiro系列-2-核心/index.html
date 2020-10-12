@@ -306,7 +306,7 @@ securityManager.realms = $fooRealm, $barRealm, $blahRealm</code></pre></div>
 <li>JDK 注解–你可以在你的 JAVA 方法上附加权限注解</li>
 <li>JSP/GSP 标签–你可以基于角色和权限控制 JSP 或 GSP 页面输出内容。</li>
 </ul>
-<h3 id="在程序中检查授权"><a href="#在程序中检查授权" class="headerlink" title="在程序中检查授权"></a>在程序中检查授权</h3><h4 id="基于角色的授权"><a href="#基于角色的授权" class="headerlink" title="基于角色的授权"></a>基于角色的授权</h4><p>如果你想简单地检查一下当前Subject是否拥有一个角色，你可以在一个实例上调用 hasRole* 方法。</p>
+<h3 id="在程序中检查授权"><a href="#在程序中检查授权" class="headerlink" title="在程序中检查授权"></a>在程序中检查授权</h3><h4 id="基于角色的授权"><a href="#基于角色的授权" class="headerlink" title="基于角色的授权"></a>基于角色的授权</h4><p>如果你想简单地检查一下当前Subject是否拥有一个角色，你可以在一个实例上调用 hasRole方法。</p>
 <p>例如，查看一个 Subject 是否有特定（单独）的角色，你可以调用subject.hasRole(roleName))方法，做出相应的反馈。</p>
 <div class="hljs"><pre><code class="hljs java">Subject currentUser = SecurityUtils.getSubject();
 
@@ -360,7 +360,7 @@ openBankAccount();</code></pre></div>
 <span class="hljs-comment">//开一个银行帐户：</span>
 currentUser.checkPermission(<span class="hljs-string">"account:open"</span>);
 openBankAccount();</code></pre></div>
-<p>与 isPermitted* 方法相比较，这种方法的优势是代码更为清晰，如果当前Subject 不符合条件，你不必创建你自己的 AuthorizationExceptions 异常（如果你不想那么做）。<br><img src="https://img-blog.csdnimg.cn/20200622233049193.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p>与 isPermitted 方法相比较，这种方法的优势是代码更为清晰，如果当前Subject 不符合条件，你不必创建你自己的 AuthorizationExceptions 异常（如果你不想那么做）。<br><img src="https://img-blog.csdnimg.cn/20200622233049193.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h3 id="基于注解的授权"><a href="#基于注解的授权" class="headerlink" title="基于注解的授权"></a>基于注解的授权</h3><h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>在你使用 JAVA 的注解之前，你需要在程序中启动 AOP 支持，因为有许多AOP 框架，所以很不幸，在这里并没有标准的在程序中启用 AOP 的方法。</p>
 <h4 id="RequiresAuthentication-注解"><a href="#RequiresAuthentication-注解" class="headerlink" title="RequiresAuthentication 注解"></a>RequiresAuthentication 注解</h4><p>RequiresAuthentication 注解表示在访问或调用被注解的类/实例/方法时，要求 Subject 在当前的 session中已经被验证。</p>
 <p>举例：</p>
@@ -750,7 +750,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
                       <a href="/2020/06/23/Spring-Security%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E6%80%BB%E7%BB%93/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Spring Security官方文档总结</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -759,7 +759,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
                     
                       <a href="/2020/06/22/%E5%89%91%E6%8C%87Offer-%E6%9C%80%E5%B0%8F%E7%9A%84k%E4%B8%AA%E6%95%B0/">
                         <span class="hidden-mobile">剑指Offer-最小的k个数</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -792,7 +792,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -819,7 +819,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -828,7 +828,7 @@ requestSubject = <span class="hljs-keyword">new</span> Subject.Builder().session
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

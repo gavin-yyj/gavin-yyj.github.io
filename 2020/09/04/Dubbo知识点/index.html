@@ -322,7 +322,7 @@ ExceptionFilter</code></pre></div>
 <h2 id="为什么要有RPC"><a href="#为什么要有RPC" class="headerlink" title="为什么要有RPC"></a>为什么要有RPC</h2><p>http接口是在接口不多、系统与系统交互较少的情况下，解决信息孤岛初期常使用的一种通信手段；优点就是简单、直接、开发方便。利用现成的http协议进行传输。但是如果是一个大型的网站，内部子系统较多、接口非常多的情况下，RPC框架的好处就显示出来了，首先就是长链接，不必每次通信都要像http一样去3次握手什么的，减少了网络开销；其次就是RPC框架一般都有注册中心，有丰富的监控管理；发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。第三个来说就是安全性。最后就是最近流行的服务化架构、服务化治理，RPC框架是一个强力的支撑。</p>
 <p>socket只是一个简单的网络通信方式，只是创建通信双方的通信通道，而要实现rpc的功能，还需要对其进行封装，以实现更多的功能。</p>
 <p>RPC一般配合netty框架、spring自定义注解来编写轻量级框架，其实netty内部是封装了socket的，较新的jdk的IO一般是NIO，即非阻塞IO，在高并发网站中，RPC的优势会很明显。</p>
-<h2 id="PRC架构组件"><a href="#PRC架构组件" class="headerlink" title="PRC架构组件"></a>PRC架构组件</h2><p>一个基本的RPC架构里面应该至少包含以下4个组件：</p>
+<h2 id="RPC架构组件"><a href="#RPC架构组件" class="headerlink" title="RPC架构组件"></a>RPC架构组件</h2><p>一个基本的RPC架构里面应该至少包含以下4个组件：</p>
 <p>1、客户端（Client）:服务调用方（服务消费者）</p>
 <p>2、客户端存根（Client Stub）:存放服务端地址信息，将客户端的请求参数数据信息打包成网络消息，再通过网络传输发送给服务端</p>
 <p>3、服务端存根（Server Stub）:接收客户端发送过来的请求消息并进行解包，然后再调用本地服务进行处理</p>
@@ -442,7 +442,7 @@ ExceptionFilter</code></pre></div>
                     
                       <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E5%9B%9B-%E8%BF%87%E6%BB%A4%E5%99%A8%E9%93%BE%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90/">
                         <span class="hidden-mobile">Spring Security核心(四)-过滤器链加载流程解析</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -475,7 +475,7 @@ ExceptionFilter</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -502,7 +502,7 @@ ExceptionFilter</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -511,7 +511,7 @@ ExceptionFilter</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

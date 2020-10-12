@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      147
+      146
        分钟
     </span>
   
@@ -530,7 +530,7 @@ Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAut
 &#125;</code></pre></div>
 <p>(1)：权限信息列表，默认是 GrantedAuthority 接口的一些实现类，通常是代表权限信息的一系列字符串。<br>(2)：密码信息，用户输入的密码字符串，在认证过后通常会被移除，用于保障安全。<br>(3)：细节信息，web 应用中的实现接口通常为 WebAuthenticationDetails，它记录了访问者的 ip 地址和 sessionId 的值。<br>(4)：敲黑板！！！最重要的身份信息，大部分情况下返回的是 UserDetails 接口的实现类，也是框架中的常用接口之一。</p>
 <h2 id="3-6-GrantedAuthority"><a href="#3-6-GrantedAuthority" class="headerlink" title="3.6 GrantedAuthority"></a>3.6 GrantedAuthority</h2><p>GrantedAuthoritys是授予用户的高级权限。主要是角色或范围。<br>可以从authentication.getauthoritys()方法获得GrantedAuthoritys。此方法提供授予的权限对象的集合。这些权限通常是“角色”，例如ROLE_ADMINISTRATOR或ROLE_HR_SUPERVISOR。稍后将为web授权、方法授权和域对象授权配置这些角色。</p>
-<h2 id="3-7-AuthenticationManager"><a href="#3-7-AuthenticationManager" class="headerlink" title="3.7 AuthenticationManager"></a>3.7 AuthenticationManager</h2><p>AuthenticationManager（接口）是认证相关的核心接口，也是发起认证的出发点，因为在实际需求中，我们可能会允许用户使用用户名 + 密码登录，同时允许用户使用邮箱 + 密码，手机号码 + 密码登录，甚至，可能允许用户使用指纹登录，所以说 AuthenticationManager 一般不直接认证，AuthenticationManager 接口的实现类去完成认证工作。</p>
+<h2 id="3-7-AuthenticationManager"><a href="#3-7-AuthenticationManager" class="headerlink" title="3.7 AuthenticationManager"></a>3.7 AuthenticationManager</h2><p>AuthenticationManager（接口）是认证相关的核心接口，也是发起认证的出发点，因为在实际需求中，我们可能会允许用户使用<strong>用户名 + 密码</strong>登录，同时允许用户使用邮箱 + 密码，手机号码 + 密码登录，甚至，可能允许用户使用指纹登录，所以说 AuthenticationManager 一般不直接认证，<strong>AuthenticationManager 接口的实现类去完成认证工作</strong>。</p>
 <h2 id="3-8-ProviderManager"><a href="#3-8-ProviderManager" class="headerlink" title="3.8 ProviderManager"></a>3.8 ProviderManager</h2><p>ProviderManager是AuthenticationManager最常用的实现。ProviderManager委托给AuthenticationProvider列表。每个AuthenticationProvider都有机会指示身份验证应该成功、失败，或者指示它不能做出决定并允许下游的AuthenticationProvider作出决定。在默认策略下，只需要通过一个 AuthenticationProvider 的认证，即可被认为是登录成功。如果所有配置的authenticationprovider都不能进行身份验证，那么身份验证将失败，出现ProviderNotFoundException，这是一个特殊的AuthenticationException，表明ProviderManager不支持Aut类型。<br><img src="https://img-blog.csdnimg.cn/20200517181019629.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="ProviderManager"><br>事实上，多个ProviderManager实例可能共享同一个父AuthenticationManager。在有多个SecurityFilterChain实例的场景中经常见到，这些实例有一些共同的身份验证(共享的父AuthenticationManager)，但也有不同的身份验证机制(不同的ProviderManager实例)。<br><img src="https://img-blog.csdnimg.cn/20200517181558524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="multiple ProviderManager"><br>默认情况下，ProviderManager将尝试从成功的身份验证请求返回的Authentication对象中清除任何敏感的凭据信息。这可以防止密码等信息在HttpSession中保留的时间超过必要的时间。<br>例如，当您使用用户对象的缓存来提高无状态应用程序的性能时，这可能会导致问题。如果身份验证包含对缓存中的对象的引用(例如UserDetails实例)，并且该对象的凭据已被删除，则不再能够根据缓存的值进行身份验证。如果使用缓存，则需要考虑这一点。一个明显的解决方案是，首先在缓存实现中或在创建返回的Authentication对象的AuthenticationProvider中复制对象。</p>
 <h2 id="3-9-AuthenticationProvider"><a href="#3-9-AuthenticationProvider" class="headerlink" title="3.9 AuthenticationProvider"></a>3.9 AuthenticationProvider</h2><p>可以将多个AuthenticationProvider注入到ProviderManager中。每个AuthenticationProvider执行特定类型的身份验证。例如，DaoAuthenticationProvider支持基于用户名/密码的身份验证，而JwtAuthenticationProvider支持对JWT令牌进行身份验证。<br>AuthenticationProvider 最最最常用的一个实现便是 <strong>DaoAuthenticationProvider</strong>。顾名思义，Dao 正是数据访问层的缩写，也暗示了这个身份认证器的实现思路。</p>
 <p>接下来分析DaoAuthenticationProvider是如何认证用户的？</p>
@@ -630,9 +630,9 @@ Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAut
 </ol>
 <h3 id="基本认证"><a href="#基本认证" class="headerlink" title="基本认证"></a>基本认证</h3><p><img src="https://img-blog.csdnimg.cn/20200517190615814.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="发送www验证头"></p>
 <ol>
-<li>首先，用户向未经授权的资源发出未经身份验证的请求/private。</li>
+<li>首先，用户向未经授权的资源发出未经身份验证的请求。</li>
 <li>Spring Security 通过抛出来FilterSecurityInterceptor表示未认证的请求被拒绝AccessDeniedException。</li>
-<li>由于用户没有经过身份验证，ExceptionTranslationFilter启动Authentication进行身份验证。配置的AuthenticationEntryPoint是BasicAuthenticationEntryPoint的一个实例，它发送一个WWW-Authenticate头。RequestCache通常是一个NullRequestCache，它不保存请求，因为客户机能够重新播放它最初请求的请求。<br>当客户端收到WWW-Authenticate标头时，它知道应该使用用户名和密码重试。以下是正在处理的用户名和密码的流程。<br><img src="https://img-blog.csdnimg.cn/20200517191017240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="验证用户名和密码"><br>基本流程同表单登录<h3 id="内存中身份验证"><a href="#内存中身份验证" class="headerlink" title="内存中身份验证"></a>内存中身份验证</h3>Spring Security的InMemoryUserDetailsManager实现UserDetailsService为在内存中检索的基于用户名/密码的身份验证提供支持。 通过实现接口InMemoryUserDetailsManager提供管理。 </li>
+<li>由于用户没有经过身份验证，ExceptionTranslationFilter启动Authentication进行身份验证。配置的AuthenticationEntryPoint是BasicAuthenticationEntryPoint的一个实例，它发送一个WWW-Authenticate头。RequestCache通常是一个NullRequestCache，它不保存请求。<br>当客户端收到WWW-Authenticate标头时，它知道应该使用用户名和密码重试。以下是正在处理的用户名和密码的流程。<br><img src="https://img-blog.csdnimg.cn/20200517191017240.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="验证用户名和密码"><br>基本流程同表单登录<h3 id="内存中身份验证"><a href="#内存中身份验证" class="headerlink" title="内存中身份验证"></a>内存中身份验证</h3>Spring Security的InMemoryUserDetailsManager实现UserDetailsService为在内存中检索的基于用户名/密码的身份验证提供支持。 通过实现接口InMemoryUserDetailsManager提供管理。 </li>
 </ol>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Bean</span>
 <span class="hljs-function"><span class="hljs-keyword">public</span> UserDetailsService <span class="hljs-title">users</span><span class="hljs-params">()</span> </span>&#123;
@@ -726,9 +726,9 @@ Collection&lt;? extends GrantedAuthority&gt; authorities = authentication.getAut
 <li>DaoAuthenticationProvider<br>DaoAuthenticationProvider是AuthenticationProvider的一种实现类，利用UserDetailsService和PasswordEncoder验证用户名和密码。<br><img src="https://img-blog.csdnimg.cn/20200517201812740.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="用法"></li>
 </ol>
 <p>1、从读取用户名和密码的Authentication Filter将一个UsernamePasswordAuthenticationToken传递给由ProviderManager实现的AuthenticationManager。</p>
-<p>2、ProviderManager被配置为使用DaoAuthenticationProvider类型的AuthenticationProvider</p>
+<p>2、ProviderManager被配置为使用DaoAuthenticationProvider类型的AuthenticationProvider;</p>
 <p>3、 DaoAuthenticationProvider从UserDetailsService中查找用户详细信息。</p>
-<p>4、 然后，DaoAuthenticationProvider使用PasswordEncoder验证上一步返回的用户详细信息上的密码</p>
+<p>4、 然后，DaoAuthenticationProvider使用PasswordEncoder验证上一步返回的用户详细信息上的密码;</p>
 <p>5、当身份验证成功时，返回的身份验证类型为UsernamePasswordAuthenticationToken，其主体是配置的UserDetailsService返回的用户详细信息。最终，返回的UsernamePasswordAuthenticationToken将由Authentication Filter在securitycontextHolder中设置</p>
 <h2 id="3-13-Session-Management（会话管理）"><a href="#3-13-Session-Management（会话管理）" class="headerlink" title="3.13 Session Management（会话管理）"></a>3.13 Session Management（会话管理）</h2><p>HTTP会话相关的功能由SessionManagementFilter和SessionAuthenticationStrategy接口的组合来处理，该接口是过滤器委托给的。典型的用法包括会话固定保护攻击预防、会话超时检测和对已验证用户可以同时打开多少会话的限制。</p>
 <h3 id="超时检测"><a href="#超时检测" class="headerlink" title="超时检测"></a>超时检测</h3><p>配置Spring Security来检测提交的无效会话ID，并将用户重定向到适当的URL。这是通过以下session-management元素实现的：</p>
@@ -955,7 +955,7 @@ key:               A private key to prevent modification of the remember-me toke
                       <a href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Tomcat系统架构浅谈</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -964,7 +964,7 @@ key:               A private key to prevent modification of the remember-me toke
                     
                       <a href="/2020/06/23/shiro%E7%B3%BB%E5%88%97-2-%E6%A0%B8%E5%BF%83/">
                         <span class="hidden-mobile">shiro系列-2.核心</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -997,7 +997,7 @@ key:               A private key to prevent modification of the remember-me toke
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -1024,7 +1024,7 @@ key:               A private key to prevent modification of the remember-me toke
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -1033,7 +1033,7 @@ key:               A private key to prevent modification of the remember-me toke
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

@@ -239,7 +239,7 @@
 <li>InnoDB：InnoDB存储引擎提供了对数据库ACID的支持，具有提交、回滚和崩溃恢复能力的事务安全存储引擎，主索引是<strong>聚簇索引</strong>，在索引中保存了数据，从而避免直接读取磁盘，因此对查询性能有很大的提升。并且还提供了行级锁和外键的约束，支持哈希索引，不支持全文索引。它的设计目标就是处理大数据容量的数据库系统。</li>
 <li>MyISAM：<strong>不提供事务的支持</strong>，<strong>表级锁</strong>，不支持行级锁和外键，支持全文索引，不支持哈希索引，适合一些CMS（内容管理系统）作为后台数据库使用，但是使用大并发、重负荷生产系统上，显得力不从心。</li>
 </ul>
-<p>比较</p>
+<p><strong>比较</strong></p>
 <ul>
 <li>事务：InnoDB 是事务型的，可以使用 Commit 和 Rollback 语句。</li>
 <li>并发：MyISAM 只支持表级锁，而 InnoDB 还支持行级锁。</li>
@@ -660,7 +660,7 @@ mysql&gt; select * from v01;
                       <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Spring核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -669,7 +669,7 @@ mysql&gt; select * from v01;
                     
                       <a href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/">
                         <span class="hidden-mobile">JVM浅析</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -702,7 +702,7 @@ mysql&gt; select * from v01;
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -729,7 +729,7 @@ mysql&gt; select * from v01;
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -738,7 +738,7 @@ mysql&gt; select * from v01;
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

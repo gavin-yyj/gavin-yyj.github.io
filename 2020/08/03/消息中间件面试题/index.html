@@ -269,7 +269,7 @@
 <li>请求削峰</li>
 </ul>
 <h1 id="RabbitMQ基本概念"><a href="#RabbitMQ基本概念" class="headerlink" title="RabbitMQ基本概念"></a>RabbitMQ基本概念</h1><ul>
-<li>Broker：简单来说就是消息队列服务器实体</li>
+<li>Broker：简单来说就是消息队列服务器实体;</li>
 <li>Exchange：消息交换机，它指定消息按照什么规则，路由到哪个队列；</li>
 <li>Queue：消息队列载体，每个消息都会被投入到一个或多个队列；</li>
 <li>Binding：绑定，它的作用是把exchange和queue按照路由规则绑定起来；</li>
@@ -280,7 +280,7 @@
 <li>Channel：消息通道，在客户端的每个连接里，可建立多个Channel，每个Channel代表一个会话任务。</li>
 </ul>
 <p>由Exchange，Queue，RoutingKey三个才能决定一个从Exchange到Queue的唯一的线路。</p>
-<h1 id="RabbitMQ的工作模式"><a href="#RabbitMQ的工作模式" class="headerlink" title="RabbitMQ的工作模式"></a>RabbitMQ的工作模式</h1><h2 id="simple模式（即最简单的收发模式）"><a href="#simple模式（即最简单的收发模式）" class="headerlink" title="simple模式（即最简单的收发模式）"></a>simple模式（即最简单的收发模式）</h2><p><img src="https://img-blog.csdnimg.cn/20200728222931954.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>消息产生消息，将消息放入队列<br>消息的消费者监听消息队列，如果队列中有消息，消息被拿走后，自动从队列中删除（隐患：消息可能没有被消费者正确处理，已经从队列中消失了，造成消息的丢失，这里可以设置成手动的ack，但如果设置成手动ack，处理完要及时发送ack消息给队列，否则会造成内存溢出）。</p>
+<h1 id="RabbitMQ的工作模式"><a href="#RabbitMQ的工作模式" class="headerlink" title="RabbitMQ的工作模式"></a>RabbitMQ的工作模式</h1><h2 id="simple模式（即最简单的收发模式）"><a href="#simple模式（即最简单的收发模式）" class="headerlink" title="simple模式（即最简单的收发模式）"></a>simple模式（即最简单的收发模式）</h2><p><img src="https://img-blog.csdnimg.cn/20200728222931954.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>消息产生消息，将消息放入队列。<br>消息的消费者监听消息队列，如果队列中有消息，消息被拿走后，自动从队列中删除（隐患：消息可能没有被消费者正确处理，已经从队列中消失了，造成消息的丢失，这里可以设置成手动的ack，但如果设置成手动ack，处理完要及时发送ack消息给队列，否则会造成内存溢出）。</p>
 <h2 id="work工作模式（资源的竞争）"><a href="#work工作模式（资源的竞争）" class="headerlink" title="work工作模式（资源的竞争）"></a>work工作模式（资源的竞争）</h2><p> <img src="https://img-blog.csdnimg.cn/20200728224817834.png" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>消息产生者将消息放入队列消费者可以有多个，消费者C1，消费者C2同时监听同一个队列，消费者被消费。C1，C2共同争抢当前的消息队列内容，谁先拿到谁负责消费消息（隐患：高并发情况下，默认会产生某一个消息被多个消费者共同使用，可以设置一个开关（synchronized）保证一条消息只能被一个消费者使用）。</p>
 <h2 id="发布订阅（资源共享）"><a href="#发布订阅（资源共享）" class="headerlink" title="发布订阅（资源共享）"></a>发布订阅（资源共享）</h2><p><img src="https://img-blog.csdnimg.cn/20200729085309490.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
@@ -392,7 +392,7 @@
                       <a href="/2020/08/03/HTTPS%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">HTTPS核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -401,7 +401,7 @@
                     
                       <a href="/2020/08/03/HTTP%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/">
                         <span class="hidden-mobile">HTTP请求过程详解</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -434,7 +434,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -461,7 +461,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -470,7 +470,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

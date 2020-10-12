@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      3.4k 字
+      3.7k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      42
+      44
        分钟
     </span>
   
@@ -261,14 +261,20 @@
 </ul>
 <h2 id="ArrayLsit和Vector的区别是什么"><a href="#ArrayLsit和Vector的区别是什么" class="headerlink" title="ArrayLsit和Vector的区别是什么"></a>ArrayLsit和Vector的区别是什么</h2><ul>
 <li>线程安全：Vector使用了Synchronized来实现线程同步，而ArrayList是非线程安全的；</li>
-<li>性能：ArrayList在性能方面优于Vector</li>
-<li>扩容：ArrayList扩容每次增加0.5倍，Vector增加1倍。</li>
+<li>性能：ArrayList在性能方面优于Vector；</li>
+<li>扩容：ArrayList初始大小为10，每次进行1.5倍扩容，Vector进行2倍扩容。</li>
 </ul>
 <h2 id="ArrayList和LinkedList的区别"><a href="#ArrayList和LinkedList的区别" class="headerlink" title="ArrayList和LinkedList的区别"></a>ArrayList和LinkedList的区别</h2><ol>
 <li>ArrayList是实现了基于动态数组的数据结构，LinkedList是基于链表结构。</li>
 <li>对于随机访问的get和set方法，ArrayList要优于LinkedList，因为LinkedList要移动指针。</li>
 <li>对于新增和删除操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。</li>
 </ol>
+<h2 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h2><p>CopyOnWriteArrayList是一个写时复制的容器，用读写分离的思想用来保证list的一致性，其实现是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行copy，复制出一个新的容器，然后在新的容器里添加元素，添加完元素之后，再将原容器的引用指向新的容器；这样做的好处是我们可以对CopyOnWriteArrayList进行并发的读，而不需要加锁，而在其<strong>增删改</strong>的操作中都使用了独占锁ReetrantLock来保证某个时间只有一个线程能对list数组进行修改。</p>
+<p>缺点：</p>
+<ul>
+<li>内存占用：在进行写操作的时候，内存里会同时驻扎两个对象的内存。</li>
+<li>数据一致性问题：不能保证数据的实时一致性，只能保证数据的最终一致性。</li>
+</ul>
 <h2 id="List和Set的区别"><a href="#List和Set的区别" class="headerlink" title="List和Set的区别"></a>List和Set的区别</h2><p>List和Set都是继承自Collection接口</p>
 <p>List特点：有序（元素存入集合的顺序和取出的顺序一致），元素可以重复，可以插入多个null元素；支持for循环，可以通过下标来遍历，查找元素效率高，插入删除元素效率低。</p>
 <p>Set特点：无序，不可以存储重复元素，只允许存入一个null元素；只能通过迭代来获取数据，删除和插入效率高，检索元素效率低。</p>
@@ -518,7 +524,7 @@
                       <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java异常</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -527,7 +533,7 @@
                     
                       <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">
                         <span class="hidden-mobile">Java基础</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -560,7 +566,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -587,7 +593,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -596,7 +602,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

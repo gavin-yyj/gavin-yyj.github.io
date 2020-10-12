@@ -234,7 +234,7 @@
 <p>原因是switch在编译时被编译成对应的两个实现方式的指令，而这两个指令只支持int类型。</p>
 <h2 id="2、Java语言采用何种编码方式，有什么特点？"><a href="#2、Java语言采用何种编码方式，有什么特点？" class="headerlink" title="2、Java语言采用何种编码方式，有什么特点？"></a>2、Java语言采用何种编码方式，有什么特点？</h2><p>Java语言采用Unicode编码标准，Unicode（标准码），它为每个字符制订了一个唯一的数值，因此在任何的语言，平台，程序都可以放心的使用。</p>
 <p>Unicode 编码共有三种具体实现，分别为utf-8,utf-16,utf-32，其中utf-8占用一到四个字节，utf-16占用二或四个字节，utf-32占用四个字节</p>
-<h2 id="3、-super关键字的用法"><a href="#3、-super关键字的用法" class="headerlink" title="3、 super关键字的用法"></a>3、 super关键字的用法</h2><p>super可以理解为是指向自己超（父）类对象的一个指针。<br>A：可以利用super关键字代表父类对象访问父类的属性和方法；<br>    super.属性 —-&gt; 访问父类的属性<br>    super.方法名()—- &gt; 调用父类的方法<br>B：可以使用super关键字调用父类的构造函数，必须出现在构造函数的第一行；<br>C：super不能和static混用，因为super指的是对象，而static代表的是类。</p>
+<h2 id="3、super关键字的用法"><a href="#3、super关键字的用法" class="headerlink" title="3、super关键字的用法"></a>3、super关键字的用法</h2><p>super可以理解为是指向自己超（父）类对象的一个指针。<br>A：可以利用super关键字代表父类对象访问父类的属性和方法；<br>    super.属性 —-&gt; 访问父类的属性<br>    super.方法名()—- &gt; 调用父类的方法<br>B：可以使用super关键字调用父类的构造函数，必须出现在构造函数的第一行；<br>C：super不能和static混用，因为super指的是对象，而static代表的是类。</p>
 <h2 id="4、static关键字的意义"><a href="#4、static关键字的意义" class="headerlink" title="4、static关键字的意义"></a>4、static关键字的意义</h2><p>主要意义是在于创建独立于具体对象的域变量或者方法，以至于即使没有创建对象，也能使用属性和调用方法！<br>另外还可以用来形成静态代码块用来优化程序性能，因为static块在类加载的时候仅会执行一次，所以可以将一些只需要进行一次的初始化操作都放在static代码块中进行;</p>
 <p>利用static实现单例模式：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span></span>&#123;
@@ -288,13 +288,13 @@
 <li>没有返回值，但不能用void声明构造函数</li>
 <li>生成类的对象时自动执行，无需调用</li>
 </ul>
-<h2 id="9、静态变量、实例变量的区别"><a href="#9、静态变量、实例变量的区别" class="headerlink" title="9、静态变量、实例变量的区别"></a>9、静态变量、实例变量的区别</h2><p>静态变量：静态变量不属于任何实例对象，而属于类，所以在内存中只会存在一份，在类的加载过程中，JVM只为静态变量分配一次内存空间；<br>实例变量：每次创建对象，都会为每个对象分配成员变量内存空间，实例变量属于实例对象，在内存中创建几次对象，就会有几份成员变量</p>
+<h2 id="9、静态变量、实例变量的区别"><a href="#9、静态变量、实例变量的区别" class="headerlink" title="9、静态变量、实例变量的区别"></a>9、静态变量、实例变量的区别</h2><p>静态变量：静态变量不属于任何实例对象，而属于类，所以在内存中只会存在一份，在类的加载过程中，JVM只为静态变量分配一次内存空间；<br>实例变量：每次创建对象，都会为每个对象分配成员变量内存空间，实例变量属于实例对象，在内存中创建几次对象，就会有几份成员变量。</p>
 <h2 id="10、内部类的优点？有哪些应用场景"><a href="#10、内部类的优点？有哪些应用场景" class="headerlink" title="10、内部类的优点？有哪些应用场景"></a>10、内部类的优点？有哪些应用场景</h2><p><strong>优点</strong>：</p>
 <ul>
 <li>一个内部类对象可以访问创建它的外部类对象的内容，包括私有数据；</li>
 <li>内部类不为同一包的其他类所见，具有很好的封装性；</li>
 <li>内部类有效实现了“多重继承”，优化Java单继承的缺陷；</li>
-<li>匿名内部类可以很方便的实现回调</li>
+<li>匿名内部类可以很方便的实现回调。</li>
 </ul>
 <p><strong>应用场景</strong>：</p>
 <ul>
@@ -496,7 +496,7 @@ System.out.println(count);</code></pre></div>
                       <a href="/2020/06/28/Java%E9%9B%86%E5%90%88/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Java集合</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -505,7 +505,7 @@ System.out.println(count);</code></pre></div>
                     
                       <a href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/">
                         <span class="hidden-mobile">Tomcat系统架构浅谈</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -538,7 +538,7 @@ System.out.println(count);</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -565,7 +565,7 @@ System.out.println(count);</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -574,7 +574,7 @@ System.out.println(count);</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

@@ -328,7 +328,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
 <li>服务器关闭时，web服务器销毁Filter的实例对象。</li>
 </ul>
 <p>Filter类的核心还是FilterChain对象，这个对象保存了到最终Servlet对象等待所有Filter对象，这些对象都保存再ApplicationFilterChain对象的filters数组中，再FilterChain链上每执行一个Filter对象，数组的当前计数都会加1，直到计数等于数组的长度。当FilterChain上所有的Filter对象执行完成后，就会执行最终的servlet，所以在ApplicationFilterChain对象中会持有Servlet对象的引用。</p>
-<h1 id="7-Servlet中的url-pattern"><a href="#7-Servlet中的url-pattern" class="headerlink" title="7 Servlet中的url-pattern"></a>7 Servlet中的url-pattern</h1><p>在web.xml中<srevlet-mapping>和<filter-mapping>中都有<url-pattern>配置项，其作用是匹配一次请求是否会执行这个Servlet或者Filter。<br>Filter的url-pattern匹配是在创建ApplicationFilterChain对象时进行的，它会把所有定义的Filter的url-pattern与当前的URL匹配，如果匹配成功就将这个Filter保存到ApplicationFilterChain的filters数组中，然后在FilterChain中依次调用。</p>
+<h1 id="7-Servlet中的url-pattern"><a href="#7-Servlet中的url-pattern" class="headerlink" title="7 Servlet中的url-pattern"></a>7 Servlet中的url-pattern</h1><p>在web.xml中&lt;srevlet-mapping&gt;和&lt;filter-mapping&gt;中都有&lt;url-pattern&gt;配置项，其作用是匹配一次请求是否会执行这个Servlet或者Filter。<br>Filter的url-pattern匹配是在创建ApplicationFilterChain对象时进行的，它会把所有定义的Filter的url-pattern与当前的URL匹配，如果匹配成功就将这个Filter保存到ApplicationFilterChain的filters数组中，然后在FilterChain中依次调用。</p>
 <h1 id="8-常见面试题"><a href="#8-常见面试题" class="headerlink" title="8 常见面试题"></a>8 常见面试题</h1><h2 id="1、Servlet的生命周期？"><a href="#1、Servlet的生命周期？" class="headerlink" title="1、Servlet的生命周期？"></a>1、Servlet的生命周期？</h2><p>Servlet是基于Java技术的Web组件，该组件由容器托管，主要功能在于交互式地浏览和修改数据，生成动态Web内容。</p>
 <p>Servlet的生命周期有四个阶段：加载并实例化、初始化、请求处理和销毁。主要涉及的方法有：init、service、doGet、doPost、destory等。</p>
 <p><img src="http://www.hollischuang.com/wp-content/uploads/2015/12/20150628211705937.png" srcset="/img/loading.gif" alt="img"></p>
@@ -371,7 +371,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
                       <a href="/2020/06/18/%E8%AE%A4%E8%AF%81%E3%80%81%E6%8E%88%E6%9D%83%E3%80%81%E9%89%B4%E6%9D%83%E5%92%8C%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6%E7%9A%84%E7%90%86%E8%A7%A3/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">认证、授权、鉴权和权限控制的理解</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">前の記事</span>
                       </a>
                     
                   </div>
@@ -380,7 +380,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
                     
                       <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-5-JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
                         <span class="hidden-mobile">深入分析Java Web技术内幕-5.JVM内存管理</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">次の記事</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -413,7 +413,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
   <div id="tocbot"></div>
 </div>
 
@@ -440,7 +440,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -449,7 +449,7 @@ destroy()方法：在销毁Filter时自动调用，当web容器调用这个方�
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">キーワード</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
