@@ -179,6 +179,119 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">11.Netty--预置的ChannelHandler和编解码器</a>
+
+      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+通过SSL/TLS保护Netty应用程序；
+构建基于Netty的HTTP/HTTPS应用程序
+处理空闲的连接和超时
+解码基于分隔符的协议和基于长度的协议
+写大型数据
+Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。
+
+
+通过SSL/TLS保护Netty应用程序为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLE</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">10.Netty--编解码器框架</a>
+
+      <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/" class="index-excerpt">
+        
+        
+          
+        
+        <div>
+本文主要内容：
+
+解码器、编码器以及编解码器的概述
+Netty的编解码器类
+
+
+什么是编解码器
+编码器是将消息转换为适合于传输的格式（最有可能的就是字节流）；
+
+解码器则是将网络字节流换回应用程序的消息格式；
+
+编码器操作出站数据，解码器处理入站数据；
+
+
+解码器
+将字节码解码为消息———ByteToMessageDecoder和ReplayingDecoder；
+
+将一种消息类型解码为另一种—</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
+            
+              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Netty/">Netty</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
       <a class="index-header" href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">9.Netty--单元测试</a>
 
       <a href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="index-excerpt">
@@ -620,107 +733,6 @@ ChannelHandler和ChannelPipeline
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">1.Netty--异步和事件驱动</a>
-
-      <a href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" class="index-excerpt">
-        
-        
-          
-        
-        <div>
-本系列文章主要来自《Netty IN ACTION》
-本章主要内容：
-
-Java网络编程
-
-Netty简介
-
-Netty核心组件
-
-
-
-Java网络编程首先来看一个典型的阻塞I/O示例：
-//创建一个新的ServerSocket，用于监听指定端口上的连接请求
-ServerSocket serverSocket = new ServerSocket(portNumber);//1
-//以阻塞的方式</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a>
-            
-              <a href="/categories/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/Netty/">Netty</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Netty/">Netty</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-9-%E8%A7%92%E8%89%B2%E7%BB%A7%E6%89%BF/">SpringBoot集成Spring Security(9)--角色继承</a>
-
-      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-9-%E8%A7%92%E8%89%B2%E7%BB%A7%E6%89%BF/" class="index-excerpt">
-        
-        
-          
-        
-        <div>在本节中，补充下角色继承的知识点。角色继承其实是一个十分常见的需求，因为一般系统中角色权限呈金字塔型，高层用户拥有底层用户的权限。
-例如存在以下角色：普通用户、VIP 用户、SVIP 用户、星悦会员，那么对应的权限可以是“星悦会员 &gt; SVIP 用户 &gt; VIP 用户 &gt; 普通用户”。那么如何在 Spring Security 中实现这样的功能呢？
-引言为了简便起见，我直接使用《</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring-Security/">Spring Security</a>
             
           </div>
         

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Git技巧 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-29 19:31">
+      May 29, 2021 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      49
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h2 id="一、创建版本库"><a href="#一、创建版本库" class="headerlink" title="一、创建版本库"></a>一、创建版本库</h2><p>版本库又称仓库，英文名<code>repository</code>，你可以简单的理解一个目录，这个目录里面的所有文件都可以被<code>Git</code>管理起来，每个文件的修改，删除，<code>Git</code>都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻还可以将文件”<strong>还原</strong>”。</p>
+<p>创建一个版本库：如下我是D盘 –&gt; www下目录下新建一个<code>testgit</code>版本库。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193407.png" srcset="/img/loading.gif" alt="img"></p>
+<p><code>pwd</code>命令是用于显示当前的目录。</p>
+<p>通过命令<code>git init</code>把这个目录变成<code>git</code>可以管理的仓库。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193429.png" srcset="/img/loading.gif" alt="img"></p>
+<p>此时当前<code>testgit</code>目录下会多了一个<code>.git</code>的目录，这个目录是Git来跟踪管理版本的，没事千万不要手动乱改这个目录里面的文件，否则，会把<code>git</code>仓库给破坏了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193438.png" srcset="/img/loading.gif" alt="img"></p>
+<p><strong>Demo演示：</strong></p>
+<p>在版本库<code>testgit</code>目录下新建一个记事本文件 readme.txt 内容如下：11111111</p>
+<p>第一步：使用命令<code>git add readme.txt</code>添加到暂存区里面去。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193448.png" srcset="/img/loading.gif" alt="img"></p>
+<p>如果没有任何提示，说明已经添加成功了。</p>
+<p>第二步：用命令 <code>git commit</code>告诉Git，把文件提交到仓库。</p>
+<p><code>Git commit -m &quot;readme.txt提交&quot;</code>：后面双引号为提示提交的注释信息。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193519.png" srcset="/img/loading.gif" alt="img"></p>
+<p>可以通过命令<code>git status</code>来查看是否还有文件未提交：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193537.png" srcset="/img/loading.gif" alt="img"></p>
+<p>说明没有任何文件未提交，但是我现在继续来改下readme.txt内容，比如我在下面添加一行2222222222内容，继续使用<code>git status</code>来查看下结果，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193548.png" srcset="/img/loading.gif" alt="img"></p>
+<p>上面的命令告诉我们readme.txt文件已被修改，但是未被提交。利用<code>git diff readme.txt</code>查看有哪些内容被修改了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193558.png" srcset="/img/loading.gif" alt="img"></p>
+<p>如上可以看到，readme.txt文件内容从一行11111111改成两行，添加了一行22222222内容。</p>
+<p>知道了对readme.txt文件做了什么修改后，我们可以放心的提交到仓库了，提交修改和提交文件是一样的。</p>
+<ul>
+<li>第一步是<code>git add</code></li>
+<li>第二步是：<code>git commit</code></li>
+</ul>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193615.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="二：版本回退"><a href="#二：版本回退" class="headerlink" title="二：版本回退"></a>二：版本回退</h2><p>如上，我们已经学会了修改文件，现在我继续对readme.txt文件进行修改，再增加一行内容为33333333333333.继续执行命令<code>git add readme.txt</code>：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193624.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在我已经对readme.txt文件做了三次修改了，那么我们现在可以使用命令 <code>git log</code>来查看下历史记录：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193633.png" srcset="/img/loading.gif" alt="img"></p>
+<p><code>git log</code>命令显示从最近到最远的显示日志，我们可以看到最近三次提交，最近的一次是增加内容为333333，上一次是添加内容222222，第一次默认是 111111，如果嫌上面显示的信息太多的话，我们可以使用命令<code>git log -–pretty=oneline</code>，演示如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193642.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在我想使用版本回退操作，我想把当前的版本回退到上一个版本，要使用什么命令呢？可以使用如下两种命令：</p>
+<ul>
+<li>回退到上一个版本：<code>git reset --hard HEAD^</code>，如果要回退到上上个版本只需把<code>HEAD^</code> 改成<code>HEAD^^</code>，以此类推。</li>
+<li>如果回退版本过多，我们可以使用下面的简便命令操作：<code>git reset --hard HEAD~100</code> 即可。</li>
+</ul>
+<p>未回退之前的readme.txt内容如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193651.png" srcset="/img/loading.gif" alt="img"></p>
+<p>如果想回退到上一个版本的命令如下操作：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193700.png" srcset="/img/loading.gif" alt="img"></p>
+<p>再来查看下 readme.txt内容如下：通过命令<code>cat readme.txt</code>查看</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193709.png" srcset="/img/loading.gif" alt="img"></p>
+<p>可以看到，内容已经回退到上一个版本了。我们可以继续使用<code>git log</code>来查看下历史记录信息，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193717.png" srcset="/img/loading.gif" alt="img"></p>
+<p>我们看到增加333333 内容我们没有看到了，但是现在我想回退到最新的版本，如：有333333的内容要如何恢复呢？我们可以通过版本号回退，使用命令<code>git reset --hard 版本号</code>，但是现在的问题假如我已经关掉过一次命令行或者333内容的版本号我并不知道呢？要如何知道增加3333内容的版本号呢？</p>
+<p>可以通过命令<code>git reflog</code>即可获取到版本号：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193725.png" srcset="/img/loading.gif" alt="img"></p>
+<p>通过上面的显示我们可以知道，增加内容3333的版本号是 6fcfc89.我们现在可以命令<code>git reset --hard 6fcfc89</code>来恢复了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193733.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="三：工作区与暂存区"><a href="#三：工作区与暂存区" class="headerlink" title="三：工作区与暂存区"></a>三：工作区与暂存区</h2><p><strong>工作区：</strong>就是你在电脑上看到的目录，比如目录下<code>testgit</code>里的文件(<code>.git</code>隐藏目录版本库除外)，或者以后需要再新建的目录文件等等都属于工作区范畴。</p>
+<p><strong>版本库(Repository)：</strong>工作区有一个隐藏目录<code>.git</code>,这个不属于工作区，这是版本库。其中版本库里面存了很多东西，其中最重要的就是<code>stage</code>(暂存区)，还有<code>Git</code>为我们自动创建了第一个分支<code>master</code>，以及指向<code>master</code>的一个指针<code>HEAD</code>。</p>
+<p>我们前面说过使用<code>Git</code>提交文件到版本库有两步：</p>
+<ul>
+<li>第一步：是使用 <code>git add</code> 把文件添加进去，实际上就是把文件添加到暂存区。</li>
+<li>第二步：使用<code>git commit</code>提交更改，实际上就是把暂存区的所有内容提交到<strong>当前分支</strong>上。</li>
+</ul>
+<p>我们继续使用demo来演示下：</p>
+<p>我们在readme.txt再添加一行内容为4444444，接着在目录下新建一个文件为test.txt 内容为test，我们先用命令<code>git status</code>来查看下状态，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193744.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在我们先使用<code>git add</code>命令把两个文件都添加到暂存区中，再使用<code>git status</code>来查看下状态，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193752.png" srcset="/img/loading.gif" alt="img"></p>
+<p>接着我们可以使用<code>git commit</code>一次性提交到分支上，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193802.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="四：Git撤销修改和删除文件操作"><a href="#四：Git撤销修改和删除文件操作" class="headerlink" title="四：Git撤销修改和删除文件操作"></a>四：Git撤销修改和删除文件操作</h2><h3 id="撤销修改"><a href="#撤销修改" class="headerlink" title="撤销修改"></a>撤销修改</h3><p>比如我现在在readme.txt文件里面增加一行，内容为555555555555，我们先通过命令查看如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193813.png" srcset="/img/loading.gif" alt="img"></p>
+<p>在我未提交之前，我发现添加5555555555555内容有误，所以我得马上恢复以前的版本，现在我可以有如下几种方法可以做修改：</p>
+<ul>
+<li>如果我知道要删掉那些内容的话，直接手动更改去掉那些需要的文件，然后<code>add</code>添加到暂存区，最后<code>commit</code>掉。</li>
+<li>我可以按以前的方法直接恢复到上一个版本。使用<code>git reset --hard HEAD^</code></li>
+</ul>
+<p>但是现在我不想使用上面的两种方法，我想直接想使用撤销命令该如何操作呢？</p>
+<p>首先在做撤销之前，我们可以先用 <code>git status</code> 查看下当前的状态。如下所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193820.png" srcset="/img/loading.gif" alt="img"></p>
+<p>可以发现，<code>Git</code>会告诉你，<code>git checkout -- file</code><strong>（注意空格）</strong>可以<strong>丢弃工作区的修改</strong>，执行后：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193830.png" srcset="/img/loading.gif" alt="img"></p>
+<p>命令<code>git checkout -- readme.txt</code>的意思就是，<strong>把readme.txt文件在工作区做的修改全部撤销</strong>，这里有两种情况：</p>
+<ul>
+<li>readme.txt自动修改后，还没有放到暂存区，使用<code>git checkout -- file</code>撤销修改就回到和版本库一模一样的状态。</li>
+<li>另外一种是readme.txt已经放入暂存区了，接着又作了修改，撤销修改就回到添加暂存区后的状态。</li>
+</ul>
+<p>对于第二种情况，我想我们继续做demo来看下，假如现在我对readme.txt添加一行，内容为6666666666666，我<code>git add</code>增加到暂存区后，接着添加内容7777777，我想通过撤销命令让其回到暂存区后的状态。如下所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193838.png" srcset="/img/loading.gif" alt="img"></p>
+<p>注意：命令<code>git checkout -- readme.txt</code>中的 <code>--</code>很重要，如果没有<code>--</code>的话，那么命令变成创建分支了。</p>
+<h3 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h3><p>假如我现在版本库<code>testgit</code>目录添加一个文件b.txt，然后提交：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193847.png" srcset="/img/loading.gif" alt="img"></p>
+<p>一般情况下，可以直接在文件目录中把文件删了，或者使用如上<code>rm</code>命令：<code>rm b.txt</code> ，如果我想彻底从版本库中删掉了此文件的话，可以再执行<code>commit</code>命令提交掉，现在目录是这样的：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193855.png" srcset="/img/loading.gif" alt="img"></p>
+<p>只要没有<code>commit</code>之前，如果我想在版本库中恢复此文件如何操作呢？</p>
+<p>可以使用如下命令 <code>git checkout -- b.txt</code>，如下所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193902.png" srcset="/img/loading.gif" alt="img"></p>
+<p>再来看看我们<code>testgit</code>目录，添加了3个文件了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193916.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="五：远程仓库。"><a href="#五：远程仓库。" class="headerlink" title="五：远程仓库。"></a>五：远程仓库。</h2><p>在了解之前，先注册<code>github</code>账号，由于你的本地<code>Git</code>仓库和<code>github</code>仓库之间的传输是通过<code>SSH</code>加密的，所以需要进行如下设置：</p>
+<p>第一步：<strong>创建SSH Key</strong>。在用户主目录下，看看有没有<code>.ssh</code>目录，如果有，再看看这个目录下有没有<code>id_rsa</code>和<code>id_rsa.pub</code>这两个文件，如果有的话，直接跳过此如下命令，如果没有的话，打开命令行，输入如下命令：</p>
+<p><code>ssh-keygen -t rsa –C “youremail@example.com”</code>, 由于我本地此前运行过一次，所以本地有：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193933.png" srcset="/img/loading.gif" alt="img"></p>
+<p><code>id_rsa</code>是私钥，不能泄露出去，<code>id_rsa.pub</code>是公钥，可以放心地告诉任何人。</p>
+<p>第二步：登录github,打开<code>settings</code>中的<code>SSH Keys</code>页面，然后点击<code>Add SSH Key</code>，填上任意title，在Key文本框里粘贴<code>id_rsa.pub</code>文件的内容。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193949.png" srcset="/img/loading.gif" alt="img"></p>
+<p>点击 <code>Add Key</code>，你就应该可以看到已经添加的key。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194007.png" srcset="/img/loading.gif" alt="img"></p>
+<h3 id="如何添加远程库"><a href="#如何添加远程库" class="headerlink" title="如何添加远程库"></a>如何添加远程库</h3><p>现在的情景是：我们已经在本地创建了一个<code>Git</code>仓库后，又想在<code>github</code>创建一个<code>Git</code>仓库，并且希望这两个仓库进行远程同步，这样<code>github</code>的仓库可以作为备份，又可以让其他人通过该仓库来协作。</p>
+<p>首先，登录<code>github</code>，然后在右上角找到<code>create a new repo</code>创建一个新的仓库。如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194018.png" srcset="/img/loading.gif" alt="img"></p>
+<p>在<code>Repository name</code>填入<code>testgit</code>，其他保持默认设置，点击<code>Create repository</code>按钮，就成功地创建了一个新的<code>Git</code>仓库：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194028.png" srcset="/img/loading.gif" alt="img"></p>
+<p>目前，在<code>GitHub</code>上的这个<code>testgit</code>仓库还是空的，<code>GitHub</code>告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到<code>GitHub</code>仓库。</p>
+<p>现在，我们根据<code>GitHub</code>的提示，在本地的<code>testgit</code>仓库下运行命令：</p>
+<div class="hljs"><pre><code class="hljs vim">git remote <span class="hljs-built_in">add</span> origin http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/tugenhua0707/testgit.git</code></pre></div>
+
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194036.png" srcset="/img/loading.gif" alt="img"></p>
+<p>把本地库的内容推送到远程，使用<code>git push</code>命令，实际上是把当前分支<code>master</code>推送到远程。</p>
+<p>由于远程库是空的，我们第一次推送<code>master</code>分支时，加上了 <code>–u</code>参数，<code>Git</code>不但会把本地的<code>master</code>分支内容推送到远程新的<code>master</code>分支，还会把本地的<code>master</code>分支和远程的<code>master</code>分支关联起来，在以后的推送或者拉取时就可以简化命令。推送成功后，可以立刻在<code>github</code>页面中看到远程库的内容已经和本地一模一样了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194045.png" srcset="/img/loading.gif" alt="img"></p>
+<p>从现在起，只要本地作了提交，就可以通过如下命令：<code>git push origin master</code>，就可以把本地<code>master</code>分支的最新修改推送到<code>github</code>上了，现在你就拥有了真正的分布式版本库了。</p>
+<h3 id="修改已提交的commit注释"><a href="#修改已提交的commit注释" class="headerlink" title="修改已提交的commit注释"></a>修改已提交的commit注释</h3><p>如果代码已经<code>push</code>到远程仓库，先从远程仓库pull下来：<code>git pull</code>，然后进入修改步骤：</p>
+<p>1、修改最后一次注释：</p>
+<ul>
+<li><code>Git commit --amend</code></li>
+<li>输入<code>i</code>进入修改模式</li>
+<li>修改完成后按<code>Esc</code>退出编辑模式，输入<code>:wq</code>保存并退出</li>
+</ul>
+<p>2、修改之前的注释：</p>
+<p><code>Git rebase -I HEAD~2</code>:最后的数字2指的是显示到倒数第几次。</p>
+<p>你想修改哪条注释，就把哪条注释前面的<code>pick</code>换成<code>edit</code>。方法就是上面说的编辑方式：<code>i</code>—编辑，把<code>pick</code>换成<code>edit</code>—<code>Esc</code>—<code>:wq</code>，</p>
+<p>然后：（接下来的步骤<code>Terminal</code>会提示）</p>
+<p><code>git commit --amend</code></p>
+<p>修改注释，保存并退出后，输入：<code>git rebase --continue</code></p>
+<p>3、修改之前的某几次注释：</p>
+<p>修改多次的注释其实步骤和上面的一样，不同点在于：</p>
+<p>你可以将多个想修改的<code>commit</code>注释前面的pick换成edit，依次修改你的注释（顺序是从旧到新），<code>erminal</code>基本都会提示你接下来的操作，每修改一个注释都要重复上面的步骤，直到修改完你所选择的所有注释，最后强制<code>push</code>到远程仓库：<code>git push --force origin master</code></p>
+<h3 id="如何从远程库克隆"><a href="#如何从远程库克隆" class="headerlink" title="如何从远程库克隆"></a>如何从远程库克隆</h3><p>假如远程库有新的内容了，我想克隆到本地来，如何克隆呢？</p>
+<p>首先，登录<code>github</code>，创建一个新的仓库，名字叫<code>testgit2</code>：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194057.png" srcset="/img/loading.gif" alt="img"></p>
+<p>如下，我们看到：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194108.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在，远程库已经准备好了，下一步是使用命令<code>git clone</code>克隆到本地库了：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194115.png" srcset="/img/loading.gif" alt="img"></p>
+<p>接着在我本地目录下生成<code>testgit2</code>目录：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194122.png" srcset="/img/loading.gif" alt="img"></p>
+<h2 id="六：创建与合并分支"><a href="#六：创建与合并分支" class="headerlink" title="六：创建与合并分支"></a>六：创建与合并分支</h2><p>在版本回退里，你已经知道，每次提交，<code>Gi</code>都把它们串成一条时间线，这条时间线就是一个分支。截止到目前，只有一条时间线，在<code>Git</code>里，这个分支叫主分支，即<code>master</code>分支。<code>HEAD</code>严格来说不是指向提交，而是指向<code>master</code>，<code>master</code>才是指向提交的，所以，<code>HEAD</code>指向的就是当前分支。</p>
+<p>首先，我们来创建<code>dev</code>分支，然后切换到<code>dev</code>分支上。如下操作：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194129.png" srcset="/img/loading.gif" alt="img"></p>
+<p><code>git checkout –b</code>表示创建并切换，相当于如下2条命令:</p>
+<ul>
+<li>git branch dev</li>
+<li>git checkout dev</li>
+</ul>
+<p><code>git branch</code>查看分支，会列出所有的分支，当前分支前面会添加一个<code>*</code>。然后我们在<code>dev</code>分支上继续做demo，比如我们现在在readme.txt再增加一行 7777777777777。</p>
+<p>首先我们先来查看下readme.txt内容，接着添加内容77777777，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194137.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在<code>dev</code>分支工作已完成，现在我们切换到主分支<code>master</code>上，继续查看readme.txt内容如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194146.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在我们使用命令<code>git merge dev</code>，可以把dev分支上的内容合并到分支master上了：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194153.png" srcset="/img/loading.gif" alt="img"></p>
+<p><code>git merge</code>命令用于<strong>合并指定分支到当前分支上</strong>，合并后，再查看readme.txt内容，可以看到，和dev分支最新提交的是完全一样的。</p>
+<p>注意到上面的<code>Fast-forward</code>信息，Git告诉我们，这次合并是<strong>快进模式</strong>，也就是直接把master指向dev的当前提交，所以合并速度非常快。</p>
+<p>合并完成后，我们可以接着使用命令<code>git branch -d dev</code>删除dev分支：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194202.png" srcset="/img/loading.gif" alt="img"></p>
+<h3 id="命令总结"><a href="#命令总结" class="headerlink" title="命令总结"></a>命令总结</h3><ul>
+<li>查看分支：<code>git branch</code></li>
+<li>创建分支：<code>git branch name</code></li>
+<li>切换分支：<code>git checkout name</code></li>
+<li>创建+切换分支：<code>git checkout –b name</code></li>
+<li>合并某分支到当前分支：<code>git merge name</code></li>
+<li>删除分支：<code>git branch –d name</code></li>
+</ul>
+<h3 id="如何解决冲突"><a href="#如何解决冲突" class="headerlink" title="如何解决冲突"></a>如何解决冲突</h3><p>下面我们还是一步一步来，先新建一个新分支，比如名字叫<code>fenzhi1</code>，在readme.txt添加一行内容8888888，然后提交，如下所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194216.png" srcset="/img/loading.gif" alt="img"></p>
+<p>同样，我们现在切换到<code>master</code>分支上来，也在最后一行添加内容，内容为99999999，如下所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194223.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在我们需要在<code>master</code>分支上来合并fenzhi1，如下操作：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194229.png" srcset="/img/loading.gif" alt="img"></p>
+<p>Git用<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>，<code>=======</code>，<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>标记出不同分支的内容，其中<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>是指<strong>主分支</strong>修改的内容，<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt; fenzhi1</code>是指fenzhi1上修改的内容，我们可以修改成如下后保存：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194235.png" srcset="/img/loading.gif" alt="img"></p>
+<p>如果我想查看分支合并的情况的话，需要使用命令<code>git log</code>命令行。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194241.png" srcset="/img/loading.gif" alt="img"></p>
+<h3 id="分支管理策略"><a href="#分支管理策略" class="headerlink" title="分支管理策略"></a>分支管理策略</h3><p>通常合并分支时，<code>git</code>一般使用<code>Fast forward</code>模式，在这种模式下，删除分支后，会丢掉分支信息，现在我们来使用带参数<code>no-ff</code>来禁用<code>Fast forward</code>模式。首先我们来做demo演示下：</p>
+<ol>
+<li>创建一个dev分支。</li>
+<li>修改readme.txt内容。</li>
+<li>添加到暂存区。</li>
+<li>切换回主分支(master)。</li>
+<li>合并dev分支，使用命令<code>git merge no-ff -m &quot;注释&quot; dev</code></li>
+<li>查看历史记录</li>
+</ol>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194254.png" srcset="/img/loading.gif" alt="img"></p>
+<p>分支策略:</p>
+<p>首先master主分支应该是非常稳定的，也就是用来发布新版本，<strong>一般情况下不允许在上面干活</strong>，干活一般情况下在新建的dev分支上干活，干完后，比如要发布，或者说dev分支代码稳定后可以合并到主分支master上来。</p>
+<h2 id="七：bug分支"><a href="#七：bug分支" class="headerlink" title="七：bug分支"></a>七：bug分支</h2><p>在开发中，会经常碰到bug问题，那么有了bug就需要修复，在Git中，分支是很强大的，每个bug都可以通过一个临时分支来修复，修复完成后，合并分支，然后将临时的分支删除掉。</p>
+<p>比如我在开发中遇到一个<code>404 bug</code>时候，我们可以创建一个<code>issue-404</code> bug分支来修复它，但是，当前的<code>dev</code>分支上的工作还没有提交，如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194302.png" srcset="/img/loading.gif" alt="img"></p>
+<p>并不是我不想提交，而是工作进行到一半时候，我们还无法提交，比如我这个分支bug要2天完成，但是我<code>issue-404</code>bug需要5个小时内完成。怎么办呢？还好，Git还提供了一个<code>stash</code>功能，可以把当前工作现场<strong>隐藏起来</strong>，等以后恢复现场后继续工作。如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194307.png" srcset="/img/loading.gif" alt="img"></p>
+<p>所以现在我可以通过创建<code>issue-404</code>分支来修复bug了。</p>
+<p>首先我们要确定在哪个分支上修复bug，比如我现在是在主分支<code>master</code>上来修复的，现在我要在<code>master</code>分支上创建一个临时分支，演示如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194313.png" srcset="/img/loading.gif" alt="img"></p>
+<p>修复完成后，切换到<code>master</code>分支上，并完成合并，最后删除<code>issue-404</code>分支。演示如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194318.png" srcset="/img/loading.gif" alt="img"></p>
+<p>现在，我们回到<code>dev</code>分支上干活了。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194322.png" srcset="/img/loading.gif" alt="img"></p>
+<p>工作区是干净的，那么我们工作现场去哪里呢？我们可以使用命令<code>git stash list</code>来查看下。如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194329.png" srcset="/img/loading.gif" alt="img"></p>
+<p>工作现场还在，Git把stash内容存在某个地方了，但是需要恢复一下，可以使用如下2个方法：</p>
+<ul>
+<li><code>git stash apply</code>恢复，恢复后，stash内容并不删除，你需要使用命令<code>git stash drop</code>来删除。</li>
+<li>另一种方式是使用<code>git stash pop</code>,恢复的同时把<code>stash</code>内容也删除了。</li>
+</ul>
+<p>演示如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529194337.png" srcset="/img/loading.gif" alt="img"></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Git/">Git</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Git/">Git</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/29/IDEA-Debug%E6%8C%87%E5%8D%97/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">IDEA Debug指南</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/29/PicGo-Gitee%E5%AE%9E%E7%8E%B0MarkDown%E5%9B%BE%E5%BA%8A/">
+                        <span class="hidden-mobile">PicGo+Gitee实现MarkDown图床</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Git技巧&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
