@@ -549,7 +549,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
 <h2 id="事务的传播属性"><a href="#事务的传播属性" class="headerlink" title="事务的传播属性"></a>事务的传播属性</h2><p>　<strong>PROPAGATION_REQUIRED</strong> – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。<br>　<strong>PROPAGATION_SUPPORTS</strong> – 支持当前事务，如果当前没有事务，就以非事务方式执行。<br>　<strong>PROPAGATION_MANDATORY</strong> – 支持当前事务，如果当前没有事务，就抛出异常。<br>　<strong>PROPAGATION_REQUIRES_NEW</strong> – 新建事务，如果当前存在事务，把当前事务挂起。<br>　<strong>PROPAGATION_NOT_SUPPORTED</strong> – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。<br>　<strong>PROPAGATION_NEVER</strong> – 以非事务方式执行，如果当前存在事务，则抛出异常。<br>　<strong>PROPAGATION_NESTED</strong>–如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED</p>
 <h1 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h1><h2 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h2><p>AOP(Aspect-Oriented Programming)，一般称为面向切面编程，作为面向对象的一种补充，用于<strong>将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块</strong>，这个模块被命名为“<strong>切面</strong>”（Aspect），以减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。可用于<strong>权限认证</strong>、日志、事务处理等。AOP底层原理就是动态代理的实现。</p>
 <h2 id="AOP的名词解释"><a href="#AOP的名词解释" class="headerlink" title="AOP的名词解释"></a>AOP的名词解释</h2><ul>
-<li><strong>通知（Advice）</strong>：在切面的某个特定的连接点（Joinpoint）上执行的动作。通知有各种类型，其中包扩“around”，“before”和“after”等通知。<br>通知的类型将在后面部分进行讨论。许多AOP框架，包括Spring，都是以拦截器做通知模型， 并维护一个以连接点为中心的拦截器链。</li>
+<li><strong>通知（Advice）</strong>：在切面的某个特定的连接点（Joinpoint）上执行的动作。通知有各种类型，其中包扩 “around”， “before” 和 “after”等通知。<br>通知的类型将在后面部分进行讨论。许多AOP框架，包括Spring，都是以拦截器做通知模型， 并维护一个以连接点为中心的拦截器链。</li>
 <li><strong>连接点（JoinPoint）</strong>：Spring<strong>允许</strong>你使用通知的地方，一般是方法前后；</li>
 <li><strong>切入点（Pointcut）</strong>：连接点是可以使用通知的地方，而切入点是你<strong>想要</strong>使用通知的地方；</li>
 <li><strong>切面（Aspect）</strong>：<strong>通知</strong>和<strong>切入点</strong>的结合，通知说明了<strong>干什么和什么时候干</strong>（时间是通过方法名中的before、after、around等确定的），切入点说明了<strong>在哪干</strong>（指定使用通知的方法）；</li>
@@ -769,7 +769,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -778,7 +778,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -811,7 +811,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -838,7 +838,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -847,7 +847,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

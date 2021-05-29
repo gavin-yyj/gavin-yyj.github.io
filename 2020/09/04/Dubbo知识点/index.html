@@ -215,7 +215,7 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="为什么要用Dubbo"><a href="#为什么要用Dubbo" class="headerlink" title="为什么要用Dubbo"></a>为什么要用Dubbo</h2><p>随着服务化的进一步发展，服务越来越多，服务之间的调用和依赖关系也越来越复杂，诞生了面向服务的架构体系（SOA），也因此衍生出了一系列相应的技术，如：服务提供、服务调用、连接处理、通信协议、序列化方式、服务发现、服务路由、日志输出等行为进行封装的服务框架，就这样产生了Dobbo这样的为分布式系统系统服务治理的框架。</p>
+              <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="为什么要用Dubbo"><a href="#为什么要用Dubbo" class="headerlink" title="为什么要用Dubbo"></a>为什么要用Dubbo</h2><p>随着服务化的进一步发展，服务越来越多，服务之间的调用和依赖关系也越来越复杂，诞生了面向服务的架构体系（SOA），也因此衍生出了一系列相应的技术，如：服务提供、服务调用、连接处理、通信协议、序列化方式、服务发现、服务路由、日志输出等行为进行封装的服务框架，就这样产生了Dobbo这样的为分布式系统服务治理的框架。</p>
 <h2 id="什么是Dobbo"><a href="#什么是Dobbo" class="headerlink" title="什么是Dobbo"></a>什么是Dobbo</h2><p>Dubbo是一款高性能、轻量级的开源RPC框架，能提供服务自动注册、自动发现等高效服务治理方案，可以和Spring框架无缝集成。</p>
 <h2 id="Dubbo的使用场景"><a href="#Dubbo的使用场景" class="headerlink" title="Dubbo的使用场景"></a>Dubbo的使用场景</h2><ul>
 <li>透明化的远程方法调用：就像调用本地方法一样调用远程方法，只需简单配置，没有任何API侵入；</li>
@@ -321,7 +321,7 @@ ExceptionFilter</code></pre></div>
 <h1 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h1><h2 id="什么是RPC"><a href="#什么是RPC" class="headerlink" title="什么是RPC"></a>什么是RPC</h2><p>RPC（Remote Procedure Call Protocol）远程过程调用协议，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。简言之，RPC使得程序能够像访问本地系统资源一样，去访问远端系统资源。比较关键的一些方面包括：通讯协议、序列化、资源（接口）描述、服务框架、性能、语言支持等。<br><img src="https://img-blog.csdnimg.cn/20200903204300305.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70#pic_center" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>简单的说，RPC就是从一台机器(客户端)上通过参数传递的方式调用另一台机器(服务器)上的一个函数或方法(可以统称为服务)并得到返回的结果。</p>
 <h2 id="为什么要有RPC"><a href="#为什么要有RPC" class="headerlink" title="为什么要有RPC"></a>为什么要有RPC</h2><p>http接口是在接口不多、系统与系统交互较少的情况下，解决信息孤岛初期常使用的一种通信手段；优点就是简单、直接、开发方便。利用现成的http协议进行传输。但是如果是一个大型的网站，内部子系统较多、接口非常多的情况下，RPC框架的好处就显示出来了，首先就是长链接，不必每次通信都要像http一样去3次握手什么的，减少了网络开销；其次就是RPC框架一般都有注册中心，有丰富的监控管理；发布、下线接口、动态扩展等，对调用方来说是无感知、统一化的操作。第三个来说就是安全性。最后就是最近流行的服务化架构、服务化治理，RPC框架是一个强力的支撑。</p>
 <p>socket只是一个简单的网络通信方式，只是创建通信双方的通信通道，而要实现rpc的功能，还需要对其进行封装，以实现更多的功能。</p>
-<p>RPC一般配合netty框架、spring自定义注解来编写轻量级框架，其实netty内部是封装了socket的，较新的jdk的IO一般是NIO，即非阻塞IO，在高并发网站中，RPC的优势会很明显。</p>
+<p>RPC一般配合Netty框架、spring自定义注解来编写轻量级框架，其实netty内部是封装了socket的，较新的jdk的IO一般是NIO，即非阻塞IO，在高并发网站中，RPC的优势会很明显。</p>
 <h2 id="RPC架构组件"><a href="#RPC架构组件" class="headerlink" title="RPC架构组件"></a>RPC架构组件</h2><p>一个基本的RPC架构里面应该至少包含以下4个组件：</p>
 <p>1、客户端（Client）:服务调用方（服务消费者）</p>
 <p>2、客户端存根（Client Stub）:存放服务端地址信息，将客户端的请求参数数据信息打包成网络消息，再通过网络传输发送给服务端</p>
@@ -436,13 +436,19 @@ ExceptionFilter</code></pre></div>
                   <div class="post-prev col-6">
                     
                     
+                      <a href="/2020/12/08/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%8A%80%E6%9C%AF%E5%AE%9E%E6%88%98/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">分布式中间件技术实战</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
                   </div>
                   <div class="post-next col-6">
                     
                     
                       <a href="/2020/09/02/Spring-Security%E6%A0%B8%E5%BF%83-%E5%9B%9B-%E8%BF%87%E6%BB%A4%E5%99%A8%E9%93%BE%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90/">
                         <span class="hidden-mobile">Spring Security核心(四)-过滤器链加载流程解析</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -475,7 +481,7 @@ ExceptionFilter</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -502,7 +508,7 @@ ExceptionFilter</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -511,7 +517,7 @@ ExceptionFilter</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

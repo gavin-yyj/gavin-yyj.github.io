@@ -320,7 +320,7 @@ list<span class="hljs-tag">&lt;<span class="hljs-name">name</span>&gt;</span> na
   &#125;</code></pre></div>
 
 <blockquote>
-<p>Mybatis内置的ExecutorType有3种，默认为simple,该模式下它为每个语句的执行创建一个新的预处理语句，单条提交sql；而batch模式重复使用已经预处理的语句，并且批量执行所有更新语句，显然batch性能将更优； 但batch模式也有自己的问题，比如在Insert操作时，在事务没有提交之前，是没有办法获取到自增的id，这在某型情形下是不符合业务要求的。</p>
+<p>Mybatis内置的ExecutorType有3种，默认为simple,该模式下它为每个语句的执行创建一个新的预处理语句，单条提交sql；而batch模式重复使用已经预处理的语句，并且批量执行所有更新语句，显然batch性能将更优； 但batch模式也有自己的问题，比如在Insert操作时，在事务没有提交之前，是没有办法获取到自增的id，这在某些情形下是不符合业务要求的。</p>
 </blockquote>
 <h2 id="13-如何获取自动生成的主键值"><a href="#13-如何获取自动生成的主键值" class="headerlink" title="13. 如何获取自动生成的主键值"></a>13. 如何获取自动生成的主键值</h2><p>insert方法总是返回一个int值，这个值代表的是插入的行数。<br>如果采用自增长策略，自动生成的键值在insert方法执行完后可以被设置到传入的参数对象中，如：</p>
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">insert</span> <span class="hljs-attr">id</span>=<span class="hljs-string">”insertname”</span> <span class="hljs-attr">usegeneratedkeys</span>=<span class="hljs-string">”true”</span> <span class="hljs-attr">keyproperty</span>=<span class="hljs-string">”id”</span>&gt;</span>
@@ -491,7 +491,7 @@ from some_table
                       <a href="/2020/07/10/Spring-Boot%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Spring Boot核心知识点</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -500,7 +500,7 @@ from some_table
                     
                       <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <span class="hidden-mobile">Spring核心知识点</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -533,7 +533,7 @@ from some_table
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -560,7 +560,7 @@ from some_table
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -569,7 +569,7 @@ from some_table
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

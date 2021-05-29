@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>高效程序员的45个习惯 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-17 06:38">
+      May 17, 2021 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <blockquote>
+<p>迭代开发，价值优先</p>
+<p>分解任务，真实进度</p>
+<p>站立会议，交流畅通</p>
+<p>用户参与，调整方向</p>
+<p>结对编程，代码质量</p>
+<p>测试驱动，安全可靠</p>
+<p>持续集成，尽早反馈</p>
+<p>自动部署，一键安装</p>
+<p>定期回顾，持续改进</p>
+<p>不断学习，提高能力</p>
+<p>​        —–编程的武功秘籍</p>
+</blockquote>
+<h1 id="第1章-敏捷–高效软件开发之道"><a href="#第1章-敏捷–高效软件开发之道" class="headerlink" title="第1章 敏捷–高效软件开发之道"></a>第1章 敏捷–高效软件开发之道</h1><ul>
+<li><strong>个体和交互</strong>胜过过程和工具</li>
+<li><strong>可工作的软件</strong>胜过面面俱到的文档</li>
+<li><strong>客户协作</strong>胜过合同谈判</li>
+<li><strong>响应变化</strong>胜过遵循计划</li>
+</ul>
+<p><strong>敏捷开发</strong>：一种把以人为本、团队合作、快速响应变化和可工作的软件作为宗旨的开发方法，要求在一个高度协作的环境中，不断地使用反馈进行自我调整和完善。</p>
+<p>重点：持续开发、持续反馈、发现问题及时解决问题。</p>
+<p><strong>重构</strong>：不断从自己写的代码中得到反馈，并且使用自动化工具不断构建（持续集成）和测试系统，在功能不变的情况下，对部分代码重新设计，来改善代码的质量。</p>
+<p><strong>迭代</strong>：将当前版本演示给客户，及时得到他们的反馈，然后根据实际情况进行修改。</p>
+<p>敏捷工具箱：</p>
+<ul>
+<li>Wiki【Wiki之道】</li>
+<li>版本控制</li>
+<li>单元测试【单元测试之道Java版】</li>
+<li>自动构建</li>
+<li>《软件项目成功之道》</li>
+</ul>
+<h1 id="第2章-态度决定一切"><a href="#第2章-态度决定一切" class="headerlink" title="第2章 态度决定一切"></a>第2章 态度决定一切</h1><p>专业的态度应该着眼于项目和团队的积极结果，关注个人和团队的成长，围绕最后的成功开展工作。  </p>
+<p>出了问题，第一重要的不是确定元凶，而是解决问题【<strong>指责不能修复bug</strong>】。</p>
+<p>一个重大的错误应该被当作是一次学习而不是指责他人的机会。团队成员们在一起工作，应互相帮助，而不是互相指责。  </p>
+<p>千里之堤，溃于蚁穴，大灾难是逐步演化来的。一次又一次的快速修复，每一次都不探究问题的根源，久而久之就形成了一个危险的沼泽地，最终会吞噬整个项目的生命。  </p>
+<p>实行代码复审，不仅有助于代码更好理解，而且是发现bug最有效的方法之一 ，所以<strong>不要孤立的编码</strong>，多花些时间阅读其他同事写的代码。</p>
+<p>多投入时间和精力保持代码的整洁、敞亮。</p>
+<p>不要急于修复一段没能真正理解的代码。</p>
+<p>没有一个人能完全明白所有的代码。除了深入了解你正在开发的那部分代码之外，你还需要从更高的层面来了解大部分代码的功能，这样就可以理解系统各个功能块之间是如何交互的。  </p>
+<p>小故事：</p>
+<blockquote>
+<p>多年以前，在我担任系统管理员的第一天，一位资深的管理员和我一起安装一些软件，我突然按错了一个按钮，把服务器给关掉了。没过几分钟，几位不爽的用户就在敲门了。<br>这时，我的导师赢得了我的信任和尊重，他并没有指责我，而是对他们说：“对不起，我们正在查找是什么地方出错了。系统会在几分钟之内启动起来。”这让我学到了难忘的重要一课。  </p>
+</blockquote>
+<p>在一个需要紧密合作的开发团队中，如果能稍加注意礼貌对待他人，将会有益于整个团队关注真正有价值的问题，而不是勾心斗角，误入歧途。  </p>
+<p>负面的评论和态度扼杀了创新。  把重点放在解决问题上，而不是去极力证明谁的主意更好。  </p>
+<p>你不需要很出色才能起步，但是你必须起步才能变得很出色。  —莱斯·布朗</p>
+<p>能欣赏自己并不接受的想法， 表明你的头脑足够有学识。—亚里士多德</p>
+<p>没有最好的答案，只有更合适的方案。  </p>
+<p>开会的时候设立仲裁人，其责任就是确保每个人都有发言的机会，并维持会议的正常进行。</p>
+<p>支持已经做出的决定，让我们骄傲的应该是解决了问题，而不是比较出谁的主意更好。</p>
+<p>想要支持或者反驳一个观点，有时候你必须先做一个原型或者调查出它有多少的同意者或者反对者。    </p>
+<p>假如要你修复其他人编写的代码，  抱怨和发泄并不能解决问题，最有效的方式是动手重写这些代码，并比较重写前后的优缺点。</p>
+<p>如果发现你以前的一段代码出错了，不要试图掩盖这些问题，而是应该主动承认，并且寻求解决方案。</p>
+<p>要诚实，要有勇气去说出实情。有时，这样做很困难，所以我们要有足够的勇气。  </p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/18/%E9%87%8D%E6%9E%84_%E6%94%B9%E5%96%84%E6%97%A2%E6%9C%89%E4%BB%A3%E7%A0%81%E7%9A%84%E8%AE%BE%E8%AE%A1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重构_改善既有代码的设计</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/12/08/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%8A%80%E6%9C%AF%E5%AE%9E%E6%88%98/">
+                        <span class="hidden-mobile">分布式中间件技术实战</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "高效程序员的45个习惯&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

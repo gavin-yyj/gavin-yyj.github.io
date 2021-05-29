@@ -311,7 +311,7 @@
 <li>direct：如果路由键完全匹配，消息就被投递到相应的队列；</li>
 <li>topic：可以使来自不同源头的消息能够到达同一个队列，使用topic交换器时，可以使用通配符。</li>
 </ul>
-<h1 id="消息基于什么传输？"><a href="#消息基于什么传输？" class="headerlink" title="消息基于什么传输？"></a>消息基于什么传输？</h1><p>由于TCP连接的创建和销毁开销较大，且并发数受系统资源限制，会造成性能瓶颈，RabbitMQ使用信道的方式来传输数据，信道是建立在真实的TCP连接内的虚拟连接，且每条TCP连接上信道数没有限制。</p>
+<h1 id="消息基于什么传输？"><a href="#消息基于什么传输？" class="headerlink" title="消息基于什么传输？"></a>消息基于什么传输？</h1><p>由于TCP连接的创建和销毁开销较大，且并发数受系统资源限制，会造成性能瓶颈，RabbitMQ使用<strong>信道</strong>的方式来传输数据，信道是建立在真实的TCP连接内的虚拟连接，且每条TCP连接上信道数没有限制。</p>
 <h1 id="如何保证消息不被重复消费？或者说，如何保证消息消费时的幂等性？"><a href="#如何保证消息不被重复消费？或者说，如何保证消息消费时的幂等性？" class="headerlink" title="如何保证消息不被重复消费？或者说，如何保证消息消费时的幂等性？"></a>如何保证消息不被重复消费？或者说，如何保证消息消费时的幂等性？</h1><p>先说为什么会重复消费？<br>正常情况下，消费者在消费消息的时候，消费完毕后，会发送一个确认消息给消息队列，消息队列就知道该消息被消费了，就会将消息从消息队列中删除；<br>但是因为网络传输等故障，确认消息没有传送到消息队列，导致消息队列不知道自己已经消费过该消息了，再次将消息分发给其他的消费者。</p>
 <p>针对以上问题，一个解决思路是：保证消息的唯一性，<strong>就算是多次传输，不要让消息的多次消费带来影响，保证消息幂等性；</strong></p>
 <p>比如：在写入消息队列的数据做<strong>唯一标识</strong>，消费消息时，根据唯一标识来判断是否消费过；</p>
@@ -392,7 +392,7 @@
                       <a href="/2020/08/03/HTTPS%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">HTTPS核心知识点</span>
-                        <span class="visible-mobile">前の記事</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -401,7 +401,7 @@
                     
                       <a href="/2020/08/03/HTTP%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/">
                         <span class="hidden-mobile">HTTP请求过程详解</span>
-                        <span class="visible-mobile">次の記事</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -434,7 +434,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;ディレクトリ</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -461,7 +461,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -470,7 +470,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

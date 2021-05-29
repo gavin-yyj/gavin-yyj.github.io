@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>重构_改善既有代码的设计 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-18 06:44">
+      May 18, 2021 am
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      125
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <blockquote>
+<p>重构：在不改变软件可观察行为的前提下，对代码进行修改，以改善其内部结构。</p>
+</blockquote>
+<h1 id="第1章-重构，第一个案例"><a href="#第1章-重构，第一个案例" class="headerlink" title="第1章 重构，第一个案例"></a>第1章 重构，第一个案例</h1><h2 id="1-1-起点"><a href="#1-1-起点" class="headerlink" title="1.1 起点"></a>1.1 起点</h2><p>案例：影片出租店用的程序，计算每一位顾客的消费金额并打印详单。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类：普通片、儿童片和新片。除了计算费用，还要为常客计算积分，积分会根据租片种类是否为新片而有所不同。</p>
+<p>UML类图如下所示：</p>
+<p><img src="../image/image-20210527232752556.png" srcset="/img/loading.gif" alt="image-20210527232752556"></p>
+<p><strong>Movie（影片）</strong>：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Movie</span> </span>&#123;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CHILDREDS = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> REGULAR = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> NEW_RELEASE = <span class="hljs-number">2</span>;
+
+    <span class="hljs-keyword">private</span> String _title;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> _priceCode;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Movie</span><span class="hljs-params">(String _title, <span class="hljs-keyword">int</span> _priceCode)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>._title = _title;
+        <span class="hljs-keyword">this</span>._priceCode = _priceCode;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get_priceCode</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> _priceCode;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set_priceCode</span><span class="hljs-params">(<span class="hljs-keyword">int</span> _priceCode)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>._priceCode = _priceCode;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">get_title</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> _title;
+    &#125;
+&#125;</code></pre></div>
+
+<p><strong>Rental（租赁）</strong>：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Rental</span> </span>&#123;
+    <span class="hljs-keyword">private</span> Movie _movie;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> _daysRented;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Rental</span><span class="hljs-params">(Movie _movie, <span class="hljs-keyword">int</span> _daysRented)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>._movie = _movie;
+        <span class="hljs-keyword">this</span>._daysRented = _daysRented;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Movie <span class="hljs-title">get_movie</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> _movie;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get_daysRented</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> _daysRented;
+    &#125;
+&#125;</code></pre></div>
+
+<p><strong>Customer（顾客）</strong>:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Customer</span> </span>&#123;
+    <span class="hljs-keyword">private</span> String _name;
+    <span class="hljs-keyword">private</span> Vector _rentals = <span class="hljs-keyword">new</span> Vector();
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Customer</span><span class="hljs-params">(String _name)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>._name = _name;
+    &#125;
+    
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addRental</span><span class="hljs-params">(Rental arg)</span></span>&#123;
+        _rentals.addElement(arg);
+    &#125;
+    
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> _name;
+    &#125;
+&#125;</code></pre></div>
+
+<p>Customer还提供了一个用于生成详单的函数，该函数交互过程如下图所示。</p>
+<p><img src="../image/image-20210519072922928.png" srcset="/img/loading.gif" alt="image-20210519072922928"></p>
+<p>代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">statement</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">double</span> totalAmount = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> frequentRenterPoints = <span class="hljs-number">0</span>;
+        Enumeration rentals = _rentals.elements();
+        String result = <span class="hljs-string">"Rental Record for "</span> + getName() + <span class="hljs-string">"\n"</span>;
+        <span class="hljs-keyword">while</span> (rentals.hasMoreElements()) &#123;
+            <span class="hljs-keyword">double</span> thisAmount = <span class="hljs-number">0</span>;
+            Rental each = (Rental) rentals.nextElement();
+            <span class="hljs-keyword">switch</span> (each.getMovie().getPriceCode()) &#123;
+                <span class="hljs-keyword">case</span> Movie.REGULAR:
+                    thisAmount += <span class="hljs-number">2</span>;
+                    <span class="hljs-keyword">if</span> (each.getDaysRented() &gt; <span class="hljs-number">2</span>) &#123;
+                        thisAmount += (each.getDaysRented() - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+                    &#125;
+                    <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+                    thisAmount += each.getDaysRented() * <span class="hljs-number">3</span>;
+                    <span class="hljs-keyword">break</span>;
+                <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+                    thisAmount += <span class="hljs-number">1.5</span>;
+                    <span class="hljs-keyword">if</span> (each.getDaysRented() &gt; <span class="hljs-number">3</span>) &#123;
+                        thisAmount += (each.getDaysRented() - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+                    &#125;
+                    <span class="hljs-keyword">break</span>;
+            &#125;
+            frequentRenterPoints++;
+            <span class="hljs-keyword">if</span> ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) &amp;&amp;
+                    each.getDaysRented() &gt; <span class="hljs-number">1</span>) &#123;
+                frequentRenterPoints ++;
+            &#125;
+            result += <span class="hljs-string">"\t"</span> + each.getMovie().getTitle() + <span class="hljs-string">"\t"</span> + String.valueOf(thisAmount)+<span class="hljs-string">"\n"</span>;
+            totalAmount += thisAmount;
+        &#125;
+        result +=<span class="hljs-string">"Amount owed is "</span> + String.valueOf(totalAmount)+<span class="hljs-string">"\n"</span>;
+        result +=<span class="hljs-string">"You earned "</span>+ String.valueOf(frequentRenterPoints)+<span class="hljs-string">" frequent renter points"</span>;
+        <span class="hljs-keyword">return</span> result;
+    &#125;</code></pre></div>
+
+<p><strong>评价：</strong></p>
+<p>不符合面向对象精神，<code>statement()</code>做的事情太多，容易产生bug，另外如果需求改变，比如希望以HTML格式输出详单，该方法没有任何作用，需要重写一个新的方法，导致大量重复工作产生。</p>
+<p><strong>关键点：如果你发现自己需要为程序添加一个特性，而代码结构使你无法很方便地达成目的，那就先重构那个程序，使特性的添加比较容易进行，然后再添加特性。</strong></p>
+<h2 id="1-2-重构的第一步"><a href="#1-2-重构的第一步" class="headerlink" title="1.2 重构的第一步"></a>1.2 重构的第一步</h2><p>第一步：<strong>为即将修改的代码建立一组可靠的测试环境</strong>，保证重构前后代码功能没有改变。要求这些测试都能够自我检测，要么输出“<strong>OK</strong>”，要么列出失败清单，显示问题出现的行号等。</p>
+<h2 id="1-3-分解并重组statement"><a href="#1-3-分解并重组statement" class="headerlink" title="1.3 分解并重组statement()"></a>1.3 分解并重组statement()</h2><h3 id="1-3-1-找出代码的逻辑泥团"><a href="#1-3-1-找出代码的逻辑泥团" class="headerlink" title="1.3.1 找出代码的逻辑泥团"></a>1.3.1 找出代码的逻辑泥团</h3><p>如上例中的<code>switch</code>语句，将它提炼到独立函数中。</p>
+<p>首先、<strong>找出这段代码内的局部变量和参数</strong>，这里是<code>each</code>和<code>thisAmount</code>。前者并未修改，后者会被修改。</p>
+<p>记住：<strong>任何不会被修改的变量都可以当成参数传入新的函数，如果只有一个变量会被修改，可以将它作为返回值。</strong></p>
+<p>重构后的代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">statement</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">double</span> totalAmount = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">int</span> frequentRenterPoints = <span class="hljs-number">0</span>;
+        Enumeration rentals = _rentals.elements();
+        String result = <span class="hljs-string">"Rental Record for "</span> + getName() + <span class="hljs-string">"\n"</span>;
+        <span class="hljs-keyword">while</span> (rentals.hasMoreElements()) &#123;
+            <span class="hljs-keyword">double</span> thisAmount = <span class="hljs-number">0</span>;
+            Rental each = (Rental) rentals.nextElement();
+            thisAmount = amountFor(each);
+            frequentRenterPoints++;
+            <span class="hljs-keyword">if</span> ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) &amp;&amp;
+                    each.getDaysRented() &gt; <span class="hljs-number">1</span>) &#123;
+                frequentRenterPoints ++;
+            &#125;
+            result += <span class="hljs-string">"\t"</span> + each.getMovie().getTitle() + <span class="hljs-string">"\t"</span> + String.valueOf(thisAmount)+<span class="hljs-string">"\n"</span>;
+            totalAmount += thisAmount;
+        &#125;
+        result +=<span class="hljs-string">"Amount owed is "</span> + String.valueOf(totalAmount)+<span class="hljs-string">"\n"</span>;
+        result +=<span class="hljs-string">"You earned "</span>+ String.valueOf(frequentRenterPoints)+<span class="hljs-string">" frequent renter points"</span>;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> <span class="hljs-title">amountFor</span><span class="hljs-params">(Rental each)</span> </span>&#123;
+        <span class="hljs-keyword">int</span> thisAmount = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">switch</span> (each.getMovie().getPriceCode()) &#123;
+            <span class="hljs-keyword">case</span> Movie.REGULAR:
+                thisAmount += <span class="hljs-number">2</span>;
+                <span class="hljs-keyword">if</span> (each.getDaysRented() &gt; <span class="hljs-number">2</span>) &#123;
+                    thisAmount += (each.getDaysRented() - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+                &#125;
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+                thisAmount += each.getDaysRented() * <span class="hljs-number">3</span>;
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+                thisAmount += <span class="hljs-number">1.5</span>;
+                <span class="hljs-keyword">if</span> (each.getDaysRented() &gt; <span class="hljs-number">3</span>) &#123;
+                    thisAmount += (each.getDaysRented() - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+                &#125;
+                <span class="hljs-keyword">break</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> thisAmount;
+    &#125;
+  &#125;</code></pre></div>
+
+<p>然后、修改<code>amountFor()</code>内的某些变量名称。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> <span class="hljs-title">amountFor</span><span class="hljs-params">(Rental aRental)</span> </span>&#123;
+        <span class="hljs-keyword">double</span> result = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">switch</span> (aRental.getMovie().getPriceCode()) &#123;
+            <span class="hljs-keyword">case</span> Movie.REGULAR:
+                result += <span class="hljs-number">2</span>;
+                <span class="hljs-keyword">if</span> (aRental.getDaysRented() &gt; <span class="hljs-number">2</span>) &#123;
+                    result += (aRental.getDaysRented() - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+                &#125;
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+                result += aRental.getDaysRented() * <span class="hljs-number">3</span>;
+                <span class="hljs-keyword">break</span>;
+            <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+                result += <span class="hljs-number">1.5</span>;
+                <span class="hljs-keyword">if</span> (aRental.getDaysRented() &gt; <span class="hljs-number">3</span>) &#123;
+                    result += (aRental.getDaysRented() - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+                &#125;
+                <span class="hljs-keyword">break</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;</code></pre></div>
+
+<p>改名之后也要重新编译并测试，确保没有破坏任何东西。</p>
+<p>改名的重要性：<strong>提高代码的清晰度，写出人类容易理解的代码</strong>。</p>
+<h3 id="1-3-2-搬移“金额计算”代码"><a href="#1-3-2-搬移“金额计算”代码" class="headerlink" title="1.3.2 搬移“金额计算”代码"></a>1.3.2 搬移“金额计算”代码</h3><p><code>amountFor()</code>这个函数使用了来自<code>Rental</code>类的信息，却没有使用来自<code>Customer</code>类的信息，而函数应该放在它所使用的数据的所属对象内，因此需要将该函数移到<code>Rental</code>类去，并适当作出修改。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">double</span> result = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">switch</span> (getMovie().getPriceCode()) &#123;
+        <span class="hljs-keyword">case</span> Movie.REGULAR:
+            result += <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">if</span> (getDaysRented() &gt; <span class="hljs-number">2</span>) &#123;
+                result += (getDaysRented() - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+            result += getDaysRented() * <span class="hljs-number">3</span>;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+            result += <span class="hljs-number">1.5</span>;
+            <span class="hljs-keyword">if</span> (getDaysRented() &gt; <span class="hljs-number">3</span>) &#123;
+                result += (getDaysRented() - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>在这里去掉了多余的参数，并改变了函数名称，private变为public。</p>
+<p>修改完之后，去掉旧函数，然后再进行测试。</p>
+<p>再回到<code>statement()</code>函数中，发现<code>thisAmount</code>比较多余，去掉，直接改为<code>each.getCharge()</code>替代。</p>
+<p>去掉临时变量的好处是避免引发问题，缺点是性能上差点。</p>
+<h3 id="1-3-3-提炼“常客积分计算”代码"><a href="#1-3-3-提炼“常客积分计算”代码" class="headerlink" title="1.3.3 提炼“常客积分计算”代码"></a>1.3.3 提炼“常客积分计算”代码</h3><p>积分的计算跟影片种类有关，可以将积分计算放在<code>Rental</code>类里。</p>
+<p>“常客积分计算”代码如下：</p>
+<div class="hljs"><pre><code class="hljs java">frequentRenterPoints++;
+<span class="hljs-keyword">if</span> ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) &amp;&amp;
+    each.getDaysRented() &gt; <span class="hljs-number">1</span>) &#123;
+    frequentRenterPoints ++;
+&#125;</code></pre></div>
+
+<p>涉及两个局部变量，<code>each</code>和<code>frequentRenterPoints</code>，<code>each</code>可以被当做参数传入新函数中，<code>frequentRenterPoints</code>在使用前已经有初值，但提炼出来的函数并没有读取该值，所以我们不需要将它作为参数传进去，只需把新函数的返回值累加即可。</p>
+<p><img src="../image/image-20210527230811817.png" srcset="/img/loading.gif" alt="image-20210527230811817"></p>
+<center>“常客积分计算“函数被提炼及搬移之前的类图</center>
+
+<p><img src="../image/image-20210527231218079.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
+<center>“常客积分计算“函数被提炼及搬移之后的类图</center>
+
+<p><img src="../image/image-20210527232715018.png" srcset="/img/loading.gif" alt="image-20210527232715018"></p>
+<center>序列图（前）</center>
+
+<p><img src="../image/image-20210527232552508.png" srcset="/img/loading.gif" alt="image-20210527232552508"></p>
+<center>序列图（前）</center>
+
+<h3 id="1-3-4-去掉临时变量"><a href="#1-3-4-去掉临时变量" class="headerlink" title="1.3.4 去掉临时变量"></a>1.3.4 去掉临时变量</h3><p>利用查询函数来取代<code>totalAmount</code>和<code>frequentRentalPoints</code>这两个临时变量。</p>
+<p>首先用<code>Customer</code>类的<code>getTotalCharge()</code>取代<code>totalAmount</code>，由于<code>totalAmount</code>在循环内部被赋值，所以不得不把循环复制到查询函数中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">while</span> (rentals.hasMoreElements()) &#123;
+          Rental each = (Rental) rentals.nextElement();
+          frequentRenterPoints += each.getFrequentRenterPoints();
+          result += <span class="hljs-string">"\t"</span> + each.getMovie().getTitle() + <span class="hljs-string">"\t"</span>
+                  + String.valueOf(each.getCharge())+<span class="hljs-string">"\n"</span>;
+         <span class="hljs-comment">// totalAmount += each.getCharge();</span>
+      &#125;
+      result +=<span class="hljs-string">"Amount owed is "</span> + String.valueOf(getTotalCharge())+<span class="hljs-string">"\n"</span>;
+      result +=<span class="hljs-string">"You earned "</span>+ String.valueOf(frequentRenterPoints)+<span class="hljs-string">" frequent renter points"</span>;
+      <span class="hljs-keyword">return</span> result;
+  &#125;
+
+  <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getTotalCharge</span><span class="hljs-params">()</span> </span>&#123;
+      <span class="hljs-keyword">double</span> result = <span class="hljs-number">0</span>;
+      Enumeration rentals = _rentals.elements();
+      <span class="hljs-keyword">while</span> (rentals.hasMoreElements())&#123;
+          Rental each = (Rental) rentals.nextElement();
+          result += each.getCharge();
+      &#125;
+      <span class="hljs-keyword">return</span> result;
+  &#125;</code></pre></div>
+
+<p>用同样的方法处理<code>frequentRenterPoints</code>：</p>
+<div class="hljs"><pre><code class="hljs java"> <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">statement</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-comment">//double totalAmount = 0;</span>
+<span class="hljs-comment">//        int frequentRenterPoints = 0;</span>
+        Enumeration rentals = _rentals.elements();
+        String result = <span class="hljs-string">"Rental Record for "</span> + getName() + <span class="hljs-string">"\n"</span>;
+        <span class="hljs-keyword">while</span> (rentals.hasMoreElements()) &#123;
+            Rental each = (Rental) rentals.nextElement();
+<span class="hljs-comment">//            frequentRenterPoints += each.getFrequentRenterPoints();</span>
+            result += <span class="hljs-string">"\t"</span> + each.getMovie().getTitle() + <span class="hljs-string">"\t"</span>
+                    + String.valueOf(each.getCharge())+<span class="hljs-string">"\n"</span>;
+           <span class="hljs-comment">// totalAmount += each.getCharge();</span>
+        &#125;
+        result +=<span class="hljs-string">"Amount owed is "</span> + String.valueOf(getTotalCharge())+<span class="hljs-string">"\n"</span>;
+        result +=<span class="hljs-string">"You earned "</span>+ String.valueOf(getTotalFrequentRenterPoints())+<span class="hljs-string">" frequent renter points"</span>;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+	<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getTotalFrequentRenterPoints</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">int</span> result = <span class="hljs-number">0</span>;
+        Enumeration rentals = _rentals.elements();
+        <span class="hljs-keyword">while</span>(rentals.hasMoreElements())&#123;
+            Rental each = (Rental) rentals.nextElement();
+            result += each.getFrequentRenterPoints();
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;</code></pre></div>
+
+<p>对比：</p>
+<p><img src="../image/image-20210527231218079.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
+<center/>“总量计算”函数被提炼前的类图
+
+<p><img src="../image/image-20210528065054433.png" srcset="/img/loading.gif" alt="image-20210528065054433"></p>
+<center>“总量计算”函数被提炼后的类图</center>
+
+
+
+<p><img src="../image/image-20210528065346215.png" srcset="/img/loading.gif" alt="image-20210528065346215"></p>
+<center/>“总量计算”函数被提炼前的时序图
+
+<p><img src="../image/image-20210528070115851.png" srcset="/img/loading.gif" alt="image-20210528070115851"></p>
+<center/>“总量计算”函数被提炼后的时序图
+
+<p>如果需要修改影片分类规则，但是与之相应的费用计算方式与常客积分计算方式还未确定，可以将费用计算和常客积分计算代码中因条件而异的代码替换掉。</p>
+<h2 id="1-4-运用多态取代与价格相关的条件逻辑"><a href="#1-4-运用多态取代与价格相关的条件逻辑" class="headerlink" title="1.4 运用多态取代与价格相关的条件逻辑"></a>1.4 运用多态取代与价格相关的条件逻辑</h2><p>问题一：最好不要在另一个对象的属性基础上运用<strong>switch</strong>语句，如果不得不使用，也应该在对象自己的数据上使用。</p>
+<p>计算费用时需要两项数据：租期长度和影片类型，这里选择将租期长度传给Movie对象，因为本系统可能发生的变化是加入新影片类型，这种变化带有不稳定倾向，如果影片类型有所变化，则需要尽量控制它造成的影响。</p>
+<p>这里将计费方法放进<strong>Movie</strong>类，然后修改<code>Rental的getCharge()</code>，让它调用这个新函数。</p>
+<div class="hljs"><pre><code class="hljs java"> <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">()</span> </span>&#123;
+     <span class="hljs-keyword">return</span> _movie.getCharge(_daysRented);
+ &#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span> </span>&#123;
+    <span class="hljs-keyword">double</span> result = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">switch</span> (getPriceCode()) &#123;
+        <span class="hljs-keyword">case</span> Movie.REGULAR:
+            result += <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">if</span> (daysRented &gt; <span class="hljs-number">2</span>) &#123;
+                result += (daysRented - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+            result += daysRented * <span class="hljs-number">3</span>;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+            result += <span class="hljs-number">1.5</span>;
+            <span class="hljs-keyword">if</span> (daysRented &gt; <span class="hljs-number">3</span>) &#123;
+                result += (daysRented - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>搬移<code>getCharge()</code>之后，以同样手法处理常客积分计算，这样就把根据影片类型而变化的所有东西，都放到影片类型所属的类中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getFrequentRenterPoints</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> _movie.getFrequentRenterPoints(_daysRented);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getFrequentRenterPoints</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> ((getPriceCode() == Movie.NEW_RELEASE) &amp;&amp;
+        daysRented &gt; <span class="hljs-number">1</span>) &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;
+    &#125;<span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p><img src="../image/image-20210528070449852.png" srcset="/img/loading.gif" alt="image-20210528070449852"></p>
+<center/>移动前的类图
+
+<p><img src="../image/image-20210528071049301.png" srcset="/img/loading.gif" alt="image-20210528071049301"></p>
+<center/>移动后的类图
+
+<h3 id="1-4-1-终于…开始继承"><a href="#1-4-1-终于…开始继承" class="headerlink" title="1.4.1 终于…开始继承"></a>1.4.1 终于…开始继承</h3><p>建立Movie的三个子类，代表不同影片类型，每个都有自己的计费法。</p>
+<p><img src="../image/image-20210528072142525.png" srcset="/img/loading.gif" alt="image-20210528072142525"></p>
+<p>本来想法是利用多态取代switch语句，但是这里不允许这么做，因为<strong>一部影片可以在生命周期内修改自己的分类，但一个对象却不能在生命周期内修改自己所属的类。</strong></p>
+<p>解决方法：<strong>State模式</strong></p>
+<p><img src="../image/image-20210528072556454.png" srcset="/img/loading.gif" alt="image-20210528072556454"></p>
+<p>加上这一层间接性，我们就可以在Price对象内进行子类化动作，于是便可以在任何必要时刻修改价格。</p>
+<p>为了引入State模式，这里将使用三个重构手法，首先将与类型相关的行为搬移至State模式内，然后将switch语句移到Price类，最后去掉switch语句。</p>
+<p>第一步骤需要确保任何时候都通过取值函数和设值函数来访问类型代码。</p>
+<p>将Movie类中的构造函数进行修改，用一个设值函数来代替直接访问价格代码。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Movie</span><span class="hljs-params">(String _title, <span class="hljs-keyword">int</span> _priceCode)</span> </span>&#123;
+    <span class="hljs-keyword">this</span>._title = _title;
+    setPriceCode(_priceCode);
+&#125;</code></pre></div>
+
+<p>新建一个Price类，并在其中提供类型相关的行为。因此在Price类中加入一个抽象函数。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Price</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getPriceCode</span><span class="hljs-params">()</span></span>;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChildrensPrice</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Price</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getPriceCode</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> Movie.CHILDRENS;
+    &#125;
+&#125;	
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NewReleasePrice</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Price</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getPriceCode</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> Movie.NEW_RELEASE;
+    &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RegularPrice</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Price</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">getPriceCode</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> Movie.REGULAR;
+    &#125;
+&#125;</code></pre></div>
+
+<p>现在需要修改Movie类内的“价格代号”访问函数（取值/设值函数），让它们使用新类。</p>
+<p>因此需要在Movie类内保存一个Price对象，而不是一个_priceCode变量。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> Price _price;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getPriceCode</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">return</span> _price.getPriceCode();
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPriceCode</span><span class="hljs-params">(<span class="hljs-keyword">int</span> arg)</span> </span>&#123;
+    <span class="hljs-keyword">switch</span> (arg)&#123;
+        <span class="hljs-keyword">case</span> REGULAR:
+            _price = <span class="hljs-keyword">new</span> RegularPrice();
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> CHILDRENS:
+            _price = <span class="hljs-keyword">new</span> ChildrensPrice();
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> NEW_RELEASE:
+            _price = <span class="hljs-keyword">new</span> NewReleasePrice();
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">"Incorrect Price Code"</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<p>接着改写getCharge()，将Movie类中的getCharge代码搬移到Price类中。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//Movie类</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> _price.getCharge(daysRented);
+&#125;
+<span class="hljs-comment">// Price类    </span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span></span>&#123;
+    <span class="hljs-keyword">double</span> result = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">switch</span> (getPriceCode())&#123;
+        <span class="hljs-keyword">case</span> Movie.REGULAR:
+            result += <span class="hljs-number">2</span>;
+            <span class="hljs-keyword">if</span>(daysRented &gt; <span class="hljs-number">2</span>)&#123;
+                result += (daysRented - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.NEW_RELEASE:
+            result += daysRented * <span class="hljs-number">3</span>;
+            <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> Movie.CHILDRENS:
+            result += <span class="hljs-number">1.5</span>;
+            <span class="hljs-keyword">if</span>(daysRented &gt; <span class="hljs-number">3</span>)&#123;
+                result += (daysRented - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+            &#125;
+            <span class="hljs-keyword">break</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>取出一个case分支，在相应的类建立一个覆盖函数，先从RegelarPrice开始：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span></span>&#123;
+    <span class="hljs-keyword">double</span> result = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">if</span>(daysRented &gt; <span class="hljs-number">2</span>)&#123;
+        result += (daysRented - <span class="hljs-number">2</span>) * <span class="hljs-number">1.5</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>依次处理剩下两个分支：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//ChildrensPrice类</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span></span>&#123;
+    <span class="hljs-keyword">double</span> result = <span class="hljs-number">1.5</span>;
+    <span class="hljs-keyword">if</span>(daysRented &gt; <span class="hljs-number">3</span>)&#123;
+        result += (daysRented - <span class="hljs-number">3</span>) * <span class="hljs-number">1.5</span>;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;
+<span class="hljs-comment">// NewReleasePrice类</span>
+<span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span></span>&#123;
+    <span class="hljs-keyword">return</span> daysRented * <span class="hljs-number">3</span>;
+&#125;</code></pre></div>
+
+<p>处理完所有分支后，将Price.getCharge()声明为abstract：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span></span>;</code></pre></div>
+
+<p>用同样手法处理getFrequentRenterPoints()。</p>
+<p>首先将Movie类中的getFrequentRenterPoints()方法移到Price类中，默认情况下返回1。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getFrequentRenterPoints</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+&#125;</code></pre></div>
+
+<p>在新片类型重写该方法。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@Override</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">getFrequentRenterPoints</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysRented)</span> </span>&#123;
+    <span class="hljs-keyword">return</span> (daysRented &gt; <span class="hljs-number">1</span>) ? <span class="hljs-number">2</span> : <span class="hljs-number">1</span>;
+&#125;</code></pre></div>
+
+<p><img src="../image/image-20210528075518286.png" srcset="/img/loading.gif" alt="image-20210528075518286"></p>
+<center/>重构后的时序图
+
+<p><img src="../image/image-20210528075024347.png" srcset="/img/loading.gif" alt="image-20210528075024347"></p>
+<center/>重构后的类图
+
+<h1 id="第2章-重构原理"><a href="#第2章-重构原理" class="headerlink" title="第2章 重构原理"></a>第2章 重构原理</h1><h2 id="2-1-何谓重构"><a href="#2-1-何谓重构" class="headerlink" title="2.1 何谓重构"></a>2.1 何谓重构</h2><ul>
+<li>重构（名词）：对软件内部结构的一种调整，目的是在<strong>不改变软件可观察行为的前提</strong>下，提高其可理解性，降低其修改成本。</li>
+<li>重构（动词）：使用一系列重构手法，在不改变软件可观察行为的前提下，调整其结构。</li>
+</ul>
+<p>一般而言，重构都是对软件的小改动。</p>
+<h2 id="2-2-为何重构"><a href="#2-2-为何重构" class="headerlink" title="2.2 为何重构"></a>2.2 为何重构</h2><ul>
+<li>重构改进软件设计，经常性的重构可以帮助代码维持自己该有的形态，改进代码的一个重要方向就是消除重复代码，优秀设计的根本在于所有事物和行为在代码中只表述一次；</li>
+<li>重构使软件更容易理解；</li>
+<li>重构帮助找到bug；</li>
+<li>重构能提高编程效率，良好的设计是快速开发的根本。</li>
+</ul>
+<h2 id="2-3-何时重构"><a href="#2-3-何时重构" class="headerlink" title="2.3 何时重构"></a>2.3 何时重构</h2><blockquote>
+<p>事不过三，三则重构。</p>
+</blockquote>
+<ul>
+<li>第一次做某件事时只管去做；第二次做类似的事会产生反感；第三次再做类似的事，就应该重构。</li>
+<li><strong>添加功能时重构</strong></li>
+<li>修补错误时重构</li>
+<li>复审代码时重构：最好是一个复审者搭配一个原作者，两人共同判断这些修改是否能通过重构轻松实现。</li>
+</ul>
+<p>困扰程序员的四种程序：</p>
+<ul>
+<li>难以阅读的程序</li>
+<li>逻辑重复的程序</li>
+<li>添加新行为时需要修改已有代码的程序</li>
+<li>带复杂条件逻辑的程序</li>
+</ul>
+<h2 id="2-5-重构的难题"><a href="#2-5-重构的难题" class="headerlink" title="2.5 重构的难题"></a>2.5 重构的难题</h2><h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p>绝大多数商用程序都与它们背后的数据库结构紧密耦合在一起，另外就是数据迁移。</p>
+<p>在非对象数据库中，解决该问题的一个办法是在对象模型和数据库模型之间插入一个分隔层，以隔离两个模型各自的变化。</p>
+<h3 id="修改接口"><a href="#修改接口" class="headerlink" title="修改接口"></a>修改接口</h3><p>如果重构手法改变了已发布接口，那么就必须同时维护新旧两个接口，知道所有用户都有时间对这个变化做出反应。</p>
+<p>可以让旧接口调用新接口，同时将旧接口标记为deprecated，当你要修改某个函数名称时，留下旧函数，让它调用新函数。</p>
+<p>建议：不要过早发布接口，请修改你的代码所有权政策，使重构更顺畅。</p>
+<h3 id="何时不该重构"><a href="#何时不该重构" class="headerlink" title="何时不该重构"></a>何时不该重构</h3><p>如果现有代码根本不能正常运作，建议重写！</p>
+<p>折中办法是：将“大块头软件”重构为封装良好的小型组件，然后逐一对组件作出“重构或重建”的决定。</p>
+<p>另外如果项目已近最后期限，也应该避免重构。</p>
+<h2 id="2-6-重构与设计"><a href="#2-6-重构与设计" class="headerlink" title="2.6 重构与设计"></a>2.6 重构与设计</h2><p>设计是软件开发的关键环节，编程只是机械式的低级劳动！！</p>
+<p>有了重构，不必再逐一实现每一个风险的解决方案，而是在实现中不断优化。</p>
+<h2 id="2-7-重构与性能"><a href="#2-7-重构与性能" class="headerlink" title="2.7 重构与性能"></a>2.7 重构与性能</h2><p>大多数程序把大半时间都耗费在一小半代码身上。</p>
+<p>在性能优化阶段，首先应该用度量工具来监控程序的运行，找出哪些地方大量消耗时间和空间，再去对代码进行优化。</p>
+<h1 id="第3章-代码的坏味道"><a href="#第3章-代码的坏味道" class="headerlink" title="第3章 代码的坏味道"></a>第3章 代码的坏味道</h1><h2 id="3-1-重复代码-Duplicated-Code"><a href="#3-1-重复代码-Duplicated-Code" class="headerlink" title="3.1 重复代码(Duplicated Code)"></a>3.1 重复代码(Duplicated Code)</h2><p>如果在一个以上的地点看到相同的代码，设法将它们合而为一。</p>
+<p>场景一：同一个类的两个函数含有相同的表达式。</p>
+<p>场景二：两个互为兄弟的子类还有相同表达式。【将相同部分提炼出来，放入超类中】</p>
+<p>场景三：两个毫不相干的类出现重复代码。【对其中一个类将重复代码提炼到一个独立类中，然后在另一个类内使用这个新类】</p>
+<h2 id="3-2-过长函数-Long-Method"><a href="#3-2-过长函数-Long-Method" class="headerlink" title="3.2 过长函数(Long Method)"></a>3.2 过长函数(Long Method)</h2><p>有一条原则：每当感觉需要以注释来说明点什么的时候（就算只有一行代码），就把需要说明的东西写进一个独立函数中，并以其用途命名。</p>
+<p>条件表达式和循环也是提炼的信号。</p>
+<h2 id="3-3-过大的类-Large-Class"><a href="#3-3-过大的类-Large-Class" class="headerlink" title="3.3 过大的类(Large Class)"></a>3.3 过大的类(Large Class)</h2><p>如果某个类有太多实例变量，可以将几个相关联的变量提炼到新类。</p>
+<p>如果有五个“百行函数”，它们之间有很多相同代码，则可以试着将它们变成五个“十行代码”和十个“双行代码”。</p>
+<h2 id="3-4-过长参数列-Long-Parameter-List"><a href="#3-4-过长参数列-Long-Parameter-List" class="headerlink" title="3.4 过长参数列(Long Parameter List)"></a>3.4 过长参数列(Long Parameter List)</h2><p>全局参数是邪恶的东西。</p>
+<p>将繁杂的参数整合成一个对象，有了对象，就不必将函数需要的所有东西都以参数传递给它，只需传给它足够的、让函数能从中获取自己所需要的东西即可。</p>
+<h2 id="3-5-发散式变化-Divergent-Change"><a href="#3-5-发散式变化-Divergent-Change" class="headerlink" title="3.5 发散式变化(Divergent Change)"></a>3.5 发散式变化(Divergent Change)</h2><p>针对某一外界变化的所有相应修改，都只应该发生在单一类中。如果一个类受多种变化的影响时，则需要考虑重构</p>
+<h2 id="3-6-霰弹式修改-Shotgun-Surgery"><a href="#3-6-霰弹式修改-Shotgun-Surgery" class="headerlink" title="3.6 霰弹式修改(Shotgun Surgery)"></a>3.6 霰弹式修改(Shotgun Surgery)</h2><p>如果一种变化引发多个类相应修改，则需要整理代码，使“外界变化”和“需要修改的类”趋于一一对应。</p>
+<h2 id="3-7-依恋情结-Feature-Envy"><a href="#3-7-依恋情结-Feature-Envy" class="headerlink" title="3.7 依恋情结(Feature Envy)"></a>3.7 依恋情结(Feature Envy)</h2><p>函数对某个类的兴趣高于对自己所处类的兴趣，如：某个函数为了计算某个值，从另一个对象那儿调用几乎半打的取值函数。</p>
+<p>解决办法：把这个函数移到它该去的地方，如果函数中只有一部分受这种依恋之苦，则可以将这部分提炼到独立函数中。</p>
+<h2 id="3-8-数据泥团-Data-Clumps"><a href="#3-8-数据泥团-Data-Clumps" class="headerlink" title="3.8 数据泥团(Data Clumps)"></a>3.8 数据泥团(Data Clumps)</h2><p>两个类中有相同的字段、许多函数签名中有相同的参数，这些总是绑在一起出现的数据真应该拥有属于它们自己的对象。</p>
+<p>好处是：可以将很多参数列缩短，简化函数调用。</p>
+<h2 id="3-9-基本类型偏执-Primitive-Obsession"><a href="#3-9-基本类型偏执-Primitive-Obsession" class="headerlink" title="3.9 基本类型偏执(Primitive Obsession)"></a>3.9 基本类型偏执(Primitive Obsession)</h2><p>可以将原本单独存在的数据值替换为对象。</p>
+<h2 id="3-10-switch惊悚现身-Switch-Statements"><a href="#3-10-switch惊悚现身-Switch-Statements" class="headerlink" title="3.10 switch惊悚现身(Switch Statements)"></a>3.10 switch惊悚现身(Switch Statements)</h2><p>少用switch语句。</p>
+<p>看到switch语句，就应该考虑用多态来替换。</p>
+<p>方法：将switch语句提炼到一个独立函数中，再将它搬移到需要多态性的那个类里。</p>
+<h2 id="3-11-平行继承体系-Parallel-Inheritance-Hierarchies"><a href="#3-11-平行继承体系-Parallel-Inheritance-Hierarchies" class="headerlink" title="3.11 平行继承体系(Parallel Inheritance Hierarchies)"></a>3.11 平行继承体系(Parallel Inheritance Hierarchies)</h2><p>现象：每当你为某个类增加一个子类，就必须也为另一个类相应增加一个子类。或者是你发现某个继承体系的类名称前缀和另一个继承体系的类名称前缀完全相同。</p>
+<p>策略：让一个继承体系的实例引用另一个继承体系的实例。</p>
+<h2 id="3-12-冗赘类-Lazy-Class"><a href="#3-12-冗赘类-Lazy-Class" class="headerlink" title="3.12 冗赘类(Lazy Class)"></a>3.12 冗赘类(Lazy Class)</h2><p>对于几乎没用的组件，就应该让它消失。</p>
+<h2 id="3-13-夸夸其谈未来性-Speculative-Generality"><a href="#3-13-夸夸其谈未来性-Speculative-Generality" class="headerlink" title="3.13 夸夸其谈未来性(Speculative Generality)"></a>3.13 夸夸其谈未来性(Speculative Generality)</h2><p>企图以各式各样的钩子和特殊情况来处理一些非必要的事情。</p>
+<h2 id="3-14-令人迷惑的暂时字段-Temporary-Field"><a href="#3-14-令人迷惑的暂时字段-Temporary-Field" class="headerlink" title="3.14 令人迷惑的暂时字段(Temporary Field)"></a>3.14 令人迷惑的暂时字段(Temporary Field)</h2><p>如果类中有一个复杂算法，需要好几个变量，而这些变量只有在使用该算法时才有效，往往就有可能导致坏味道的出现。</p>
+<p>可以将这些变量和其相关的函数提炼到一个独立类中。</p>
+<h2 id="3-15-过度耦合的消息链-Message-Chains"><a href="#3-15-过度耦合的消息链-Message-Chains" class="headerlink" title="3.15 过度耦合的消息链(Message Chains)"></a>3.15 过度耦合的消息链(Message Chains)</h2><p>用户向一个对象请求另一个对象，然后再向后者请求另一个对象，然后再请求另一个对象…这就是消息链。这样的后果就是一旦对象间的关系发生任何变化，客户端就不得不作出相应修改。</p>
+<h2 id="3-16-中间人-Middle-Man"><a href="#3-16-中间人-Middle-Man" class="headerlink" title="3.16 中间人(Middle Man)"></a>3.16 中间人(Middle Man)</h2><p>如果某个类的接口有一半的函数都委托给其他类，这就是过度运用委托。</p>
+<h2 id="3-17-狎昵关系-Inappropriate-Intimacy"><a href="#3-17-狎昵关系-Inappropriate-Intimacy" class="headerlink" title="3.17 狎昵关系(Inappropriate Intimacy)"></a>3.17 狎昵关系(Inappropriate Intimacy)</h2><p>继承往往造成过度亲密，因为子类对超类的了解总是超过后者的主观愿望。</p>
+<p>过分狎昵的类必须拆散，或者将两者共同点提炼到一个新类。</p>
+<h2 id="3-18-异曲同工的类-Alternative-Classes-with-Different-Interfaces"><a href="#3-18-异曲同工的类-Alternative-Classes-with-Different-Interfaces" class="headerlink" title="3.18 异曲同工的类(Alternative Classes with Different Interfaces)"></a>3.18 异曲同工的类(Alternative Classes with Different Interfaces)</h2><p>如果两个函数做同一件事，却有着不同的签名，可以根据它们的用途重新命名。</p>
+<h2 id="3-19-不完美的库类-Incomplete-Library-Class"><a href="#3-19-不完美的库类-Incomplete-Library-Class" class="headerlink" title="3.19 不完美的库类(Incomplete Library Class)"></a>3.19 不完美的库类(Incomplete Library Class)</h2><h2 id="3-20-纯粹的数据类-Data-Class"><a href="#3-20-纯粹的数据类-Data-Class" class="headerlink" title="3.20 纯粹的数据类(Data Class)"></a>3.20 纯粹的数据类(Data Class)</h2><p>拥有一些字段，以及用于访问（读写）这些字段的函数，除此之外一无长物。</p>
+<h2 id="3-21-被拒绝的遗赠-Refused-Bequest"><a href="#3-21-被拒绝的遗赠-Refused-Bequest" class="headerlink" title="3.21 被拒绝的遗赠(Refused Bequest)"></a>3.21 被拒绝的遗赠(Refused Bequest)</h2><h2 id="3-22-过多的注释-Comments"><a href="#3-22-过多的注释-Comments" class="headerlink" title="3.22 过多的注释(Comments)"></a>3.22 过多的注释(Comments)</h2><p>当你感觉需要撰写注释时，请先尝试重构，试着让所有注释都变得多余。</p>
+<h1 id="第4章-构筑测试体系"><a href="#第4章-构筑测试体系" class="headerlink" title="第4章 构筑测试体系"></a>第4章 构筑测试体系</h1><h2 id="4-1-自测试代码的价值"><a href="#4-1-自测试代码的价值" class="headerlink" title="4.1 自测试代码的价值"></a>4.1 自测试代码的价值</h2><p>修复错误通常比较快，但找出错误却是噩梦一场。</p>
+<p>确保所有测试都完全自动化，让它们检查自己的测试结果。</p>
+<p>每写一个小功能，就立即添加测试。</p>
+<p>一套测试就是一个强大的bug侦测器，能够大大缩减查找bug所需要的时间。</p>
+<p>编写测试代码的最有用时机是在开始编程之前当你需要添加新特性的时候，先写相应测试代码。因为编写测试代码其实就是在问自己：添加这个功能需要做些什么？此外，编写测试代码还能使你把注意力集中于接口而非实现。预先写好的测试代码也为你的工作安上了一个明确的结束标志：一旦测试代码正常运行，工作就算完成了。</p>
+<p>我们可以建立一个独立类用于测试，并在一个框架中运行它，使测试工作更轻松。</p>
+<h2 id="4-2-JUnit测试框架"><a href="#4-2-JUnit测试框架" class="headerlink" title="4.2 JUnit测试框架"></a>4.2 JUnit测试框架</h2><p>单元测试需要我们去控制台查看测试结果，而引入单元测试框架后会自动帮我们校验结果的正确与否。</p>
+<p>通常Java中常用的单元测试框架包含三个功能：</p>
+<ul>
+<li>测试工具：确保测试能够在共享且固定的环境中运行，保证测试结果的可重复性，具体负责初始化测试环境、准备测试数据和测试数据清理；</li>
+<li>测试套件：捆绑几个测试案例同时运行；</li>
+<li>测试允许器：用于执行测试案例，一般负责调用需要被测试的单元、收集结果并和期望值比较。</li>
+</ul>
+<p>测试Demo：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CalculateServiceImplTest</span> </span>&#123;
+
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Logger logger = LoggerFactory.getLogger(CalculateServiceImplTest<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+    <span class="hljs-keyword">private</span> CalculateService calculateService;
+
+    <span class="hljs-meta">@Before</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUp</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        logger.info(<span class="hljs-string">"begin to test..."</span>);
+        calculateService = <span class="hljs-keyword">new</span> CalculateServiceImpl();
+    &#125;
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testAdd</span><span class="hljs-params">()</span></span>&#123;
+        Assert.assertEquals(calculateService.add(<span class="hljs-number">2</span>,<span class="hljs-number">2</span>),<span class="hljs-number">4</span>);
+    &#125;
+
+    <span class="hljs-meta">@After</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">tearDown</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+        logger.info(<span class="hljs-string">"end to test..."</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<h3 id="Assert类"><a href="#Assert类" class="headerlink" title="Assert类"></a>Assert类</h3><p>该类提供了一系列用于检测测试结果的方法，只有失败的声明方法才会被记录。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">assertEquals</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> expected, <span class="hljs-keyword">boolean</span> actual)</span></span></code></pre></div>
+
+<p>检查两个变量或者等式是否平衡</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">assertFalse</span><span class="hljs-params">(<span class="hljs-keyword">boolean</span> condition)</span></span></code></pre></div>
+
+<p>检查条件是假的</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">assertNotNull</span><span class="hljs-params">(Object object)</span></span></code></pre></div>
+
+<p>检查对象不是空的</p>
+<h3 id="JUnit中的注解"><a href="#JUnit中的注解" class="headerlink" title="JUnit中的注解"></a>JUnit中的注解</h3><ul>
+<li><code>@BeforeClass</code>：针对所有测试，只执行一次，且必须为static void</li>
+<li><code>@Before</code>：初始化方法</li>
+<li><code>@Test</code>：测试方法，在这里可以测试期望异常和超时时间</li>
+<li><code>@After</code>：释放资源</li>
+<li><code>@AfterClass</code>：针对所有测试，只执行一次，且必须为static void</li>
+<li><code>@Ignore</code>：忽略的测试方法</li>
+</ul>
+<p>一个单元测试类执行顺序为：</p>
+<p><code>@BeforeClass</code> –&gt; <code>@Before</code> –&gt; <code>@Test</code> –&gt; <code>@After</code> –&gt; <code>@AfterClass</code></p>
+<p>每一个测试方法的调用顺序为：</p>
+<p><code>@Before</code> –&gt; <code>@Test</code> –&gt; <code>@After</code></p>
+<p>@Test(timeout = 1000)：指定测试用例的执行时间，如果超过该时间，那么JUnit会将它标记为失败。</p>
+<p>@Test(expected = NullPointerException.class)：测试代码是否抛出了想要得到的异常。</p>
+<h2 id="4-3-测试技巧"><a href="#4-3-测试技巧" class="headerlink" title="4.3 测试技巧"></a>4.3 测试技巧</h2><p>测试的一项重要技巧是“寻找边界条件”，如第一个字符、最后一个字符、倒数第二个字符等。</p>
+<p>对于文件相关测试，空文件也是一个不错的边界条件。</p>
+<p>当事情认定会出错时，别忘了检查是否抛出了预期的异常。</p>
+<p>单元测试基本准则：<a href="https://www.cnblogs.com/54chensongxia/p/12410239.html" target="_blank" rel="noopener">https://www.cnblogs.com/54chensongxia/p/12410239.html</a></p>
+<h1 id="第5章-重构列表"><a href="#第5章-重构列表" class="headerlink" title="第5章 重构列表"></a>第5章 重构列表</h1><h2 id="5-1-重构的记录格式"><a href="#5-1-重构的记录格式" class="headerlink" title="5.1 重构的记录格式"></a>5.1 重构的记录格式</h2><p>每个重构手法都包括如下五个部分：</p>
+<ul>
+<li>名称（name）</li>
+<li>简短概要（summary）：简单介绍此重构手法的适用场景，以及它所做的事情；</li>
+<li>动机（motivation）：为什么需要重构，以及什么情况下不该使用这个重构；</li>
+<li>做法（mechanics）：进一步介绍如何进行此重构；</li>
+<li>范例（examples）</li>
+</ul>
+<p>“概要”包括三部分：</p>
+<ul>
+<li>一句话介绍这个重构能够帮助解决的问题；</li>
+<li>一段简短陈述，介绍你应该做的事；</li>
+<li>一幅UML图或一段代码，简单展示重构前后示例。</li>
+</ul>
+<h2 id="5-2-寻找引用点"><a href="#5-2-寻找引用点" class="headerlink" title="5.2 寻找引用点"></a>5.2 寻找引用点</h2><p>可以利用工具找到对于某个函数、某个字段或某个类的所有引用点，但是不要盲目地查找-替换，应该仔细检查每个引用点，确定它的确指向你想要替换的东西。</p>
+<h2 id="5-3-这些重构手法有多成熟"><a href="#5-3-这些重构手法有多成熟" class="headerlink" title="5.3 这些重构手法有多成熟"></a>5.3 这些重构手法有多成熟</h2><p>重构的基本技巧–小步前进、频繁测试。</p>
+<p>设计模式是你希望到达的目标，重构则是到达之路。</p>
+<h1 id="第6章-重新组织函数"><a href="#第6章-重新组织函数" class="headerlink" title="第6章 重新组织函数"></a>第6章 重新组织函数</h1><h2 id="6-1-提炼函数-Extract-Method"><a href="#6-1-提炼函数-Extract-Method" class="headerlink" title="6.1 提炼函数(Extract Method)"></a>6.1 提炼函数(Extract Method)</h2><p>如果有一段代码可以被组织在一起并独立出来，则将它们放入一个独立函数中，并让函数名称解释该函数的用途。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printOwing</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount)</span> </span>&#123;
+    printBanner();
+
+    System.out.println(<span class="hljs-string">"name:"</span> + name);
+    System.out.println(<span class="hljs-string">"amount:"</span> + amount);
+&#125;</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printOwing</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount)</span> </span>&#123;
+    printBanner();
+    printDetails(amount);
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">printDetails</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount)</span> </span>&#123;
+    System.out.println(<span class="hljs-string">"name:"</span> + name);
+    System.out.println(<span class="hljs-string">"amount:"</span> + amount);
+&#125;</code></pre></div>
+
+<p><strong>动机</strong></p>
+<p>如果每个函数的粒度都很小，那么函数被复用的机会就很大，而且高层函数读起来很容易理解，函数的重写也会更容易。</p>
+<p><strong>做法</strong></p>
+<ul>
+<li>创造一个新函数，根据这个函数的意图（功能）来对它命名，而不是以它“怎么做”来命名。</li>
+<li>将提炼出的代码从源函数复制到新建的目标函数中；</li>
+<li>仔细检查提炼出的代码，看看其中是否引用了“作用域限于源函数”的变量；</li>
+<li>检查是否有“仅用于被提炼代码段”的临时变量，如果有，在目标函数中将它们声明为临时变量；</li>
+<li>检查被提炼代码段，看看是否有任何局部变量的值被它改变，如果有，看看是否可以将被提炼代码段处理为一个查询，并将结果赋给相关变量；</li>
+<li>将被提炼代码段中需要读取的局部变量，当做参数传给目标函数；</li>
+<li>处理完所有局部变量后，进行编译；</li>
+<li>在源函数中，将被提炼代码段替换为对目标函数的调用。（如果临时变量的声明在被提炼代码段的外围，记得删除这些声明）</li>
+<li>编译、测试</li>
+</ul>
+<p><strong>范例：对局部变量再赋值</strong></p>
+<p>分两种情况：</p>
+<ul>
+<li>这个变量只在被提炼代码段中使用：将这个临时变量的声明移到被提炼代码段中，然后一起提炼出去；</li>
+<li>被提炼代码段之外的代码也使用了这个变量，这里分两种情况：<ul>
+<li>如果这个变量在被提炼代码段之后再未被使用：直接在目标函数中修改；</li>
+<li>如果这个变量在被提炼代码段之后也被使用：让目标函数返回该变量改变后的值。</li>
+</ul>
+</li>
+</ul>
+<p>初始代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printOwing</span><span class="hljs-params">(<span class="hljs-keyword">double</span> previousAmount)</span></span>&#123;
+    Enumeration e = _orders.elements();
+    <span class="hljs-keyword">double</span> outstanding = previousAmount * <span class="hljs-number">2</span>;
+    printBanner();
+
+    <span class="hljs-keyword">while</span>(e.hasMoreElements())&#123;
+        Order each = (Order) e.nextElement();
+        outstanding += each.getAmount();
+    &#125;
+    printDetails(outstanding);
+&#125;</code></pre></div>
+
+<p>重构后的代码：</p>
+<div class="hljs"><pre><code class="hljs java"> <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">printOwing</span><span class="hljs-params">(<span class="hljs-keyword">double</span> previousAmount)</span></span>&#123;
+     printBanner();
+     outstanding = getOutstanding(previousAmount * <span class="hljs-number">2</span>);
+     printDetails(outstanding);
+ &#125;
+    
+<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">getOutstanding</span><span class="hljs-params">(<span class="hljs-keyword">double</span> initialValue)</span></span>&#123;
+    Double result = initialValue;
+    Enumeration e = _orders.elements();
+    <span class="hljs-keyword">while</span>(e.hasMoreElements())&#123;
+        Order each = (Order) e.nextElement();
+        result += each.getAmount();
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>如果需要返回的变量不止一个，最好的选择是：挑选另一块代码来提炼，让每个函数都只返回一个值。</p>
+<h2 id="6-2-内联函数-Inline-Method"><a href="#6-2-内联函数-Inline-Method" class="headerlink" title="6.2 内联函数(Inline Method)"></a>6.2 内联函数(Inline Method)</h2><p><strong>动机</strong></p>
+<p>如果一个函数的本体与名称同样清楚易懂，在函数调用点插入函数本体，然后移除该函数。</p>
+<p>如果有一群组织不甚合理的函数，可以将它们都内联到一个大型函数中，再从中提炼出组织合理的小型函数。</p>
+<p><strong>做法</strong></p>
+<ul>
+<li>检查函数，确定它不具备多态性；</li>
+<li>找出这个函数的所有被调用点；</li>
+<li>将这个函数的所有被调用点都替换为函数主体；</li>
+<li>编译、测试</li>
+<li>删掉该函数的定义</li>
+</ul>
+<h2 id="6-3-内联临时变量-Inline-Temp"><a href="#6-3-内联临时变量-Inline-Temp" class="headerlink" title="6.3 内联临时变量(Inline Temp)"></a>6.3 内联临时变量(Inline Temp)</h2><p>如果某个临时变量很少被用到，可以将所有对该变量的引用动作，替换为对它赋值的那个表达式自身。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">double</span> basicPrice = anOrder.basePrice();
+<span class="hljs-keyword">return</span> (basicPrice &gt; <span class="hljs-number">1000</span>);</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">return</span> (anOrder.basePrice() &gt; <span class="hljs-number">1000</span>);</code></pre></div>
+
+<p><strong>做法</strong></p>
+<ul>
+<li>检查给临时变量赋值的语句，确保等号右边的表达式没有副作用；</li>
+<li><strong>如果在这个临时变量并未被声明为final，那就将它声明为final，然后编译，可以检查该变量是否真的只被赋值一次</strong>；</li>
+<li>找到该临时变量的所有引用点，将它们替换为“为临时变量赋值”的表达式；</li>
+<li>每次修改后，编译并测试；修改完所有引用点之后，删除该临时变量的声明和赋值语句；</li>
+<li>编译、测试</li>
+</ul>
+<h2 id="6-4-以查询取代临时变量-Replace-Temp-with-Query"><a href="#6-4-以查询取代临时变量-Replace-Temp-with-Query" class="headerlink" title="6.4 以查询取代临时变量(Replace Temp with Query)"></a>6.4 以查询取代临时变量(Replace Temp with Query)</h2><p>如果临时变量保存某一表达式的运算结果，则将这个表达式提炼到一个独立函数中，将这个临时变量的所有引用点替换为对新函数的调用。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">double</span> basePrice = quantity * itemPrice;
+<span class="hljs-keyword">if</span>(basePrice &gt; <span class="hljs-number">1000</span>)&#123;
+	<span class="hljs-keyword">return</span> basePrice * <span class="hljs-number">0.95</span>;
+&#125;<span class="hljs-keyword">else</span> &#123;
+	<span class="hljs-keyword">return</span> basePrice * <span class="hljs-number">0.98</span>;
+&#125;</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(basePrice() &gt; <span class="hljs-number">1000</span>)&#123;
+	<span class="hljs-keyword">return</span> basePrice() * <span class="hljs-number">0.95</span>;
+&#125;<span class="hljs-keyword">else</span> &#123;
+	<span class="hljs-keyword">return</span> basePrice() * <span class="hljs-number">0.98</span>;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">basePrice</span><span class="hljs-params">()</span></span>&#123;
+	<span class="hljs-keyword">return</span> quantity * itemPrice;
+&#125;</code></pre></div>
+
+<p><strong>做法</strong></p>
+<p>简单情况：</p>
+<ul>
+<li>找出只被赋值一次的临时变量（如果被赋值超过一次，考虑将它分割成多个变量）；</li>
+<li>将该变量声明为final（确保只被赋值一次）；</li>
+<li>编译</li>
+<li>将赋值语句等号右侧部分提炼到一个独立函数中；<ul>
+<li>首先将函数声明为private，如果后面有其他类需要使用，可以再改变；</li>
+<li>确保该函数并不修改任何对象内容。</li>
+</ul>
+</li>
+<li>编译、测试</li>
+</ul>
+<h2 id="6-5-引入解释性变量-Introduce-Explaining-Variable"><a href="#6-5-引入解释性变量-Introduce-Explaining-Variable" class="headerlink" title="6.5 引入解释性变量(Introduce Explaining Variable)"></a>6.5 引入解释性变量(Introduce Explaining Variable)</h2><p>如果有一个复杂表达式，可以将该表达式（或其中一部分）的结果放进一个临时变量，以此变量名称来解释表达式用途。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span>((platform.toUpperCase().indexOf(<span class="hljs-string">"MAC"</span>) &gt; -<span class="hljs-number">1</span>) &amp;&amp; (browser.toUpperCase().indexOf(<span class="hljs-string">"IE"</span>) &gt; -<span class="hljs-number">1</span>) &amp;&amp; wasInitialized() &amp;&amp; resize &gt; <span class="hljs-number">0</span>)&#123;
+
+&#125;</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> isMacOs = platform.toUpperCase().indexOf(<span class="hljs-string">"MAC"</span>) &gt; -<span class="hljs-number">1</span>;
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> isIEBrowser = browser.toUpperCase().indexOf(<span class="hljs-string">"IE"</span>) &gt; -<span class="hljs-number">1</span>;
+<span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> wasResized = resize &gt; <span class="hljs-number">0</span>;
+<span class="hljs-keyword">if</span>(isMacOs &amp;&amp; isIEBrowser &amp;&amp; wasInitialized &amp;&amp; wasResized)&#123;
+
+&#125;</code></pre></div>
+
+<p>除非是要处理一个拥有大量局部变量的算法，否则一般情况下都会考虑Extract Method对函数进行提炼。</p>
+<h2 id="6-6-分解临时变量-Split-Temporary-Variable"><a href="#6-6-分解临时变量-Split-Temporary-Variable" class="headerlink" title="6.6 分解临时变量(Split Temporary Variable)"></a>6.6 分解临时变量(Split Temporary Variable)</h2><p>如果程序中有某个临时变量被赋值超过一次，它既不是循环变量，也不被用于收集计算结果，可以<strong>针对每次赋值，创造一个独立、对应的临时变量。</strong></p>
+<p><strong>范例</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">getDistanceTravelled</span><span class="hljs-params">(<span class="hljs-keyword">int</span> time)</span></span>&#123;
+    <span class="hljs-keyword">double</span> result;
+    <span class="hljs-keyword">double</span> acc = primaryForce / mass;
+    <span class="hljs-keyword">int</span> primaryTime = Math.min(time,delay);
+    result = <span class="hljs-number">0.5</span> * acc * primaryTime * primaryTime;
+    <span class="hljs-keyword">int</span> secondaryTime = time - delay;
+    <span class="hljs-keyword">if</span>(secondaryTime &gt; <span class="hljs-number">0</span>)&#123;
+        <span class="hljs-keyword">double</span> primaryVel = acc * delay;
+        acc = (primaryForce + secondaryForce) / mass;
+        result += primaryVel * secondaryTime + <span class="hljs-number">0.5</span> * acc * secondaryTime * secondaryTime;
+    &#125;
+    <span class="hljs-keyword">return</span> result;
+&#125;</code></pre></div>
+
+<p>第一个acc是保存第一个力造成的初始加速度，第二个是保存两个力共同造成的加速度。</p>
+<ul>
+<li>首先，在函数开始处修改这个临时变量名称，并声明为final；</li>
+<li>接着，把第二次赋值之前对acc变量的所有引用点全部改为新的临时变量；</li>
+<li>最后，在第二次赋值处重新声明acc变量。</li>
+</ul>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">getDistanceTravelled</span><span class="hljs-params">(<span class="hljs-keyword">int</span> time)</span></span>&#123;
+        <span class="hljs-keyword">double</span> result;
+        <span class="hljs-keyword">final</span> <span class="hljs-keyword">double</span> primaryAcc = primaryForce / mass;
+        <span class="hljs-keyword">int</span> primaryTime = Math.min(time,delay);
+        result = <span class="hljs-number">0.5</span> * primaryAcc * primaryTime * primaryTime;
+        <span class="hljs-keyword">int</span> secondaryTime = time - delay;
+        <span class="hljs-keyword">if</span>(secondaryTime &gt; <span class="hljs-number">0</span>)&#123;
+            <span class="hljs-keyword">double</span> primaryVel = primaryAcc * delay;
+            <span class="hljs-keyword">final</span> <span class="hljs-keyword">double</span> secondaryAcc = (primaryForce + secondaryForce) / mass;
+            result += primaryVel * secondaryTime + <span class="hljs-number">0.5</span> * secondaryAcc * secondaryTime * secondaryTime;
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;</code></pre></div>
+
+<h2 id="6-7-移除对参数的赋值-Remove-Assignments-to-Parameters"><a href="#6-7-移除对参数的赋值-Remove-Assignments-to-Parameters" class="headerlink" title="6.7 移除对参数的赋值(Remove Assignments to Parameters)"></a>6.7 移除对参数的赋值(Remove Assignments to Parameters)</h2><p>代码对一个参数进行赋值，以一个临时变量取代该参数的位置。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">discount</span><span class="hljs-params">(<span class="hljs-keyword">int</span> inputVal,<span class="hljs-keyword">int</span> quantity,<span class="hljs-keyword">int</span> yearToDate)</span></span>&#123;
+    <span class="hljs-keyword">if</span>(inputVal&gt;<span class="hljs-number">50</span>)&#123;
+        inputVal -= <span class="hljs-number">2</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">discount</span><span class="hljs-params">(<span class="hljs-keyword">int</span> inputVal,<span class="hljs-keyword">int</span> quantity,<span class="hljs-keyword">int</span> yearToDate)</span></span>&#123;
+	<span class="hljs-keyword">int</span> result = inputVal;
+    <span class="hljs-keyword">if</span>(inputVal&gt;<span class="hljs-number">50</span>)&#123;
+        result -= <span class="hljs-number">2</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>这里需要明确“对参数赋值”的含义，如果是在“被传入对象”身上进行什么操作，那没问题，而如果该对象指向另一个对象，则最好进行修改。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">aMethod</span><span class="hljs-params">(Object foo)</span></span>&#123;
+	foo.modifyInSomeWay();  <span class="hljs-comment">//that's OK</span>
+	foo = anotherObject;	<span class="hljs-comment">//trouble and despair will follow you</span>
+&#125;</code></pre></div>
+
+<p><strong>Java的按值传递</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Param</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        Date d1 = <span class="hljs-keyword">new</span> Date(<span class="hljs-string">"1 Apr 98"</span>);
+        nextDateUpdate(d1);
+        System.out.println(<span class="hljs-string">"d1 after nextDay："</span> + d1);
+
+        Date d2 = <span class="hljs-keyword">new</span> Date(<span class="hljs-string">"1 Apr 98"</span>);
+        nextDateReplace(d2);
+        System.out.println(<span class="hljs-string">"d2 after nextDay:"</span> + d2);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">nextDateUpdate</span><span class="hljs-params">(Date arg)</span> </span>&#123;
+        arg.setDate(arg.getDate() + <span class="hljs-number">1</span>);
+        System.out.println(<span class="hljs-string">"arg in nextDay:"</span> + arg);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">nextDateReplace</span><span class="hljs-params">(Date arg)</span> </span>&#123;
+        arg = <span class="hljs-keyword">new</span> Date(arg.getYear(), arg.getMonth(), arg.getDate() + <span class="hljs-number">1</span>);
+        System.out.println(<span class="hljs-string">"arg in nextDay:"</span> + arg);
+    &#125;
+&#125;</code></pre></div>
+
+<p>输出结果：</p>
+<div class="hljs"><pre><code class="hljs j">arg in nextDay:Thu Apr 02 00:00:00 CST 1998
+d1 after nextDay：Thu Apr 02 00:00:00 CST 1998
+arg in nextDay:Thu Apr 02 00:00:00 CST 1998
+d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
+
+<h2 id="6-8-以函数对象取代函数-Replace-Method-with-Method-Object"><a href="#6-8-以函数对象取代函数-Replace-Method-with-Method-Object" class="headerlink" title="6.8 以函数对象取代函数(Replace Method with Method Object)"></a>6.8 以函数对象取代函数(Replace Method with Method Object)</h2><p>如果一个大型函数有许多局部变量，可以将这个函数放进一个单独对象中，让局部变量成为对象内的字段，然后在同一个对象中将这个大型函数分解为多个小型函数。</p>
+<div class="hljs"><pre><code class="hljs java">Class Order...
+	<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">price</span><span class="hljs-params">()</span></span>&#123;
+		<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">primaryBasePrice</span><span class="hljs-params">()</span></span>;
+		<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">secondaryBasePrice</span><span class="hljs-params">()</span></span>;
+		<span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">tertiaryBasePrice</span><span class="hljs-params">()</span></span>;
+	&#125;</code></pre></div>
+
+<p>转变为：</p>
+<p><img src="../image/image-20210528221101435.png" srcset="/img/loading.gif" alt="image-20210528221101435"></p>
+<p><strong>做法</strong></p>
+<ul>
+<li>新建一个类，根据用途来命名；</li>
+<li>在新类中建立一个final字段，用以保存原先大型函数所在的对象，简称“源对象”，同时针对原函数的每个临时变量和每个参数，在新类中建立一个对应的字段保存；</li>
+<li>在新类中建立一个构造函数，接收源对象及原函数的所有参数作为参数；</li>
+<li>在新类中建立一个compute()函数；</li>
+<li>将原函数的代码复制到compute()函数中；</li>
+<li>编译</li>
+<li>将旧函数的函数本体替换为：创建新类的一个对象，然后调用compute()方法。</li>
+</ul>
+<h2 id="6-9-替换算法-Substitute-Algorithm"><a href="#6-9-替换算法-Substitute-Algorithm" class="headerlink" title="6.9 替换算法(Substitute Algorithm)"></a>6.9 替换算法(Substitute Algorithm)</h2><p>如果你发现做一件事可以有更清晰的方式，那就应该以较清晰的方式取代复杂的方式。</p>
+<p><strong>做法</strong></p>
+<ul>
+<li>准备好另一个（替换用）算法，让它通过编译；</li>
+<li>针对现有测试，执行上述的新算法，比较两者的效果。</li>
+</ul>
+<h1 id="第7章-在对象之间搬移特性"><a href="#第7章-在对象之间搬移特性" class="headerlink" title="第7章 在对象之间搬移特性"></a>第7章 在对象之间搬移特性</h1><h2 id="7-1-搬移函数-Move-Method"><a href="#7-1-搬移函数-Move-Method" class="headerlink" title="7.1 搬移函数(Move Method)"></a>7.1 搬移函数(Move Method)</h2><p>如果一个类有太多行为，或如果一个类与另一个类有太多合作而形成高度耦合，就要考虑搬移函数。</p>
+<p><strong>做法</strong></p>
+<ul>
+<li>检查源类中被源函数所使用的一切特性（包括字段和函数），考虑它们是否也该被搬移；</li>
+<li>检查源类的子类和超类，看看是否有该函数的其他声明；</li>
+<li>在目标类中声明这个函数；</li>
+<li>将源函数的代码复制到目标函数中，使其能正常工作；</li>
+<li>编译目标类；</li>
+<li>决定如何从源函数正确引入目标对象；</li>
+<li>修改源函数，使之成为一个纯委托函数；</li>
+<li>编译、测试；</li>
+<li>决定是否删除源函数，或将它当做一个委托函数保留下来；</li>
+<li>编译、测试。</li>
+</ul>
+<p><strong>范例</strong></p>
+<p>用一个表示“账户”的Account类来说明这项重构：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span> </span>&#123;
+    <span class="hljs-keyword">private</span> AccountType type;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> daysOverdrawn;
+
+    <span class="hljs-comment">/**</span>
+<span class="hljs-comment">     * 透支金额计费规则</span>
+<span class="hljs-comment">     * <span class="hljs-doctag">@return</span></span>
+<span class="hljs-comment">     */</span>
+    <span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">overdraftCharge</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (type.isPremium()) &#123;
+            <span class="hljs-keyword">double</span> result = <span class="hljs-number">10</span>;
+            <span class="hljs-keyword">if</span> (daysOverdrawn &gt; <span class="hljs-number">7</span>) &#123;
+                result += (daysOverdrawn - <span class="hljs-number">7</span>) * <span class="hljs-number">0.85</span>;
+            &#125;
+            <span class="hljs-keyword">return</span> result;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> daysOverdrawn * <span class="hljs-number">1.75</span>;
+        &#125;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">bankCharge</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">double</span> result = <span class="hljs-number">4.5</span>;
+        <span class="hljs-keyword">if</span> (daysOverdrawn &gt; <span class="hljs-number">0</span>) &#123;
+            result += overdraftCharge();
+        &#125;
+        <span class="hljs-keyword">return</span> result;
+    &#125;
+&#125;</code></pre></div>
+
+<p>因为“透支金额计费规则”随着账户类型而变化，所以将overdraftCharge()搬移到AccountType类去。</p>
+<p>第一步：观察被overdraftCharge()使用的每一项特性，考虑是否值得将它们与overdraftCharge()一起移动，这里需要让daysOverdrawn留在Account类，因为这个值会随不同账户而变化。将函数复制到AccountType中，并进行相应调整。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">overdraftCharge</span><span class="hljs-params">(<span class="hljs-keyword">int</span> daysOverdrawn)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (isPremium()) &#123;
+            <span class="hljs-keyword">double</span> result = <span class="hljs-number">10</span>;
+            <span class="hljs-keyword">if</span> (daysOverdrawn &gt; <span class="hljs-number">7</span>) &#123;
+                result += (daysOverdrawn - <span class="hljs-number">7</span>) * <span class="hljs-number">0.85</span>;
+            &#125;
+            <span class="hljs-keyword">return</span> result;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> daysOverdrawn * <span class="hljs-number">1.75</span>;
+        &#125;
+    &#125;</code></pre></div>
+
+<p>当我们需要使用源类的特性时，有4种选择：</p>
+<ol>
+<li>将这个特性也移到目标类；</li>
+<li>建立或使用一个从目标类到源类的引用关系；</li>
+<li>将源对象当做参数传给目标函数；</li>
+<li>如果特性是个变量，将它当做参数传给目标函数。</li>
+</ol>
+<p>调整目标函数使之通过编译，然后就可以将源函数的函数本体替换为一个简单的委托动作，然后编译并测试。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">overdraftCharge</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> type.overdraftCharge(daysOverdrawn);
+    &#125;</code></pre></div>
+
+<h2 id="7-2-搬移字段-Move-Field"><a href="#7-2-搬移字段-Move-Field" class="headerlink" title="7.2 搬移字段(Move Field)"></a>7.2 搬移字段(Move Field)</h2><p>如果某个字段被其所驻类之外的类更多地用到，则需要在目标类新建一个字段，修改源字段的所有用户，令它们改用新字段。</p>
+<p><strong>范例</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Account</span> </span>&#123;
+    <span class="hljs-keyword">private</span> AccountType type;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> daysOverdrawn;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> interestRate;
+
+    <span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">interestForAmount_days</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount,<span class="hljs-keyword">int</span> days)</span></span>&#123;
+        <span class="hljs-keyword">return</span> interestRate * amount * days / <span class="hljs-number">365</span>;
+    &#125;
+&#125;</code></pre></div>
+
+<p>这里我想把表示利率的interestRate搬移到AccountType类去。</p>
+<p>在AccountType中建立interestRate字段以及相应的访问函数：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AccountType</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">double</span> interestRate;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">double</span> <span class="hljs-title">getInterestRate</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> interestRate;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setInterestRate</span><span class="hljs-params">(<span class="hljs-keyword">double</span> interestRate)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.interestRate = interestRate;
+    &#125;
+&#125;</code></pre></div>
+
+<p>现在需要让Account类中访问interestRate字段的函数转而使用AccountType对象，然后删除Account类中的interestRate字段。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">double</span> <span class="hljs-title">interestForAmount_days</span><span class="hljs-params">(<span class="hljs-keyword">double</span> amount,<span class="hljs-keyword">int</span> days)</span></span>&#123;
+    <span class="hljs-keyword">return</span> type.getInterestRate() * amount * days / <span class="hljs-number">365</span>;
+&#125;</code></pre></div>
+
+<h2 id="7-3-提炼类-Extract-Class"><a href="#7-3-提炼类-Extract-Class" class="headerlink" title="7.3 提炼类(Extract Class)"></a>7.3 提炼类(Extract Class)</h2><p>如果某个类做了应该由两个类做的事，则需要建立一个新类，将相关的字段和函数从旧类搬移到新类。</p>
+<p>一个类应该是一个清楚的抽象，处理一些明确的责任。</p>
+<h2 id="7-4-将类内联化-Inline-Class"><a href="#7-4-将类内联化-Inline-Class" class="headerlink" title="7.4 将类内联化(Inline Class)"></a>7.4 将类内联化(Inline Class)</h2><p>如果某个类没有做太多事情，则考虑将这个类的所有特性搬移到另一个类中，然后移除原类。</p>
+<h2 id="7-5-隐藏“委托关系”-Hide-Delegate"><a href="#7-5-隐藏“委托关系”-Hide-Delegate" class="headerlink" title="7.5 隐藏“委托关系”(Hide Delegate)"></a>7.5 隐藏“委托关系”(Hide Delegate)</h2><p>客户通过一个委托类来调用另一个对象，如在服务类上建立客户所需的所有函数，用以隐藏委托关系。</p>
+<p><img src="../image/image-20210528221542715.png" srcset="/img/loading.gif" alt="image-20210528221542715"></p>
+<p><strong>做法</strong></p>
+<ul>
+<li>对于每一个委托关系中的函数，在服务对象端建立一个简单的委托函数；</li>
+<li>调整客户，令它只调用服务对象提供的函数；</li>
+<li>每次调整后，编译并测试；</li>
+<li>如果将来不再有任何客户需要取用Delegate(受托类)，便可移除服务对象中的相关访问函数；</li>
+<li>编译，测试。</li>
+</ul>
+<p><strong>范例</strong></p>
+<p>先编写代表“人”的Person和代表“部门”的Department：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;
+    Department department;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Department <span class="hljs-title">getDepartment</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> department;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setDepartment</span><span class="hljs-params">(Department department)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.department = department;
+    &#125;
+&#125;
+
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Department</span> </span>&#123;
+    <span class="hljs-keyword">private</span> String chargeCode;
+    <span class="hljs-keyword">private</span> Person manager;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Department</span><span class="hljs-params">(Person manager)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.manager = manager;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Person <span class="hljs-title">getManager</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> manager;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setManager</span><span class="hljs-params">(Person manager)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.manager = manager;
+    &#125;
+&#125;</code></pre></div>
+
+<p>如果客户希望知道某人的经理是谁，他必须先取得Department对象：</p>
+<div class="hljs"><pre><code class="hljs java">manager = john.getDepartment().getManager();</code></pre></div>
+
+<p>这样的编码就是对客户揭露了Department的工作内容，而且属于高耦合代码，为了对客户隐藏Department，减少耦合，在Person类中建立一个简单的委托函数：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> Person <span class="hljs-title">getManager</span><span class="hljs-params">()</span></span>&#123;
+	<span class="hljs-keyword">return</span> department.getManager();
+&#125;</code></pre></div>
+
+<p>然后让Person的所有对象去调用新函数getManager，就可以将getDepartment()移除了。</p>
+<h2 id="7-6-移除中间人-Remove-Middle-Man"><a href="#7-6-移除中间人-Remove-Middle-Man" class="headerlink" title="7.6 移除中间人(Remove Middle Man)"></a>7.6 移除中间人(Remove Middle Man)</h2><p>某个类做了<strong>过多</strong>的简单委托动作，让客户直接调用受托类。</p>
+<h2 id="7-7-引入外加函数-Introduce-Foreign-Method"><a href="#7-7-引入外加函数-Introduce-Foreign-Method" class="headerlink" title="7.7 引入外加函数(Introduce Foreign Method)"></a>7.7 引入外加函数(Introduce Foreign Method)</h2><p>当你需要为提供服务的类增加一个函数，但无法修改这个类的时候，可以在客户类中建立一个函数，并以第一参数形式传入一个服务类实例。</p>
+<div class="hljs"><pre><code class="hljs java">Date newStart = <span class="hljs-keyword">new</span> Date(previousEnd.getYear(),previousEnd.getMonth(),previousEnd.getDate()+<span class="hljs-number">1</span>);</code></pre></div>
+
+<p>替换为：</p>
+<div class="hljs"><pre><code class="hljs java">Date newStart = nextDay(previousEnd);
+
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Date <span class="hljs-title">nextDay</span><span class="hljs-params">(Date arg)</span></span>&#123;
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Date(arg.getYear(),arg.geteMonth(),arg.getDate()+<span class="hljs-number">1</span>);
+&#125;</code></pre></div>
+
+<h2 id="7-8-引入本地扩展-Introduce-Local-Extension"><a href="#7-8-引入本地扩展-Introduce-Local-Extension" class="headerlink" title="7.8 引入本地扩展(Introduce Local Extension)"></a>7.8 引入本地扩展(Introduce Local Extension)</h2><p>当你需要为服务类提供一些额外函数，但你无法修改这个类的时候，可以建立一个新类，使它包含这些额外函数（<strong>新特性</strong>），让这个扩展品成为源类的<strong>子类</strong>或者<strong>包装类</strong>。</p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/23/%E5%85%B3%E4%BA%8EIDEA%E4%B8%ADDebug%E6%8A%80%E5%B7%A7/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于IDEA中Debug技巧</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/17/%E9%AB%98%E6%95%88%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%8445%E4%B8%AA%E4%B9%A0%E6%83%AF/">
+                        <span class="hidden-mobile">高效程序员的45个习惯</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "重构_改善既有代码的设计&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
