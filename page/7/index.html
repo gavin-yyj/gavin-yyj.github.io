@@ -179,33 +179,40 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/">4.SpringSecurity整合OAuth2.0-Day03</a>
+      <a class="index-header" href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">11.Netty--预置的ChannelHandler和编解码器</a>
 
-      <a href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/" class="index-excerpt">
+      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/" class="index-excerpt">
         
         
           
         
-        <div>上一篇文章中我们介绍了获取 token 的流程，这一篇重点分析一下，携带 token 访问受限资源时，内部的工作流程。
-@EnableResourceServer 与 @EnableAuthorizationServer之前我们介绍过了 OAuth2 的两个核心概念，资源服务器与身份认证服务器。我们对两个注解进行配置的同时，到底触发了内部的什么相关配置呢？
-上一篇文章重点介绍的其实是与身份认证相关</div>
+        <div>
+本文主要内容：
+
+通过SSL/TLS保护Netty应用程序；
+构建基于Netty的HTTP/HTTPS应用程序
+处理空闲的连接和超时
+解码基于分隔符的协议和基于长度的协议
+写大型数据
+Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。
+
+
+通过SSL/TLS保护Netty应用程序为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLE</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-10
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -213,7 +220,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Spring-Security/">Spring Security</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -225,38 +232,47 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/">3.SpringSecurity整合OAuth2.0-Day02</a>
+      <a class="index-header" href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">10.Netty--编解码器框架</a>
 
-      <a href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/" class="index-excerpt">
+      <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/" class="index-excerpt">
         
         
           
         
-        <div>准备工作首先开启 debug 信息：
-logging:
-  level:
-    org.springframework: DEBUG
+        <div>
+本文主要内容：
 
-可以完整的看到内部的运转流程。
-client 模式稍微简单一些，使用 client 模式获取 token
-http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</div>
+解码器、编码器以及编解码器的概述
+Netty的编解码器类
+
+
+什么是编解码器
+编码器是将消息转换为适合于传输的格式（最有可能的就是字节流）；
+
+解码器则是将网络字节流换回应用程序的消息格式；
+
+编码器操作出站数据，解码器处理入站数据；
+
+
+解码器
+将字节码解码为消息———ByteToMessageDecoder和ReplayingDecoder；
+
+将一种消息类型解码为另一种—</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-09
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -264,7 +280,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Spring-Security/">Spring Security</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -276,39 +292,39 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/">2.SpringSecurity整合OAuth2.0-Day01</a>
+      <a class="index-header" href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">9.Netty--单元测试</a>
 
-      <a href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/" class="index-excerpt">
+      <a href="/2020/06/02/9-Netty-%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" class="index-excerpt">
         
         
           
         
-        <div>概述使用 oauth2 保护你的应用，可以分为简易的分为三个步骤：
+        <div>
+本文主要内容：
 
-配置资源服务器
+单元测试
+EmbeddedChannel概述
+使用EmbeddedChannel测试ChannelHandler
 
-配置认证服务器
 
-配置 spring security
-本文重点讲解接口对接中常使用的密码模式（以下简称 password 模式）和客户端模式（以下简称 client 模式）。授权码模式使用到了回调地址，是最为复杂的方式，通常网站中经常出现的微博，qq 第三方登录，都会采用这个形式。简化模式不常用。
-项目准备首</div>
+单元测试的标准：不仅能够证明你的实现是正确的，而且还要能够很容易地隔离那些因修改代码而突然出现的问题。
+因为正在被测试的代码模块或者单元将在它正常的运行环境之外被执行，所以还需要一个框架或者脚手架以便在其中运行它（这里我们选择的是JUnit4）。
+Embedde</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-08
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -316,7 +332,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Spring-Security/">Spring Security</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -328,34 +344,41 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/1-%E7%90%86%E8%A7%A3-OAuth-2-0/">1.理解 OAuth 2.0</a>
+      <a class="index-header" href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/">8.Netty--引导</a>
 
-      <a href="/2020/06/06/1-%E7%90%86%E8%A7%A3-OAuth-2-0/" class="index-excerpt">
+      <a href="/2020/06/02/8-Netty-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
         
         
           
         
-        <div>OAuth是一个关于授权（authorization）的开放网络标准，在全世界得到广泛应用，目前的版本是2.0版。
-本文对OAuth 2.0的设计思路和运行流程，做一个简明通俗的解释，主要参考材料为RFC 6749。
-一、应用场景为了理解OAuth的适用场合，让我举一个假设的例子。
-有一个”云冲印”的网站，可以将用户储存在Google的照片，冲印出来。用户为了使用该服务，必须让”云冲印”读取自己储</div>
+        <div>
+本文主要内容：
+
+引导客户端和服务器
+从Channel内引导客户端
+添加ChannelHandler
+使用ChannelOption和属性
+
+
+Bootstrap类引导类的层次结构：
+
+服务器致力于使用一个父Channel来接收来自客户端的连接，并创建子Channel以用于它们之间的通信；而客户端一般只需要一个单独的、没有父Channel的Channel来用于所有的网络交互。
+首先聊聊为什么引导</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -363,7 +386,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Spring-Security/">Spring Security</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -375,31 +398,48 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/">11. Redis--一致性Hash算法</a>
+      <a class="index-header" href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/">7.Netty--EventLoop和线程模型</a>
 
-      <a href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" class="index-excerpt">
+      <a href="/2020/06/01/7-Netty-EventLoop%E5%92%8C%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="index-excerpt">
         
         
           
         
-        <div>一、Redis集群的使用我们在使用Redis的时候，为了保证Redis的高可用，提高Redis的读写性能，最简单的方式我们会做主从复制，组成Master-Master或者Master-Slave的形式，或者搭建Redis集群，进行数据的读写分离，类似于数据库的主从复制和读写分离。如下所示：
+        <div>
+本文主要内容：
 
-同样类似于数据库，当单表数据大于500W的时候需要对其进行分库分表，当数据量很大的时候（标准可能不一样，要</div>
+线程模型概述
+事件循环的概念和实现
+任务调度
+实现细节
+
+
+线程模型概述基本的线程池化模式可以描述为：
+
+从池的空闲列表中选择一个Thread，并且指派它去运行一个已提交的任务（一个Runnable的实现）；
+
+当任务完成时，将该Thread返回给该列表，使其可被重用。
+
+
+
+（1）要执行的任务；
+（2）任务递交给了线程池；
+（3）从线程池中拉取一个可用的Thread，并执行任</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-01
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -407,7 +447,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -419,30 +459,53 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/">0. Redis--引导</a>
+      <a class="index-header" href="/2020/05/31/6-Netty-ChannelHandler%E5%92%8CChannelPipeline/">6.Netty--ChannelHandler和ChannelPipeline</a>
 
-      <a href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
+      <a href="/2020/05/31/6-Netty-ChannelHandler%E5%92%8CChannelPipeline/" class="index-excerpt">
         
         
           
         
-        <div>一、Redis简介Redis是一个开源的，基于内存的数据结构存储系统，它可以用作：数据库、缓存和消息中间件。
-它支持多种类型的数据结构，如字符串（String），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：String</div>
+        <div>
+本文主要内容：
+
+ChannelHandler和ChannelPipeline
+检测资源泄漏
+异常处理
+
+
+ChannelHandler家族Channel的生命周期
+
+
+状态
+描述
+
+
+
+ChannelUnregistered
+Channel已经被创建，但还未注册到EventLoop
+
+
+ChannelRegistered
+Channel已经被注册到了EventLoop
+
+
+ChannelAct</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -450,7 +513,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -462,33 +525,44 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/">10. Redis--如何优化缓存架构</a>
+      <a class="index-header" href="/2020/05/31/5-Netty-ByteBuf/">5.Netty--ByteBuf</a>
 
-      <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" class="index-excerpt">
+      <a href="/2020/05/31/5-Netty-ByteBuf/" class="index-excerpt">
         
         
           
         
-        <div>一、为什么要用缓存集群啥叫热 Key 和大 Value 呢?简单来说，热 Key，就是你的缓存集群中的某个 Key 瞬间被数万甚至十万的并发请求打爆。
-大 Value，就是你的某个 Key 对应的 Value 可能有 GB 级的大小，导致查询 Value 的时候出现网络相关的故障问题。
-先来看看下面的一幅图：
+        <div>
+本文主要内容：
 
-简单来说，假设你手头有个系统，它本身是集群部署的，然后后面有一套缓存集群，这个集群不管</div>
+ByteBuf：Netty的数据容器
+API的详细信息
+用例
+内存分配
+
+
+ByteBuf的APIJava NIO虽然提供了ByteBuffer作为字节容器，但是其使用过于复杂和繁琐，因此用ByteBuf来代替ByteBuffer。
+优点：
+
+可以被用户自定义的缓冲区类型扩展
+通过内置的复合缓冲区类型实现了透明的零拷贝
+容量可以按需增长
+在读和写这两种模式之间切换不需要调用By</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -496,7 +570,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -508,31 +582,40 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/">9. Redis--Redis缓存问题</a>
+      <a class="index-header" href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/">4.Netty--传输</a>
 
-      <a href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/" class="index-excerpt">
+      <a href="/2020/05/31/4-Netty-%E4%BC%A0%E8%BE%93/" class="index-excerpt">
         
         
           
         
-        <div>一、引言Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括缓存穿透、缓存雪崩、缓存击穿、缓存预热等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基本就是废话了，谨慎阅读哦。
-二、缓存穿透问题描述：
-缓存穿透是指查询一个一定不存在的数据，这样就导致用户查询的时候，在缓存中找不到，每次都要去数据库再查</div>
+        <div>
+本文主要内容：
+
+OIO：阻塞传输
+NIO：异步传输
+Local：JVM内部的异步通信
+Embedded：测试你的ChannelHandler
+
+
+案例研究：传输迁移不通过Netty使用OIO和NIO未使用Netty的阻塞网络编程代码如下：
+public class PlainOioServer &#123;
+    public void serve(int port) throws IOEx</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -540,7 +623,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -552,33 +635,38 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/">8. Redis--Redis的实际应用</a>
+      <a class="index-header" href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/">3.Netty--Netty的组件和设计</a>
 
-      <a href="/2020/06/06/8-Redis-Redis%E7%9A%84%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8/" class="index-excerpt">
+      <a href="/2020/05/31/3-Netty-Netty%E7%9A%84%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/" class="index-excerpt">
         
         
           
         
-        <div>在《Redis初探（7）——Jedis操纵集群》中，我们已经学会了搭建 Redis 集群，以及使用策略模式，在xml文件中灵活切换单机版和集群版。
-本章将演示在宜立方商城项目中使用 Redis，项目地址：e3mall。
-一、功能需求商城首页访问量巨大，因为首页的大轮播图是从数据库查询获取的，每次访问都要查询一次数据库，数据库压力巨大，亟需缓存。
+        <div>
+本文主要内容：
 
-二、功能实现实现之前首先思考 Redis 是要加在</div>
+Netty的技术和体系结构方面的内容
+Channel、EventLoop和ChannelFuture
+ChannelHandler和ChannelPipeline
+引导
+
+
+学习Netty是因为它是基于Java NIO 的异步和事件驱动的实现，保证了高负载下应用程序性能的最大化和可伸缩性；同时它包含了一组设计模式，实现了应用程序逻辑从网络层解耦，简化了开发过程，最大限度地提高了</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -586,7 +674,7 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -598,33 +686,45 @@ http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/7-Redis-Redis%E6%93%8D%E7%BA%B5%E9%9B%86%E7%BE%A4/">7. Redis--Redis操纵集群</a>
+      <a class="index-header" href="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/">2.Netty--你的第一款Netty应用</a>
 
-      <a href="/2020/06/06/7-Redis-Redis%E6%93%8D%E7%BA%B5%E9%9B%86%E7%BE%A4/" class="index-excerpt">
+      <a href="/2020/05/31/2-Netty-%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E6%AC%BENetty%E5%BA%94%E7%94%A8/" class="index-excerpt">
         
         
           
         
-        <div>在《Redis 初探（2）——Jedis 的使用》中，我们已经学会了Jedis操纵单机Redis的简单使用，本章将继续深入，介绍Jedis对集群的操纵。
-一、Jedis 连接单机在开始介绍 Jedis 连接集群之前，先简单回顾下连接单机的使用。
-1.1 简单使用@Test
-public void testJedis() &#123;
-    // 1.获得连接对象。参数为redis所在的服务器地址</div>
+        <div>
+本文主要内容：
+
+设置开发环境
+
+编写Echo服务器和客户端
+
+构建并测试应用程序
+
+
+
+1.设置开发环境准备好JDK和Maven
+2.Netty客户端/服务器概览
+在客户端建立一个连接之后，它会向服务器发送一个或多个消息，反过来，服务器又会将每个消息回送给客户端。
+3.编写Echo服务器首先明确的一点是，所有的Netty服务器都需要以下两部分：
+
+至少一个ChannelHandler：用户实现</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-31
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
             
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
             
           </div>
         
@@ -632,7 +732,7 @@ public void testJedis() &#123;
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Redis/">Redis</a>
+              <a href="/tags/Netty/">Netty</a>
             
           </div>
         
@@ -644,7 +744,7 @@ public void testJedis() &#123;
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/6/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/6/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
   
@@ -676,7 +776,7 @@ public void testJedis() &#123;
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -685,7 +785,7 @@ public void testJedis() &#123;
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

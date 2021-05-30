@@ -179,354 +179,35 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/">6. Redis--Redis集群</a>
+      <a class="index-header" href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">1.Netty--异步和事件驱动</a>
 
-      <a href="/2020/06/06/6-Redis-Redis%E9%9B%86%E7%BE%A4/" class="index-excerpt">
-        
-        
-          
-        
-        <div>之前我们所学习的都是 Redis 的单机版，我们知道 Redis 之所以读取速度快是因为它是存储在内存中的。内存的容量是有限的，单台 Redis 会碰到性能瓶颈，这就需要使用 Redis集群（Redis-cluster）。
-一、集群原理1.1 集群架构
-如上图所示，每一个蓝色圆圈就是一个 Redis 节点，这些节点组成了一个 Redis集群（Redis-cluster）。节点之间使用 Ping——</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/">5. Redis--Redis的持久化</a>
-
-      <a href="/2020/06/06/5-Redis-Redis%E7%9A%84%E6%8C%81%E4%B9%85%E5%8C%96/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Redis 的高性能是由其将所有数据都存储在了内存中，需要使用时直接从内存调用即可。为了使 Redis 在重启之后仍然能保证数据不丢失，需要将数据从内存同步到数据库中，这一过程就是持久化。
-Redis 支持两种持久化方式，一种是 RDB方式，一种是 AOF方式。可以单独使用其中一种或将两种结合使用。
-
-RDB (默认) 在指定的时间间隔内将内存中的数据快照写入磁盘。
-AOF 以日志的形式记录服务器</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/">4. Redis--Redis的特性</a>
-
-      <a href="/2020/06/06/4-Redis-Redis%E7%9A%84%E7%89%B9%E6%80%A7/" class="index-excerpt">
-        
-        
-          
-        
-        <div>一、多数据库每一个 Redis 实例可以包括多个数据库，客户端可以指定连接某个 Redis 实例的某个数据库。一个Redis实例最多可以提供 16 个数据库，下标从 0 到 15，客户端默认连接第 0 号数据库。
-
-
-
-含义
-方法
-
-
-
-选择第 n 号数据库
-select n
-
-
-将当前库的 key 转移到第 n 号数据库
-move key n
-
-
-
-这里补充下之前没有提到的 Redis 服务器的</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/05/3-Redis-Redis%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">3. Redis--Redis的数据类型</a>
-
-      <a href="/2020/06/05/3-Redis-Redis%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Redis支持以下五种数据结构：
-
-String类型
-List类型
-Set类型
-SortedSet类型
-Hash类型
-
-
-
-
-存储极限
-大小
-
-
-
-String类型的value大小
-512M
-
-
-Hash类型key的键值对大小
-4294967295
-
-
-List类型的key个数
-4294967295
-
-
-Set/SortedSet类型的key个数
-4294967295
-
-
-一、String（字符串</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-05
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/">2. Redis--Jedis的使用</a>
-
-      <a href="/2020/06/05/2-Redis-Jedis%E7%9A%84%E4%BD%BF%E7%94%A8/" class="index-excerpt">
-        
-        
-          
-        
-        <div>准备工作在Linux中开启redis服务，并传入一个变量username，赋值为yyj：
-第一个Jedis程序导包&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;redis.clients&lt;/groupId&gt;
-        &lt;artifactId&gt;jedis&lt;/artifactId</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-05
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/05/1-Redis-%E5%AE%89%E8%A3%85Redis/">1. Redis--安装Redis</a>
-
-      <a href="/2020/06/05/1-Redis-%E5%AE%89%E8%A3%85Redis/" class="index-excerpt">
-        
-        
-          
-        
-        <div>1.1 什么是 RedisRedis 是使用 C 语言开发的一个开源的高性能键值对（key-value）数据库。它通过提供多种键值数据类型来适应不同场景下的存储需求，Redis 支持以下五种数据类型：
-
-String 类型
-List 类型
-Set 类型
-SortedSet 类型
-Hash类型
-
-1.2 Redis 应用场景
-缓存
-分布式集群架构中session分离
-任务队列
-…
-
-1.3 安装 R</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-05
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Redis/">Redis</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/13-Netty-%E4%BD%BF%E7%94%A8UDP%E5%B9%BF%E6%92%AD%E4%BA%8B%E4%BB%B6/">13.Netty--使用UDP广播事件</a>
-
-      <a href="/2020/06/03/13-Netty-%E4%BD%BF%E7%94%A8UDP%E5%B9%BF%E6%92%AD%E4%BA%8B%E4%BB%B6/" class="index-excerpt">
+      <a href="/2020/05/30/1-Netty-%E5%BC%82%E6%AD%A5%E5%92%8C%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" class="index-excerpt">
         
         
           
         
         <div>
-本文主要内容：
+本系列文章主要来自《Netty IN ACTION》
+本章主要内容：
 
-UDP概述
-一个广播应用程序示例
+Java网络编程
+
+Netty简介
+
+Netty核心组件
 
 
-UDP的基础知识面向连接的传输（如TCP）管理了两个网络端点之间的连接的建立，在连接的生命周期内的有序和可靠的消息传输，以及最后连接的有序终止。类似于UDP这样的无连接协议中，并没有持久化连接这样的概念，并且每个消息（一个UDP数据报）都是一个单独的传输单元。
-UDP广播UDP提供了向多个接收者发送消息的额外传输模式：多播：传播到一个预定义</div>
+
+Java网络编程首先来看一个典型的阻塞I/O示例：
+//创建一个新的ServerSocket，用于监听指定端口上的连接请求
+ServerSocket serverSocket = new ServerSocket(portNumber);//1
+//以阻塞的方式</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
           </div>
         
         
@@ -555,40 +236,33 @@ UDP广播UDP提供了向多个接收者发送消息的额外传输模式：多�
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/12-Netty-WebSocket/">12.Netty--WebSocket</a>
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-9-%E8%A7%92%E8%89%B2%E7%BB%A7%E6%89%BF/">SpringBoot集成Spring Security(9)--角色继承</a>
 
-      <a href="/2020/06/03/12-Netty-WebSocket/" class="index-excerpt">
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-9-%E8%A7%92%E8%89%B2%E7%BB%A7%E6%89%BF/" class="index-excerpt">
         
         
           
         
-        <div>
-本文主要内容：
-
-实时Web的概念
-WebSocket协议
-使用Netty构建一个基于WebSocket的聊天室服务器
-
-
-WebSocket简介WebSocket协议是完全重新设计的协议，旨在为Web上的双向数据传输问题提供一个切实可行的解决方案，使得客户端与服务器之间可以在任意时刻传输消息。
-我们的WebSocket示例应用程序
-添加WebSocket支持
-处理HTTP请求首先我们需要实现处</div>
+        <div>在本节中，补充下角色继承的知识点。角色继承其实是一个十分常见的需求，因为一般系统中角色权限呈金字塔型，高层用户拥有底层用户的权限。
+例如存在以下角色：普通用户、VIP 用户、SVIP 用户、星悦会员，那么对应的权限可以是“星悦会员 &gt; SVIP 用户 &gt; VIP 用户 &gt; 普通用户”。那么如何在 Spring Security 中实现这样的功能呢？
+引言为了简便起见，我直接使用《</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -596,7 +270,7 @@ WebSocket简介WebSocket协议是完全重新设计的协议，旨在为Web上�
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Netty/">Netty</a>
+              <a href="/tags/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -608,40 +282,34 @@ WebSocket简介WebSocket协议是完全重新设计的协议，旨在为Web上�
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/">11.Netty--预置的ChannelHandler和编解码器</a>
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-8-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(8)--短信验证码登录</a>
 
-      <a href="/2020/06/03/11-Netty-%E9%A2%84%E7%BD%AE%E7%9A%84ChannelHandler%E5%92%8C%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8/" class="index-excerpt">
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-8-%E7%9F%AD%E4%BF%A1%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95/" class="index-excerpt">
         
         
           
         
-        <div>
-本文主要内容：
+        <div>一、理论说明在开始编码前，先理解下短信验证码的实现流程。如果你能对《SpringBoot集成Spring Security（7）——认证流程》这篇文章有一定的了解的话，那么这篇文章的学习你会轻松许多。
+1.1 用户名密码登录逻辑废话不多说，在上一篇文章中，以标准的用户名密码登录为例，讲解了整个认证流程。大致流程如下：
 
-通过SSL/TLS保护Netty应用程序；
-构建基于Netty的HTTP/HTTPS应用程序
-处理空闲的连接和超时
-解码基于分隔符的协议和基于长度的协议
-写大型数据
-Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱即用。
-
-
-通过SSL/TLS保护Netty应用程序为了支持SSL/TLS，Java提供了javax.net.ssl包，它的SSLContext和SSLE</div>
+先进入 UsernamePasswordAuthenticationFilte</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-03
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -649,7 +317,7 @@ Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Netty/">Netty</a>
+              <a href="/tags/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -661,47 +329,36 @@ Netty为许多通用协议提供了编解码器和处理器，几乎可以开箱
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/">10.Netty--编解码器框架</a>
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-7-%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B/">SpringBoot集成Spring Security(7)--认证流程</a>
 
-      <a href="/2020/06/02/10-Netty-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%A1%86%E6%9E%B6/" class="index-excerpt">
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-7-%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B/" class="index-excerpt">
         
         
           
         
-        <div>
-本文主要内容：
+        <div>在前面的六章中，介绍了 Spring Security 的基础使用，在继续深入向下的学习前，有必要理解清楚 Spring Security 的认证流程，这样才能理解为什么要这样写代码，也方便后续的扩展。
+一、认证流程
 
-解码器、编码器以及编解码器的概述
-Netty的编解码器类
+上图是 Spring Security 认证流程的一部分，下面的讲解以上图为依据。
 
-
-什么是编解码器
-编码器是将消息转换为适合于传输的格式（最有可能的就是字节流）；
-
-解码器则是将网络字节流换回应用程序的消息格式；
-
-编码器操作出站数据，解码器处理入站数据；
-
-
-解码器
-将字节码解码为消息———ByteToMessageDecoder和ReplayingDecoder；
-
-将一种消息类型解码为另一种—</div>
+（1） 用户发起表单登录请求后，首先进入 UsernamePasswordAuthentica</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-02
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
             
-              <a href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/Netty/">Netty</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -709,7 +366,296 @@ Netty的编解码器类
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Netty/">Netty</a>
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-6-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86/">SpringBoot集成Spring Security(6)--登录管理</a>
+
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-6-%E7%99%BB%E5%BD%95%E7%AE%A1%E7%90%86/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、自定义认证成功、失败处理有些时候我们想要在认证成功后做一些业务处理，例如添加积分；有些时候我们想要在认证失败后也做一些业务处理，例如记录日志。
+在之前的文章中，关于认证成功、失败后的处理都是如下配置的：
+http.authorizeRequests()
+    // 如果有允许匿名的url，填在下面
+//    .antMatchers().permitAll()
+    .anyReques</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-5-%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/">SpringBoot集成Spring Security(5)--权限控制</a>
+
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-5-%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6/" class="index-excerpt">
+        
+        
+          
+        
+        <div>在第一篇中，我们说过，用户&lt;–&gt;角色&lt;–&gt;权限三层中，暂时不考虑权限，在这一篇，是时候把它完成了。
+为了方便演示，这里的权限只是对角色赋予权限，也就是说同一个角色的用户，权限是一样的。当然了，你也可以精细化到为每一个用户设置权限，但是这不在本篇的探讨范围，有兴趣可以自己实验，原理都是一样的。
+一、数据准备1.1 创建 sys_permission 表让我们先创建一张权限表，</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-4-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(4)--自定义表单登录</a>
+
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-4-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A1%A8%E5%8D%95%E7%99%BB%E5%BD%95/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、添加验证码1.1 验证码 Servlet验证码的 Servlet 代码，大家无需关心其内部实现，我也是百度直接捞了一个，直接复制即可。
+com.gavin.springsecurity04.common.VerifyServlet
+    public class VerifyServlet extends HttpServlet &#123;
+		 private static final </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">SpringBoot集成Spring Security(3)--异常处理</a>
+
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-3-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="index-excerpt">
+        
+        
+          
+        
+        <div>思考：为何登录失败自动跳转到/login?error，而且没有异常提示？
+
+因为首先 /login?error 是 Spring security 默认的失败 Url，其次如果你不手动处理这个异常，这个异常是不会被处理的。
+一、常见异常我们先来列举下一些 Spring Security 中常见的异常：
+
+UsernameNotFoundException（用户不存在）
+DisabledExcept</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-2-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/">SpringBoot集成Spring Security(2)--自动登录</a>
+
+      <a href="/2020/05/30/SpringBoot%E9%9B%86%E6%88%90Spring-Security-2-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、修改 login.html在登录页添加自动登录的选项，注意自动登录字段的 name 属性必须是 remember-me ：
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;登录&lt;/title&gt;
+&lt;/head&g</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-30
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/05/29/SpringBoot%E9%9B%86%E6%88%90Spring-Security-1-%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/">SpringBoot集成Spring Security(1)--基础入门</a>
+
+      <a href="/2020/05/29/SpringBoot%E9%9B%86%E6%88%90Spring-Security-1-%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、导入依赖导入 spring-boot-starter-security 依赖，在 SpringBoot 2.0 环境下默认使用的是 5.0 版本。
+&lt;dependency&gt;
+          &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+          &lt;artifactId&gt;spring-boot</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-05-29
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -721,7 +667,7 @@ Netty的编解码器类
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/7/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/7/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
     </span>
   </nav>
   
@@ -753,7 +699,7 @@ Netty的编解码器类
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -762,7 +708,7 @@ Netty的编解码器类
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>

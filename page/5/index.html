@@ -179,116 +179,23 @@
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">Spring核心知识点</a>
+      <a class="index-header" href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-5-JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">深入分析Java Web技术内幕-5.JVM内存管理</a>
 
-      <a href="/2020/07/09/Spring%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/" class="index-excerpt">
+      <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-5-JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" class="index-excerpt">
         
         
           
         
-        <div>
-Spring概述什么是SpringSpring是一个轻量级的Java开发框架，目的是为了解决企业级应用开发的业务逻辑层和其他各层的耦合问题，简化Java开发，其设计理念是通过IoC容器实现对象耦合关系的管理，从而实现解耦。
-Spring的优缺点优点：
-
-方便解耦，简化开发（将所有对象的创建和依赖关系的维护交给Spring管理）
-AOP编程的支持（方便实现对程序进行权限拦截、运行监控等功能）
-声明</div>
+        <div>1 物理内存与虚拟内存
+物理内存就是RAM（随机存储器），还有一个存储单元叫做寄存器，连接处理器和RAM或者寄存器的是地址总线，这个地址总线的宽度影响了物理地址的索引范围，同时也决定了处理器最大可以寻址的地址空间。
+除了硬件程序或者驱动程序需要直接访问存储器外，大部分情况下都是通过操作系统提供的接口来访问内存，在java中甚至不需要写和内存相关的代码。
+我们要运行程序，都要向操作系统先申请内存地址</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-09
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
-            
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/Spring%E6%A1%86%E6%9E%B6/">Spring框架</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Spring/">Spring</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">MySQL数据库</a>
-
-      <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/" class="index-excerpt">
-        
-        
-          
-        
-        <div>数据库基础知识什么是SQL？结构化查询语言（Structured Query Language）：数据查询语言，用于存取数据、查询、更新和管理关系数据库系统。
-数据库三大范式：第一范式：每个列都不可再拆分；第二范式：在第一范式的基础上，非主键列完全依赖于主键，而不能依赖于主键的一部分；第三范式：在第二范式的基础上，非主键列只依赖于主键，不依赖于其他非主键；
-2NF：非主键列是否完全依赖于主键，还是</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-07
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
-            
-              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/MySQL/">MySQL</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/">JVM浅析</a>
-
-      <a href="/2020/07/01/JVM%E6%B5%85%E6%9E%90/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Java内存区域JVM的主要组成部分及作用JVM主要由四个部分组成：
-1. 类加载器（ClassLoader）
-2. 运行时数据区（Runtime Data Area）
-3. 执行引擎（Execution Engine）
-4. 本地库接口（Native Interface）各组件的作用：首先通过编译器把 Java 代码转换成字节码，类加载器（ClassLoader）再把字节码加载到内存中，将其放在</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-07-01
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-12
           </div>
         
         
@@ -315,38 +222,27 @@ AOP编程的支持（方便实现对程序进行权限拦截、运行监控等�
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">Java并发编程</a>
+      <a class="index-header" href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-4-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90ClassLoader%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">深入分析Java Web技术内幕-4.深入分析ClassLoader工作机制</a>
 
-      <a href="/2020/06/28/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" class="index-excerpt">
+      <a href="/2020/06/12/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90Java-Web%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-4-%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90ClassLoader%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/" class="index-excerpt">
         
         
           
         
-        <div>基础知识形成死锁的四个必要条件是什么
-互斥：线程对于所分配到的资源具有排他性，即一个资源只能被一个线程占用，直到该线程释放；
-请求与保持：一个线程因请求被占用资源而发生阻塞时，对已获得的资源保持不放；
-不剥夺：线程已获得的资源在未使用完之前不能被其他线程强行剥夺，只有自己使用完毕后才释放资源；
-循环等待：当发生死锁时，所等待的线程必定会形成一个环路，造成永久阻塞。
-
-创建线程的4种方式
-继承Thr</div>
+        <div>1 什么是ClassLoader当我们编写的程序在运行的时候，需要调用其他.class文件中的方法，在Java中并不会一次性加载程序的所要用的所有的class文件，而是根据程序的需要，通过Java的类加载机制来动态加载某个.class文件到内存当中，只有class文件被加载到内存中后，才能被其他clss所引用，JVM负责加载.class字节码到内存，而ClassLoader就负责将.class字节</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-28
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-12
           </div>
         
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/">Java进阶</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+              <a href="/categories/JVM%E8%A7%84%E8%8C%83/">JVM规范</a>
             
           </div>
         
@@ -354,7 +250,7 @@ AOP编程的支持（方便实现对程序进行权限拦截、运行监控等�
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+              <a href="/tags/JVM/">JVM</a>
             
           </div>
         
@@ -366,214 +262,22 @@ AOP编程的支持（方便实现对程序进行权限拦截、运行监控等�
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/">Java异常</a>
+      <a class="index-header" href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/">4.SpringSecurity整合OAuth2.0-Day03</a>
 
-      <a href="/2020/06/28/Java%E5%BC%82%E5%B8%B8/" class="index-excerpt">
+      <a href="/2020/06/10/4-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day03/" class="index-excerpt">
         
         
           
         
-        <div>Java异常架构
-Java异常处理捕获异常（try-catch）如果知道如何处理该异常，就通过try…catch…来捕获异常，根据不同的异常进行不同的处理。
-声明异常（throws，必须处理）如果不知道如何处理该异常，可以将该异常继续传递下去，此时可以在该异常出现的方法签名处使用throws关键字来声明可能抛出的异常。注意：
-
-非受检异常（Error，RuntimeException或它们的子类）</div>
+        <div>上一篇文章中我们介绍了获取 token 的流程，这一篇重点分析一下，携带 token 访问受限资源时，内部的工作流程。
+@EnableResourceServer 与 @EnableAuthorizationServer之前我们介绍过了 OAuth2 的两个核心概念，资源服务器与身份认证服务器。我们对两个注解进行配置的同时，到底触发了内部的什么相关配置呢？
+上一篇文章重点介绍的其实是与身份认证相关</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-28
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80/Java%E5%BC%82%E5%B8%B8%E4%BD%93%E7%B3%BB/">Java异常体系</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Java%E5%BC%82%E5%B8%B8/">Java异常</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/28/Java%E9%9B%86%E5%90%88/">Java集合</a>
-
-      <a href="/2020/06/28/Java%E9%9B%86%E5%90%88/" class="index-excerpt">
-        
-        
-          
-        
-        <div>集合概述集合和数组的区别
-数组的长度是固定的；集合是可变长的；
-数组中可以存储基本数据类型，也可以存储区引用数据类型；集合只能存储引用数据类型
-数组存储的元素必须是同一个数据类型；集合存储的对象可以是不同数据类型
-
-集合框架底层数据结构CollectionList
-ArrayList：Object数组
-Vector：Object数组
-LinkedList：双向循环链表
-
-Set
-HashSet（无</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-28
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/">Java进阶</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/Java%E9%9B%86%E5%90%88/">Java集合</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Java%E9%9B%86%E5%90%88/">Java集合</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
-
-      <a href="/2020/06/28/Java%E5%9F%BA%E7%A1%80/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Java概述1. JVM、JRE和JDK的关系JVMJava Virtual Machine，是Java虚拟机，Java程序需要运行在虚拟机上，不同的平台有自己的虚拟机，因此Java语言可以实现跨平台。JREJava Runtime Environment，包括Java虚拟机和Java程序所需的核心类库等。核心类库主要是java.lang包：包含了运行Java程序必不可少的系统类，如基本数据类型、</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-28
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
-            
-              <a href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Java%E5%9F%BA%E7%A1%80/">Java基础</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/">Tomcat系统架构浅谈</a>
-
-      <a href="/2020/06/24/Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84%E6%B5%85%E8%B0%88/" class="index-excerpt">
-        
-        
-          
-        
-        <div>Tomcat顶层架构
-
-Server：代表整个服务器，控制整个Tomcat的生命周期；
-Service：用于对外提供服务；
-Connector：用于处理连接相关的事情，并提供Socket与Request和Response相关的转化；
-Container：用于封装和管理Servlet，以及具体处理Request请求。
-
-关系：一个Tomcat只有一个Server，一个Server可以包含多个Serv</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-24
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Web%E6%8A%80%E6%9C%AF/">Web技术</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Web%E6%8A%80%E6%9C%AF/">Web技术</a>
-            
-          </div>
-        
-      </div>
-    </div>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/23/Spring-Security%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E6%80%BB%E7%BB%93/">Spring Security官方文档总结</a>
-
-      <a href="/2020/06/23/Spring-Security%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E6%80%BB%E7%BB%93/" class="index-excerpt">
-        
-        
-          
-        
-        <div>1. 引导跨站脚本攻击（XSS）XSS攻击是指攻击者在网站上注入恶意的客户端代码，通过恶意脚本对客户端网页进行篡改，从而在用户浏览网页时，对用户浏览器进行控制或者获取用户隐私数据的一种攻击方式。
-如何防护？现在主流的浏览器内置了防范XSS的措施，对于开发者来说，有如下方式来防止XSS攻击。
-HTTPOnly防止截取Cookie作为一个标准，浏览器将禁止页面的JavaScript访问带有HTTPOn</div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-23
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-10
           </div>
         
         
@@ -604,24 +308,27 @@ HTTPOnly防止截取Cookie作为一个标准，浏览器将禁止页面的JavaSc
     
     
     <div class="col-12 col-md-12 mx-auto index-info">
-      <a class="index-header" href="/2020/06/23/shiro%E7%B3%BB%E5%88%97-2-%E6%A0%B8%E5%BF%83/">shiro系列-2.核心</a>
+      <a class="index-header" href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/">3.SpringSecurity整合OAuth2.0-Day02</a>
 
-      <a href="/2020/06/23/shiro%E7%B3%BB%E5%88%97-2-%E6%A0%B8%E5%BF%83/" class="index-excerpt">
+      <a href="/2020/06/09/3-SpringSecurity%E6%95%B4%E5%90%88OAuth2.0-Day02/" class="index-excerpt">
         
         
           
         
-        <div>[TOC]
-1、认证认证（Authentication）：身份验证的过程–也就是证明一个用户的真实身份。为了证明用户的身份，需要提供系统可以理解和相信的身份信息【principals】和证据【credentials】。
+        <div>准备工作首先开启 debug 信息：
+logging:
+  level:
+    org.springframework: DEBUG
 
-Principals（身份）是Subject的“标识属性”，可以是任何与Subject相关的标识，通常用用户名或者邮件地址来作为标识。
-Credentials（证明）：通常是只有</div>
+可以完整的看到内部的运转流程。
+client 模式稍微简单一些，使用 client 模式获取 token
+http://localhost:8080/oauth/token?client_id=client_1&amp;client_secret=123456&</div>
       </a>
 
       <div class="index-btm post-metas">
         
           <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>&nbsp;2020-06-23
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-09
           </div>
         
         
@@ -632,7 +339,7 @@ Credentials（证明）：通常是只有</div>
             
               <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
             
-              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Shiro/">Shiro</a>
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
             
           </div>
         
@@ -640,7 +347,283 @@ Credentials（证明）：通常是只有</div>
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Shiro/">Shiro</a>
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/">2.SpringSecurity整合OAuth2.0-Day01</a>
+
+      <a href="/2020/06/08/2-SpringSecurity%E6%95%B4%E5%90%88OAuth2-0-Day01/" class="index-excerpt">
+        
+        
+          
+        
+        <div>概述使用 oauth2 保护你的应用，可以分为简易的分为三个步骤：
+
+配置资源服务器
+
+配置认证服务器
+
+配置 spring security
+本文重点讲解接口对接中常使用的密码模式（以下简称 password 模式）和客户端模式（以下简称 client 模式）。授权码模式使用到了回调地址，是最为复杂的方式，通常网站中经常出现的微博，qq 第三方登录，都会采用这个形式。简化模式不常用。
+项目准备首</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-08
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/1-%E7%90%86%E8%A7%A3-OAuth-2-0/">1.理解 OAuth 2.0</a>
+
+      <a href="/2020/06/06/1-%E7%90%86%E8%A7%A3-OAuth-2-0/" class="index-excerpt">
+        
+        
+          
+        
+        <div>OAuth是一个关于授权（authorization）的开放网络标准，在全世界得到广泛应用，目前的版本是2.0版。
+本文对OAuth 2.0的设计思路和运行流程，做一个简明通俗的解释，主要参考材料为RFC 6749。
+一、应用场景为了理解OAuth的适用场合，让我举一个假设的例子。
+有一个”云冲印”的网站，可以将用户储存在Google的照片，冲印出来。用户为了使用该服务，必须让”云冲印”读取自己储</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/">开发框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/">安全框架</a>
+            
+              <a href="/categories/%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6/%E5%AE%89%E5%85%A8%E6%A1%86%E6%9E%B6/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Spring-Security/">Spring Security</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/">11. Redis--一致性Hash算法</a>
+
+      <a href="/2020/06/06/11-Redis-%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、Redis集群的使用我们在使用Redis的时候，为了保证Redis的高可用，提高Redis的读写性能，最简单的方式我们会做主从复制，组成Master-Master或者Master-Slave的形式，或者搭建Redis集群，进行数据的读写分离，类似于数据库的主从复制和读写分离。如下所示：
+
+同样类似于数据库，当单表数据大于500W的时候需要对其进行分库分表，当数据量很大的时候（标准可能不一样，要</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/">0. Redis--引导</a>
+
+      <a href="/2020/06/06/0-Redis-%E5%BC%95%E5%AF%BC/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、Redis简介Redis是一个开源的，基于内存的数据结构存储系统，它可以用作：数据库、缓存和消息中间件。
+它支持多种类型的数据结构，如字符串（String），散列（Hash），列表（List），集合（Set），有序集合（Sorted Set或者是ZSet）与范围查询，Bitmaps，Hyperloglogs 和地理空间（Geospatial）索引半径查询。其中常见的数据结构类型有：String</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/">10. Redis--如何优化缓存架构</a>
+
+      <a href="/2020/06/06/10-Redis-%E5%A6%82%E4%BD%95%E4%BC%98%E5%8C%96%E7%BC%93%E5%AD%98%E6%9E%B6%E6%9E%84/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、为什么要用缓存集群啥叫热 Key 和大 Value 呢?简单来说，热 Key，就是你的缓存集群中的某个 Key 瞬间被数万甚至十万的并发请求打爆。
+大 Value，就是你的某个 Key 对应的 Value 可能有 GB 级的大小，导致查询 Value 的时候出现网络相关的故障问题。
+先来看看下面的一幅图：
+
+简单来说，假设你手头有个系统，它本身是集群部署的，然后后面有一套缓存集群，这个集群不管</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
+            
+          </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <div class="col-12 col-md-12 mx-auto index-info">
+      <a class="index-header" href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/">9. Redis--Redis缓存问题</a>
+
+      <a href="/2020/06/06/9-Redis-Redis%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98/" class="index-excerpt">
+        
+        
+          
+        
+        <div>一、引言Redis 所存在的缓存问题也是大部分缓存所存在的问题，因此本文不单单特指于 Redis。这些问题包括缓存穿透、缓存雪崩、缓存击穿、缓存预热等等，相关文章网络上已经数不胜数了，说实话本文和它们没啥不同之处，只是为了记录，所以对于了解过的人基本就是废话了，谨慎阅读哦。
+二、缓存穿透问题描述：
+缓存穿透是指查询一个一定不存在的数据，这样就导致用户查询的时候，在缓存中找不到，每次都要去数据库再查</div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>&nbsp;2020-06-06
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+              <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/Redis/">Redis</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Redis/">Redis</a>
             
           </div>
         
@@ -652,7 +635,7 @@ Credentials（证明）：通常是只有</div>
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/4/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/4/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
   
@@ -684,7 +667,7 @@ Credentials（证明）：通常是只有</div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">検索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -693,7 +676,7 @@ Credentials（证明）：通常是只有</div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">キーワード</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
