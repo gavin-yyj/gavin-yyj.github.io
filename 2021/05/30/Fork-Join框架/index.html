@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Fork/Join框架 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-30 20:38">
+      May 30, 2021 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      55
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p><strong>1. 简介</strong></p>
+<p>Fork/Join并行方式是获取良好的并行计算性能的一种最简单同时也是最有效的设计技术。Fork/Join并行算法是我们所熟悉的<strong>分治算法的并行版本</strong>，典型的用法如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function">Result <span class="hljs-title">solve</span><span class="hljs-params">(Problem problem)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (problem is small) &#123;
+        directly solve problem
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        split problem into independent parts
+        fork <span class="hljs-keyword">new</span> subtasks to solve each part
+        join all subtasks
+        compose result from subresults
+    &#125;
+&#125;</code></pre></div>
+
+<p>fork操作将会启动一个新的并行Fork/Join子任务。join操作会一直等待直到所有的子任务都结束。Fork/Join算法，如同其他分治算法一样，总是会递归的、反复的划分子任务，直到这些子任务可以用足够简单的、短小的顺序方法来执行。</p>
+<p><strong>2. 工作窃取算法</strong></p>
+<p>工作窃取（work-stealing）算法是指某个线程从其他队列里窃取任务来执行。工作窃取的运行流程图如下：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530204028.png" srcset="/img/loading.gif" alt="image-20210530204028621"></p>
+<p>那么为什么需要使用工作窃取算法呢？假如我们需要做一个比较大的任务，我们可以把这个任务分割为若干互不依赖的子任务，为了减少线程间的竞争，于是把这些子任务分别放到不同的队列里，并为每个队列创建一个单独的线程来执行队列里的任务，线程和队列一一对应，比如A线程负责处理A队列里的任务。但是有的线程会先把自己队列里的任务干完，而其他线程对应的队列里还有任务等待处理。干完活的线程与其等着，不如去帮其他线程干活，于是它就去其他线程的队列里窃取一个任务来执行。而在这时它们会访问同一个队列，所以为了减少窃取任务线程和被窃取任务线程之间的竞争，通常会使用双端队列，被窃取任务线程永远从双端队列的头部拿任务执行，而窃取任务的线程永远从双端队列的尾部拿任务执行。</p>
+<p>工作窃取算法的优点是充分利用线程进行并行计算，并减少了线程间的竞争，其缺点是在某些情况下还是存在竞争，比如双端队列里只有一个任务时。并且消耗了更多的系统资源，比如创建多个线程和多个双端队列。</p>
+<p><strong>3. Fork/Join框架的介绍</strong></p>
+<p>我们已经很清楚Fork/Join框架的需求了，那么我们可以思考一下，如果让我们来设计一个Fork/Join框架，该如何设计？这个思考有助于你理解Fork/Join框架的设计。</p>
+<p><strong>第一步分割任务。</strong></p>
+<p>首先我们需要有一个fork类来把大任务分割成子任务，有可能子任务还是很大，所以还需要不停的分割，直到分割出的子任务足够小。</p>
+<p><strong>第二步执行任务并合并结果。</strong></p>
+<p>分割的子任务分别放在双端队列里，然后几个启动线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，启动一个线程从队列里拿数据，然后合并这些数据。</p>
+<p>Fork/Join使用两个类来完成以上两件事情：</p>
+<p>ForkJoinTask：我们要使用ForkJoin框架，必须首先创建一个ForkJoin任务。它提供在任务中执行fork()和join()操作的机制，通常情况下我们不需要直接继承ForkJoinTask类，而只需要继承它的子类，Fork/Join框架提供了以下两个子类：</p>
+<ul>
+<li>RecursiveAction：用于没有返回结果的任务。</li>
+<li>RecursiveTask     ：用于有返回结果的任务。</li>
+</ul>
+<p>ForkJoinPool ：ForkJoinTask需要通过ForkJoinPool来执行，任务分割出的子任务会添加到当前工作线程所维护的双端队列中，进入队列的头部。当一个工作线程的队列里暂时没有任务时，它会随机从其他工作线程的队列的尾部获取一个任务。</p>
+<p><strong>4. 使用Fork/Join框架</strong></p>
+<p>让我们通过一个简单的需求来使用下Fork／Join框架，需求是：计算1+2+3+4的结果。</p>
+<p>使用Fork／Join框架首先要考虑到的是如何分割任务，如果我们希望每个子任务最多执行两个数的相加，那么我们设置分割的阈值是2，由于是4个数字相加，所以Fork／Join框架会把这个任务fork成两个子任务，子任务一负责计算1+2，子任务二负责计算3+4，然后再join两个子任务的结果。</p>
+<p>因为是有结果的任务，所以必须继承RecursiveTask，实现代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.concurrent.ExecutionException;
+<span class="hljs-keyword">import</span> java.util.concurrent.ForkJoinPool;
+<span class="hljs-keyword">import</span> java.util.concurrent.Future;
+<span class="hljs-keyword">import</span> java.util.concurrent.RecursiveTask;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountTask</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RecursiveTask</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> THRESHOLD = <span class="hljs-number">2</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> start;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> end;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">CountTask</span><span class="hljs-params">(<span class="hljs-keyword">int</span> start,<span class="hljs-keyword">int</span> end)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.start= start;
+        <span class="hljs-keyword">this</span>.end= end;
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> Integer <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">int</span> sum = <span class="hljs-number">0</span>;
+        <span class="hljs-comment">//如果任务足够小就计算任务</span>
+        <span class="hljs-keyword">boolean</span> canCompute = (end - start) &lt;= THRESHOLD;
+        <span class="hljs-keyword">if</span> (canCompute) &#123;
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = start; i &lt;= end; i++) &#123;
+                sum += i;
+            &#125;
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-comment">//如果任务大于阀值，就分裂成两个子任务计算</span>
+            <span class="hljs-keyword">int</span> middle = (start + end) / <span class="hljs-number">2</span>;
+            CountTask leftTask = <span class="hljs-keyword">new</span> CountTask(start, middle);
+            CountTask rightTask = <span class="hljs-keyword">new</span> CountTask(middle + <span class="hljs-number">1</span>, end);
+            <span class="hljs-comment">//执行子任务</span>
+            leftTask.fork();
+            rightTask.fork();
+            <span class="hljs-comment">//等待子任务执行完，并得到其结果</span>
+            <span class="hljs-keyword">int</span> leftResult = (<span class="hljs-keyword">int</span>) leftTask.join();
+            <span class="hljs-keyword">int</span> rightResult = (<span class="hljs-keyword">int</span>) rightTask.join();
+            <span class="hljs-comment">//合并子任务</span>
+            sum = leftResult + rightResult;
+        &#125;
+        <span class="hljs-keyword">return</span> sum;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        ForkJoinPool forkJoinPool = <span class="hljs-keyword">new</span> ForkJoinPool();
+        <span class="hljs-comment">//生成一个计算任务，负责计算1+2+3+4</span>
+        CountTask task = <span class="hljs-keyword">new</span> CountTask(<span class="hljs-number">1</span>, <span class="hljs-number">4</span>);
+        <span class="hljs-comment">//执行一个任务</span>
+        Future result = forkJoinPool.submit(task);
+        <span class="hljs-keyword">try</span>&#123;
+            System.out.println(result.get());
+        &#125;<span class="hljs-keyword">catch</span>(InterruptedException e) &#123;
+        &#125;<span class="hljs-keyword">catch</span>(ExecutionException e) &#123;
+        &#125;
+    &#125;
+&#125;</code></pre></div>
+
+<p>通过这个例子让我们再来进一步了解ForkJoinTask，ForkJoinTask与一般的任务的主要区别在于它需要实现compute方法，在这个方法里，首先需要判断任务是否足够小，如果足够小就直接执行任务。如果不足够小，就必须分割成两个子任务，每个子任务在调用fork方法时，又会进入compute方法，看看当前子任务是否需要继续分割成小任务，如果不需要继续分割，则执行当前子任务并返回结果。使用join方法会等待子任务执行完并得到其结果。</p>
+<p><strong>5. Fork/Join框架的异常处理</strong></p>
+<p>ForkJoinTask在执行的时候可能会抛出异常，但是我们没办法在主线程里直接捕获异常，所以ForkJoinTask提供了isCompletedAbnormally()方法来检查任务是否已经抛出异常或已经被取消了，并且可以通过ForkJoinTask的getException方法获取异常。使用如下代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(task.isCompletedAbnormally())
+&#123;
+	System.out.println(task.getException());
+&#125;</code></pre></div>
+
+<p>getException方法返回Throwable对象，如果任务被取消了则返回CancellationException。如果任务没有完成或者没有抛出异常则返回null。</p>
+<p><strong>6. Fork/Join框架的实现原理</strong></p>
+<p>ForkJoinPool由ForkJoinTask数组和ForkJoinWorkerThread数组组成，ForkJoinTask数组负责存放程序提交给ForkJoinPool的任务，而ForkJoinWorkerThread数组负责执行这些任务。</p>
+<p>ForkJoinTask的fork方法实现原理。当我们调用ForkJoinTask的fork方法时，程序会调用ForkJoinWorkerThread的pushTask方法异步的执行这个任务，然后立即返回结果。代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> ForkJoinTask <span class="hljs-title">fork</span><span class="hljs-params">()</span> </span>&#123;
+    ((ForkJoinWorkerThread) Thread.currentThread()).pushTask(<span class="hljs-keyword">this</span>);
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+&#125;</code></pre></div>
+
+<p>pushTask方法把当前任务存放在ForkJoinTask 数组queue里。然后再调用ForkJoinPool的signalWork()方法唤醒或创建一个工作线程来执行任务。代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">pushTask</span><span class="hljs-params">(ForkJoinTask t)</span> </span>&#123;
+    ForkJoinTask[] q; <span class="hljs-keyword">int</span> s, m;
+    <span class="hljs-keyword">if</span> ((q = queue) != <span class="hljs-keyword">null</span>) &#123;    <span class="hljs-comment">// ignore if queue removed</span>
+        <span class="hljs-keyword">long</span> u = (((s = queueTop) &amp; (m = q.length - <span class="hljs-number">1</span>)) &lt;&lt; ASHIFT) + ABASE;
+        UNSAFE.putOrderedObject(q, u, t);
+        queueTop = s + <span class="hljs-number">1</span>;         <span class="hljs-comment">// or use putOrderedInt</span>
+        <span class="hljs-keyword">if</span> ((s -= queueBase) &lt;= <span class="hljs-number">2</span>)
+        pool.signalWork();
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (s == m)
+        growQueue();
+    &#125;
+&#125;</code></pre></div>
+
+<p>ForkJoinTask的join方法实现原理。Join方法的主要作用是阻塞当前线程并等待获取结果。让我们一起看看ForkJoinTask的join方法的实现，代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> V <span class="hljs-title">join</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (doJoin() != NORMAL)
+        <span class="hljs-keyword">return</span> reportResult();
+    <span class="hljs-keyword">else</span>
+       <span class="hljs-keyword">return</span> getRawResult();
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">private</span> V <span class="hljs-title">reportResult</span><span class="hljs-params">()</span> </span>&#123;
+    <span class="hljs-keyword">int</span> s; Throwable ex;
+    <span class="hljs-keyword">if</span> ((s = status) == CANCELLED)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> CancellationException();
+    <span class="hljs-keyword">if</span> (s == EXCEPTIONAL &amp;&amp; (ex = getThrowableException()) != <span class="hljs-keyword">null</span>)
+        UNSAFE.throwException(ex);
+    <span class="hljs-keyword">return</span> getRawResult();
+&#125;</code></pre></div>
+
+<p>首先，它调用了doJoin()方法，通过doJoin()方法得到当前任务的状态来判断返回什么结果，任务状态有四种：已完成（NORMAL），被取消（CANCELLED），信号（SIGNAL）和出现异常（EXCEPTIONAL）。</p>
+<ul>
+<li>如果任务状态是已完成，则直接返回任务结果。</li>
+<li>如果任务状态是被取消，则直接抛出CancellationException。</li>
+<li>如果任务状态是抛出异常，则直接抛出对应的异常。</li>
+</ul>
+<p>让我们再来分析下doJoin()方法的实现代码：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">doJoin</span><span class="hljs-params">()</span> </span>&#123;
+    Thread t;
+    ForkJoinWorkerThread w;
+    <span class="hljs-keyword">int</span> s;
+    <span class="hljs-keyword">boolean</span> completed;
+    <span class="hljs-keyword">if</span> ((t = Thread.currentThread()) <span class="hljs-keyword">instanceof</span> ForkJoinWorkerThread) &#123;
+        <span class="hljs-keyword">if</span> ((s = status) &lt; <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">return</span> s;
+        &#125;
+        <span class="hljs-keyword">if</span> ((w = (ForkJoinWorkerThread) t).unpushTask(<span class="hljs-keyword">this</span>)) &#123;
+            <span class="hljs-keyword">try</span> &#123;
+                completed = exec();
+            &#125; <span class="hljs-keyword">catch</span> (Throwable rex) &#123;
+                <span class="hljs-keyword">return</span> setExceptionalCompletion(rex);
+            &#125;
+            <span class="hljs-keyword">if</span> (completed) &#123;
+                <span class="hljs-keyword">return</span> setCompletion(NORMAL);
+            &#125;
+        &#125;
+        <span class="hljs-keyword">return</span> w.joinTask(<span class="hljs-keyword">this</span>);
+    &#125; <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-keyword">return</span> externalAwaitDone();
+    &#125;
+&#125;</code></pre></div>
+
+<p>在doJoin()方法里，首先通过查看任务的状态，看任务是否已经执行完了，如果执行完了，则直接返回任务状态，如果没有执行完，则从任务数组里取出任务并执行。如果任务顺利执行完成了，则设置任务状态为NORMAL，如果出现异常，则记录异常，并将任务状态设置为EXCEPTIONAL。</p>
+<p><strong>7. Fork/Join源码剖析与算法解析</strong></p>
+<p>我们在大学算法课本上，学过的一种基本算法就是：分治。其基本思路就是：把一个大的任务分成若干个子任务，这些子任务分别计算，最后再Merge出最终结果。这个过程通常都会用到递归。</p>
+<p>而Fork/Join其实就是一种利用多线程来实现“分治算法”的并行框架。</p>
+<p>另外一方面，可以把Fori/Join看作一个单机版的Map/Reduce，只不过这里的并行不是多台机器并行计算，而是多个线程并行计算。</p>
+<p>下面看2个简单例子：</p>
+<p>例子1： 快排 </p>
+<p>我们都知道，快排有2个步骤： </p>
+<ul>
+<li>第1步，拿数组的第1个元素，把元素划分成2半，左边的比该元素小，右边的比该元素大； </li>
+<li>第2步，对左右的2个子数组，分别排序。</li>
+</ul>
+<p>可以看出，这里左右2个子数组，可以相互独立的，并行计算。因此可以利用ForkJoin框架， 代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//定义一个Task，基础自RecursiveAction，实现其compute方法</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SortTask</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RecursiveAction</span> </span>&#123;
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span>[] array;
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> lo;
+    <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> hi;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> THRESHOLD = <span class="hljs-number">0</span>; <span class="hljs-comment">//For demo only</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SortTask</span><span class="hljs-params">(<span class="hljs-keyword">long</span>[] array)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.array = array;
+        <span class="hljs-keyword">this</span>.lo = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">this</span>.hi = array.length - <span class="hljs-number">1</span>;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SortTask</span><span class="hljs-params">(<span class="hljs-keyword">long</span>[] array, <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.array = array;
+        <span class="hljs-keyword">this</span>.lo = lo;
+        <span class="hljs-keyword">this</span>.hi = hi;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (hi - lo &lt; THRESHOLD)
+            sequentiallySort(array, lo, hi);
+        <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">int</span> pivot = partition(array, lo, hi); <span class="hljs-comment">//划分</span>
+            coInvoke(<span class="hljs-keyword">new</span> SortTask(array, lo, pivot - <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> SortTask(array,
+                    pivot + <span class="hljs-number">1</span>, hi)); <span class="hljs-comment">//递归调，左右2个子数组</span>
+        &#125;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">partition</span><span class="hljs-params">(<span class="hljs-keyword">long</span>[] array, <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi)</span> </span>&#123;
+        <span class="hljs-keyword">long</span> x = array[hi];
+        <span class="hljs-keyword">int</span> i = lo - <span class="hljs-number">1</span>;
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = lo; j &lt; hi; j++) &#123;
+            <span class="hljs-keyword">if</span> (array[j] &lt;= x) &#123;
+                i++;
+                swap(array, i, j);
+            &#125;
+        &#125;
+        swap(array, i + <span class="hljs-number">1</span>, hi);
+        <span class="hljs-keyword">return</span> i + <span class="hljs-number">1</span>;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(<span class="hljs-keyword">long</span>[] array, <span class="hljs-keyword">int</span> i, <span class="hljs-keyword">int</span> j)</span> </span>&#123;
+        <span class="hljs-keyword">if</span> (i != j) &#123;
+            <span class="hljs-keyword">long</span> temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        &#125;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sequentiallySort</span><span class="hljs-params">(<span class="hljs-keyword">long</span>[] array, <span class="hljs-keyword">int</span> lo, <span class="hljs-keyword">int</span> hi)</span> </span>&#123;
+        Arrays.sort(array, lo, hi + <span class="hljs-number">1</span>);
+    &#125;
+&#125;
+<span class="hljs-comment">//测试函数</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testSort</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    ForkJoinTask sort = <span class="hljs-keyword">new</span> SortTask(array); <span class="hljs-comment">//1个任务</span>
+    ForkJoinPool fjpool = <span class="hljs-keyword">new</span> ForkJoinPool(); <span class="hljs-comment">//1个ForkJoinPool</span>
+    fjpool.submit(sort); <span class="hljs-comment">//提交任务</span>
+    fjpool.shutdown(); <span class="hljs-comment">//结束。ForkJoinPool内部会开多个线程，并行上面的子任务</span>
+    fjpool.awaitTermination(<span class="hljs-number">30</span>, TimeUnit.SECONDS);
+&#125;</code></pre></div>
+
+<p>例子2：求1到n个数的和</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//定义一个Task，基础自RecursiveTask，实现其commpute方法</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SumTask</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">RecursiveTask</span>&lt;<span class="hljs-title">Long</span>&gt;</span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> THRESHOLD = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> start;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">long</span> end;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">SumTask</span><span class="hljs-params">(<span class="hljs-keyword">long</span> n)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>(<span class="hljs-number">1</span>,n);
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">SumTask</span><span class="hljs-params">(<span class="hljs-keyword">long</span> start, <span class="hljs-keyword">long</span> end)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.start = start;
+        <span class="hljs-keyword">this</span>.end = end;
+    &#125;
+    <span class="hljs-meta">@Override</span> <span class="hljs-comment">//有返回值</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> Long <span class="hljs-title">compute</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">long</span> sum = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">if</span>((end - start) &lt;= THRESHOLD)&#123;
+            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">long</span> l = start; l &lt;= end; l++)&#123;
+                sum += l;
+            &#125;
+        &#125;<span class="hljs-keyword">else</span>&#123;
+            <span class="hljs-keyword">long</span> mid = (start + end) &gt;&gt;&gt; <span class="hljs-number">1</span>;
+            SumTask left = <span class="hljs-keyword">new</span> SumTask(start, mid); <span class="hljs-comment">//分治，递归</span>
+            SumTask right = <span class="hljs-keyword">new</span> SumTask(mid + <span class="hljs-number">1</span>, end);
+            left.fork();
+            right.fork();
+            sum = left.join() + right.join();
+        &#125;
+        <span class="hljs-keyword">return</span> sum;
+    &#125;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+&#125;
+<span class="hljs-comment">//测试函数</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testSum</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception </span>&#123;
+    SumTask sum = <span class="hljs-keyword">new</span> SumTask(<span class="hljs-number">100</span>); <span class="hljs-comment">//1个任务</span>
+    ForkJoinPool fjpool = <span class="hljs-keyword">new</span> ForkJoinPool(); <span class="hljs-comment">//1个ForkJoinPool</span>
+    Future&lt;Long&gt; future = fjpool.submit(sum); <span class="hljs-comment">//提交任务</span>
+    Long r = future.get(); <span class="hljs-comment">//获取返回值</span>
+    fjpool.shutdown();
+&#125;</code></pre></div>
+
+<p><strong>8. 与ThreadPool的区别</strong></p>
+<p>通过上面例子，我们可以看出，它在使用上，和ThreadPool有共同的地方，也有区别点： </p>
+<p>（1） ThreadPool只有“外部任务”，也就是调用者放到队列里的任务。 ForkJoinPool有“外部任务”，还有“内部任务”，也就是任务自身在执行过程中，分裂出”子任务“，递归，再次放入队列。 </p>
+<p>（2）ForkJoinPool里面的任务通常有2类，RecusiveAction/RecusiveTask，这2个都是继承自FutureTask。在使用的时候，重写其compute算法。</p>
+<p><strong>9. 工作窃取算法</strong></p>
+<p>上面提到，ForkJoinPool里有”外部任务“，也有“内部任务”。其中外部任务，是放在ForkJoinPool的全局队列里面，而每个Worker线程，也有一个自己的队列，用于存放内部任务。</p>
+<p>窃取的基本思路就是：当worker自己的任务队列里面没有任务时，就去scan别的线程的队列，把别人的任务拿过来执行。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//ForkJoinPool的成员变量</span>
+ForkJoinWorkerThread[] workers; <span class="hljs-comment">//worker thread集合</span>
+<span class="hljs-keyword">private</span> ForkJoinTask&lt;?&gt;[] submissionQueue; <span class="hljs-comment">//外部任务队列</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> ReentrantLock submissionLock;
+<span class="hljs-comment">//ForkJoinWorkerThread的成员变量</span>
+ForkJoinTask&lt;?&gt;[] queue; <span class="hljs-comment">//每个worker线程自己的内部任务队列</span>
+<span class="hljs-comment">//提交任务</span>
+<span class="hljs-keyword">public</span> &lt;T&gt; <span class="hljs-function">ForkJoinTask&lt;T&gt; <span class="hljs-title">submit</span><span class="hljs-params">(ForkJoinTask&lt;T&gt; task)</span> </span>&#123;
+    <span class="hljs-keyword">if</span> (task == <span class="hljs-keyword">null</span>)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> NullPointerException();
+    forkOrSubmit(task);
+    <span class="hljs-keyword">return</span> task;
+&#125;
+<span class="hljs-keyword">private</span> &lt;T&gt; <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">forkOrSubmit</span><span class="hljs-params">(ForkJoinTask&lt;T&gt; task)</span> </span>&#123;
+    ForkJoinWorkerThread w;
+    Thread t = Thread.currentThread();
+    <span class="hljs-keyword">if</span> (shutdown)
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RejectedExecutionException();
+<span class="hljs-comment">//如果当前是worker线程提交的任务，也就是worker执行过程中，</span>
+<span class="hljs-comment">//分裂出来的子任务，放入worker自己的内部任务队列</span>
+    <span class="hljs-keyword">if</span> ((t <span class="hljs-keyword">instanceof</span> ForkJoinWorkerThread) &amp;&amp;
+            (w = (ForkJoinWorkerThread)t).pool == <span class="hljs-keyword">this</span>)
+        w.pushTask(task);
+    <span class="hljs-keyword">else</span>
+        addSubmission(task); <span class="hljs-comment">//外部任务，放入pool的全局队列</span>
+&#125;
+<span class="hljs-comment">//worker的run方法</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+    Throwable exception = <span class="hljs-keyword">null</span>;
+    <span class="hljs-keyword">try</span> &#123;
+        onStart();
+        pool.work(<span class="hljs-keyword">this</span>);
+    &#125; <span class="hljs-keyword">catch</span> (Throwable ex) &#123;
+        exception = ex;
+    &#125; <span class="hljs-keyword">finally</span> &#123;
+        onTermination(exception);
+    &#125;
+&#125;
+<span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">work</span><span class="hljs-params">(ForkJoinWorkerThread w)</span> </span>&#123;
+    <span class="hljs-keyword">boolean</span> swept = <span class="hljs-keyword">false</span>; <span class="hljs-comment">// true on empty scans </span>
+    <span class="hljs-keyword">long</span> c;
+    <span class="hljs-keyword">while</span> (!w.terminate &amp;&amp; (<span class="hljs-keyword">int</span>)(c = ctl) &gt;= <span class="hljs-number">0</span>) &#123;
+        <span class="hljs-keyword">int</span> a; <span class="hljs-comment">// active count </span>
+        <span class="hljs-keyword">if</span> (!swept &amp;&amp; (a = (<span class="hljs-keyword">int</span>)(c &gt;&gt; AC_SHIFT)) &lt;= <span class="hljs-number">0</span>)
+            swept = scan(w, a); <span class="hljs-comment">//核心代码都在这个scan函数里面</span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (tryAwaitWork(w, c))
+            swept = <span class="hljs-keyword">false</span>;
+    &#125;
+&#125;
+<span class="hljs-comment">//scan的基本思路：从别人的任务队列里面抢，没有，再到pool的全局的任务队列里面去取。</span>
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">scan</span><span class="hljs-params">(ForkJoinWorkerThread w, <span class="hljs-keyword">int</span> a)</span> </span>&#123;
+    <span class="hljs-keyword">int</span> g = scanGuard;
+    <span class="hljs-keyword">int</span> m = (parallelism == <span class="hljs-number">1</span> - a &amp;&amp; blockedCount == <span class="hljs-number">0</span>) ? <span class="hljs-number">0</span> : g &amp; SMASK;
+    ForkJoinWorkerThread[] ws = workers;
+    <span class="hljs-keyword">if</span> (ws == <span class="hljs-keyword">null</span> || ws.length &lt;= m) <span class="hljs-comment">// 过期检测 </span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> r = w.seed, k = r, j = -(m + m); j &lt;= m + m; ++j) &#123;
+        ForkJoinTask&lt;?&gt; t; ForkJoinTask&lt;?&gt;[] q; <span class="hljs-keyword">int</span> b, i;
+        <span class="hljs-comment">//随机选出一个牺牲者(工作线程)。 </span>
+        ForkJoinWorkerThread v = ws[k &amp; m];
+        <span class="hljs-comment">//一系列检查... </span>
+        <span class="hljs-keyword">if</span> (v != <span class="hljs-keyword">null</span> &amp;&amp; (b = v.queueBase) != v.queueTop &amp;&amp;
+                (q = v.queue) != <span class="hljs-keyword">null</span> &amp;&amp; (i = (q.length - <span class="hljs-number">1</span>) &amp; b) &gt;= <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-comment">//如果这个牺牲者的任务队列中还有任务，尝试窃取这个任务。 </span>
+            <span class="hljs-keyword">long</span> u = (i &lt;&lt; ASHIFT) + ABASE;
+            <span class="hljs-keyword">if</span> ((t = q[i]) != <span class="hljs-keyword">null</span> &amp;&amp; v.queueBase == b &amp;&amp;
+                    UNSAFE.compareAndSwapObject(q, u, t, <span class="hljs-keyword">null</span>)) &#123;
+                <span class="hljs-comment">//窃取成功后，调整queueBase </span>
+                <span class="hljs-keyword">int</span> d = (v.queueBase = b + <span class="hljs-number">1</span>) - v.queueTop;
+                <span class="hljs-comment">//将牺牲者的stealHint设置为当前工作线程在pool中的下标。 </span>
+                v.stealHint = w.poolIndex;
+                <span class="hljs-keyword">if</span> (d != <span class="hljs-number">0</span>)
+                    signalWork(); <span class="hljs-comment">// 如果牺牲者的任务队列还有任务，继续唤醒(或创建)线程。 </span>
+                w.execTask(t); <span class="hljs-comment">//执行窃取的任务。 </span>
+            &#125;
+            <span class="hljs-comment">//计算出下一个随机种子。 </span>
+            r ^= r &lt;&lt; <span class="hljs-number">13</span>; r ^= r &gt;&gt;&gt; <span class="hljs-number">17</span>; w.seed = r ^ (r &lt;&lt; <span class="hljs-number">5</span>);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>; <span class="hljs-comment">// 返回false，表示不是一个空扫描。 </span>
+        &#125;
+        <span class="hljs-comment">//前2*m次，随机扫描。 </span>
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (j &lt; <span class="hljs-number">0</span>) &#123; <span class="hljs-comment">// xorshift </span>
+            r ^= r &lt;&lt; <span class="hljs-number">13</span>; r ^= r &gt;&gt;&gt; <span class="hljs-number">17</span>; k = r ^= r &lt;&lt; <span class="hljs-number">5</span>;
+        &#125;
+        <span class="hljs-comment">//后2*m次，顺序扫描。 </span>
+        <span class="hljs-keyword">else</span>
+            ++k;
+    &#125;
+    <span class="hljs-keyword">if</span> (scanGuard != g) <span class="hljs-comment">// staleness check </span>
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+    <span class="hljs-keyword">else</span> &#123;
+        <span class="hljs-comment">//如果扫描完毕后没找到可窃取的任务，那么从Pool的提交任务队列中取一个任务来执行。 </span>
+        ForkJoinTask&lt;?&gt; t; ForkJoinTask&lt;?&gt;[] q; <span class="hljs-keyword">int</span> b, i;
+        <span class="hljs-keyword">if</span> ((b = queueBase) != queueTop &amp;&amp;
+                (q = submissionQueue) != <span class="hljs-keyword">null</span> &amp;&amp;
+                (i = (q.length - <span class="hljs-number">1</span>) &amp; b) &gt;= <span class="hljs-number">0</span>) &#123;
+            <span class="hljs-keyword">long</span> u = (i &lt;&lt; ASHIFT) + ABASE;
+            <span class="hljs-keyword">if</span> ((t = q[i]) != <span class="hljs-keyword">null</span> &amp;&amp; queueBase == b &amp;&amp;
+                    UNSAFE.compareAndSwapObject(q, u, t, <span class="hljs-keyword">null</span>)) &#123;
+                queueBase = b + <span class="hljs-number">1</span>;
+                w.execTask(t);
+            &#125;
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+        &#125;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>; <span class="hljs-comment">// 如果所有的队列(工作线程的任务队列和pool的任务队列)都是空的，返回true。 </span>
+    &#125;
+&#125;</code></pre></div>
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/">Java进阶</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/30/Happens-Before%E5%8E%9F%E5%88%99/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Happens-Before原则</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/30/Executor%E6%A1%86%E6%9E%B6/">
+                        <span class="hidden-mobile">Executor框架</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Fork/Join框架&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

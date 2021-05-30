@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>HTTP请求过程详解 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2020-08-03 15:11">
+      August 3, 2020 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.9k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1-浏览器根据域名解析IP地址"><a href="#1-浏览器根据域名解析IP地址" class="headerlink" title="1. 浏览器根据域名解析IP地址"></a>1. 浏览器根据域名解析IP地址</h1><p><img src="https://img-blog.csdnimg.cn/20200610161609454.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"><br>浏览器根据访问的域名找到其IP地址，DNS查找过程如下：</p>
+<ol>
+<li><strong>浏览器缓存</strong>：首先搜索浏览器自身的DNS缓存（缓存的时间比较短，大概只有1分钟，且只能容纳1000条缓存），看自身的缓存中是否具有域名对应的条目，如果有且没有过期则解析到此结束。</li>
+<li><strong>系统缓存</strong>：如果浏览器自身的缓存里面没有找到对应的条目，那么浏览器会搜索操作系统自身的DNS缓存（Hosts文件），如果找到且没有过期则停止搜索，解析到此结束；</li>
+<li>操作系统将这个域名发送给LDNS，也就是<strong>本地区的域名服务器</strong>（完成80%的域名解析工作）；</li>
+<li>如果LDNS没有，则直接到<strong>Root Server</strong>域名服务器请求解析；</li>
+<li>根域名服务器返回给本地域名服务器一个所查询域的<strong>主域名服务器</strong>（gTLD Server）地址；</li>
+<li>本地域名服务器（Local DNS Server）再向上一步返回的gTLD服务器发送请求；</li>
+<li>接受请求的gTLD服务器查找并返回此域名对应的Name Server域名服务器（<strong>当时注册的域名服务器</strong>）的地址；</li>
+<li>Name Server域名服务器会查询存储的域名和IP的映射关系表；</li>
+<li>返回该域名对应的IP和TTL值；</li>
+<li>把解析的结果返回给用户，用户根据TTL值存储在本地系统缓存中，域名解析过程结束。</li>
+</ol>
+<h1 id="2-浏览器与Web服务器建立一个TCP连接"><a href="#2-浏览器与Web服务器建立一个TCP连接" class="headerlink" title="2 浏览器与Web服务器建立一个TCP连接"></a>2 浏览器与Web服务器建立一个TCP连接</h1><h2 id="TCP的三次握手"><a href="#TCP的三次握手" class="headerlink" title="TCP的三次握手"></a>TCP的三次握手</h2><p><img src="https://img-blog.csdnimg.cn/20200803111553979.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<ul>
+<li>第一次握手：客户端发送网络包，服务端收到了，这样服务端就能得出结论：客户端的发送能力，服务端的接收能力是正常的；</li>
+<li>第二次握手：服务端发包，客户端收到了，这样客户端就能得到结论：服务端的发送和接收能力，客户端的发送和接收能力是正常的，但此时服务端并不知道自己的发送能力以及客户端的接收能力是否正常，所以还需要第三次握手；</li>
+<li>第三次握手：客户端发包，服务端收到，这样服务端得出结论，服务端的发送和客户端的接收能力正常，可以正常通信了。</li>
+</ul>
+<h1 id="3-浏览器给Web服务器发送一个HTTP请求"><a href="#3-浏览器给Web服务器发送一个HTTP请求" class="headerlink" title="3. 浏览器给Web服务器发送一个HTTP请求"></a>3. 浏览器给Web服务器发送一个HTTP请求</h1><p>一个HTTP请求报文由<strong>请求行</strong>（request line），<strong>请求头部</strong>（headers），<strong>空行</strong>（blank line）和<strong>请求数据</strong>（request body）4个部分组成。<br><img src="https://img-blog.csdnimg.cn/20200803141229911.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="3-1-请求行"><a href="#3-1-请求行" class="headerlink" title="3.1 请求行"></a>3.1 请求行</h2><p>请求行分为三个部分：<strong>请求方法</strong>，<strong>请求地址URL</strong>和<strong>HTTP协议版本</strong>，它们之前用空格分隔，例如：GET /index.html HTTP/1.1</p>
+<h3 id="3-1-1请求方法"><a href="#3-1-1请求方法" class="headerlink" title="3.1.1请求方法"></a>3.1.1请求方法</h3><p>HTTP/1.1定义的请求方法有8种：GET（完整请求一个资源），POST（提交表单），PUT（上传文件），DELETE（删除），PATCH，HEAD（仅请求响应首部），OPTIONS（返回请求的资源所支持的方法），TRACE（追求一个资源请求中间所经过的代理），RESTful接口的话一般会用到GET，POST，DELETE，PUT。</p>
+<h4 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h4><p>当客户端要从服务器中读取文档时，当点击网页上的链接或者通过在浏览器的地址栏输入网址来浏览网页，使用的都是GET方式，GET方法要求服务器<strong>将URL定位的资源放在响应报文的数据部分</strong>，会送给客户端。<br>使用GET方法时，请求参数和对应的值附加在URL后面，利用一个问号<code>?</code>代表URL的结尾与请求参数的开始，多个参数之间用<code>&amp;</code>符号分开，不适合传输私密数据，另外传递参数长度也有限制。<br>GET请求不会对服务器产生任何其他影响，仅仅是获取数据。</p>
+<h4 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h4><p>允许客户端给服务器提供信息较多，POST方法将请求参数封装在HTTP请求数据中，以<code>名称/值</code>的形式出现，可以传输大量数据，同时参数也不会显示在URL栏中，POST方式大多用于页面的表单中。<br>POST是客户端向服务器提交数据的方法，这种方法会影响服务器，服务器可能根据收到的数据动态创建新的资源，也可能更新原有的资源。</p>
+<h3 id="3-1-2-请求地址URL"><a href="#3-1-2-请求地址URL" class="headerlink" title="3.1.2 请求地址URL"></a>3.1.2 请求地址URL</h3><p>URL：统一资源定位符，是一种资源位置的抽象唯一识别方法。<br>组成：&lt;协议&gt;://&lt;主机&gt;:&lt;端口&gt;/&lt;路径&gt;<br>端口和路径有时可以省略（HTTP默认端口号是80）<br><img src="https://img-blog.csdnimg.cn/20200803142845620.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h3 id="3-1-3-协议版本"><a href="#3-1-3-协议版本" class="headerlink" title="3.1.3 协议版本"></a>3.1.3 协议版本</h3><p>协议版本的格式为：HTTP/主版本号.次版本号，常用的有：HTTP/1.0 和 HTTP/1.1。</p>
+<h2 id="3-2-请求头部"><a href="#3-2-请求头部" class="headerlink" title="3.2 请求头部"></a>3.2 请求头部</h2><p>请求头部<strong>为请求报文添加了一些附加信息</strong>，如：主机名，发送请求的应用程序名称等，由“名/值”对组成，每行一对，名和值之间使用冒号分隔。<br>请求头部的最后会有一个空格，表示请求头部结束，接下来为请求数据。<br><img src="https://img-blog.csdnimg.cn/20200803145204839.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="3-3-请求数据"><a href="#3-3-请求数据" class="headerlink" title="3.3 请求数据"></a>3.3 请求数据</h2><p><strong>请求数据不在GET方法中使用，而是在POST方法中使用</strong>，POST方法适用于需要客户填写表单的场合，与请求数据相关的最常使用的请求头部是Content-Type和Content-Length。下面是一个POST方法的请求报文：</p>
+<div class="hljs"><pre><code class="hljs txt">POST 　&#x2F;index.php　HTTP&#x2F;1.1 　　 请求行
+Host: localhost
+User-Agent: Mozilla&#x2F;5.0 (Windows NT 5.1; rv:10.0.2) Gecko&#x2F;20100101 Firefox&#x2F;10.0.2　　请求头
+Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,&#x2F;;q&#x3D;0.8
+Accept-Language: zh-cn,zh;q&#x3D;0.5
+Accept-Encoding: gzip, deflate
+Connection: keep-alive
+Referer: http:&#x2F;&#x2F;localhost&#x2F;
+Content-Length：25
+Content-Type：application&#x2F;x-www-form-urlencoded
+　　空行
+username&#x3D;aa&amp;password&#x3D;1234　　请求数据</code></pre></div>
+<h1 id="4-服务器端响应HTTP请求，浏览器得到HTML代码"><a href="#4-服务器端响应HTTP请求，浏览器得到HTML代码" class="headerlink" title="4. 服务器端响应HTTP请求，浏览器得到HTML代码"></a>4. 服务器端响应HTTP请求，浏览器得到HTML代码</h1><p>HTTP响应报文由<strong>状态行</strong>（status line），<strong>响应头部</strong>（headers），<strong>空行</strong>（blank line）和<strong>响应数据</strong>（response body）4个部分组成。<br><img src="https://img-blog.csdnimg.cn/20200803145717649.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="4-1-状态行"><a href="#4-1-状态行" class="headerlink" title="4.1 状态行"></a>4.1 状态行</h2><p>状态行由3部分组成，分别为：<strong>协议版本</strong>，<strong>状态码</strong>，<strong>状态信息</strong>。其中协议版本与请求报文一致，状态信息是对状态码的简单描述。<br><img src="https://img-blog.csdnimg.cn/20200803150014704.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="4-2-响应头部"><a href="#4-2-响应头部" class="headerlink" title="4.2 响应头部"></a>4.2 响应头部</h2><p><img src="https://img-blog.csdnimg.cn/20200803150037655.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="4-3-响应数据"><a href="#4-3-响应数据" class="headerlink" title="4.3 响应数据"></a>4.3 响应数据</h2><p>用于存放需要返回给客户端的数据信息。</p>
+<div class="hljs"><pre><code class="hljs java">HTTP/<span class="hljs-number">1.1</span> <span class="hljs-number">200</span> OK　　状态行
+Date: Sun, <span class="hljs-number">17</span> Mar <span class="hljs-number">2013</span> <span class="hljs-number">08</span>:<span class="hljs-number">12</span>:<span class="hljs-number">54</span> GMT　　响应头部
+Server: Apache/<span class="hljs-number">2.2</span><span class="hljs-number">.8</span> (Win32) PHP/<span class="hljs-number">5.2</span><span class="hljs-number">.5</span>
+X-Powered-By: PHP/<span class="hljs-number">5.2</span><span class="hljs-number">.5</span>
+Set-Cookie: PHPSESSID=c0huq7pdkmm5gg6osoe3mgjmm3; path=/
+Expires: Thu, <span class="hljs-number">19</span> Nov <span class="hljs-number">1981</span> <span class="hljs-number">08</span>:<span class="hljs-number">52</span>:<span class="hljs-number">00</span> GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=<span class="hljs-number">0</span>, pre-check=<span class="hljs-number">0</span>
+Pragma: no-cache
+Content-Length: <span class="hljs-number">4393</span>
+Keep-Alive: timeout=<span class="hljs-number">5</span>, max=<span class="hljs-number">100</span>
+Connection: Keep-Alive
+Content-Type: text/html; charset=utf-<span class="hljs-number">8</span>
+　　空行
+&lt;html&gt;　　响应数据
+&lt;head&gt;
+&lt;title&gt;HTTP响应示例&lt;title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+Hello HTTP!
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></div>
+<h1 id="5-浏览器解析HTML代码，并请求HTML代码中的资源"><a href="#5-浏览器解析HTML代码，并请求HTML代码中的资源" class="headerlink" title="5. 浏览器解析HTML代码，并请求HTML代码中的资源"></a>5. 浏览器解析HTML代码，并请求HTML代码中的资源</h1><p>浏览器拿到HTML文件后，开始解析HTML代码，遇到静态资源时，就向服务器去请求下载。</p>
+<h1 id="6-关闭TCP连接，浏览器对页面进行渲染呈现给用户"><a href="#6-关闭TCP连接，浏览器对页面进行渲染呈现给用户" class="headerlink" title="6. 关闭TCP连接，浏览器对页面进行渲染呈现给用户"></a>6. 关闭TCP连接，浏览器对页面进行渲染呈现给用户</h1><p>浏览器利用自己内部的工作机制，把请求到的静态资源和HTML代码进行渲染，呈现给用户。</p>
+<p>参考:<br>1、<a href="https://blog.csdn.net/ailunlee/article/details/90600174?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.edu_weight&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-4.edu_weight" target="_blank" rel="noopener">HTTP请求的完全过程</a></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/">计算机基础</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/03/HTTPS%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HTTPS核心知识点</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/29/LRU%E7%AE%97%E6%B3%95/">
+                        <span class="hidden-mobile">LRU算法</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "HTTP请求过程详解&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

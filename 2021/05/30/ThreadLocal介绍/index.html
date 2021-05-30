@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>ThreadLocal介绍 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-30 20:58">
+      May 30, 2021 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      37
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <h1 id="1、ThreadLocal是什么？"><a href="#1、ThreadLocal是什么？" class="headerlink" title="1、ThreadLocal是什么？"></a>1、ThreadLocal是什么？</h1><p>ThreadLocal是啥？以前面试别人时就喜欢问这个，有些伙伴喜欢把它和线程同步机制混为一谈，事实上ThreadLocal与线程同步无关。ThreadLocal虽然提供了一种解决多线程环境下成员变量的问题，但是它并不是解决多线程共享变量的问题。那么ThreadLocal到底是什么呢？</p>
+<p>API是这样介绍它的：</p>
+<p>该类提供了线程局部 (thread-local) 变量。这些变量不同于它们的普通对应物，因为访问某个变量（通过其get 或 set方法）的每个线程都有自己的局部变量，它独立于变量的初始化副本。ThreadLocal实例通常是类中的 private static 字段，它们希望将状态与某一个线程（例如，用户 ID 或事务 ID）相关联。</p>
+<p>所以<strong>ThreadLocal与线程同步机制不同，线程同步机制是多个线程共享同一个变量，而**</strong>ThreadLocal是为每一个线程创建一个单独的变量副本，故而每个线程都可以独立地改变自己所拥有的变量副本，而不会影响其他线程所对应的副本**。可以说ThreadLocal为多线程环境下变量问题提供了另外一种解决思路。</p>
+<p>ThreadLocal定义了四个方法：</p>
+<p>1、get()：返回此线程局部变量的当前线程副本中的值；</p>
+<p>2、initialValue()：返回此线程局部变量的当前线程的“初始值”；</p>
+<p>3、remove()：移除此线程局部变量中当前线程的值；</p>
+<p>4、set(T value)：将此线程局部变量的当前线程副本中的值设置为指定值。</p>
+<p>除了这四个方法，ThreadLocal内部还有一个静态内部类<strong>ThreadLocalMap**</strong>，该内部类才是实现线程隔离机制的关键，get()、set()、remove()都是基于该内部类操作<strong>。</strong>ThreadLocalMap提供了一种用<strong><strong>键值对方式</strong></strong>存储每一个线程的变量副本的方法，<strong>**key为当前ThreadLocal对象，value则是对应线程的变量副本</strong>。</p>
+<p>对于ThreadLocal需要注意的有两点：</p>
+<ol>
+<li><p>ThreadLocal实例本身是不存储值，它只是提供了一个在当前线程中找到副本值的key；</p>
+</li>
+<li><p>是ThreadLocal包含在Thread中，而不是Thread包含在ThreadLocal中，有些小伙伴会弄错他们的关系。</p>
+</li>
+</ol>
+<p>下图是Thread、ThreadLocal、ThreadLocalMap的关系：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530205942.png" srcset="/img/loading.gif" alt="image-20210530205942564"></p>
+<h1 id="2、ThreadLocal使用示例"><a href="#2、ThreadLocal使用示例" class="headerlink" title="2、ThreadLocal使用示例"></a>2、ThreadLocal使用示例</h1><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SeqCount</span> </span>&#123;
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ThreadLocal&lt;Integer&gt; seqCount = <span class="hljs-keyword">new</span> ThreadLocal&lt;Integer&gt;()&#123;
+                <span class="hljs-comment">// 实现initialValue</span>
+                <span class="hljs-function"><span class="hljs-keyword">public</span> Integer <span class="hljs-title">initialValue</span><span class="hljs-params">()</span></span>&#123;
+                <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                &#125;
+        &#125;;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">nextSeq</span><span class="hljs-params">()</span></span>&#123;
+                seqCount.set(seqCount.get() + <span class="hljs-number">1</span>);
+                <span class="hljs-keyword">return</span> seqCount.get();
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+                SeqCount seqCount = <span class="hljs-keyword">new</span> SeqCount();
+                SeqThread thread1 = <span class="hljs-keyword">new</span> SeqThread(seqCount);
+                SeqThread thread2 = <span class="hljs-keyword">new</span> SeqThread(seqCount);
+                SeqThread thread3 = <span class="hljs-keyword">new</span> SeqThread(seqCount);
+                SeqThread thread4 = <span class="hljs-keyword">new</span> SeqThread(seqCount);
+                thread1.start();
+                thread2.start();
+                thread3.start();
+                thread4.start();
+        &#125;
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SeqThread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Thread</span> </span>&#123;
+        <span class="hljs-keyword">private</span> SeqCount seqCount;
+        SeqThread(SeqCount seqCount) &#123;
+                <span class="hljs-keyword">this</span>.seqCount = seqCount;
+        &#125;
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">()</span> </span>&#123;
+                <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) &#123;
+                System.out.println(Thread.currentThread().getName() + <span class="hljs-string">" seqCount :"</span> + seqCount.nextSeq());
+                &#125;
+        &#125;
+&#125;</code></pre></div>
+
+<p>运行结果：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530210029.png" srcset="/img/loading.gif" alt="image-20210530210029320"></p>
+<p>从运行结果可以看出，ThreadLocal确实是可以达到线程隔离机制，确保变量的安全性。这里我们想一个问题，在上面的代码中ThreadLocal的initialValue()方法返回的是0，假如该方法返回的是一个对象呢，会产生什么后果呢？例如：</p>
+<div class="hljs"><pre><code class="hljs java">A a = <span class="hljs-keyword">new</span> A();
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ThreadLocal&lt;A&gt; seqCount = <span class="hljs-keyword">new</span> ThreadLocal&lt;A&gt;()&#123;
+<span class="hljs-comment">// 实现initialValue()</span>
+<span class="hljs-function"><span class="hljs-keyword">public</span> A <span class="hljs-title">initialValue</span><span class="hljs-params">()</span> </span>&#123;
+<span class="hljs-keyword">return</span> a;
+&#125;
+&#125;;
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span></span>&#123;
+<span class="hljs-comment">// ....</span>
+&#125;</code></pre></div>
+
+<ul>
+<li>具体过程请参考：<a href="http://www.jianshu.com/p/ee8c9dccc953" target="_blank" rel="noopener">对ThreadLocal实现原理的一点思考</a></li>
+</ul>
+<h1 id="3、ThreadLocal源码分析"><a href="#3、ThreadLocal源码分析" class="headerlink" title="3、ThreadLocal源码分析"></a>3、ThreadLocal源码分析</h1><p>ThreadLocal虽然解决了这个多线程变量的复杂问题，但是它的源码实现却是比较简单的。ThreadLocalMap是实现ThreadLocal的关键，我们先从它入手。</p>
+<h2 id="3-1、ThreadLocalMap"><a href="#3-1、ThreadLocalMap" class="headerlink" title="3.1、ThreadLocalMap"></a>3.1、ThreadLocalMap</h2><p>ThreadLocalMap是ThreadLocal中的一个静态内部类。ThreadLocalMap其内部利用Entry来实现key-value的存储，如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadLocal</span>&lt;<span class="hljs-title">T</span>&gt; </span>&#123;
+	<span class="hljs-comment">// ... 其他方法 </span>
+	<span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ThreadLocalMap</span> </span>&#123;
+		<span class="hljs-keyword">static</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Entry</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">WeakReference</span>&lt;<span class="hljs-title">ThreadLocal</span>&gt; </span>&#123;
+			<span class="hljs-comment">/** The value associated with this ThreadLocal. */</span>
+			Object value;
+			Entry(ThreadLocal k, Object v) &#123;
+			<span class="hljs-keyword">super</span>(k);
+			value = v;
+			&#125;
+		&#125;
+	<span class="hljs-comment">// ...其他方法</span>
+	&#125;
+	<span class="hljs-comment">// ...其他方法</span>
+&#125;</code></pre></div>
+
+<p>从上面代码中可以看出<strong>Entry的key就是ThreadLocal</strong>，而value就是值。同时，<strong>Entry也继承WeakReference，所以说Entry所对应key（ThreadLocal实例）的引用为一个弱引用</strong>（关于弱引用这里就不多说了，感兴趣的可以关注这篇博客：<a href="https://www.ibm.com/developerworks/cn/java/j-jtp11225/" target="_blank" rel="noopener">Java 理论与实践: 用弱引用堵住内存泄漏</a>）。</p>
+<p>ThreadLocalMap的源码稍微多了点，我们就看两个最核心的方法getEntry()、set(ThreadLocal&gt; key, Object value)方法。</p>
+<p><strong>3.1.1、getEntry()</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> Entry <span class="hljs-title">getEntry</span><span class="hljs-params">(ThreadLocal key)</span> </span>&#123;
+	<span class="hljs-keyword">int</span> i = key.threadLocalHashCode &amp; (table.length - <span class="hljs-number">1</span>);
+	Entry e = table[i];
+	<span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span> &amp;&amp; e.get() == key)
+		<span class="hljs-keyword">return</span> e;
+	<span class="hljs-keyword">else</span>
+		<span class="hljs-keyword">return</span> getEntryAfterMiss(key, i, e);
+&#125;</code></pre></div>
+
+<p>由于采用了开放地址法，所以当前key的散列值和元素在数组的索引并不是完全对应的，首先取一个探测数（key的散列值），如果所对应的key就是我们所要找的元素，则返回，否则调用getEntryAfterMiss()，如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> Entry <span class="hljs-title">getEntryAfterMiss</span><span class="hljs-params">(ThreadLocal key, <span class="hljs-keyword">int</span> i, Entry e)</span> </span>&#123;
+	Entry[] tab = table;
+	<span class="hljs-keyword">int</span> len = tab.length;
+	<span class="hljs-keyword">while</span> (e != <span class="hljs-keyword">null</span>) &#123;
+		ThreadLocal k = e.get();
+		<span class="hljs-keyword">if</span> (k == key)
+			<span class="hljs-keyword">return</span> e;
+		<span class="hljs-keyword">if</span> (k == <span class="hljs-keyword">null</span>)
+			expungeStaleEntry(i);
+		<span class="hljs-keyword">else</span>
+			i = nextIndex(i, len);
+		e = tab[i];
+	&#125;
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre></div>
+
+<p>这里有一个重要的地方，当key == null时，调用了expungeStaleEntry()方法，该方法用于处理key == null，有利于GC回收，能够有效地避免内存泄漏。</p>
+<p><strong>3.1.2、set(ThreadLocal&gt; key, Object value)</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(ThreadLocal&lt;?&gt; key, Object value)</span> </span>&#123;
+	ThreadLocal.ThreadLocalMap.Entry[] tab = table;
+	<span class="hljs-keyword">int</span> len = tab.length;
+	<span class="hljs-comment">// 根据 ThreadLocal 的散列值，查找对应元素在数组中的位置</span>
+	<span class="hljs-keyword">int</span> i = key.threadLocalHashCode &amp; (len - <span class="hljs-number">1</span>);
+	<span class="hljs-comment">// 采用“线性探测法”，寻找合适位置</span>
+	<span class="hljs-keyword">for</span> (ThreadLocal.ThreadLocalMap.Entry e = tab[i]; e != <span class="hljs-keyword">null</span>; e = tab[i = nextIndex(i, len)]) &#123;
+		ThreadLocal&lt;?&gt; k = e.get();
+		<span class="hljs-comment">// key 存在，直接覆盖</span>
+		<span class="hljs-keyword">if</span> (k == key) &#123;
+			e.value = value;
+			<span class="hljs-keyword">return</span>;
+		&#125;
+		<span class="hljs-comment">// key == null，但是存在值（因为此处的e != null），说明之前的ThreadLocal对象已经被回收了</span>
+		<span class="hljs-keyword">if</span> (k == <span class="hljs-keyword">null</span>) &#123;
+			<span class="hljs-comment">// 用新元素替换陈旧的元素</span>
+			replaceStaleEntry(key, value, i);
+			<span class="hljs-keyword">return</span>;
+		&#125;
+	&#125;
+	<span class="hljs-comment">// ThreadLocal对应的key实例不存在也没有陈旧元素，new 一个</span>
+	tab[i] = <span class="hljs-keyword">new</span> ThreadLocal.ThreadLocalMap.Entry(key, value);
+	<span class="hljs-keyword">int</span> sz = ++size;
+	<span class="hljs-comment">// cleanSomeSlots 清除陈旧的Entry（key == null）</span>
+	<span class="hljs-comment">// 如果没有清理陈旧的 Entry 并且数组中的元素大于了阈值，则进行 rehash</span>
+	<span class="hljs-keyword">if</span> (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)
+		rehash();
+&#125;</code></pre></div>
+
+<p>这个set()操作和我们在集合了解的put()方式有点儿不一样，虽然他们都是key-value结构，不同在于他们解决散列冲突的方式不同。集合Map的put()采用的是拉链法，而<strong>ThreadLocalMap的set()则是采用开放地址法</strong>（具体请参考<a href="http://www.nowamagic.net/academy/detail/3008015" target="_blank" rel="noopener">散列冲突处理系列博客</a>）。掌握了开放地址法该方法就一目了然了。</p>
+<p><strong>set()操作除了存储元素外，还有一个很重要的作用，就是replaceStaleEntry()和cleanSomeSlots()，这两个方法可以清除掉key == null 的实例，防止内存泄漏</strong>。在set()方法中还有一个变量很重要：threadLocalHashCode，定义如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> threadLocalHashCode = nextHashCode();</code></pre></div>
+
+<p>从名字上面我们可以看出threadLocalHashCode应该是ThreadLocal的散列值，定义为final，表示ThreadLocal一旦创建其散列值就已经确定了，生成过程则是调用nextHashCode()：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> AtomicInteger nextHashCode = <span class="hljs-keyword">new</span> AtomicInteger();
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> HASH_INCREMENT = <span class="hljs-number">0x61c88647</span>;
+<span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">nextHashCode</span><span class="hljs-params">()</span> </span>&#123;
+	<span class="hljs-keyword">return</span> nextHashCode.getAndAdd(HASH_INCREMENT);
+&#125;</code></pre></div>
+
+<p>nextHashCode表示分配下一个ThreadLocal实例的threadLocalHashCode的值，HASH_INCREMENT则表示分配两个ThradLocal实例的threadLocalHashCode的增量，从nextHashCode就可以看出他们的定义。</p>
+<p>上面的两个方法都是静态内部类ThreadLocalMap中的方法，下面让我们看看ThreadLocal中的其他方法。</p>
+<h2 id="3-2、get"><a href="#3-2、get" class="headerlink" title="3.2、get()"></a>3.2、get()</h2><p>返回此线程局部变量的当前线程副本中的值。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> T <span class="hljs-title">get</span><span class="hljs-params">()</span> </span>&#123;
+	<span class="hljs-comment">// 获取当前线程</span>
+	Thread t = Thread.currentThread();
+	<span class="hljs-comment">// 获取当前线程的成员变量 threadLocal</span>
+	ThreadLocalMap map = getMap(t);
+	<span class="hljs-keyword">if</span> (map != <span class="hljs-keyword">null</span>) &#123;
+		<span class="hljs-comment">// 从当前线程的ThreadLocalMap获取相对应的Entry</span>
+		ThreadLocalMap.Entry e = map.getEntry(<span class="hljs-keyword">this</span>);
+		<span class="hljs-keyword">if</span> (e != <span class="hljs-keyword">null</span>) &#123;
+			<span class="hljs-meta">@SuppressWarnings</span>(<span class="hljs-string">"unchecked"</span>)
+			<span class="hljs-comment">// 获取目标值 </span>
+			T result = (T)e.value;
+			<span class="hljs-keyword">return</span> result;
+		&#125;
+	&#125;
+	<span class="hljs-keyword">return</span> setInitialValue();
+&#125;</code></pre></div>
+
+<p>首先通过当前线程获取所对应的成员变量ThreadLocalMap，然后通过ThreadLocalMap获取当前ThreadLocal的Entry，最后通过所获取的Entry获取目标值result。</p>
+<p>getMap()方法可以获取当前线程所对应的ThreadLocalMap，如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function">ThreadLocalMap <span class="hljs-title">getMap</span><span class="hljs-params">(Thread t)</span> </span>&#123; 
+    <span class="hljs-keyword">return</span> t.threadLocals; 
+&#125;</code></pre></div>
+
+<h2 id="3-3、set-T-value"><a href="#3-3、set-T-value" class="headerlink" title="3.3、set(T value)"></a>3.3、set(T value)</h2><p>将此线程局部变量的当前线程副本中的值设置为指定值。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">set</span><span class="hljs-params">(T value)</span> </span>&#123;
+	Thread t = Thread.currentThread(); <span class="hljs-comment">// 获取当前线程</span>
+	ThreadLocalMap map = getMap(t); <span class="hljs-comment">// 获取当前线程所对应的ThreadLocalMap</span>
+	<span class="hljs-keyword">if</span> (map != <span class="hljs-keyword">null</span>)
+		map.set(<span class="hljs-keyword">this</span>, value); <span class="hljs-comment">// ThreadLocalMap不为空时，调用ThreadLocalMap的set()方法</span>
+	<span class="hljs-keyword">else</span>
+		createMap(t, value); <span class="hljs-comment">// ThreadLocalMap为空时，调用createMap()方法新建一个ThreadLocalMap</span>
+&#125;</code></pre></div>
+
+<p>首先获取当前线程所对应的ThreadLocalMap，如果不为空，则调用ThreadLocalMap的set()方法，key就是当前ThreadLocal；如果不存在，则调用createMap()方法新建一个ThreadLocalMap，key为当前线程，值为指定的value。如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">createMap</span><span class="hljs-params">(Thread t, T firstValue)</span> </span>&#123;
+	t.threadLocals = <span class="hljs-keyword">new</span> ThreadLocalMap(<span class="hljs-keyword">this</span>, firstValue);
+&#125;</code></pre></div>
+
+<h2 id="3-4、initialValue"><a href="#3-4、initialValue" class="headerlink" title="3.4、initialValue()"></a>3.4、initialValue()</h2><p>返回此线程局部变量的当前线程的“初始值”；</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">protected</span> T <span class="hljs-title">initialValue</span><span class="hljs-params">()</span> </span>&#123;
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;
+&#125;</code></pre></div>
+
+<p>该方法定义为protected级别且返回为null，很明显是要子类实现它的，所以我们在使用ThreadLocal的时候一般都应该覆盖该方法。该方法不能显示调用，只有在第一次调用get()或者set()方法时才会被执行，并且仅执行1次。</p>
+<h2 id="3-5、remove"><a href="#3-5、remove" class="headerlink" title="3.5、remove()"></a>3.5、remove()</h2><p>将当前线程局部变量的值移除。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">remove</span><span class="hljs-params">()</span> </span>&#123;
+<span class="hljs-comment">// 获取当前线程的ThreadLocalMap</span>
+ThreadLocalMap m = getMap(Thread.currentThread()); 
+<span class="hljs-keyword">if</span> (m != <span class="hljs-keyword">null</span>)
+	m.remove(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// 如果当前线程的ThreadLocalMap不为空，则移除</span>
+&#125;</code></pre></div>
+
+<h1 id="4、ThreadLocal为什么会内存泄漏"><a href="#4、ThreadLocal为什么会内存泄漏" class="headerlink" title="4、ThreadLocal为什么会内存泄漏"></a>4、ThreadLocal为什么会内存泄漏</h1><p>先看这样一个小案例：</p>
+<p>在JAVA里面，存在强引用、弱引用、软引用、虚引用。这里主要谈一下强引用和弱引用。</p>
+<p>强引用类似于：</p>
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">A a</span> = new A();
+<span class="hljs-attribute">B b</span> = new B();</code></pre></div>
+
+<p>现在考虑这种情况：</p>
+<div class="hljs"><pre><code class="hljs ebnf"><span class="hljs-attribute">C c</span> = new C(b);
+<span class="hljs-attribute">b</span> = null;</code></pre></div>
+
+<p>考虑下GC的情况。要知道b被置为null，那么是否意味着一段时间后GC工作可以回收b所分配的内存空间呢？</p>
+<p>答案是否定的，因为即便b被置为null，但是c仍然持有对b的引用，而且还是强引用，所以GC不会回收b原先所分配的空间！既不能回收利用，又不能使用，这就造成了内存泄露。</p>
+<p>那么如何处理呢？</p>
+<p>可以使c = null;也可以使用弱引用！（WeakReference w = new WeakReference(b);）</p>
+<p>下面就来看看ThreadLocal的内存泄露是怎么一回事：</p>
+<p>前面提到每个Thread都有一个ThreadLocal.ThreadLocalMap的map，该map的key为ThreadLocal实例，它为一个弱引用，我们知道弱引用有利于GC回收。当ThreadLocal的key == null时，GC就会回收这部分空间，但是value却不一定能够被回收，因为他还与Current Thread存在一个强引用关系，如下图所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530210510.png" srcset="/img/loading.gif" alt="image-20210530210510395"></p>
+<p>由于存在这个强引用关系，会导致value无法回收。如果这个线程对象不会销毁，那么这个强引用关系则会一直存在，就会出现内存泄漏情况。所以说只要这个线程对象能够及时被GC回收，就不会出现内存泄漏。如果碰到线程池，那就更坑了。</p>
+<p>那么要怎么避免这个问题呢？</p>
+<p>在前面提过，在ThreadLocalMap中的setEntry()、getEntry()，<strong>如果遇到key == null的情况，会对value设置为null</strong>。当然我们也可以<strong>显示调用ThreadLocal的remove()方法进行处理</strong>。</p>
+<h1 id="5、总结"><a href="#5、总结" class="headerlink" title="5、总结"></a>5、总结</h1><p><strong>下面对ThreadLocal进行简单的总结：</strong></p>
+<p>1、ThreadLocal 不是用于解决共享变量的问题的，也不是为了协调线程同步而存在，而是为了方便每个线程处理自己的状态而引入的一个机制。这点至关重要；</p>
+<p>2、每个Thread内部都有一个ThreadLocal.ThreadLocalMap类型的成员变量，该成员变量用来存储实际的ThreadLocal变量副本；</p>
+<p>3、ThreadLocal并不是为线程保存对象的副本，它仅仅只起到一个<strong>索引</strong>的作用。它的主要目的是<strong>为每一个线程隔离一个类的实例，这个实例的作用范围仅限于线程内部。</strong></p>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/">语言相关</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/">Java进阶</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AF%AD%E8%A8%80%E7%9B%B8%E5%85%B3/Java%E8%BF%9B%E9%98%B6/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%B9%B6%E5%8F%91/">Java并发</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/05/31/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BB%8B%E7%BB%8D/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">线程池介绍</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/30/ConcurrentHashMap/">
+                        <span class="hidden-mobile">ConcurrentHashMap</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "ThreadLocal介绍&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
