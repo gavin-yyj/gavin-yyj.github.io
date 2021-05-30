@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>重构_改善既有代码的设计 - 杨玉杰|个人博客</title>
+  <title>重构 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,8 +163,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2021-05-18 06:44">
-      May 18, 2021 am
+    <time datetime="2021-05-29 22:13">
+      May 29, 2021 pm
     </time>
   </div>
 
@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10.2k 字
+      10.5k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      125
+      130
        分钟
     </span>
   
@@ -220,7 +220,7 @@
 </blockquote>
 <h1 id="第1章-重构，第一个案例"><a href="#第1章-重构，第一个案例" class="headerlink" title="第1章 重构，第一个案例"></a>第1章 重构，第一个案例</h1><h2 id="1-1-起点"><a href="#1-1-起点" class="headerlink" title="1.1 起点"></a>1.1 起点</h2><p>案例：影片出租店用的程序，计算每一位顾客的消费金额并打印详单。操作者告诉程序：顾客租了哪些影片、租期多长，程序便根据租赁时间和影片类型算出费用。影片分为三类：普通片、儿童片和新片。除了计算费用，还要为常客计算积分，积分会根据租片种类是否为新片而有所不同。</p>
 <p>UML类图如下所示：</p>
-<p><img src="../image/image-20210527232752556.png" srcset="/img/loading.gif" alt="image-20210527232752556"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221426.png" srcset="/img/loading.gif" alt="image-20210527232752556"></p>
 <p><strong>Movie（影片）</strong>：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Movie</span> </span>&#123;
     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> CHILDREDS = <span class="hljs-number">2</span>;
@@ -286,7 +286,7 @@
 &#125;</code></pre></div>
 
 <p>Customer还提供了一个用于生成详单的函数，该函数交互过程如下图所示。</p>
-<p><img src="../image/image-20210519072922928.png" srcset="/img/loading.gif" alt="image-20210519072922928"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221438.png" srcset="/img/loading.gif" alt="image-20210519072922928"></p>
 <p>代码如下：</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">statement</span><span class="hljs-params">()</span> </span>&#123;
         <span class="hljs-keyword">double</span> totalAmount = <span class="hljs-number">0</span>;
@@ -440,17 +440,17 @@
 &#125;</code></pre></div>
 
 <p>涉及两个局部变量，<code>each</code>和<code>frequentRenterPoints</code>，<code>each</code>可以被当做参数传入新函数中，<code>frequentRenterPoints</code>在使用前已经有初值，但提炼出来的函数并没有读取该值，所以我们不需要将它作为参数传进去，只需把新函数的返回值累加即可。</p>
-<p><img src="../image/image-20210527230811817.png" srcset="/img/loading.gif" alt="image-20210527230811817"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221537.png" srcset="/img/loading.gif" alt="image-20210527230811817"></p>
 <center>“常客积分计算“函数被提炼及搬移之前的类图</center>
 
-<p><img src="../image/image-20210527231218079.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221547.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
 <center>“常客积分计算“函数被提炼及搬移之后的类图</center>
 
-<p><img src="../image/image-20210527232715018.png" srcset="/img/loading.gif" alt="image-20210527232715018"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221647.png" srcset="/img/loading.gif" alt="image-20210527232715018"></p>
 <center>序列图（前）</center>
 
-<p><img src="../image/image-20210527232552508.png" srcset="/img/loading.gif" alt="image-20210527232552508"></p>
-<center>序列图（前）</center>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221714.png" srcset="/img/loading.gif" alt="image-20210527232552508"></p>
+<center>序列图（后）</center>
 
 <h3 id="1-3-4-去掉临时变量"><a href="#1-3-4-去掉临时变量" class="headerlink" title="1.3.4 去掉临时变量"></a>1.3.4 去掉临时变量</h3><p>利用查询函数来取代<code>totalAmount</code>和<code>frequentRentalPoints</code>这两个临时变量。</p>
 <p>首先用<code>Customer</code>类的<code>getTotalCharge()</code>取代<code>totalAmount</code>，由于<code>totalAmount</code>在循环内部被赋值，所以不得不把循环复制到查询函数中。</p>
@@ -504,18 +504,16 @@
     &#125;</code></pre></div>
 
 <p>对比：</p>
-<p><img src="../image/image-20210527231218079.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221732.png" srcset="/img/loading.gif" alt="image-20210527231218079"></p>
 <center/>“总量计算”函数被提炼前的类图
 
-<p><img src="../image/image-20210528065054433.png" srcset="/img/loading.gif" alt="image-20210528065054433"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221748.png" srcset="/img/loading.gif" alt="image-20210528065054433"></p>
 <center>“总量计算”函数被提炼后的类图</center>
 
-
-
-<p><img src="../image/image-20210528065346215.png" srcset="/img/loading.gif" alt="image-20210528065346215"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221802.png" srcset="/img/loading.gif" alt="image-20210528065346215"></p>
 <center/>“总量计算”函数被提炼前的时序图
 
-<p><img src="../image/image-20210528070115851.png" srcset="/img/loading.gif" alt="image-20210528070115851"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221815.png" srcset="/img/loading.gif" alt="image-20210528070115851"></p>
 <center/>“总量计算”函数被提炼后的时序图
 
 <p>如果需要修改影片分类规则，但是与之相应的费用计算方式与常客积分计算方式还未确定，可以将费用计算和常客积分计算代码中因条件而异的代码替换掉。</p>
@@ -562,17 +560,17 @@
     &#125;
 &#125;</code></pre></div>
 
-<p><img src="../image/image-20210528070449852.png" srcset="/img/loading.gif" alt="image-20210528070449852"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221834.png" srcset="/img/loading.gif" alt="image-20210528070449852"></p>
 <center/>移动前的类图
 
-<p><img src="../image/image-20210528071049301.png" srcset="/img/loading.gif" alt="image-20210528071049301"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221848.png" srcset="/img/loading.gif" alt="image-20210528071049301"></p>
 <center/>移动后的类图
 
 <h3 id="1-4-1-终于…开始继承"><a href="#1-4-1-终于…开始继承" class="headerlink" title="1.4.1 终于…开始继承"></a>1.4.1 终于…开始继承</h3><p>建立Movie的三个子类，代表不同影片类型，每个都有自己的计费法。</p>
-<p><img src="../image/image-20210528072142525.png" srcset="/img/loading.gif" alt="image-20210528072142525"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221858.png" srcset="/img/loading.gif" alt="image-20210528072142525"></p>
 <p>本来想法是利用多态取代switch语句，但是这里不允许这么做，因为<strong>一部影片可以在生命周期内修改自己的分类，但一个对象却不能在生命周期内修改自己所属的类。</strong></p>
 <p>解决方法：<strong>State模式</strong></p>
-<p><img src="../image/image-20210528072556454.png" srcset="/img/loading.gif" alt="image-20210528072556454"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221920.png" srcset="/img/loading.gif" alt="image-20210528072556454"></p>
 <p>加上这一层间接性，我们就可以在Price对象内进行子类化动作，于是便可以在任何必要时刻修改价格。</p>
 <p>为了引入State模式，这里将使用三个重构手法，首先将与类型相关的行为搬移至State模式内，然后将switch语句移到Price类，最后去掉switch语句。</p>
 <p>第一步骤需要确保任何时候都通过取值函数和设值函数来访问类型代码。</p>
@@ -701,10 +699,10 @@
     <span class="hljs-keyword">return</span> (daysRented &gt; <span class="hljs-number">1</span>) ? <span class="hljs-number">2</span> : <span class="hljs-number">1</span>;
 &#125;</code></pre></div>
 
-<p><img src="../image/image-20210528075518286.png" srcset="/img/loading.gif" alt="image-20210528075518286"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221930.png" srcset="/img/loading.gif" alt="image-20210528075518286"></p>
 <center/>重构后的时序图
 
-<p><img src="../image/image-20210528075024347.png" srcset="/img/loading.gif" alt="image-20210528075024347"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529221943.png" srcset="/img/loading.gif" alt="image-20210528075024347"></p>
 <center/>重构后的类图
 
 <h1 id="第2章-重构原理"><a href="#第2章-重构原理" class="headerlink" title="第2章 重构原理"></a>第2章 重构原理</h1><h2 id="2-1-何谓重构"><a href="#2-1-何谓重构" class="headerlink" title="2.1 何谓重构"></a>2.1 何谓重构</h2><ul>
@@ -1102,7 +1100,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
 	&#125;</code></pre></div>
 
 <p>转变为：</p>
-<p><img src="../image/image-20210528221101435.png" srcset="/img/loading.gif" alt="image-20210528221101435"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529222035.png" srcset="/img/loading.gif" alt="image-20210528221101435"></p>
 <p><strong>做法</strong></p>
 <ul>
 <li>新建一个类，根据用途来命名；</li>
@@ -1225,7 +1223,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
 <p>一个类应该是一个清楚的抽象，处理一些明确的责任。</p>
 <h2 id="7-4-将类内联化-Inline-Class"><a href="#7-4-将类内联化-Inline-Class" class="headerlink" title="7.4 将类内联化(Inline Class)"></a>7.4 将类内联化(Inline Class)</h2><p>如果某个类没有做太多事情，则考虑将这个类的所有特性搬移到另一个类中，然后移除原类。</p>
 <h2 id="7-5-隐藏“委托关系”-Hide-Delegate"><a href="#7-5-隐藏“委托关系”-Hide-Delegate" class="headerlink" title="7.5 隐藏“委托关系”(Hide Delegate)"></a>7.5 隐藏“委托关系”(Hide Delegate)</h2><p>客户通过一个委托类来调用另一个对象，如在服务类上建立客户所需的所有函数，用以隐藏委托关系。</p>
-<p><img src="../image/image-20210528221542715.png" srcset="/img/loading.gif" alt="image-20210528221542715"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529222048.png" srcset="/img/loading.gif" alt="image-20210528221542715"></p>
 <p><strong>做法</strong></p>
 <ul>
 <li>对于每一个委托关系中的函数，在服务对象端建立一个简单的委托函数；</li>
@@ -1275,7 +1273,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
 
 <p>然后让Person的所有对象去调用新函数getManager，就可以将getDepartment()移除了。</p>
 <h2 id="7-6-移除中间人-Remove-Middle-Man"><a href="#7-6-移除中间人-Remove-Middle-Man" class="headerlink" title="7.6 移除中间人(Remove Middle Man)"></a>7.6 移除中间人(Remove Middle Man)</h2><p>某个类做了<strong>过多</strong>的简单委托动作，让客户直接调用受托类。</p>
-<h2 id="7-7-引入外加函数-Introduce-Foreign-Method"><a href="#7-7-引入外加函数-Introduce-Foreign-Method" class="headerlink" title="7.7 引入外加函数(Introduce Foreign Method)"></a>7.7 引入外加函数(Introduce Foreign Method)</h2><p>当你需要为提供服务的类增加一个函数，但无法修改这个类的时候，可以在客户类中建立一个函数，并以第一参数形式传入一个服务类实例。</p>
+<h2 id="7-7-引入外加函数-Introduce-Foreign-Method"><a href="#7-7-引入外加函数-Introduce-Foreign-Method" class="headerlink" title="7.7 引入外加函数(Introduce Foreign Method)"></a>7.7 引入外加函数(Introduce Foreign Method)</h2><p>当你需要为提供服务的类增加一个函数，但无法修改这个类的时候，可以在客户类中建立一个函数(nextDay)，并以第一参数形式传入一个服务类实例(previousEnd)。</p>
 <div class="hljs"><pre><code class="hljs java">Date newStart = <span class="hljs-keyword">new</span> Date(previousEnd.getYear(),previousEnd.getMonth(),previousEnd.getDate()+<span class="hljs-number">1</span>);</code></pre></div>
 
 <p>替换为：</p>
@@ -1285,13 +1283,87 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
 	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Date(arg.getYear(),arg.geteMonth(),arg.getDate()+<span class="hljs-number">1</span>);
 &#125;</code></pre></div>
 
-<h2 id="7-8-引入本地扩展-Introduce-Local-Extension"><a href="#7-8-引入本地扩展-Introduce-Local-Extension" class="headerlink" title="7.8 引入本地扩展(Introduce Local Extension)"></a>7.8 引入本地扩展(Introduce Local Extension)</h2><p>当你需要为服务类提供一些额外函数，但你无法修改这个类的时候，可以建立一个新类，使它包含这些额外函数（<strong>新特性</strong>），让这个扩展品成为源类的<strong>子类</strong>或者<strong>包装类</strong>。</p>
+<h2 id="7-8-引入本地扩展-Introduce-Local-Extension"><a href="#7-8-引入本地扩展-Introduce-Local-Extension" class="headerlink" title="7.8 引入本地扩展(Introduce Local Extension)"></a>7.8 引入本地扩展(Introduce Local Extension)</h2><p>当你需要为服务类提供<strong>一些</strong>额外函数，但你无法修改这个类的时候，可以建立一个新类，使它包含这些额外函数（<strong>新特性</strong>），让这个扩展品成为源类的<strong>子类</strong>或者<strong>包装类</strong>。</p>
+<p><strong>范例</strong></p>
+<p>以Java1.0.1的Date类为例，假设我有一些功能需要增加。</p>
+<p>使用子类：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MfDateSub</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Date</span></span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MfDateSub</span><span class="hljs-params">(Date arg)</span></span>&#123;
+        <span class="hljs-keyword">super</span>(arg.getTime());
+    &#125;
+	<span class="hljs-function"><span class="hljs-keyword">public</span> MfDateSub <span class="hljs-title">nextDay</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Date(getYear(),getMonth(),getDate()+<span class="hljs-number">1</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<p>使用包装类则需要用上委托：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MfDateWrap</span></span>&#123;
+	<span class="hljs-keyword">private</span> Date original;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MfDateWrap</span><span class="hljs-params">(String dateString)</span></span>&#123;
+        original = <span class="hljs-keyword">new</span> Date(dateString);
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">MfDateWrap</span><span class="hljs-params">(Date arg)</span></span>&#123;
+        original = arg;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Date <span class="hljs-title">nextDay</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Date(getYear(),getMonth(),getDate()+<span class="hljs-number">1</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<h1 id="第8章-重新组织数据"><a href="#第8章-重新组织数据" class="headerlink" title="第8章 重新组织数据"></a>第8章 重新组织数据</h1><h2 id="8-1-自封装字段-Self-Encapsulate-Field"><a href="#8-1-自封装字段-Self-Encapsulate-Field" class="headerlink" title="8.1 自封装字段(Self Encapsulate Field)"></a>8.1 自封装字段(Self Encapsulate Field)</h2><p>为字段建立取值/设置函数，并且只以这些函数来访问字段。</p>
+<h2 id="8-2-以对象取代数据值-Replace-Data-Value-with-Object"><a href="#8-2-以对象取代数据值-Replace-Data-Value-with-Object" class="headerlink" title="8.2 以对象取代数据值(Replace Data Value with Object)"></a>8.2 以对象取代数据值(Replace Data Value with Object)</h2><p>比如说我们通常用字符串来存储电话号码，但是一旦需要将电话号码“格式化”或者“抽取区号”等，那我们就需要将电话号码转换为对象。</p>
+<p><strong>范例</strong></p>
+<p>订单类Order，用字符串customer来记录订单客户。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Order</span> </span>&#123;
+    <span class="hljs-keyword">private</span> String customer;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Order</span><span class="hljs-params">(String customer)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.customer = customer;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getCustomer</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> customer;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCustomer</span><span class="hljs-params">(String customer)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.customer = customer;
+    &#125;
+&#125;</code></pre></div>
+
+<p>改造，新建一个Customer类来表示“客户”概念，然后在这个类中建立一个final字段，用以保存一个字符串，记录客户名称。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Customer</span> </span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String name;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Customer</span><span class="hljs-params">(String name)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.name = name;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-keyword">return</span> name;
+    &#125;
+&#125;</code></pre></div>
+
+<p>接着将Order中的customer字段的类型修改为Customer，并修改所有引用该字段的函数。</p>
 
             </article>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/">Java开发规范</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java%E5%BC%80%E5%8F%91%E8%A7%84%E8%8C%83/">Java开发规范</a>
+                    
+                  </div>
                 
               </div>
               
@@ -1302,19 +1374,19 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/23/%E5%85%B3%E4%BA%8EIDEA%E4%B8%ADDebug%E6%8A%80%E5%B7%A7/">
+                      <a href="/2021/05/30/Java%E5%85%A8%E6%A0%88%E5%B7%A5%E7%A8%8B%E5%B8%88%E7%9A%84%E5%BF%85%E4%BF%AE%E4%B9%8B%E8%B7%AF/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">关于IDEA中Debug技巧</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="hidden-mobile">Java全栈工程师的必修之路</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2021/05/17/%E9%AB%98%E6%95%88%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%8445%E4%B8%AA%E4%B9%A0%E6%83%AF/">
-                        <span class="hidden-mobile">高效程序员的45个习惯</span>
-                        <span class="visible-mobile">Next</span>
+                      <a href="/2021/05/29/IDEA-Debug%E6%8C%87%E5%8D%97/">
+                        <span class="hidden-mobile">IDEA Debug指南</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -1347,7 +1419,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -1374,7 +1446,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -1383,7 +1455,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -1468,7 +1540,7 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "重构_改善既有代码的设计&nbsp;",
+        "重构&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

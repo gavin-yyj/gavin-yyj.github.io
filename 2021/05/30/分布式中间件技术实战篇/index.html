@@ -17,7 +17,7 @@
   <meta name="description" content="光说不做假把式">
   <meta name="author" content="杨玉杰">
   <meta name="keywords" content="">
-  <title>分布式中间件技术实战 - 杨玉杰|个人博客</title>
+  <title>分布式中间件技术实战篇 - 杨玉杰|个人博客</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -163,8 +163,8 @@
               
   <div class="mt-3 post-meta">
     <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-    <time datetime="2020-12-08 11:04">
-      December 8, 2020 am
+    <time datetime="2021-05-30 10:08">
+      May 30, 2021 am
     </time>
   </div>
 
@@ -223,7 +223,7 @@
 <p>4、数据库读写分离，并提供反向代理及CDN加速访问服务–抢票高峰，静态资源放到CDN中，加入反向代理的配置，减少访问网站时直接去服务器读取静态数据</p>
 <p>5、分布式文件系统与分布式数据库–减少DB的压力，进行分库分表，根据业务来拆分数据库</p>
 <h1 id="第2章：搭建微服务项目"><a href="#第2章：搭建微服务项目" class="headerlink" title="第2章：搭建微服务项目"></a>第2章：搭建微服务项目</h1><p>Spring Boot项目搭建规范：</p>
-<p><img src="https://img-blog.csdnimg.cn/20201208111251290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530100950.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>依赖层级关系：server依赖model，model依赖api</p>
 <p>Spring Boot项目搭建流程：</p>
 <ol>
@@ -632,10 +632,9 @@
 </li>
 </ol>
 <ol start="13">
-<li><p>最终结构</p>
-<p><img src="https://img-blog.csdnimg.cn/20201209140017395.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
-</li>
+<li>最终结构</li>
 </ol>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530101042.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>Hello World小试牛刀</p>
 <p>在server模块创建controller包和entity包</p>
 <p>controller包下新建一个BookController类，用于处理请求，entity包下新建Book类，封装书的字段信息</p>
@@ -660,7 +659,7 @@
 &#125;</code></pre></div>
 
 <p>运行程序</p>
-<p><img src="https://img-blog.csdnimg.cn/20201209141731816.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530101153.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <h1 id="第3章：缓存中间件Redis"><a href="#第3章：缓存中间件Redis" class="headerlink" title="第3章：缓存中间件Redis"></a>第3章：缓存中间件Redis</h1><p>Windows下启动Redis：双击redis-server.exe</p>
 <p>Windows下运行Redis命令行窗口：双击redis-cli.exe</p>
 <p>常用命令：</p>
@@ -2017,11 +2016,11 @@
 &#125;</code></pre></div>
 
 <p>抢红包请求设置如下：</p>
-<p><img src="https://img-blog.csdnimg.cn/20210127100846874.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530101300.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>用户抢红包账号等设置如下：共有10030~10035六个用户</p>
-<p><img src="https://img-blog.csdnimg.cn/20210127101635797.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530101312.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>运行后查看结果树：</p>
-<p><img src="https://img-blog.csdnimg.cn/20210127101811190.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530102015.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>运行栏数据：</p>
 <div class="hljs"><pre><code class="hljs angelscript">[<span class="hljs-number">2021</span><span class="hljs-number">-01</span><span class="hljs-number">-27</span> <span class="hljs-number">09</span>:<span class="hljs-number">45</span>:<span class="hljs-number">43.043</span>] boot -  INFO [http-nio<span class="hljs-number">-8087</span>-exec<span class="hljs-number">-90</span>] ---RedPacketService: 当前用户抢到红包了：userId=<span class="hljs-number">10031</span> key=redis:red:packet:<span class="hljs-number">10030</span>:<span class="hljs-number">426373717637600</span> 金额=<span class="hljs-number">0.28</span>
 [<span class="hljs-number">2021</span><span class="hljs-number">-01</span><span class="hljs-number">-27</span> <span class="hljs-number">09</span>:<span class="hljs-number">45</span>:<span class="hljs-number">43.043</span>] boot -  INFO [http-nio<span class="hljs-number">-8087</span>-exec<span class="hljs-number">-212</span>] ---RedPacketService: 当前用户抢到红包了：userId=<span class="hljs-number">10031</span> key=redis:red:packet:<span class="hljs-number">10030</span>:<span class="hljs-number">426373717637600</span> 金额=<span class="hljs-number">0.57</span>
@@ -2860,7 +2859,7 @@
     &#125;</code></pre></div>
 
 <p>2、保证RabbitMQ队列中的消息“不丢失”，是在创建队列、交换机时设置其持久化参数为true，即durable参数取值为true。</p>
-<p><img src="https://img-blog.csdnimg.cn/20210204105538457.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530101930.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <p>在创建消息时，RabbitMQ要求设置消息的持久化模式为“持久化”，从而保证RabbitMQ服务器出现崩溃并执行重启操作之后，队列、交换机仍旧存在而且消息不会丢失。</p>
 <div class="hljs"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> Message <span class="hljs-title">postProcessMessage</span><span class="hljs-params">(Message message)</span> <span class="hljs-keyword">throws</span> AmqpException </span>&#123;
                         <span class="hljs-comment">//获取消息的属性</span>
@@ -3406,9 +3405,6 @@
 &#125;</code></pre></div>
 
 <p>SysLogMapper.xml</p>
-<div class="hljs"><pre><code class="hljs plain">
-</code></pre></div>
-
 <div class="hljs"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
 <span class="hljs-comment">&lt;!--xml头部定义--&gt;</span>
 <span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">mapper</span> <span class="hljs-meta-keyword">PUBLIC</span> <span class="hljs-meta-string">"-//mybatis.org//DTD Mapper 3.0//EN"</span> <span class="hljs-meta-string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span> &gt;</span>
@@ -4638,11 +4634,28 @@
 &#125;</code></pre></div>
 
 
+
+<p>未完…待定~</p>
+
             </article>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84/">微服务分布式架构</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+                    
+                  </div>
                 
               </div>
               
@@ -4653,19 +4666,19 @@
                   <div class="post-prev col-6">
                     
                     
-                      <a href="/2021/05/17/%E9%AB%98%E6%95%88%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%8445%E4%B8%AA%E4%B9%A0%E6%83%AF/">
+                      <a href="/2021/05/30/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%8A%80%E6%9C%AF%E5%AE%9E%E6%88%98/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">高效程序员的45个习惯</span>
-                        <span class="visible-mobile">Previous</span>
+                        <span class="hidden-mobile">分布式中间件技术实战</span>
+                        <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </div>
                   <div class="post-next col-6">
                     
                     
-                      <a href="/2020/09/04/Dubbo%E7%9F%A5%E8%AF%86%E7%82%B9/">
-                        <span class="hidden-mobile">Dubbo知识点</span>
-                        <span class="visible-mobile">Next</span>
+                      <a href="/2021/05/30/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%AB%98%E6%95%88%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C/">
+                        <span class="hidden-mobile">程序员高效开发手册</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -4698,7 +4711,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -4725,7 +4738,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -4734,7 +4747,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
@@ -4819,7 +4832,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "分布式中间件技术实战&nbsp;",
+        "分布式中间件技术实战篇&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,

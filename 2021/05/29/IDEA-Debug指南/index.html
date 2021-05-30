@@ -246,7 +246,7 @@
 
 <h2 id="二、基本用法-amp-快捷键"><a href="#二、基本用法-amp-快捷键" class="headerlink" title="二、基本用法&amp;快捷键"></a>二、基本用法&amp;快捷键</h2><p>Debug调试的功能主要对应着图一中4和5两组按钮（快捷键以实际为准）：</p>
 <p>1、首先说第一组按钮，共8个按钮，从左到右依次如下：</p>
-<p>　　　　                                                                         <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529195941.png" srcset="/img/loading.gif" alt="image-20210523083953585"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529195941.png" srcset="/img/loading.gif" alt="image-20210523083953585"></p>
 <center>图 2.1</center>
 
 <ul>
@@ -260,7 +260,7 @@
 <li><strong>Evaluate Expression</strong> (<code>Ctrl + U</code>)：计算表达式，后面章节详细说明。</li>
 </ul>
 <p>2、第二组按钮，共6个按钮，从上到下依次如下：</p>
-<p> 　　                                                                                                      <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529195952.png" srcset="/img/loading.gif" alt="image-20210523085302910">   </p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529195952.png" srcset="/img/loading.gif" alt="image-20210523085302910">   </p>
 <center>图 2.2</center>
 
 <p><strong>Rerun ‘xxxx’</strong>（<code>Ctrl + F11</code>）：重新运行程序，会关闭服务后重新启动程序。</p>
@@ -269,7 +269,7 @@
 <p><strong>Stop ‘xxx’</strong>：关闭程序。有时候你会发现关闭服务再启动时，报端口被占用，这是因为没完全关闭服务的原因，你就需要查杀所有JVM进程了。</p>
 <p><strong>View Breakpoints</strong> (<code>Ctrl + Shift + F8</code>)：查看所有断点，后面章节会涉及到。</p>
 <p><strong>Mute Breakpoints</strong>：哑的断点，选择这个后，所有断点变为灰色，断点失效，按<code>F8</code>则可以直接运行完程序。再次点击，断点变为红色，有效。如果只想使某一个断点失效，可以在断点上右键取消Enabled，如图2.3，则该行断点失效。</p>
-<p>　　　　                            <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200001.png" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200001.png" srcset="/img/loading.gif" alt="img"></p>
  <center>图 2.3</center>
 
 <h2 id="三、变量查看"><a href="#三、变量查看" class="headerlink" title="三、变量查看"></a>三、变量查看</h2><p>在Debug过程中，跟踪查看变量的变化是非常必要的，这里就简单说下IDEA中可以查看变量的几个地方，相信大部分人都了解。</p>
@@ -285,11 +285,11 @@
 <center>图 3.3</center>
 
 <p>3、在<code>Variables</code>里查看，这里显示当前方法里的所有变量。</p>
-<p>​                                              　<img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200116.png" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200116.png" srcset="/img/loading.gif" alt="img"></p>
 <center>图 3.4</center>
 
 <p>4、在Watches里，点击<code>New Watch</code>，输入需要查看的变量。或者可以从<code>Variables</code>里拖到Watche里查看。</p>
-<p>　                                  　<img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200127.png" srcset="/img/loading.gif" alt="img"> </p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200127.png" srcset="/img/loading.gif" alt="img"> </p>
 <center>图 3.5</center>
 
 <p>如果你发现你没有Watches，可能在下图所在的地方。</p>
@@ -297,7 +297,7 @@
 <center>图 3.6</center>
 
 <h2 id="四、计算表达式"><a href="#四、计算表达式" class="headerlink" title="四、计算表达式"></a>四、计算表达式</h2><p>在前面提到的计算表达式如图4.1的按钮，<code>Evaluate Expression</code> (<code>Ctrl + U</code>) 。可以使用这个操作在调试过程中计算某个表达式的值，而不用再去打印信息。</p>
-<p>​                                                                              　<img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200143.png" srcset="/img/loading.gif" alt="image-20210523091147106"> </p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200143.png" srcset="/img/loading.gif" alt="image-20210523091147106"> </p>
 <center>图 4.1</center>
 
 <p>1、选中某个表达式再按<code>Ctrl + U</code>，弹出计算表达式的窗口，如下，回车或点击Evaluate计算表达式的值。</p>
@@ -313,13 +313,13 @@
 
 <p>按<code>Ctrl + F5</code>，会自动定位到当前断点行，并列出需要进入的方法，如图5.2，点击方法进入方法内部。</p>
 <p>如果只有一个方法，则直接进入，类似<code>Force Step Into</code>。</p>
-<p>　　                   <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200215.png" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200215.png" srcset="/img/loading.gif" alt="img"></p>
 <center>图 5.2</center>
 
 <h2 id="六、断点条件设置"><a href="#六、断点条件设置" class="headerlink" title="六、断点条件设置"></a>六、断点条件设置</h2><p>通过设置断点条件，在满足条件时，才停在断点处，否则直接运行。</p>
 <p>通常，当我们在遍历一个比较大的集合或数组时，在循环内设置了一个断点，难道我们要一个一个去看变量的值？那肯定很累，说不定你还错过这个值得重新来一次。(戳中泪点）</p>
 <p>1、在断点上右键直接设置当前断点的条件，如图6.1。</p>
-<p>​                                                          　<img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200223.png" srcset="/img/loading.gif" alt="image-20210523093253417"></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200223.png" srcset="/img/loading.gif" alt="image-20210523093253417"></p>
 <center>图 6.1</center>
 
 <p>2、点击<code>View Breakpoints</code> (<code>Ctrl + Shift + F8</code>)，查看所有断点。</p>
@@ -334,7 +334,7 @@
 <p><code>Pass count</code>：用于循环中，如果断点在循环中，可以设置该值，循环多少次后停在断点处，之后的循环都会停在断点处。</p>
 <p>4、异常断点，通过设置异常断点，在程序中出现需要拦截的异常时，会自动定位到异常行。</p>
 <p>如图6.3，点击+号添加<code>Java Exception Breakpoints</code>，添加异常断点。然后输入需要断点的异常类，之后可以在Java Exception Breakpoints里看到添加的异常断点，如果添加了一个NullPointerException异常断点，出现空指针异常后，自动定位在空指针异常行。</p>
-<p>　　                                       <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200246.png" srcset="/img/loading.gif" alt="img"></p>
+<p> <img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200246.png" srcset="/img/loading.gif" alt="img"></p>
 <center>图 6.3</center>
 
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529200257.png" srcset="/img/loading.gif" alt="img"> </p>
@@ -388,9 +388,9 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/IDEA/">IDEA</a>
+                      <a class="hover-with-bg" href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a>
                     
-                      <a class="hover-with-bg" href="/categories/IDEA/Debug/">Debug</a>
+                      <a class="hover-with-bg" href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/IDEA/">IDEA</a>
                     
                   </div>
                 
@@ -411,13 +411,19 @@
                   <div class="post-prev col-6">
                     
                     
+                      <a href="/2021/05/29/%E9%87%8D%E6%9E%84/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">重构</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </div>
                   <div class="post-next col-6">
                     
                     
                       <a href="/2021/05/29/Git%E6%8A%80%E5%B7%A7/">
                         <span class="hidden-mobile">Git技巧</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -450,7 +456,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -477,7 +483,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -486,7 +492,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
