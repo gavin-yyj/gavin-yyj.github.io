@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>Spring中用到的设计模式 - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-05-30 16:11">
+      May 30, 2021 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      44
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p><strong>控制反转(IoC)和依赖注入(DI)</strong></p>
+<p><strong>IoC(Inversion of Control,控制翻转)</strong> 是Spring 中一个非常非常重要的概念，它不是什么技术，而是一种解耦的设计思想。它的主要目的是借助于“第三方”(Spring 中的 IOC 容器) 实现具有依赖关系的对象之间的解耦(IOC容易管理对象，你只管使用即可)，从而降低代码之间的耦合度。<strong>IOC 是一个原则，而不是一个模式，以下模式（但不限于）实现了IoC原则。</strong></p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530161158.png" srcset="/img/loading.gif" alt="image-20210530161157870"></p>
+<p><strong>Spring IOC 容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可，完全不用考虑对象是如何被创建出来的。</strong> IOC 容器负责创建对象，将对象连接在一起，配置这些对象，并从创建中处理这些对象的整个生命周期，直到它们被完全销毁。</p>
+<p><strong>控制反转怎么理解呢?</strong> 举个例子：”对象a 依赖了对象 b，当对象 a 需要使用对象 b的时候必须自己去创建。但是当系统引入了 IOC 容器后， 对象a 和对象 b 之间就失去了直接的联系。这个时候，当对象 a 需要使用 对象 b的时候， 我们可以指定 IOC 容器去创建一个对象b注入到对象 a 中”。 对象 a 获得依赖对象 b 的过程,由主动行为变为了被动行为，控制权翻转，这就是控制反转名字的由来。</p>
+<p><strong>DI(Dependecy Inject,依赖注入)是实现控制反转的一种设计模式，依赖注入就是将实例变量传入到一个对象中去。</strong></p>
+<p><strong>工厂设计模式</strong></p>
+<p>Spring使用工厂模式可以通过 BeanFactory 或 ApplicationContext 创建 bean 对象。</p>
+<p><strong>两者对比：</strong></p>
+<ul>
+<li>BeanFactory ：延迟注入(使用到某个     bean 的时候才会注入),相比于ApplicationContext来说会占用更少的内存，程序启动速度更快。</li>
+<li>ApplicationContext ：容器启动的时候，不管你用没用到，一次性创建所有     bean 。BeanFactory 仅提供了最基本的依赖注入支持，ApplicationContext 扩展了 BeanFactory ,除了有BeanFactory的功能还有额外更多功能，所以一般开发人员使用ApplicationContext会更多。</li>
+</ul>
+<p>ApplicationContext的三个实现类：</p>
+<ol>
+<li>ClassPathXmlApplication：把上下文文件当成类路径资源。</li>
+<li>FileSystemXmlApplication：从文件系统中的 XML     文件载入上下文定义信息。</li>
+<li>XmlWebApplicationContext：从Web系统中的XML文件载入上下文定义信息。</li>
+</ol>
+<p>Example:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;
+        ApplicationContext context = <span class="hljs-keyword">new</span> FileSystemXmlApplicationContext(
+                <span class="hljs-string">"C:/work/IOC Containers/springframework.applicationcontext/"</span>
+                +<span class="hljs-string">"src/main/resources/bean-factory-config.xml"</span>);
+        HelloApplicationContext obj = 
+        (HelloApplicationContext) context.getBean(<span class="hljs-string">"helloApplicationContext"</span>);
+        obj.getMsg();
+    &#125;
+&#125;</code></pre></div>
+
+<p><strong>单例设计模式</strong></p>
+<p>在我们的系统中，有一些对象其实我们只需要一个，比如说：线程池、缓存、对话框、注册表、日志对象、充当打印机、显卡等设备驱动程序的对象。事实上，这一类对象只能有一个实例，如果制造出多个实例就可能会导致一些问题的产生，比如：程序的行为异常、资源使用过量、或者不一致性的结果。</p>
+<p><strong>使用单例模式的好处:</strong></p>
+<ul>
+<li>对于频繁使用的对象，可以省略创建对象所花费的时间，这对于那些重量级对象而言，是非常可观的一笔系统开销；</li>
+<li>由于 new     操作的次数减少，因而对系统内存的使用频率也会降低，这将减轻 GC 压力，缩短 GC 停顿时间。</li>
+</ul>
+<p><strong>Spring 中 bean 的默认作用域就是 singleton(单例)的。</strong> 除了 singleton 作用域，Spring 中 bean 还有下面几种作用域：</p>
+<ul>
+<li>prototype : 每次请求都会创建一个新的 bean 实例。</li>
+<li>request :     每一次HTTP请求都会产生一个新的bean，该bean仅在当前HTTP request内有效。</li>
+<li>session : 每一次HTTP请求都会产生一个新的     bean，该bean仅在当前 HTTP session 内有效。</li>
+<li>global-session：     全局session作用域，仅仅在基于portlet的web应用中才有意义，Spring5已经没有了。Portlet是能够生成语义代码(例如：HTML)片段的小型Java     Web插件。它们基于portlet容器，可以像servlet一样处理HTTP请求。但是，与 servlet 不同，每个 portlet     都有不同的会话。</li>
+</ul>
+<p><strong>Spring 实现单例的方式：</strong></p>
+<ul>
+<li>xml:<bean     id="userService" class="top.snailclimb.UserService"     scope="singleton"/></li>
+<li>注解：@Scope(value =     “singleton”)</li>
+</ul>
+<p>Spring 通过 ConcurrentHashMap 实现单例注册表的特殊方式实现单例模式。Spring 实现单例的核心代码如下：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">// 通过 ConcurrentHashMap（线程安全） 实现单例注册表</span>
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Map&lt;String, Object&gt; singletonObjects = 
+        <span class="hljs-keyword">new</span> ConcurrentHashMap&lt;String, Object&gt;(<span class="hljs-number">64</span>);
+
+<span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">getSingleton</span><span class="hljs-params">(String beanName, ObjectFactory&lt;?&gt; singletonFactory)</span> </span>&#123;
+        Assert.notNull(beanName, <span class="hljs-string">"'beanName' must not be null"</span>);
+        <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.singletonObjects) &#123;
+            <span class="hljs-comment">// 检查缓存中是否存在实例  </span>
+            Object singletonObject = <span class="hljs-keyword">this</span>.singletonObjects.get(beanName);
+            <span class="hljs-keyword">if</span> (singletonObject == <span class="hljs-keyword">null</span>) &#123;
+                <span class="hljs-comment">//...省略了很多代码</span>
+                <span class="hljs-keyword">try</span> &#123;
+                    singletonObject = singletonFactory.getObject();
+                &#125;
+                <span class="hljs-comment">//...省略了很多代码</span>
+                <span class="hljs-comment">// 如果实例对象在不存在，我们注册到单例注册表中。</span>
+                addSingleton(beanName, singletonObject);
+            &#125;
+            <span class="hljs-keyword">return</span> (singletonObject != NULL_OBJECT ? singletonObject : <span class="hljs-keyword">null</span>);
+        &#125;
+    &#125;
+    <span class="hljs-comment">//将对象添加到单例注册表</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">addSingleton</span><span class="hljs-params">(String beanName, Object singletonObject)</span> </span>&#123;
+            <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>.singletonObjects) &#123;
+                <span class="hljs-keyword">this</span>.singletonObjects.put(beanName, 
+                (singletonObject != <span class="hljs-keyword">null</span> ? singletonObject : NULL_OBJECT));
+            &#125;
+        &#125;
+&#125;</code></pre></div>
+
+<p><strong>代理模式在 AOP 中的应用</strong></p>
+<p>AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可拓展性和可维护性。</p>
+<p><strong>Spring AOP 就是基于动态代理的</strong>，如果要代理的对象，实现了某个接口，那么Spring AOP会使用<strong>JDK Proxy</strong>去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候Spring AOP会使用<strong>Cglib</strong> ，这时候Spring AOP会使用 <strong>Cglib</strong> 生成一个被代理对象的子类来作为代理，如下图所示：</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530161410.png" srcset="/img/loading.gif" alt="image-20210530161409894"></p>
+<p>当然你也可以使用 AspectJ ,Spring AOP 已经集成了AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。</p>
+<p>使用 AOP 之后我们可以把一些通用功能抽象出来，在需要用到的地方直接使用即可，这样大大简化了代码量。我们需要增加新功能时也方便，这样也提高了系统扩展性。日志功能、事务管理等等场景都用到了 AOP 。</p>
+<p><strong>Spring AOP 和 AspectJ AOP 有什么区别?</strong></p>
+<p><strong>Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。</strong> Spring AOP 基于代理(Proxying)，而 AspectJ 基于字节码操作(Bytecode Manipulation)。</p>
+<p>Spring AOP 已经集成了 AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单，如果我们的切面比较少，那么两者性能差异不大。但是，当切面太多的话，最好选择 AspectJ ，它比Spring AOP 快很多。</p>
+<p><strong>模板方法</strong></p>
+<p>模板方法模式是一种行为设计模式，它定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。 模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤的实现方式。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530161448.png" srcset="/img/loading.gif" alt="image-20210530161447930"></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Template</span> </span>&#123;
+    <span class="hljs-comment">//这是我们的模板方法</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">TemplateMethod</span><span class="hljs-params">()</span></span>&#123;
+        PrimitiveOperation1();  
+        PrimitiveOperation2();
+        PrimitiveOperation3();
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span>  <span class="hljs-title">PrimitiveOperation1</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-comment">//当前类实现</span>
+    &#125;
+    <span class="hljs-comment">//被子类实现的方法</span>
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PrimitiveOperation2</span><span class="hljs-params">()</span></span>;
+    <span class="hljs-function"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PrimitiveOperation3</span><span class="hljs-params">()</span></span>;
+&#125;
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TemplateImpl</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Template</span> </span>&#123;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PrimitiveOperation2</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-comment">//当前类实现</span>
+    &#125;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">PrimitiveOperation3</span><span class="hljs-params">()</span> </span>&#123;
+        <span class="hljs-comment">//当前类实现</span>
+    &#125;
+&#125;</code></pre></div>
+
+<p>Spring 中 jdbcTemplate、hibernateTemplate 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。一般情况下，我们都是使用继承的方式来实现模板模式，但是 Spring 并没有使用这种方式，而是使用Callback 模式与模板方法模式配合，既达到了代码复用的效果，同时增加了灵活性。</p>
+<p><strong>观察者模式</strong></p>
+<p>观察者模式是一种对象行为型模式。它表示的是一种对象与对象之间具有依赖关系，当一个对象发生改变的时候，这个对象所依赖的对象也会做出反应。Spring 事件驱动模型就是观察者模式很经典的一个应用。Spring 事件驱动模型非常有用，在很多场景都可以解耦我们的代码。比如我们每次添加商品的时候都需要重新更新商品索引，这个时候就可以利用观察者模式来解决这个问题。</p>
+<p><strong>Spring 事件驱动模型中的三种角色</strong></p>
+<p><strong>事件角色</strong></p>
+<p>ApplicationEvent (org.springframework.context包下)充当事件的角色,这是一个抽象类，它继承了java.util.EventObject并实现了 java.io.Serializable接口。</p>
+<p>Spring 中默认存在以下事件，他们都是对 ApplicationContextEvent 的实现(继承自ApplicationContextEvent)：</p>
+<ul>
+<li><p>ContextStartedEvent：ApplicationContext 启动后触发的事件;</p>
+</li>
+<li><p>ContextStoppedEvent：ApplicationContext 停止后触发的事件;</p>
+</li>
+<li><p>ContextRefreshedEvent：ApplicationContext 初始化或刷新完成后触发的事件;</p>
+</li>
+<li><p>ContextClosedEvent：ApplicationContext 关闭后触发的事件。</p>
+<p><strong>事件监听者角色</strong></p>
+</li>
+</ul>
+<p>ApplicationListener 充当了事件监听者角色，它是一个接口，里面只定义了一个 onApplicationEvent（）方法来处理ApplicationEvent。ApplicationListener接口类源码如下，可以看出接口中的事件只要实现了 ApplicationEvent就可以了。所以，在 Spring中我们只要实现 ApplicationListener 接口中的 onApplicationEvent() 方法即可完成监听事件。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@FunctionalInterface</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ApplicationListener</span>&lt;<span class="hljs-title">E</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApplicationEvent</span>&gt; </span>
+<span class="hljs-class"><span class="hljs-keyword">extends</span> <span class="hljs-title">EventListener</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">onApplicationEvent</span><span class="hljs-params">(E var1)</span></span>;
+&#125;
+事件发布者角色
+ApplicationEventPublisher 充当了事件的发布者，它也是一个接口。
+<span class="hljs-meta">@FunctionalInterface</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">ApplicationEventPublisher</span> </span>&#123;
+    <span class="hljs-function"><span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title">publishEvent</span><span class="hljs-params">(ApplicationEvent event)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.publishEvent((Object)event);
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">publishEvent</span><span class="hljs-params">(Object var1)</span></span>;
+&#125;</code></pre></div>
+
+<p>ApplicationEventPublisher 接口的publishEvent（）这个方法在AbstractApplicationContext类中被实现，阅读这个方法的实现，你会发现实际上事件真正是通过ApplicationEventMulticaster来广播出去的。具体内容过多，就不在这里分析了，后面可能会单独写一篇文章提到。</p>
+<p><strong>Spring 的事件流程总结</strong></p>
+<ol>
+<li>定义一个事件:     实现一个继承自 ApplicationEvent，并且写相应的构造函数；</li>
+<li>定义一个事件监听者：实现 ApplicationListener 接口，重写 onApplicationEvent() 方法；</li>
+<li>使用事件发布者发布消息: 可以通过ApplicationEventPublisher 的publishEvent（）方法发布消息。</li>
+</ol>
+<p>Example:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">// 定义一个事件,继承自ApplicationEvent并且写相应的构造函数</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoEvent</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ApplicationEvent</span></span>&#123;
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> serialVersionUID = <span class="hljs-number">1L</span>;
+    <span class="hljs-keyword">private</span> String message;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">DemoEvent</span><span class="hljs-params">(Object source,String message)</span></span>&#123;
+        <span class="hljs-keyword">super</span>(source);
+        <span class="hljs-keyword">this</span>.message = message;
+    &#125;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getMessage</span><span class="hljs-params">()</span> </span>&#123;
+         <span class="hljs-keyword">return</span> message;
+   &#125;
+<span class="hljs-comment">// 定义一个事件监听者,实现ApplicationListener接口，重写onApplicationEvent()方法；</span>
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoListener</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ApplicationListener</span>&lt;<span class="hljs-title">DemoEvent</span>&gt;</span>&#123;
+    <span class="hljs-comment">//使用onApplicationEvent接收消息</span>
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onApplicationEvent</span><span class="hljs-params">(DemoEvent event)</span> </span>&#123;
+        String msg = event.getMessage();
+        System.out.println(<span class="hljs-string">"接收到的信息是："</span>+msg);
+    &#125;
+&#125;
+<span class="hljs-comment">// 发布事件，可以通过ApplicationEventPublisher 的 publishEvent() 方法发布消息。</span>
+<span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DemoPublisher</span> </span>&#123;
+    <span class="hljs-meta">@Autowired</span>
+    ApplicationContext applicationContext;
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">publish</span><span class="hljs-params">(String message)</span></span>&#123;
+        <span class="hljs-comment">//发布事件</span>
+        applicationContext.publishEvent(<span class="hljs-keyword">new</span> DemoEvent(<span class="hljs-keyword">this</span>, message));
+    &#125;
+&#125;</code></pre></div>
+
+<p>当调用 DemoPublisher 的 publish() 方法的时候，比如 demoPublisher.publish(“你好”) ，控制台就会打印出:接收到的信息是：你好 。</p>
+<p><strong>适配器模式</strong></p>
+<p>适配器模式(Adapter Pattern) 将一个接口转换成客户希望的另一个接口，适配器模式使接口不兼容的那些类可以一起工作，其别名为包装器(Wrapper)。</p>
+<p><strong>spring AOP中的适配器模式</strong></p>
+<p>我们知道 Spring AOP 的实现是基于代理模式，但是 Spring AOP 的增强或通知(Advice)使用到了适配器模式，与之相关的接口是AdvisorAdapter 。Advice 常用的类型有：BeforeAdvice（目标方法调用前,前置通知）、AfterAdvice（目标方法调用后,后置通知）、AfterReturningAdvice(目标方法执行结束后，return之前)等等。每个类型Advice（通知）都有对应的拦截器：MethodBeforeAdviceInterceptor、AfterReturningAdviceAdapter、AfterReturningAdviceInterceptor。Spring预定义的通知要通过对应的适配器，适配成 MethodInterceptor接口(方法拦截器)类型的对象（如：MethodBeforeAdviceInterceptor 负责适配 MethodBeforeAdvice）。</p>
+<p><strong>spring MVC中的适配器模式</strong></p>
+<p>在Spring MVC中，DispatcherServlet 根据请求信息调用 HandlerMapping，解析请求对应的 Handler。解析到对应的 Handler（也就是我们平常说的 Controller 控制器）后，开始由HandlerAdapter 适配器处理。HandlerAdapter 作为期望接口，具体的适配器实现类用于对目标类进行适配，Controller 作为需要适配的类。</p>
+<p><strong>为什么要在 Spring MVC 中使用适配器模式？</strong> Spring MVC 中的 Controller 种类众多，不同类型的 Controller 通过不同的方法来对请求进行处理。如果不利用适配器模式的话，DispatcherServlet 直接获取对应类型的 Controller，需要的自行来判断，像下面这段代码一样：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">if</span>(mappedHandler.getHandler() <span class="hljs-keyword">instanceof</span> MultiActionController)&#123;  
+   ((MultiActionController)mappedHandler.getHandler()).xxx  
+&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(mappedHandler.getHandler() <span class="hljs-keyword">instanceof</span> XXX)&#123;  
+    ...  
+&#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(...)&#123;  
+   ...  
+&#125;</code></pre></div>
+
+<p>假如我们再增加一个 Controller类型就要在上面代码中再加入一行判断语句，这种形式就使得程序难以维护，也违反了设计模式中的开闭原则 – 对扩展开放，对修改关闭。</p>
+<p><strong>装饰者模式</strong></p>
+<p>装饰者模式可以动态地给对象添加一些额外的属性或行为。相比于使用继承，装饰者模式更加灵活。简单点儿说就是当我们需要修改原有的功能，但我们又不愿直接去修改原有的代码时，设计一个Decorator套在原有代码外面。其实在 JDK 中就有很多地方用到了装饰者模式，比如 InputStream家族，InputStream 类下有 FileInputStream (读取文件)、BufferedInputStream (增加缓存,使读取文件速度大大提升)等子类都在不修改InputStream 代码的情况下扩展了它的功能。</p>
+<p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210530161702.png" srcset="/img/loading.gif" alt="image-20210530161702392"></p>
+<p>Spring 中配置 DataSource 的时候，DataSource 可能是不同的数据库和数据源。我们能否根据客户的需求在少修改原有类的代码下动态切换不同的数据源？这个时候就要用到装饰者模式。Spring 中用到的包装器模式在类名上含有 Wrapper或者 Decorator。这些类基本上都是动态地给一个对象添加一些额外的职责。</p>
+<p><strong>总结</strong></p>
+<p>Spring 框架中用到了哪些设计模式：</p>
+<ul>
+<li><strong>工厂设计模式</strong> <strong>:     Spring使用工厂模式通过</strong> <strong>BeanFactory、ApplicationContext 创建bean 对象。</strong></li>
+<li><strong>代理设计模式</strong> <strong>:     Spring AOP 功能的实现。</strong></li>
+<li><strong>单例设计模式</strong> <strong>:     Spring 中的 Bean 默认都是单例的。</strong></li>
+<li><strong>模板方法模式</strong> <strong>:     Spring 中</strong> <strong>jdbcTemplate</strong>、<strong>hibernateTemplate</strong> <strong>等以Template 结尾的对数据库操作的类，它们就使用到了模板模式。</strong></li>
+<li><strong>包装器设计模式</strong> :     <strong>我们的项目需要连接多个数据库，而且不同的客户在每次访问中根据需要会去访问不同的数据库。这种模式让我们可以根据客户的需求能够动态切换不同的数据源。</strong></li>
+<li><strong>观察者模式:</strong> <strong>Spring事件驱动模型就是观察者模式很经典的一个应用。</strong></li>
+<li><strong>适配器模式</strong> <strong>:Spring  AOP 的增强或通知(Advice)使用到了适配器模式、spring MVC 中也是用到了适配器模式适配Controller</strong>。</li>
+</ul>
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/05/30/Git%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/">
+                        <span class="hidden-mobile">Git常用指令</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "Spring中用到的设计模式&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
