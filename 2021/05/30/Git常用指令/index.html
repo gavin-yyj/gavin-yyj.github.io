@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      950 字
+      1k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      12
        分钟
     </span>
   
@@ -220,15 +220,16 @@
 <li>mkdir：创建文件夹</li>
 <li>cd：进入当前目录</li>
 <li>pwd：用于显示当前目录</li>
-<li>git init：将这个目录变成git可以管理的仓库</li>
-<li>git add 文件名：将这个文件添加到暂存区</li>
-<li>git commit -m ‘注释信息’：把文件提交到仓库</li>
+<li>git init：将这个目录变成<code>git</code>可以管理的仓库</li>
+<li>git add 文件名：将这个文件添加到<strong>暂存区</strong></li>
+<li>git commit -m ‘注释信息’：把文件提交到<strong>仓库</strong></li>
 </ul>
 <p>版本回退：</p>
 <ul>
 <li>git log：显示从最近到最远的提交日志</li>
 <li>git log –pretty=oneline：显示提交日志的简版</li>
 <li>git reset –hard HEAD^：回退到上一个版本</li>
+<li>git reset –soft HEAD^：回退到上一个版本，不改变本地已修改的内容</li>
 <li>git reset –hard 版本号：回退到指定版本</li>
 <li>git reflog：查询历史命令（里面包含版本号）</li>
 </ul>
@@ -247,8 +248,11 @@
 </ul>
 <p>删除文件：</p>
 <ul>
-<li>git rm 文件名：删除文件（类似于git add 文件名），此时有两个选择：从版本库中删除该文件执行git commit；误删执行</li>
-<li>git checkout – 文件名</li>
+<li>git rm 文件名：删除文件（类似于git add 文件名），此时有两个选择：<ul>
+<li>从版本库中删除该文件执行git commit；</li>
+<li>误删执行git checkout – 文件名</li>
+</ul>
+</li>
 </ul>
 <p>远程仓库：</p>
 <ul>
@@ -274,7 +278,7 @@
 </ul>
 <p>Bug分支</p>
 <ul>
-<li>git stash：将当前工作现场“隐藏”起来，用于工作没有完成，但需要先解决bug的情况</li>
+<li>git stash：将当前工作现场“隐藏”起来，用于工作没有完成，但需要先解决bug的情况，如果下拉代码的时候发生冲突，可以使用该指令将当前工作现场“隐藏”起来，然后手动解决冲突；</li>
 <li>git stash list：查看隐藏起来的工作现场</li>
 <li>git stash apply：恢复工作现场，但是恢复后，stash内容并不删除，你需要用git stash drop来删除；</li>
 <li>git stash pop：恢复的同时把stash内容也删了</li>

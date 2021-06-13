@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      4.4k 字
+      4.5k 字
     </span>
   
 
@@ -215,7 +215,13 @@
           <div class="post-content mx-auto" id="post">
             
             <article class="markdown-body">
-              <h2 id="一、创建版本库"><a href="#一、创建版本库" class="headerlink" title="一、创建版本库"></a>一、创建版本库</h2><p>版本库又称仓库，英文名<code>repository</code>，你可以简单的理解一个目录，这个目录里面的所有文件都可以被<code>Git</code>管理起来，每个文件的修改，删除，<code>Git</code>都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻还可以将文件”<strong>还原</strong>”。</p>
+              <h2 id="0、准备"><a href="#0、准备" class="headerlink" title="0、准备"></a>0、准备</h2><p><code>git help log</code>：获取帮助；</p>
+<p>设置你的名字和邮箱</p>
+<ul>
+<li>git config –global user.name “Your Name Comes Here”</li>
+<li>git config –global user.email <a href="mailto:you@yourdomain.example.com">you@yourdomain.example.com</a></li>
+</ul>
+<h2 id="一、创建版本库"><a href="#一、创建版本库" class="headerlink" title="一、创建版本库"></a>一、创建版本库</h2><p>版本库又称仓库，英文名<code>repository</code>，你可以简单的理解一个目录，这个目录里面的所有文件都可以被<code>Git</code>管理起来，每个文件的修改，删除，<code>Git</code>都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻还可以将文件”<strong>还原</strong>”。</p>
 <p>创建一个版本库：如下我是D盘 –&gt; www下目录下新建一个<code>testgit</code>版本库。</p>
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193407.png" srcset="/img/loading.gif" alt="img"></p>
 <p><code>pwd</code>命令是用于显示当前的目录。</p>
@@ -225,10 +231,10 @@
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193438.png" srcset="/img/loading.gif" alt="img"></p>
 <p><strong>Demo演示：</strong></p>
 <p>在版本库<code>testgit</code>目录下新建一个记事本文件 readme.txt 内容如下：11111111</p>
-<p>第一步：使用命令<code>git add readme.txt</code>添加到暂存区里面去。</p>
+<p>第一步：使用命令<code>git add readme.txt</code>添加到<strong>暂存区</strong>里面去。</p>
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193448.png" srcset="/img/loading.gif" alt="img"></p>
 <p>如果没有任何提示，说明已经添加成功了。</p>
-<p>第二步：用命令 <code>git commit</code>告诉Git，把文件提交到仓库。</p>
+<p>第二步：用命令 <code>git commit</code>告诉Git，把文件提交到本地仓库。</p>
 <p><code>Git commit -m &quot;readme.txt提交&quot;</code>：后面双引号为提示提交的注释信息。</p>
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193519.png" srcset="/img/loading.gif" alt="img"></p>
 <p>可以通过命令<code>git status</code>来查看是否还有文件未提交：</p>
@@ -240,7 +246,7 @@
 <p>如上可以看到，readme.txt文件内容从一行11111111改成两行，添加了一行22222222内容。</p>
 <p>知道了对readme.txt文件做了什么修改后，我们可以放心的提交到仓库了，提交修改和提交文件是一样的。</p>
 <ul>
-<li>第一步是<code>git add</code></li>
+<li>第一步是：<code>git add</code></li>
 <li>第二步是：<code>git commit</code></li>
 </ul>
 <p><img src="https://gitee.com/yang_yu_jie/blog-img/raw/master/img/20210529193615.png" srcset="/img/loading.gif" alt="img"></p>

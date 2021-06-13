@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CH">
+
+
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" type="image/png" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="光说不做假把式">
+  <meta name="author" content="杨玉杰">
+  <meta name="keywords" content="">
+  <title>单元测试之Mockito - 杨玉杰|个人博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/agate.min.css" />
+  
+
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_yg9cfy8wd6.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_pjno9b9zyxs.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>杨玉杰|个人博客</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                主页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友情链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="view intro-2" id="background" parallax=true
+         style="background: url('/img/bgi.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="container text-center white-text fadeInUp">
+            <span class="h2" id="subtitle">
+              
+            </span>
+
+            
+              
+  <div class="mt-3 post-meta">
+    <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+    <time datetime="2021-06-12 18:34">
+      June 12, 2021 pm
+    </time>
+  </div>
+
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      16
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-md">
+      <div class="container nopadding-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <div class="post-content mx-auto" id="post">
+            
+            <article class="markdown-body">
+              <p>官方资料：<a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html" target="_blank" rel="noopener">https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html</a></p>
+<h2 id="1、验证某些行为"><a href="#1、验证某些行为" class="headerlink" title="1、验证某些行为"></a>1、验证某些行为</h2><p><strong>以List集合为例，实际测试用原本的实例代替</strong></p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//导包</span>
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.mockito.Mockito.*;
+
+<span class="hljs-comment">//创造mock对象</span>
+List mockedList = mock(List<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+<span class="hljs-comment">//使用mock对象</span>
+mockedList.add(<span class="hljs-string">"one"</span>);
+mockedList.clear();
+
+<span class="hljs-comment">//验证</span>
+verify(mockedList).add(<span class="hljs-string">"one"</span>);
+verify(mockedList).clear();</code></pre></div>
+
+<p>一旦创建，mock将记住所有交互。然后你可以有选择地验证你感兴趣的交互。</p>
+<h2 id="2、stubbing（存根）"><a href="#2、stubbing（存根）" class="headerlink" title="2、stubbing（存根）"></a>2、stubbing（存根）</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//mock LinkedList对象</span>
+LinkedList mockedList = mock(LinkedList<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+<span class="hljs-comment">//stubbing</span>
+when(mockedList.get(<span class="hljs-number">0</span>)).thenReturn(<span class="hljs-string">"first"</span>);
+when(mockedList.get(<span class="hljs-number">1</span>)).thenThrow(<span class="hljs-keyword">new</span> RuntimeException());
+
+<span class="hljs-comment">//打印"first"</span>
+System.out.println(mockedList.get(<span class="hljs-number">0</span>));
+
+<span class="hljs-comment">//打印异常信息</span>
+System.out.println(mockedList.get(<span class="hljs-number">1</span>));
+
+<span class="hljs-comment">//打印null，因为get(999)没有存根</span>
+System.out.println(mockedList.get(<span class="hljs-number">999</span>));
+
+<span class="hljs-comment">//如果您的代码不关心get(0)返回什么，那么它不应该被存根。</span>
+verify(mockedList).get(<span class="hljs-number">0</span>);</code></pre></div>
+
+<p>注意：</p>
+<ul>
+<li>一旦存根，该方法将始终返回一个存根值，无论调用了多少次。</li>
+</ul>
+<h2 id="3、参数匹配器"><a href="#3、参数匹配器" class="headerlink" title="3、参数匹配器"></a>3、参数匹配器</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//使用内置的anyInt()参数匹配器存根</span>
+when(mockedList.get(anyInt())).thenReturn(<span class="hljs-string">"element"</span>);
+
+<span class="hljs-comment">//使用自定义参数匹配器</span>
+when(mockedList.contains(argThat(isValid()))).thenReturn(<span class="hljs-keyword">true</span>);
+
+<span class="hljs-comment">//打印"element"</span>
+System.out.println(mockedList.get(<span class="hljs-number">999</span>));
+
+<span class="hljs-comment">//使用参数匹配器来验证</span>
+verify(mockedList).get(anyInt());
+
+<span class="hljs-comment">//Java 8 可以使用Lambda表达式来验证</span>
+verify(mockedList).add(argThat(someString -&gt; someString.length() &gt; <span class="hljs-number">5</span>));</code></pre></div>
+
+<p>自定义参数匹配器</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ListOfTwoElements</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ArgumentMatcher</span>&lt;<span class="hljs-title">List</span>&gt; </span>&#123;
+     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">matches</span><span class="hljs-params">(List list)</span> </span>&#123;
+         <span class="hljs-keyword">return</span> list.size() == <span class="hljs-number">2</span>;
+     &#125;
+     <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">toString</span><span class="hljs-params">()</span> </span>&#123;
+         <span class="hljs-comment">//printed in verification errors</span>
+         <span class="hljs-keyword">return</span> <span class="hljs-string">"[list of 2 elements]"</span>;
+     &#125;
+ &#125;
+
+ List mock = mock(List<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+ when(mock.addAll(argThat(<span class="hljs-keyword">new</span> ListOfTwoElements()))).thenReturn(<span class="hljs-keyword">true</span>);
+
+ mock.addAll(Arrays.asList(<span class="hljs-string">"one"</span>, <span class="hljs-string">"two"</span>));
+
+ verify(mock).addAll(argThat(<span class="hljs-keyword">new</span> ListOfTwoElements()));</code></pre></div>
+
+<p>在Java 8 中可以使用Lambda表达式来代替上述实现：</p>
+<div class="hljs"><pre><code class="hljs java">verify(mock).addAll(argThat(list -&gt; list.size() == <span class="hljs-number">2</span>));</code></pre></div>
+
+<p>更多的参数匹配器参考：<a href="https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/ArgumentMatchers.html" target="_blank" rel="noopener">https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/ArgumentMatchers.html</a></p>
+<h2 id="4、验证准确的调用数量-至少x次-从不"><a href="#4、验证准确的调用数量-至少x次-从不" class="headerlink" title="4、验证准确的调用数量/至少x次 /从不"></a>4、验证准确的调用数量/至少x次 /从不</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.Test;
+<span class="hljs-keyword">import</span> org.junit.runner.RunWith;
+<span class="hljs-keyword">import</span> org.mockito.Mockito;
+<span class="hljs-keyword">import</span> org.mockito.junit.MockitoJUnitRunner;
+<span class="hljs-keyword">import</span> java.util.LinkedList;
+<span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> org.mockito.Mockito.*;
+
+<span class="hljs-meta">@RunWith</span>(MockitoJUnitRunner<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>
+<span class="hljs-class"><span class="hljs-title">public</span> <span class="hljs-title">class</span> <span class="hljs-title">PersonTest</span> </span>&#123;
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">test</span><span class="hljs-params">()</span></span>&#123;
+        LinkedList mockedList = Mockito.mock(LinkedList<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+        mockedList.add(<span class="hljs-string">"once"</span>);
+
+        mockedList.add(<span class="hljs-string">"twice"</span>);
+        mockedList.add(<span class="hljs-string">"twice"</span>);
+
+        mockedList.add(<span class="hljs-string">"three times"</span>);
+        mockedList.add(<span class="hljs-string">"three times"</span>);
+        mockedList.add(<span class="hljs-string">"three times"</span>);
+
+        <span class="hljs-comment">//下面的两个验证工作完全相同，times缺省情况下默认是1</span>
+        verify(mockedList).add(<span class="hljs-string">"once"</span>);
+        verify(mockedList, times(<span class="hljs-number">1</span>)).add(<span class="hljs-string">"once"</span>);
+
+        <span class="hljs-comment">//准确的调用数验证</span>
+        verify(mockedList, times(<span class="hljs-number">2</span>)).add(<span class="hljs-string">"twice"</span>);
+        verify(mockedList, times(<span class="hljs-number">3</span>)).add(<span class="hljs-string">"three times"</span>);
+
+        <span class="hljs-comment">//验证从未使用</span>
+        verify(mockedList, never()).add(<span class="hljs-string">"never happened"</span>);
+
+        <span class="hljs-comment">//验证最少使用次数和最多使用次数</span>
+        verify(mockedList, atMostOnce()).add(<span class="hljs-string">"once"</span>);
+        verify(mockedList, atLeastOnce()).add(<span class="hljs-string">"three times"</span>);
+        verify(mockedList, atLeast(<span class="hljs-number">2</span>)).add(<span class="hljs-string">"three times"</span>);
+        verify(mockedList, atMost(<span class="hljs-number">5</span>)).add(<span class="hljs-string">"three times"</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="5、使用异常stub-void方法"><a href="#5、使用异常stub-void方法" class="headerlink" title="5、使用异常stub void方法"></a>5、使用异常stub void方法</h2><div class="hljs"><pre><code class="hljs java">doThrow(<span class="hljs-keyword">new</span> RuntimeException()).when(mockedList).clear();
+
+<span class="hljs-comment">//抛出异常：RuntimeException:</span>
+mockedList.clear();</code></pre></div>
+
+<h2 id="6、验证顺序"><a href="#6、验证顺序" class="headerlink" title="6、验证顺序"></a>6、验证顺序</h2><p>A. 单个mock必须按特定顺序调用其方法</p>
+<div class="hljs"><pre><code class="hljs java">List singleMock = mock(List<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+<span class="hljs-comment">//using a single mock</span>
+singleMock.add(<span class="hljs-string">"was added first"</span>);
+singleMock.add(<span class="hljs-string">"was added second"</span>);
+
+<span class="hljs-comment">//为单个mock创建一个inOrder验证器</span>
+InOrder inOrder = inOrder(singleMock);
+
+<span class="hljs-comment">//下面将确保add第一次调用时使用"was added first"，然后使用"was added second"</span>
+inOrder.verify(singleMock).add(<span class="hljs-string">"was added first"</span>);
+inOrder.verify(singleMock).add(<span class="hljs-string">"was added second"</span>);</code></pre></div>
+
+<p> B. 多个mock必须按特定顺序使用</p>
+<div class="hljs"><pre><code class="hljs java">List firstMock = mock(List<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+List secondMock = mock(List<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>;
+
+<span class="hljs-comment">//使用 mocks</span>
+firstMock.add(<span class="hljs-string">"was called first"</span>);
+secondMock.add(<span class="hljs-string">"was called second"</span>);
+
+<span class="hljs-comment">//创建inOrder对象，任何mocks必须按照顺序验证通过</span>
+InOrder inOrder = inOrder(firstMock, secondMock);
+
+<span class="hljs-comment">//follow将确保firstMock在secondMock之前被调用</span>
+inOrder.verify(firstMock).add(<span class="hljs-string">"was called first"</span>);
+inOrder.verify(secondMock).add(<span class="hljs-string">"was called second"</span>);</code></pre></div>
+
+<h2 id="7、确保交互不会发生"><a href="#7、确保交互不会发生" class="headerlink" title="7、确保交互不会发生"></a>7、确保交互不会发生</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-comment">//使用mocks -只有mockOne是交互的</span>
+mockOne.add(<span class="hljs-string">"one"</span>);
+
+<span class="hljs-comment">//普通的验证</span>
+verify(mockOne).add(<span class="hljs-string">"one"</span>);
+
+<span class="hljs-comment">//验证该方法从未在mock中调用</span>
+verify(mockOne, never()).add(<span class="hljs-string">"two"</span>);
+
+<span class="hljs-comment">//验证其他模拟没有交互</span>
+verifyZeroInteractions(mockTwo, mockThree);</code></pre></div>
+
+<h2 id="8、发现多余的交互"><a href="#8、发现多余的交互" class="headerlink" title="8、发现多余的交互"></a>8、发现多余的交互</h2><div class="hljs"><pre><code class="hljs dockerfile">mockedList.<span class="hljs-keyword">add</span><span class="bash">(<span class="hljs-string">"one"</span>);</span>
+mockedList.<span class="hljs-keyword">add</span><span class="bash">(<span class="hljs-string">"two"</span>);</span>
+
+verify(mockedList).<span class="hljs-keyword">add</span><span class="bash">(<span class="hljs-string">"one"</span>);</span>
+
+//以下验证将失败
+verifyNoMoreInteractions(mockedList);</code></pre></div>
+
+<p>不建议在每个测试方法中使用verifyNoMoreInteractions()。verifyNoMoreInteractions()是来自交互测试工具包的一个方便的断言。只在相关的场合使用。滥用它会导致过度指定、更不容易维护的测试。</p>
+<h2 id="9、-Mock注释"><a href="#9、-Mock注释" class="headerlink" title="9、@Mock注释"></a>9、@Mock注释</h2><div class="hljs"><pre><code class="hljs java"><span class="hljs-meta">@RunWith</span>(MockitoJUnitRunner.StrictStubs<span class="hljs-class">.<span class="hljs-keyword">class</span>)</span>
+<span class="hljs-class"><span class="hljs-title">public</span> <span class="hljs-title">class</span> <span class="hljs-title">ExampleTest</span> </span>&#123;
+
+    <span class="hljs-meta">@Mock</span>
+    <span class="hljs-keyword">private</span> List list;
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">shouldDoSomething</span><span class="hljs-params">()</span> </span>&#123;
+        list.add(<span class="hljs-number">100</span>);
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="10、存根连续调用"><a href="#10、存根连续调用" class="headerlink" title="10、存根连续调用"></a>10、存根连续调用</h2><p>对同一个方法调用使用不同的返回值/异常存根。</p>
+<div class="hljs"><pre><code class="hljs reasonml"><span class="hljs-keyword">when</span>(mock.some<span class="hljs-constructor">Method(<span class="hljs-string">"some arg"</span>)</span>)
+  .<span class="hljs-keyword">then</span><span class="hljs-constructor">Throw(<span class="hljs-params">new</span> RuntimeException()</span>)
+  .<span class="hljs-keyword">then</span><span class="hljs-constructor">Return(<span class="hljs-string">"foo"</span>)</span>;
+
+<span class="hljs-comment">//第一次调用:抛出运行时异常:</span>
+mock.some<span class="hljs-constructor">Method(<span class="hljs-string">"some arg"</span>)</span>;
+
+<span class="hljs-comment">//第二次调用：打印"foo"</span>
+<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(mock.some<span class="hljs-constructor">Method(<span class="hljs-string">"some arg"</span>)</span>);
+
+<span class="hljs-comment">//后续任何调用都打印"foo"</span>
+<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">System</span>.</span></span>out.println(mock.some<span class="hljs-constructor">Method(<span class="hljs-string">"some arg"</span>)</span>);</code></pre></div>
+
+
+            </article>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">单元测试</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/">单元测试</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" target="_blank" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
+              
+              
+                <div class="post-prevnext row">
+                  <div class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/06/13/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4Java%E5%BC%80%E5%8F%91%E6%89%8B%E5%86%8C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">阿里巴巴Java开发手册</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </div>
+                  <div class="post-next col-6">
+                    
+                    
+                      <a href="/2021/06/12/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E5%A4%87%E5%B0%8F%E5%B7%A5%E5%85%B7/">
+                        <span class="hidden-mobile">程序员必备小工具</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </div>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <div class="comments" id="comments">
+                
+                
+  <script defer src="https://utteranc.es/client.js"
+          repo="gavin-yyj/commit-utterance"
+          issue-term="pathname"
+  
+          theme="github-light"
+          crossorigin="anonymous"
+  >
+  </script>
+
+
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div id="tocbot"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+  </main>
+
+  
+    <a id="scroll-top-button" href="#" role="button">
+      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+    </a>
+  
+
+  
+    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+
+  
+
+  
+
+  <footer class="mt-5">
+  <div class="text-center py-3">
+    <div>
+      <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
+      <i class="iconfont icon-love"></i>
+      <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener">
+        <span>Fluid</span></a>
+    </div>
+    
+
+    
+
+    
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
+<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/main.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/lazyload.js" ></script>
+  
+
+
+
+  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
+  <script  src="/js/clipboard-use.js" ></script>
+
+
+
+
+
+
+
+  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
+  <script>
+    $(document).ready(function () {
+      var boardCtn = $('#board-ctn');
+      var boardTop = boardCtn.offset().top;
+
+      tocbot.init({
+        tocSelector: '#tocbot',
+        contentSelector: '.post-content',
+        headingSelector: 'h1,h2,h3,h4,h5,h6',
+        linkClass: 'tocbot-link',
+        activeLinkClass: 'tocbot-active-link',
+        listClass: 'tocbot-list',
+        isCollapsedClass: 'tocbot-is-collapsed',
+        collapsibleClass: 'tocbot-is-collapsible',
+        collapseDepth: 0,
+        scrollSmooth: true,
+        headingsOffset: -boardTop
+      });
+      if ($('.toc-list-item').length > 0) {
+        $('#toc').css('visibility', 'visible');
+      }
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
+  <script>
+    var typed = new Typed('#subtitle', {
+      strings: [
+        '  ',
+        "单元测试之Mockito&nbsp;",
+      ],
+      cursorChar: "_",
+      typeSpeed: 70,
+      loop: false,
+    });
+    typed.stop();
+    $(document).ready(function () {
+      $(".typed-cursor").addClass("h2");
+      typed.start();
+    });
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
+  <script>
+    anchors.options = {
+      placement: "right",
+      visible: "hover",
+      
+    };
+    var el = "h1,h2,h3,h4,h5,h6".split(",");
+    var res = [];
+    for (item of el) {
+      res.push(".markdown-body > " + item)
+    }
+    anchors.add(res.join(", "))
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    var path = "/local-search.xml";
+    var inputArea = document.querySelector("#local-search-input");
+    inputArea.onclick = function () {
+      searchFunc(path, 'local-search-input', 'local-search-result');
+      this.onclick = null
+    }
+  </script>
+
+
+
+  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <script>
+    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
+      function () {
+        var element = document.createElement('a');
+        $(element).attr('data-fancybox', 'images');
+        $(element).attr('href', $(this).attr('src'));
+        $(this).wrap(element);
+      }
+    );
+  </script>
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript">
+      //定义获取词语下标
+      var a_idx = 0;
+      jQuery(document).ready(function ($) {
+        //点击body时触发事件
+        $("body").click(function (e) {
+          //需要显示的词语
+          var a = new Array("富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善");
+          //设置词语给span标签
+          var $i = $("<span/>").text(a[a_idx]);
+          //下标等于原来下标+1  余 词语总数
+          a_idx = (a_idx + 1) % a.length;
+          //获取鼠标指针的位置，分别相对于文档的左和右边缘。
+          //获取x和y的指针坐标
+          var x = e.pageX, y = e.pageY;
+          //在鼠标的指针的位置给$i定义的span标签添加css样式
+          $i.css({
+            "z-index": 999,
+            "top": y - 20,
+            "left": x,
+            "position": "absolute",
+            "font-weight": "bold",
+            "color": rand_color()
+          });
+          // 随机颜色
+          function rand_color() {
+            return "rgb(" + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + "," + ~~(255 * Math.random()) + ")"
+          }
+          //在body添加这个标签
+          $("body").append($i);
+          //animate() 方法执行 CSS 属性集的自定义动画。
+          //该方法通过CSS样式将元素从一个状态改变为另一个状态。CSS属性值是逐渐改变的，这样就可以创建动画效果。
+          //详情请看http://www.w3school.com.cn/jquery/effect_animate.asp
+          $i.animate({
+            //将原来的位置向上移动180
+            "top": y - 180,
+            "opacity": 0
+            //1500动画的速度
+          }, 1500, function () {
+            //时间到了自动删除
+            $i.remove();
+          });
+        });
+      })
+      ;
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
