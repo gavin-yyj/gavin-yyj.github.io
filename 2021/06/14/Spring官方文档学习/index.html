@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.8k 字
+      15.8k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      95
+      197
        分钟
     </span>
   
@@ -661,7 +661,497 @@ context.refresh();</code></pre></div>
     &#125;
 &#125;</code></pre></div>
 
-<h4 id="基于setter的依赖注入"><a href="#基于setter的依赖注入" class="headerlink" title="基于setter的依赖注入"></a>基于setter的依赖注入</h4><h3 id="1-4-2"><a href="#1-4-2" class="headerlink" title="1.4.2"></a>1.4.2</h3><h4 id="直接值（原语、字符串等）"><a href="#直接值（原语、字符串等）" class="headerlink" title="直接值（原语、字符串等）"></a>直接值（原语、字符串等）</h4><h4 id="内部Bean"><a href="#内部Bean" class="headerlink" title="内部Bean"></a>内部Bean</h4><h3 id="1-4-4-延迟初始化的Bean"><a href="#1-4-4-延迟初始化的Bean" class="headerlink" title="1.4.4 延迟初始化的Bean"></a>1.4.4 延迟初始化的Bean</h3><h3 id="1-4-5-自动装配协作者"><a href="#1-4-5-自动装配协作者" class="headerlink" title="1.4.5 自动装配协作者"></a>1.4.5 自动装配协作者</h3><h2 id="1-5-Bean范围"><a href="#1-5-Bean范围" class="headerlink" title="1.5 Bean范围"></a>1.5 Bean范围</h2><h3 id="1-6-1-生命周期回调"><a href="#1-6-1-生命周期回调" class="headerlink" title="1.6.1 生命周期回调"></a>1.6.1 生命周期回调</h3><h4 id="初始化回调"><a href="#初始化回调" class="headerlink" title="初始化回调"></a>初始化回调</h4><h4 id="破坏回调"><a href="#破坏回调" class="headerlink" title="破坏回调"></a>破坏回调</h4><h3 id="1-12-3使用-Bean注释"><a href="#1-12-3使用-Bean注释" class="headerlink" title="1.12.3使用@Bean注释"></a>1.12.3使用@Bean注释</h3>
+<h4 id="基于setter的依赖注入"><a href="#基于setter的依赖注入" class="headerlink" title="基于setter的依赖注入"></a>基于setter的依赖注入</h4><p>基于 Setter 的 DI 是通过容器在调用无参数构造函数或无参数静态工厂方法来实例化 bean 后调用 bean 上的 setter 方法来完成的。</p>
+<p>下面的例子展示了一个只能通过使用纯setter注入来进行依赖注入的类。这个类是传统的Java。它是一个不依赖于容器特定接口、基类或注释的POJO。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SimpleMovieLister</span> </span>&#123;
+
+    <span class="hljs-comment">// SimpleMovieLister依赖于MovieFinder</span>
+    <span class="hljs-keyword">private</span> MovieFinder movieFinder;
+
+    <span class="hljs-comment">// a setter method so that the Spring container can inject a MovieFinder</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMovieFinder</span><span class="hljs-params">(MovieFinder movieFinder)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.movieFinder = movieFinder;
+    &#125;
+
+    <span class="hljs-comment">// business logic that actually uses the injected MovieFinder is omitted...</span>
+&#125;</code></pre></div>
+
+<p>ApplicationContext为它管理的bean支持基于构造函数和基于setter的DI。在通过构造函数方法注入了一些依赖项之后，它还支持基于setter的DI。您可以以BeanDefinition的形式配置依赖项，可以与PropertyEditor实例一起使用，将属性从一种格式转换为另一种格式。</p>
+<p>但是，大多数Spring用户并不是直接使用这些类(即通过编程方式)，而是使用XML bean定义、带注释的组件(即使用@Component、@Controller等带注释的类)，或者基于java的@Configuration类中的@Bean方法。然后，这些源在内部转换为BeanDefinition的实例，并用于加载整个Spring IoC容器实例。</p>
+<blockquote>
+<p>基于构造函数还是基于setter的DI?</p>
+<p>由于可以混合使用基于构造函数和基于setter的DI，因此对于强制依赖项使用构造函数，对于可选依赖项使用setter方法或配置方法是一条很好的经验法则。注意，在setter方法上使用@Required注释可以使属性成为必需的依赖项;然而，使用编程式验证参数的构造函数注入更可取。</p>
+<p>Spring团队通常提倡构造函数注入，因为它允许您将应用程序组件实现为不可变对象，并确保所需的依赖项不为空。此外，构造函数注入的组件总是在完全初始化状态下返回给客户端(调用)代码。顺便说一下，大量构造函数参数是一种糟糕的代码味道，这意味着类可能有太多的职责，应该进行重构以更好地解决关注事项的适当分离。</p>
+<p>Setter注入应该主要用于可选的依赖项，这些依赖项可以在类中分配合理的默认值。否则，必须在代码使用依赖项的任何地方执行非空检查。setter注入的一个好处是，setter方法使该类的对象能够在以后重新配置或重新注入。因此，通过JMX mbean进行管理是setter注入的一个引人注目的用例。</p>
+<p>使用对特定类最有意义的DI风格。有时，当您处理没有源代码的第三方类时，您可以自行选择。例如，如果第三方类没有公开任何setter方法，那么构造函数注入可能是DI的唯一可用形式。</p>
+</blockquote>
+<h4 id="依赖解析过程"><a href="#依赖解析过程" class="headerlink" title="依赖解析过程"></a>依赖解析过程</h4><p>容器执行bean依赖关系解析如下:</p>
+<ul>
+<li>使用描述所有bean的配置元数据创建并初始化ApplicationContext。配置元数据可以通过XML、Java代码或注释指定。</li>
+<li>对于每个 bean，它的依赖关系以属性、构造函数参数或静态工厂方法的参数（如果您使用它而不是普通构造函数）的形式表示。 在实际创建 bean 时，将这些依赖关系提供给 bean。</li>
+<li>每个属性或构造函数参数都要设置值的实际定义，或者是对容器中另一个 bean 的引用。</li>
+<li>作为值的每个属性或构造函数参数都将从其指定的格式转换为该属性或构造函数参数的实际类型。默认情况下，Spring可以将字符串格式提供的值转换为所有内置类型，比如int、long、string、boolean等等。</li>
+</ul>
+<p>Spring容器在创建容器时验证每个bean的配置。但是，在实际创建bean之前，不会设置bean属性本身。在创建容器时将创建单例作用域且设置为预实例化(默认)的bean。作用域在Bean作用域中定义。否则，仅在请求bean时才创建它。创建一个bean可能会导致创建一个bean图，因为创建并分配了bean的依赖项及其依赖项的依赖项(等等)。请注意，这些依赖项之间的解析不匹配可能会在后期出现——即在受影响bean的第一次创建时出现。</p>
+<blockquote>
+<p>循环依赖</p>
+<p>如果主要使用构造函数注入，可能会创建不可解析的循环依赖项场景。</p>
+<p>例如：A类通过构造函数注入需要B类的实例，B类通过构造函数注入需要A类的实例。 如果您将类 A 和 B 的 bean 配置为相互注入，则 Spring IoC 容器在运行时检测到此循环引用，并抛出 BeanCurrentlyInCreationException。</p>
+<p>一种可能的解决方案是编辑一些由setter而不是构造函数配置的类的源代码。或者，避免构造函数注入，只使用setter注入。换句话说，尽管不推荐这样做，但您可以使用setter注入配置循环依赖项。</p>
+<p>与典型情况(没有循环依赖项)不同，bean a和bean B之间的循环依赖项迫使一个bean在完全初始化自己之前被注入到另一个bean中(典型的先有鸡还是先有蛋的场景)。</p>
+</blockquote>
+<p>您通常可以相信 Spring 会做正确的事情。 它在容器加载时检测配置问题，例如对不存在的 bean 的引用和循环依赖。 Spring 在真正创建 bean 时尽可能晚地设置属性并解析依赖项。</p>
+<p>这意味着，如果创建该对象或其某个依赖项出现问题时，则已正确加载的 Spring 容器稍后可以在您请求对象时生成异常，例如，bean会由于缺少或无效的属性而抛出异常。这可能会延迟一些配置问题的可见性，这就是为什么ApplicationContext实现默认情况下会预先实例化单例bean。</p>
+<p>在实际需要这些bean之前创建这些bean需要花费一些前期时间和内存，因此在创建ApplicationContext时发现配置问题，而不是稍后。您仍然可以覆盖这个默认行为，以便单例bean可以延迟初始化，而不是急切地预先实例化。    </p>
+<p>如果不存在循环依赖项，那么当一个或多个协作bean被注入到依赖bean中时，每个协作bean在被注入到依赖bean之前都会被完全配置。这意味着，如果bean A依赖于bean B，那么Spring IoC容器在调用bean A的setter方法之前将完全配置bean B。换句话说，bean被实例化(如果它不是一个预先实例化的单例)，它的依赖关系被设置，相关的生命周期方法(例如<a href="#初始化回调">配置的init方法</a>或<a href="#初始化回调">InitializingBean回调方法</a>)被调用。</p>
+<h4 id="依赖注入的例子"><a href="#依赖注入的例子" class="headerlink" title="依赖注入的例子"></a>依赖注入的例子</h4><p>下面的示例为基于setter的DI使用基于xml的配置元数据。Spring XML配置文件的一小部分指定了一些bean定义，如下所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"exampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.ExampleBean"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- setter injection using the nested ref element --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"beanOne"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"anotherExampleBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- setter injection using the neater ref attribute --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"beanTwo"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"yetAnotherBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"integerProperty"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"anotherExampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.AnotherBean"</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"yetAnotherBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.YetAnotherBean"</span>/&gt;</span></code></pre></div>
+
+<p>下面的例子显示了相应的ExampleBean类:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExampleBean</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> AnotherBean beanOne;
+
+    <span class="hljs-keyword">private</span> YetAnotherBean beanTwo;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> i;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setBeanOne</span><span class="hljs-params">(AnotherBean beanOne)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.beanOne = beanOne;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setBeanTwo</span><span class="hljs-params">(YetAnotherBean beanTwo)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.beanTwo = beanTwo;
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setIntegerProperty</span><span class="hljs-params">(<span class="hljs-keyword">int</span> i)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.i = i;
+    &#125;
+&#125;</code></pre></div>
+
+<p>在前面的示例中，setter被声明为与XML文件中指定的属性相匹配。下面的例子使用了基于构造函数的DI:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"exampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.ExampleBean"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- constructor injection using the nested ref element --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"anotherExampleBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">constructor-arg</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- constructor injection using the neater ref attribute --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"yetAnotherBean"</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"int"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"anotherExampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.AnotherBean"</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"yetAnotherBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.YetAnotherBean"</span>/&gt;</span></code></pre></div>
+
+<p>下面的例子显示了相应的ExampleBean类:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExampleBean</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> AnotherBean beanOne;
+
+    <span class="hljs-keyword">private</span> YetAnotherBean beanTwo;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> i;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">ExampleBean</span><span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">        AnotherBean anotherBean, YetAnotherBean yetAnotherBean, <span class="hljs-keyword">int</span> i)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.beanOne = anotherBean;
+        <span class="hljs-keyword">this</span>.beanTwo = yetAnotherBean;
+        <span class="hljs-keyword">this</span>.i = i;
+    &#125;
+&#125;</code></pre></div>
+
+<p>在bean定义中指定的构造函数参数被用作ExampleBean的构造函数的参数。</p>
+<p>现在考虑这个例子的一个变体，这里不使用构造函数，而是告诉Spring调用一个静态工厂方法来返回对象的实例:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"exampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.ExampleBean"</span> <span class="hljs-attr">factory-method</span>=<span class="hljs-string">"createInstance"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"anotherExampleBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"yetAnotherBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"1"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"anotherExampleBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.AnotherBean"</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"yetAnotherBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"examples.YetAnotherBean"</span>/&gt;</span></code></pre></div>
+
+<p>对应的ExampleBean类：</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExampleBean</span> </span>&#123;
+
+    <span class="hljs-comment">// a private constructor</span>
+    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">ExampleBean</span><span class="hljs-params">(...)</span> </span>&#123;
+        ...
+    &#125;
+
+    <span class="hljs-comment">// a static factory method; the arguments to this method can be</span>
+    <span class="hljs-comment">// considered the dependencies of the bean that is returned,</span>
+    <span class="hljs-comment">// regardless of how those arguments are actually used.</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> ExampleBean <span class="hljs-title">createInstance</span> <span class="hljs-params">(</span></span>
+<span class="hljs-function"><span class="hljs-params">        AnotherBean anotherBean, YetAnotherBean yetAnotherBean, <span class="hljs-keyword">int</span> i)</span> </span>&#123;
+
+        ExampleBean eb = <span class="hljs-keyword">new</span> ExampleBean (...);
+        <span class="hljs-comment">// some other operations...</span>
+        <span class="hljs-keyword">return</span> eb;
+    &#125;
+&#125;</code></pre></div>
+
+<p>静态工厂方法的参数由 &lt;constructor-arg/&gt; 元素提供，与实际使用构造函数完全相同。 工厂方法返回的类的类型不必与包含静态工厂方法的类的类型相同（尽管在本示例中是）。 实例工厂方法可以以基本相同的方式使用（除了使用 factory-bean 属性而不是 class 属性），因此我们不在这里讨论这些细节。</p>
+<h3 id="1-4-2-依赖和配置的细节"><a href="#1-4-2-依赖和配置的细节" class="headerlink" title="1.4.2 依赖和配置的细节"></a>1.4.2 依赖和配置的细节</h3><p>如上一节所述，您可以将 bean 属性和构造函数参数定义为对其他托管 bean（协作者）的引用或作为内联定义的值。 为此，Spring 的基于 XML 的配置元数据支持其&lt;property/&gt; 和 &lt;constructor-arg/&gt; 元素中的子元素类型。</p>
+<h4 id="直接值（原语、字符串等）"><a href="#直接值（原语、字符串等）" class="headerlink" title="直接值（原语、字符串等）"></a>直接值（原语、字符串等）</h4><p>&lt;property/&gt; 元素的 value 属性将属性或构造函数参数指定为人类可读的字符串表示形式。 Spring 的转换服务用于将这些值从 String 转换为属性或参数的实际类型。 以下示例显示了正在设置的各种值：</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"myDataSource"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">"close"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- results in a setDriverClassName(String) call --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"driverClassName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"com.mysql.jdbc.Driver"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"url"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"jdbc:mysql://localhost:3306/mydb"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"username"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"root"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"misterkaoli"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>下面的例子使用p名称空间来进行更简洁的XML配置:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:p</span>=<span class="hljs-string">"http://www.springframework.org/schema/p"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans</span></span>
+<span class="hljs-tag"><span class="hljs-string">    https://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"myDataSource"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"org.apache.commons.dbcp.BasicDataSource"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">destroy-method</span>=<span class="hljs-string">"close"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:driverClassName</span>=<span class="hljs-string">"com.mysql.jdbc.Driver"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:url</span>=<span class="hljs-string">"jdbc:mysql://localhost:3306/mydb"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:username</span>=<span class="hljs-string">"root"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:password</span>=<span class="hljs-string">"misterkaoli"</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>前面的XML更简洁。然而，打字错误是在运行时而不是设计时发现的，除非您使用支持创建bean定义时自动完成属性的IDE(如IntelliJ IDEA或用于Eclipse的Spring Tools)。强烈推荐这样的IDE帮助。</p>
+<p>您也可以配置一个java.util.Properties实例，如下所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"mappings"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">class</span>=<span class="hljs-string">"org.springframework.context.support.PropertySourcesPlaceholderConfigurer"</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- typed as a java.util.Properties --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"properties"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>
+            jdbc.driver.className=com.mysql.jdbc.Driver
+            jdbc.url=jdbc:mysql://localhost:3306/mydb
+        <span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>通过使用JavaBeans的PropertyEditor机制，Spring容器将&lt;value/&gt;元素中的文本转换为java.util.Properties实例。这是一个很好的快捷方式，也是Spring团队喜欢使用嵌套&lt;value/&gt;元素而不是value属性样式的少数地方之一。</p>
+<p><strong>idref元素</strong></p>
+<p>idref元素只是将容器中另一个bean的id(字符串值——而不是引用)传递给&lt;constructor-arg/&gt;或&lt;property/&gt;元素的一种防止错误的方法。下面的例子展示了如何使用它:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"theTargetBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"..."</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"theClientBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"..."</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"targetName"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">idref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"theTargetBean"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>前面的bean定义片段(在运行时)与下面的片段完全相同:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"theTargetBean"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"..."</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"client"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"..."</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"targetName"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"theTargetBean"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>第一种形式比第二种形式更可取，因为使用idref标记可以让容器在部署时验证所引用的已命名bean实际存在。在第二个变体中，对传递给客户机bean的targetName属性的值不执行任何验证。只有在实际实例化客户端bean时才会发现打字错误(很可能导致致命的结果)。如果客户端bean是一个原型bean，那么这个输入错误和由此产生的异常可能要在容器部署很久之后才会被发现。</p>
+<blockquote>
+<p>在4.0 bean XSD中不再支持idref元素的local属性，因为它不再提供常规bean引用之上的值。升级到4.0模式时，将现有的idref local更改为idref bean。</p>
+</blockquote>
+<p>&lt;idref/&gt;元素带来值的一个常见地方(至少在Spring 2.0之前的版本中)是在ProxyFactoryBean bean定义中的AOP拦截器配置中。在指定拦截器名称时使用&lt;idref/&gt;元素可以防止你拼错拦截器ID。</p>
+<h4 id="对其他bean-合作者-的引用"><a href="#对其他bean-合作者-的引用" class="headerlink" title="对其他bean(合作者)的引用"></a>对其他bean(合作者)的引用</h4><p>ref元素是&lt;constructor-arg/&gt;或&lt;property/&gt;定义元素中的最后一个元素。在这里，您将一个bean的指定属性的值设置为对容器管理的另一个bean(合作者)的引用。被引用的bean是要设置其属性的bean的依赖项，在设置属性之前，根据需要对其进行初始化。(如果合作者是一个单例bean，它可能已经被容器初始化了。)所有引用最终都是对另一个对象的引用。范围和验证取决于您是通过bean还是父属性指定其他对象的ID或名称。</p>
+<p>通过&lt;ref/&gt;标记的bean属性指定目标bean是最通用的形式，允许在同一容器或父容器中创建对任何bean的引用，而不管它是否在同一XML文件中。bean属性的值可以与目标bean的id属性相同，也可以与目标bean的name属性中的某个值相同。下面的例子展示了如何使用ref元素:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"someBean"</span>/&gt;</span></code></pre></div>
+
+<p>通过 parent 属性指定目标 bean 会创建对当前容器的父容器中的 bean 的引用。 parent 属性的值可能与目标 bean 的 id 属性或目标 bean 的 name 属性中的值之一相同。 目标 bean 必须在当前容器的父容器中。当您有一个容器层次结构，并且您想用与父bean同名的代理将现有bean包装在父容器中时，您应该主要使用这个bean引用变体。以下清单显示了如何使用 parent 属性：</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- in the parent context --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"accountService"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.something.SimpleAccountService"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- insert dependencies as required as here --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- in the child (descendant) context --&gt;</span>
+&lt;bean id="accountService" &lt;!-- bean name is the same as the parent bean --&gt;
+    class="org.springframework.aop.framework.ProxyFactoryBean"&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"target"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">parent</span>=<span class="hljs-string">"accountService"</span>/&gt;</span> <span class="hljs-comment">&lt;!-- notice how we refer to the parent bean --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- insert other configuration and dependencies as required here --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<h4 id="内部Bean"><a href="#内部Bean" class="headerlink" title="内部Bean"></a>内部Bean</h4><p>&lt;property/&gt;或&lt;constructor-arg/&gt;元素中的&lt;bean/&gt;元素定义了一个内部bean，如下所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"outer"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"..."</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- instead of using a reference to a target bean, simply define the target bean inline --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"target"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.Person"</span>&gt;</span> <span class="hljs-comment">&lt;!-- this is the inner bean --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"Fiona Apple"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"age"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"25"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>内部 bean 定义不需要定义的 ID 或名称。 如果指定，容器不会使用这样的值作为标识符。 容器在创建时也会忽略范围标志，因为内部 bean 始终是匿名的，并且始终与外部 bean 一起创建。 不可能独立访问内部 bean 或将它们注入除封闭 bean 之外的协作 bean 中。</p>
+<p>作为一种极端情况，可以从自定义范围 接收销毁回调—— 例如，对于包含在单例 bean 中的请求范围内的 bean。 内部 bean 实例的创建与其包含的 bean 相关联，但销毁回调让它参与请求范围的生命周期。 这不是一个常见的场景。 内部 bean 通常只是共享它们包含的 bean 的作用域。</p>
+<h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><p>&lt;list/&gt;， &lt;set/&gt;， &lt;map/&gt;，和&lt;props/&gt;元素分别设置Java集合类型list、set、map和properties的属性和参数。下面的例子展示了如何使用它们:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"moreComplexObject"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"example.ComplexObject"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- results in a setAdminEmails(java.util.Properties) call --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"adminEmails"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">props</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"administrator"</span>&gt;</span>administrator@example.org<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"support"</span>&gt;</span>support@example.org<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"development"</span>&gt;</span>development@example.org<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- results in a setSomeList(java.util.List) call --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"someList"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">list</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>a list element followed by a reference<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"myDataSource"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- results in a setSomeMap(java.util.Map) call --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"someMap"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"an entry"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"just some string"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span> =<span class="hljs-string">"a ref"</span> <span class="hljs-attr">value-ref</span>=<span class="hljs-string">"myDataSource"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- results in a setSomeSet(java.util.Set) call --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"someSet"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">set</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span>just some string<span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">ref</span> <span class="hljs-attr">bean</span>=<span class="hljs-string">"myDataSource"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">set</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>map键或值或set值的值也可以是以下元素中的任何一个:</p>
+<div class="hljs"><pre><code class="hljs xml">bean | ref | idref | list | set | map | props | value | null</code></pre></div>
+
+<p><strong>集合合并</strong></p>
+<p>Spring容器还支持合并集合。应用程序开发人员可以定义父元素&lt;list/&gt;、&lt;map/&gt;、&lt;set/&gt;或&lt;props/&gt;，并让子元素&lt;list/&gt;、&lt;map/&gt;、&lt;set/&gt;或&lt;props/&gt;继承和覆盖父元素集合中的值。也就是说，子集合的值是父集合和子集合的元素合并的结果，子集合的元素覆盖父集合中指定的值。</p>
+<p>关于合并的这一节讨论父-子bean机制。不熟悉父bean和子bean定义的读者可能希望在继续之前阅读相关部分。</p>
+<p>下面的例子演示了集合合并:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"parent"</span> <span class="hljs-attr">abstract</span>=<span class="hljs-string">"true"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"example.ComplexObject"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"adminEmails"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">props</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"administrator"</span>&gt;</span>administrator@example.com<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"support"</span>&gt;</span>support@example.com<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"child"</span> <span class="hljs-attr">parent</span>=<span class="hljs-string">"parent"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"adminEmails"</span>&gt;</span>
+            <span class="hljs-comment">&lt;!-- the merge is specified on the child collection definition --&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">props</span> <span class="hljs-attr">merge</span>=<span class="hljs-string">"true"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"sales"</span>&gt;</span>sales@example.com<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">prop</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"support"</span>&gt;</span>support@example.co.uk<span class="hljs-tag">&lt;/<span class="hljs-name">prop</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">props</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>请注意在子 bean 定义的 adminEmails 属性的 &lt;props/&gt; 元素上使用了 merge=true 属性。 当容器解析并实例化子 bean 时，生成的实例有一个 adminEmails Properties 集合，其中包含将子 bean 的 adminEmails 集合与父级的 adminEmails 集合合并的结果。 以下清单显示了结果：</p>
+<div class="hljs"><pre><code class="hljs xml">administrator=administrator@example.com
+sales=sales@example.com
+support=support@example.co.uk</code></pre></div>
+
+<p>子属性集合的值集继承了父属性&lt;props/&gt;的所有属性元素，并且子属性的支持值覆盖了父集合中的值。</p>
+<p>这种合并行为同样适用于&lt;list/&gt;、&lt;map/&gt;和&lt;set/&gt;集合类型。在&lt;list/&gt;元素的特定情况下，将维护与list集合类型(即值的<strong>有序</strong>集合的概念)相关联的语义，父列表的值在所有子列表的值之前。对于Map、Set和Properties集合类型，不存在排序。因此，对于容器内部使用的关联Map、Set和Properties实现类型的集合类型，没有有效的排序语义。</p>
+<p><strong>收集合并的限制</strong></p>
+<p>您不能合并不同的集合类型(例如Map和List)。如果您试图这样做，则抛出一个适当的Exception。必须在较低的继承子定义上指定merge属性。在父集合定义上指定merge属性是多余的，并且不会导致所需的合并。</p>
+<p><strong>强类型集合</strong></p>
+<p>通过在Java 5中引入泛型类型，您可以使用强类型集合。也就是说，可以声明一个Collection类型，使它只能包含(例如)String元素。如果使用Spring将强类型Collection依赖注入到bean中，那么可以利用Spring的类型转换支持，在将强类型Collection实例的元素添加到Collection之前，将其转换为适当的类型。下面的Java类和bean定义展示了如何做到这一点:</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SomeClass</span> </span>&#123;
+
+    <span class="hljs-keyword">private</span> Map&lt;String, Float&gt; accounts;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setAccounts</span><span class="hljs-params">(Map&lt;String, Float&gt; accounts)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.accounts = accounts;
+    &#125;
+&#125;</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"something"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.SomeClass"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"accounts"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">map</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"one"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"9.99"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"two"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"2.75"</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">entry</span> <span class="hljs-attr">key</span>=<span class="hljs-string">"six"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"3.99"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">map</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>当something bean 的accounts 属性准备注入时，关于强类型Map&lt;String, Float&gt; 元素类型的泛型信息可通过反射获得。 因此，Spring 的类型转换基础结构将各种值元素识别为 Float 类型，并将字符串值（9.99、2.75 和 3.99）转换为实际的 Float 类型。</p>
+<h4 id="Null和空字符串值"><a href="#Null和空字符串值" class="headerlink" title="Null和空字符串值"></a><strong>Null和空字符串值</strong></h4><p>Spring将属性等的空参数视为空字符串。以下基于xml的配置元数据片段将email属性设置为空String值(“”)。</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ExampleBean"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>上述示例相当于以下Java代码:</p>
+<div class="hljs"><pre><code class="hljs java">exampleBean.setEmail(<span class="hljs-string">""</span>);</code></pre></div>
+
+<p>&lt;null/&gt;元素处理空值。下面的清单显示了一个示例:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ExampleBean"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">null</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>等价于：</p>
+<div class="hljs"><pre><code class="hljs java">exampleBean.setEmail(<span class="hljs-keyword">null</span>);</code></pre></div>
+
+<h4 id="使用p-名称空间的XML快捷方式"><a href="#使用p-名称空间的XML快捷方式" class="headerlink" title="使用p-名称空间的XML快捷方式"></a>使用p-名称空间的XML快捷方式</h4><p>p-namespace允许您使用bean元素的属性(而不是嵌套的&lt;property/&gt;元素)来描述协作bean的属性值，或者两者都使用。</p>
+<p>Spring 支持具有命名空间的可扩展配置格式，这些格式基于 XML 模式定义。 本章讨论的 bean 配置格式是在 XML Schema 文档中定义的。 但是，p 命名空间并未在 XSD 文件中定义，仅存在于 Spring 的核心中。</p>
+<p>下面的例子显示了两个XML片段(第一个使用标准XML格式，第二个使用p-namespace)，它们解析到相同的结果:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:p</span>=<span class="hljs-string">"http://www.springframework.org/schema/p"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans</span></span>
+<span class="hljs-tag"><span class="hljs-string">        https://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"classic"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.ExampleBean"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"someone@somewhere.com"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"p-namespace"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.ExampleBean"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:email</span>=<span class="hljs-string">"someone@somewhere.com"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>该示例显示了在 bean 定义中名为 email 的 p 命名空间中的一个属性。 这告诉 Spring 包含一个属性声明。 如前所述，p 命名空间没有模式定义，因此您可以将属性的名称设置为属性名。</p>
+<p>下一个示例包括另外两个bean定义，它们都有对另一个bean的引用:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:p</span>=<span class="hljs-string">"http://www.springframework.org/schema/p"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans</span></span>
+<span class="hljs-tag"><span class="hljs-string">        https://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"john-classic"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.Person"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"John Doe"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"spouse"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"jane"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"john-modern"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.Person"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:name</span>=<span class="hljs-string">"John Doe"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">p:spouse-ref</span>=<span class="hljs-string">"jane"</span>/&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"jane"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.example.Person"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"Jane Doe"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>这个示例不仅包含使用p-namespace的属性值，而且还使用一种特殊的格式来声明<strong>属性引用</strong>。第一个bean定义使用&lt;property name=”spouse” ref=”jane”/&gt;来创建从bean john到bean jane的引用，第二个bean定义使用p:spouse-ref=”jane”作为属性来完成完全相同的工作。在本例中，spouse是属性名，而<code>-ref</code>部分表示这不是一个直接值，而是对另一个bean的引用。</p>
+<blockquote>
+<p>p-namespace不像标准XML格式那样灵活。例如，声明属性引用的格式与以Ref结尾的属性冲突，而标准XML格式不会。我们建议您谨慎地选择您的方法，并与您的团队成员进行沟通，以避免生成同时使用所有三种方法的XML文档。</p>
+</blockquote>
+<h4 id="使用c-namespace的XML快捷方式"><a href="#使用c-namespace的XML快捷方式" class="headerlink" title="使用c-namespace的XML快捷方式"></a>使用c-namespace的XML快捷方式</h4><p>与带有p-namespace的XML快捷方式类似，Spring 3.1中引入的c-namespace允许内联属性来配置构造函数参数，而不是嵌套的构造函数-参数元素。</p>
+<p>下面的例子使用c: namespace做了与基于构造函数的依赖注入相同的事情:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:xsi</span>=<span class="hljs-string">"http://www.w3.org/2001/XMLSchema-instance"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xmlns:c</span>=<span class="hljs-string">"http://www.springframework.org/schema/c"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">xsi:schemaLocation</span>=<span class="hljs-string">"http://www.springframework.org/schema/beans</span></span>
+<span class="hljs-tag"><span class="hljs-string">        https://www.springframework.org/schema/beans/spring-beans.xsd"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanTwo"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.ThingTwo"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanThree"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.ThingThree"</span>/&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- traditional declaration with optional argument names --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanOne"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.ThingOne"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"thingTwo"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"beanTwo"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"thingThree"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"beanThree"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">constructor-arg</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"something@somewhere.com"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+    <span class="hljs-comment">&lt;!-- c-namespace declaration with argument names --&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanOne"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.ThingOne"</span> <span class="hljs-attr">c:thingTwo-ref</span>=<span class="hljs-string">"beanTwo"</span></span>
+<span class="hljs-tag">        <span class="hljs-attr">c:thingThree-ref</span>=<span class="hljs-string">"beanThree"</span> <span class="hljs-attr">c:email</span>=<span class="hljs-string">"something@somewhere.com"</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<p>命名空间使用与p: one (bean引用的末尾-ref)相同的约定，通过名称设置构造函数参数。类似地，它需要在XML文件中声明，即使它没有在XSD模式中定义(它存在于Spring核心中)。</p>
+<p>对于构造函数参数名不可用的罕见情况(通常是在没有调试信息的情况下编译的字节码)，你可以使用回退参数索引，如下所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- c-namespace index declaration --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanOne"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.ThingOne"</span> <span class="hljs-attr">c:_0-ref</span>=<span class="hljs-string">"beanTwo"</span> <span class="hljs-attr">c:_1-ref</span>=<span class="hljs-string">"beanThree"</span></span>
+<span class="hljs-tag">    <span class="hljs-attr">c:_2</span>=<span class="hljs-string">"something@somewhere.com"</span>/&gt;</span></code></pre></div>
+
+<blockquote>
+<p>由于XML语法的原因，索引表示法要求出现前导_，因为XML属性名不能以数字开头(尽管有些ide允许)。对于&lt;constructor-arg&gt;元素也可以使用相应的索引表示法，但不常用，因为声明的简单顺序通常就足够了。</p>
+</blockquote>
+<p>在实践中，构造函数解析机制在匹配参数方面非常有效，所以除非真的需要，否则我们建议在整个配置中使用名称表示法。</p>
+<h4 id="复合属性名"><a href="#复合属性名" class="headerlink" title="复合属性名"></a>复合属性名</h4><p>在设置bean属性时，可以使用复合或嵌套属性名，只要路径的所有组件(最终属性名除外)不为空。考虑以下bean定义:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"something"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"things.ThingOne"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"fred.bob.sammy"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"123"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span></code></pre></div>
+
+<p>这个bean有一个fred属性，它有一个bob属性，它有一个sammy属性，最后一个sammy属性被设置为123。为了使其工作，在构造bean之后，something的fred属性和fred的bob属性不能为空。否则，抛出NullPointerException。</p>
+<h3 id="1-4-3-使用depends-on"><a href="#1-4-3-使用depends-on" class="headerlink" title="1.4.3 使用depends-on"></a>1.4.3 使用depends-on</h3><p>如果一个bean是另一个bean的依赖项，这通常意味着一个bean被设置为另一个bean的属性。通常使用基于xml的配置元数据中的&lt;ref/&gt;元素来实现这一点。但是，有时bean之间的依赖关系不是那么直接。例如，当需要触发类中的静态初始化器时，例如数据库驱动程序注册时。<strong>depends-on可以显式地在使用此元素的bean初始化之前强制初始化一个或多个bean。</strong>下面的示例使用depends-on属性表示对单个对象的依赖关系:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanOne"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ExampleBean"</span> <span class="hljs-attr">depends-on</span>=<span class="hljs-string">"manager"</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"manager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ManagerBean"</span> /&gt;</span></code></pre></div>
+
+<p>要表示对多个bean的依赖，请提供一个bean名列表作为依赖属性的值(逗号、空格和分号是有效的分隔符):</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"beanOne"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ExampleBean"</span> <span class="hljs-attr">depends-on</span>=<span class="hljs-string">"manager,accountDao"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">property</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"manager"</span> <span class="hljs-attr">ref</span>=<span class="hljs-string">"manager"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"manager"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"ManagerBean"</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"accountDao"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x.y.jdbc.JdbcAccountDao"</span> /&gt;</span></code></pre></div>
+
+<p>depends-on 属性可以指定初始化时间依赖项，并且在仅单例 bean 的情况下，可以指定相应的销毁时间依赖项。 在给定 bean 本身被销毁之前，首先销毁与给定 bean 定义依赖关系的从属 bean。 因此，depends-on 也可以控制关闭顺序。</p>
+<h3 id="1-4-4-延迟初始化的Bean"><a href="#1-4-4-延迟初始化的Bean" class="headerlink" title="1.4.4 延迟初始化的Bean"></a>1.4.4 延迟初始化的Bean</h3><p>默认情况下，ApplicationContext 实现会在初始化过程中创建和配置所有单例 bean。 通常，这种预实例化是可取的，因为可以立即发现配置或周围环境中的错误，而不是在几小时甚至几天之后。 当这种行为不可取时，您可以通过将 bean 定义标记为延迟初始化来防止单例 bean 的预实例化。 一个延迟初始化的 bean 告诉 IoC 容器在它第一次被请求时创建一个 bean 实例，而不是在启动时。</p>
+<p>在XML中，这种行为由&lt;bean/&gt;元素上的lazy-init属性控制，如下面的例子所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"lazy"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.something.ExpensiveToCreateBean"</span> <span class="hljs-attr">lazy-init</span>=<span class="hljs-string">"true"</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">bean</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"not.lazy"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"com.something.AnotherBean"</span>/&gt;</span></code></pre></div>
+
+<p>当 ApplicationContext 使用前面的配置时，当 ApplicationContext 启动时，lazy bean 不会被预先实例化，而 not.lazy bean 会被预先实例化。</p>
+<p>然而，当一个惰性初始化的bean是一个非惰性初始化的单例bean的依赖项时，ApplicationContext会在启动时创建惰性初始化的bean，因为它必须满足单例bean的依赖项。惰性初始化的bean被注入到其他未惰性初始化的单例bean中。</p>
+<p>你也可以通过在&lt;beans/&gt;元素上使用default-lazy-init属性来控制容器级的惰性初始化，如下面的例子所示:</p>
+<div class="hljs"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">beans</span> <span class="hljs-attr">default-lazy-init</span>=<span class="hljs-string">"true"</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- no beans will be pre-instantiated... --&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">beans</span>&gt;</span></code></pre></div>
+
+<h3 id="1-4-5-自动装配协作者"><a href="#1-4-5-自动装配协作者" class="headerlink" title="1.4.5 自动装配协作者"></a>1.4.5 自动装配协作者</h3><p>Spring容器可以自动装配协作bean之间的关系。通过检查ApplicationContext的内容，您可以让Spring自动为您的bean解析协作者(其他bean)。自动装配具有以下优点:</p>
+<ul>
+<li>自动装配可以显著减少指定属性或构造函数参数的需要。</li>
+<li>自动装配可以随着对象的发展更新配置。例如，如果您需要向类添加依赖项，则无需修改配置即可自动满足该依赖项。因此，在开发过程中，自动装配尤其有用，当代码库变得更加稳定时，不会否定切换到显式装配的选项。</li>
+</ul>
+<p>当使用基于xml的配置元数据时(请参阅[依赖注入](#1.4.1 依赖注入))，您可以使用&lt;bean/&gt;元素的autotowire属性为bean定义指定自动装配模式。自动装配功能有四种模式。您可以指定每个bean的自动装配，因此可以选择自动装配哪些bean。下表描述了四种自动装配模式:</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>no</td>
+<td>(默认)没有自动装配。Bean引用必须由ref元素定义。对于较大的部署，不建议更改默认设置，因为明确指定协作者可以提供更大的控制和清晰度。在某种程度上，它记录了系统的结构。</td>
+</tr>
+<tr>
+<td>byName</td>
+<td>通过属性名自动装配。Spring查找与需要自动连接的属性同名的bean。例如，如果一个bean定义被设置为按名称自动装配，并且它包含一个主属性(也就是说，它有一个setMaster(..)方法)，Spring会寻找一个名为master的bean定义，并使用它来设置该属性。</td>
+</tr>
+<tr>
+<td>byType</td>
+<td>如果容器中正好存在一个属性类型的bean，则让属性自动连接。如果存在多个，则抛出致命异常，这表明您不能为该bean使用byType自动装配。如果没有匹配的bean，则不会发生任何事情(属性没有设置)。</td>
+</tr>
+<tr>
+<td>constructor</td>
+<td>类似于byType，但应用于构造函数参数。如果容器中没有一个构造函数参数类型的bean，则会引发致命错误。</td>
+</tr>
+</tbody></table>
+<h2 id="1-5-Bean范围"><a href="#1-5-Bean范围" class="headerlink" title="1.5 Bean范围"></a>1.5 Bean范围</h2><h3 id="1-6-1-生命周期回调"><a href="#1-6-1-生命周期回调" class="headerlink" title="1.6.1 生命周期回调"></a>1.6.1 生命周期回调</h3><h4 id="初始化回调"><a href="#初始化回调" class="headerlink" title="初始化回调"></a>初始化回调</h4><h4 id="破坏回调"><a href="#破坏回调" class="headerlink" title="破坏回调"></a>破坏回调</h4><h3 id="1-12-3使用-Bean注释"><a href="#1-12-3使用-Bean注释" class="headerlink" title="1.12.3使用@Bean注释"></a>1.12.3使用@Bean注释</h3>
             </article>
             <hr>
             <div>
@@ -692,6 +1182,12 @@ context.refresh();</code></pre></div>
                 <div class="post-prevnext row">
                   <div class="post-prev col-6">
                     
+                    
+                      <a href="/2021/06/27/IDEA%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">IDEA常用快捷键</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </div>
                   <div class="post-next col-6">
