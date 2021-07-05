@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      10.5k 字
+      10.7k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      130
+      133
        分钟
     </span>
   
@@ -1344,7 +1344,26 @@ d2 after nextDay:Wed Apr 01 00:00:00 CST 1998</code></pre></div>
 &#125;</code></pre></div>
 
 <p>接着将Order中的customer字段的类型修改为Customer，并修改所有引用该字段的函数。</p>
+<div class="hljs"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Order</span> </span>&#123;
+    <span class="hljs-keyword">private</span> Customer customer;
 
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Order</span><span class="hljs-params">(String customerName)</span> </span>&#123;
+        <span class="hljs-keyword">this</span>.customer = <span class="hljs-keyword">new</span> Customer(customerName);
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getCustomerName</span><span class="hljs-params">()</span></span>&#123;
+        <span class="hljs-keyword">return</span> customer.getName();
+    &#125;
+
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setCustomer</span><span class="hljs-params">(String customerName)</span></span>&#123;
+        customer = <span class="hljs-keyword">new</span> Customer(customerName);
+    &#125;
+&#125;</code></pre></div>
+
+<h2 id="8-3-将值对象改为引用对象-Change-Value-to-Reference"><a href="#8-3-将值对象改为引用对象-Change-Value-to-Reference" class="headerlink" title="8.3 将值对象改为引用对象(Change Value to Reference)"></a>8.3 将值对象改为引用对象(Change Value to Reference)</h2><h2 id="8-4-将引用对象改为值对象-Change-Reference-to-Value"><a href="#8-4-将引用对象改为值对象-Change-Reference-to-Value" class="headerlink" title="8.4 将引用对象改为值对象(Change Reference to Value)"></a>8.4 将引用对象改为值对象(Change Reference to Value)</h2><p>如果引用对象开始变得难以使用，就应该将其改为值对象。</p>
+<p>值对象是不可变的，因此<strong>如果对象无法修改为不可变的，也就无法将引用对象改为值对象</strong>。</p>
+<h2 id="8-5-以对象取代数组-Replace-Array-with-Object"><a href="#8-5-以对象取代数组-Replace-Array-with-Object" class="headerlink" title="8.5 以对象取代数组(Replace Array with Object)"></a>8.5 以对象取代数组(Replace Array with Object)</h2><p>如果数组中的元素代表不同的东西，可以利用对象来取代数组，数组中的每个元素，用一个字段来表示。</p>
+<h2 id="8-6-复制“被监视数据”-Duplicate-Observed-Data"><a href="#8-6-复制“被监视数据”-Duplicate-Observed-Data" class="headerlink" title="8.6 复制“被监视数据”(Duplicate Observed Data)"></a>8.6 复制“被监视数据”(Duplicate Observed Data)</h2>
             </article>
             <hr>
             <div>
