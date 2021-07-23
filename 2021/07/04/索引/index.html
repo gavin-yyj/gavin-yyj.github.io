@@ -174,7 +174,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      885 字
+      1.4k 字
     </span>
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      14
        分钟
     </span>
   
@@ -240,7 +240,8 @@
 <td></td>
 </tr>
 </tbody></table>
-<h1 id="InnoDB的索引模型"><a href="#InnoDB的索引模型" class="headerlink" title="InnoDB的索引模型"></a>InnoDB的索引模型</h1><p>InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。</p>
+<h1 id="InnoDB的索引模型"><a href="#InnoDB的索引模型" class="headerlink" title="InnoDB的索引模型"></a>InnoDB的索引模型</h1><p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210723223213.png" srcset="/img/loading.gif" alt="image-20210723223213434"></p>
+<p>InnoDB 使用了 B+ 树索引模型，所以数据都是存储在 B+ 树中的。</p>
 <p>在 InnoDB 里，主键索引也被称为聚簇索引（clustered index）。</p>
 <ul>
 <li>聚簇索引以INNODB为例，叶子结点即存储了真实的数据行，不再有另外单独的数据页。</li>
@@ -248,11 +249,17 @@
 </ul>
 <p>非主键索引的叶子节点内容是主键的值。在 InnoDB 里，非主键索引也被称为二级索引（secondary index）。</p>
 <p>一张表可以有多个树，树的每个节点对应一个page，一个page里面可能有多个数据块，因为page的大小是16KB，如果key 的大小是8字节，指针的大小是6字节，那么一个节点会产生16KB/(8+6)字节=1170个分支。</p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210723223641.png" srcset="/img/loading.gif" alt="image-20210723223641353"></p>
 <p>根据叶子节点的内容，索引类型分为主键索引和非主键索引：</p>
 <ul>
 <li>主键索引的叶子节点存的是整行数据。在 InnoDB 里，主键索引也被称为聚簇索引（clustered index）；</li>
 <li>非主键索引的叶子节点内容是主键的值。在 InnoDB 里，非主键索引也被称为二级索引（secondary index）。</li>
 </ul>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210723224009.png" srcset="/img/loading.gif" alt="image-20210723224009306"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210723224555.png" srcset="/img/loading.gif" alt="image-20210723224555731"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210724065454.png" srcset="/img/loading.gif" alt="image-20210724065454480"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210724065746.png" srcset="/img/loading.gif" alt="image-20210724065745937"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210724070118.png" srcset="/img/loading.gif" alt="image-20210724070118020"></p>
 <p>基于主键索引和普通索引的查询有什么区别？</p>
 <ul>
 <li>如果语句是 select * from T where ID=500，即主键查询方式，则只需要搜索 ID 这棵 B+ 树；</li>
@@ -268,6 +275,18 @@
 <p>除了影响性能外，页分裂操作还影响数据页的利用率。原本放在一个页的数据，现在分到两个页中，整体空间利用率降低大约 50%。</p>
 <p>自增主键的插入数据模式，每次插入一条新记录，都是追加操作，都不涉及到挪动其他记录，也不会触发叶子节点的分裂。而有业务逻辑的字段做主键，则往往不容易保证有序插入，这样写数据成本相对较高。</p>
 <p>另外，主键长度越小，普通索引的叶子节点就越小，普通索引占用的空间也就越小，单个节点存放的指针也就越多。</p>
+<p>联合索引(A, B)意味着不需要建立A的索引了，因为这个联合索引意味着建立了(A,B)和(A)这两种索引。</p>
+<p>如果既有联合查询，又有基于 a、b 各自的查询呢？查询条件里面只有 b 的语句，是无法使用 (a,b) 这个联合索引的，这时候你不得不维护另外一个索引，也就是说你需要同时维护 (a,b)、(b) 这两个索引。</p>
+<p>用不上最左前缀，如果是高频的查询，就再建一个单独的索引，当然我们可以选择交换顺序，争取建立的索引占用的内存越小，比如name 字段是比 age 字段大的 ，那我就建议你创建一个（name,age) 的联合索引和一个 (age) 的单字段索引。</p>
+<p>为什么要重建索引？</p>
+<p>因为索引可能因为删除，或者页分裂等原因，导致数据页有空洞，重建索引的过程会创建一个新的索引，把数据按顺序插入，这样页面的利用率最高，也就是索引更紧凑、更省空间。</p>
+<p> InnoDB 引擎，虽然删除了表的部分记录,但是它的索引还在, 并未释放。</p>
+<p>1.select * from T where k in(1,2,3,4,5)<br>2.select * from T where k between 1 and 5</p>
+<p>第一个要树搜素5次<br>第二个搜索一次</p>
+<p>因为覆盖索引的目的就是”不回表“，所以只有索引包含了where条件部分和select返回部分的所有字段，才能实现这个目的。</p>
+<p>查询语句的where里面各个判断调换顺序没关系的，优化器会自动处理。</p>
+<p>一次查询为啥不能只回表一次呢？比如范围查询通过二级索引定位到全部符合条件的主键再回表一次？？</p>
+<p>这样还需要地方把”满足条件的所有主键值“存起来，就要用到临时表了，性能反而更差</p>
 
             </article>
             <hr>
@@ -306,7 +325,7 @@
                     
                       <a href="/2021/07/03/MySQL8-0-25%E5%AE%89%E8%A3%85/">
                         <span class="hidden-mobile">MySQL8.0.25安装</span>
-                        <span class="visible-mobile">Next</span>
+                        <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -339,7 +358,7 @@
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
   <div id="tocbot"></div>
 </div>
 
@@ -366,7 +385,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -375,7 +394,7 @@
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">keyword</label>
+                 for="local-search-input">关键词</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
