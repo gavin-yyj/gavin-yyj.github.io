@@ -232,7 +232,7 @@
 <li>使用门槛较高</li>
 <li>配置较复杂</li>
 </ul>
-<h2 id="Spring由哪些模块组成"><a href="#Spring由哪些模块组成" class="headerlink" title="Spring由哪些模块组成"></a>Spring由哪些模块组成</h2><p><img src="https://img-blog.csdnimg.cn/20200709145013402.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzg3NzMzMg==,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
+<h2 id="Spring由哪些模块组成"><a href="#Spring由哪些模块组成" class="headerlink" title="Spring由哪些模块组成"></a>Spring由哪些模块组成</h2><p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210803223552.png" srcset="/img/loading.gif" alt="在这里插入图片描述"></p>
 <ul>
 <li>Core：提供了框架的基本组成部分，包括<strong>控制反转</strong>和<strong>依赖注入</strong>功能；</li>
 <li>Beans：提供了BeanFactory，是工厂模式的一个经典实现，Spring将管理对象称为Bean；</li>
@@ -329,12 +329,12 @@
 <p>将配置文件解析成一个个Bean，并且注册到BeanFactory中，注意这里只是注册进去，并没有初始化。</p>
 <h4 id="注册实现原理"><a href="#注册实现原理" class="headerlink" title="注册实现原理"></a>注册实现原理</h4><p><strong>BeanDefinition(Bean定义)</strong></p>
 <p>在IOC实现中，我们在XML中描述的Bean信息最后都将保存至BeanDefinition对象中，xml-bean中设置的属性最后都会体现在BeanDefinition中，如：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/18628873-7553de4d8ddfbb11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1136/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210803223609.webp" srcset="/img/loading.gif" alt="img"></p>
 <p><strong>BeanDefinitionRegistry(Bean注册器)</strong></p>
 <p>xml-bean中的id作为当前Bean的存储key注册到了BeanDefinitionRegistry注册器中，name作为别名key注册到了AliasRegistry注册中心，最后都是指向其对应的BeanDefinition。</p>
 <p><strong>BeanDefinitionReader（Bean定义读取）</strong></p>
 <p>BeanDefinition中存储了xml-bean信息，而BeanDefinitionRegister基于ID和name保存了Bean的定义，下图是从xml-Bean到BeanDefinition然后再注册至BeanDefinitionRegister的整个过程。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/18628873-50f575074eb4c65c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/687/format/webp" srcset="/img/loading.gif" alt="img"></p>
+<p><img src="https://gitee.com/jie_1204/blog-img/raw/master/img/20210803223519.webp" srcset="/img/loading.gif" alt="img"></p>
 <p>从上图可以看出，Bean的定义是由BeanDefinitionReader从xml中读取配置并构建出BeanDefinition，然后再基于别名注册BeanDefinitionRegister中。</p>
 <h3 id="4-prepareBeanFactory（beanFactory）"><a href="#4-prepareBeanFactory（beanFactory）" class="headerlink" title="4. prepareBeanFactory（beanFactory）"></a>4. prepareBeanFactory（beanFactory）</h3><p>设置BeanFactory的类加载器，然后添加几个BeanPostProcessor，手动注册几个特殊的bean，这里都是Spring里面的特殊处理。</p>
 <h3 id="5-postProcessBeanFactory（beanFactory）"><a href="#5-postProcessBeanFactory（beanFactory）" class="headerlink" title="5. postProcessBeanFactory（beanFactory）"></a>5. postProcessBeanFactory（beanFactory）</h3><p>提供给子类的扩展点，到这里所有的Bean都加载，注册完成了，但是都还没有初始化，具体的子类可以在这步的时候添加一些特殊的BeanFactoryPostProcessor的实现类，来完成一些其他的操作。</p>
@@ -769,7 +769,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                       <a href="/2020/07/10/MyBatis%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9/">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">MyBatis核心知识点</span>
-                        <span class="visible-mobile">上一篇</span>
+                        <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </div>
@@ -778,7 +778,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
                     
                       <a href="/2020/07/07/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/">
                         <span class="hidden-mobile">MySQL数据库</span>
-                        <span class="visible-mobile">下一篇</span>
+                        <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
                     
@@ -811,7 +811,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
     
       <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
         <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
   <div id="tocbot"></div>
 </div>
 
@@ -838,7 +838,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
         <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -847,7 +847,7 @@ TransactionStatus ts = transactionManager.getTransaction(td);
         <div class="md-form mb-5">
           <input type="text" id="local-search-input" class="form-control validate">
           <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
+                 for="local-search-input">keyword</label>
         </div>
         <div class="list-group" id="local-search-result"></div>
       </div>
